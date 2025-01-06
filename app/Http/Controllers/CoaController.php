@@ -47,11 +47,12 @@ class CoaController extends Controller
             // dd($apiResponse->json());
             return view('masterdata.coa.coa', ['data' => $data]);
         } else {
-            return response()->json([
-                'message' => 'Failed to fetch data from API',
-                'status' => $apiResponse->status(),
-                'error' => $apiResponse->json(),
-            ]);
+            return view('masterdata.coa.coa');
+            // return response()->json([
+            //     'message' => 'Failed to fetch data from API',
+            //     'status' => $apiResponse->status(),
+            //     'error' => $apiResponse->json(),
+            // ]);
         }
     }
 
@@ -153,8 +154,8 @@ class CoaController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
-    {
-        //
-    }
+    // public function destroy(string $id)
+    // {
+    //     //
+    // }
 }
