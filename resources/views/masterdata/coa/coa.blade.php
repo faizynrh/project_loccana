@@ -1,10 +1,6 @@
 @extends('layouts.mainlayout')
 @section('content')
     <link rel="stylesheet" href="{{ asset('assets/datatables/datatables.min.css') }}">
-
-    {{-- <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
-    --}}
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <div class="container mt-2 bg-white rounded-top">
         <h5>Chart Of Account</h5>
         @if (session('success'))
@@ -97,8 +93,6 @@
             </tbody> --}}
         </table>
     </div>
-    {{-- <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script> --}}
-    <script src="{{ asset('assets/datatables/datatables.min.js') }}"></script>
     <script>
         $(document).ready(function() {
             $('#tablecoa').DataTable({});
