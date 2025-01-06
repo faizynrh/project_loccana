@@ -55,9 +55,9 @@ class UomDataController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'uom_name' => 'required',
-            'uom_code' => 'required',
-            'description' => 'required'
+            'uom_name' => 'required|string|max:255',
+            'uom_code' => 'required|string|max:10',
+            'description' => 'required|string|max:500'
         ]);
 
         $tokenurl = 'https://gateway.apicentrum.site/oauth2/token';
@@ -72,10 +72,15 @@ class UomDataController extends Controller
         ]);
 
         if (!$tokenResponse->successful()) {
-            return back()->withErrors('Gagal mendapatkan token');
+            return back()->withErrors('Gagal mendapatkan token.');
         }
 
-        $accessToken = $tokenResponse->json()['access_token'];
+        $tokenData = $tokenResponse->json();
+        if (!isset($tokenData['access_token'])) {
+            return back()->withErrors('Token tidak tersedia dalam respons.');
+        }
+
+        $accessToken = $tokenData['access_token'];
 
         $data = [
             'uom_name' => $request->input('uom_name'),
@@ -84,25 +89,23 @@ class UomDataController extends Controller
         ];
 
         $apiResponse = Http::withHeaders([
-            'Authorization' => 'Bearer ' . $accessToken,
-            'Content-Type' => 'application/json'
+            'Authorization' => 'Bearer ' . $accessToken
         ])->post($apiurl, $data);
 
-        if (
-            $apiResponse->successful() &&
-            isset($responseData['success'])
-            // $responseData['success'] === true
-        ) {
+        $responseData = $apiResponse->json();
 
-            return redirect()->route('coa')
-                ->with('success', $responseData['message'] ?? 'Data COA berhasil ditambahkan');
+        if ($apiResponse->successful() && isset($responseData['success']) && $responseData['success'] === true) {
+            return redirect()->route('uom.index')
+                ->with('success', $responseData['message'] ?? 'Data UoM berhasil ditambahkan.');
         } else {
+            Log::error('Error saat menambahkan UoM: ' . $apiResponse->body());
             return back()->withErrors(
                 'Gagal menambahkan data: ' .
                     ($responseData['message'] ?? $apiResponse->body())
             );
         }
     }
+
 
     public function create()
     {
