@@ -164,55 +164,25 @@ class CoaController extends Controller
             'Content-Type' => 'application/json'
         ])->get($apiurl);
 
-        dd($apiResponse->json());
-    }
-
-
-
-    public function update(Request $request, string $id)
-    {
-        $request->validate([
-            'coa_code' => 'required|string',
-            'description' => 'required|string',
-            'parent_account' => 'required|numeric',
-            'show_hide' => 'required|string',
-        ]);
-
-        $tokenurl = 'https://gateway.apicentrum.site/oauth2/token';
-        $apiurl = 'https://gateway-internal.apicentrum.site/t/loccana.com/loccana/masterdata/coa/1.0.0/masterdata/coa/' . $id;
-        $clientid = 'OsqY1VGEgsgEQxLffrDs126FfVsa';
-        $clientsecret = 'AnOU_SENF6BjI1MY32OXmiKQEPMa';
-
-        $tokenResponse = Http::asForm()->post($tokenurl, [
-            'grant_type' => 'client_credentials',
-            'client_id' => $clientid,
-            'client_secret' => $clientsecret,
-        ]);
-
-        if (!$tokenResponse->successful()) {
-            return back()->withErrors('Gagal mendapatkan token');
-        }
-
-        $accessToken = $tokenResponse->json()['access_token'];
-
-        $apiResponse = Http::withHeaders([
-            'Authorization' => 'Bearer ' . $accessToken,
-            'Content-Type' => 'application/json'
-        ])->put($apiurl, [
-            'coa' => $request->input('coa_code'),
-            'description' => $request->input('description'),
-            'parent' => $request->input('parent_account'),
-            'show_hide' => $request->input('show_hide'),
-        ]);
-
         if ($apiResponse->successful()) {
-            return redirect()->route('coa.index')->with('success', 'Data COA berhasil diperbarui');
+            $coa = $apiResponse->json();
+            // if (empty($coa)) {
+            //     return back()->withErrors('Data COA tidak ditemukan.');
+            // }
+            dd($apiResponse->body());
+            dd($coa);
+            return view('masterdata.coa.edit', [
+                'id' => $id,
+                'coa' => $coa
+            ]);
         } else {
-            return back()->withErrors('Gagal memperbarui data: ' . $apiResponse->body());
+            return back()->withErrors('Gagal mengambil data COA: ' . $apiResponse->status());
         }
     }
 
 
+
+    public function update(Request $request, string $id) {}
 
     /**
      * Update the specified resource in storage.
