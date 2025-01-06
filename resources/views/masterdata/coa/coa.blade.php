@@ -45,9 +45,13 @@
                                 <a href="coa/edit" class="btn btn-sm btn-warning mb-2" title="Edit">
                                     <i class="bi bi-pencil"></i>
                                 </a>
-                                <button class="btn btn-sm btn-danger mb-2" title="Hapus">
-                                    <i class="bi bi-trash"></i>
-                                </button>
+                                <form action="{{ route('coa.destroy', $coa->id) }}" method="POST" style="display:inline;">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-sm btn-danger mb-2" title="Hapus">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </form>
                                 <button class="btn btn-sm btn-danger w-100" title="Lihat">
                                     <i class="bi bi-search">
                                         <label for="">Hide</label>

@@ -154,8 +154,37 @@ class CoaController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    // public function destroy(string $id)
-    // {
-    //     //
-    // }
+    public function destroy($id)
+    {
+        $tokenurl = 'https://gateway.apicentrum.site/oauth2/token';
+        $apiurl = 'https://gateway-internal.apicentrum.site/t/loccana.com/loccana/masterdata/coa/1.0.0/masterdata/coa/' . $id;
+        $clientid = 'OsqY1VGEgsgEQxLffrDs126FfVsa';
+        $clientsecret = 'AnOU_SENF6BjI1MY32OXmiKQEPMa';
+
+        $tokenResponse = Http::asForm()->post($tokenurl, [
+            'grant_type' => 'client_credentials',
+            'client_id' => $clientid,
+            'client_secret' => $clientsecret,
+        ]);
+
+        if (!$tokenResponse->successful()) {
+            return back()->withErrors('Gagal mendapatkan token');
+        }
+
+        $accessToken = $tokenResponse->json()['access_token'];
+
+        $apiResponse = Http::withHeaders([
+            'Authorization' => 'Bearer ' . $accessToken,
+            'Content-Type' => 'application/json'
+        ])->delete($apiurl);
+
+        if ($apiResponse->successful()) {
+            return redirect()->route('coa')
+                ->with('success', 'Data COA berhasil dihapus');
+        } else {
+            return back()->withErrors(
+                'Gagal menghapus data: ' . $apiResponse->body()
+            );
+        }
+    }
 }

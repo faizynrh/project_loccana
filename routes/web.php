@@ -2,7 +2,6 @@
 
 use App\Http\Controllers\CoaController;
 use Illuminate\Support\Facades\Route;
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -47,6 +46,7 @@ Route::get('/coa', [CoaController::class, 'index'])->name('coa');
 
 Route::get('/coa/add', [CoaController::class, 'create'])->name('coa.create');
 Route::post('/coa/add', [CoaController::class, 'store'])->name('coa.store');
+Route::delete('/coa/{id}', [CoaController::class, 'destroy'])->name('coa.destroy');
 Route::get('/coa/edit', function () {
     return view('masterdata.coa.edit');
 });
