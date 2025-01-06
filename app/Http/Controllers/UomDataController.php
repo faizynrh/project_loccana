@@ -43,12 +43,12 @@ class UomDataController extends Controller
 
             return view('masterdata.uom.uom', ['data' => $data['data']]);
         } else {
-            // return response([
-            //     'message' => 'Gagal mendapatkan data',
-            //     'status' => $apiResponse->status(),
-            //     'error' => $apiResponse->json(),
-            // ]);
-            return view('masterdata.uom.uom');
+            return response([
+                'message' => 'Gagal mendapatkan data',
+                'status' => $apiResponse->status(),
+                'error' => $apiResponse->json(),
+            ]);
+            // return view('masterdata.uom.uom');
         }
     }
 

@@ -27,7 +27,9 @@
                 </tr>
             </thead>
             <tbody>
+            {{-- {{dd($data)}} --}}
     @if (!empty($data['data']))
+
         @foreach ($data['data'] as $index => $item)
             <tr>
                 <td>{{ $index + 1 }}</td>
