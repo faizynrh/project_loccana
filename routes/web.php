@@ -48,9 +48,9 @@ Route::get('/coa', [CoaController::class, 'index'])->name('coa');
 Route::get('/coa/add', [CoaController::class, 'create'])->name('coa.create');
 Route::post('/coa/add', [CoaController::class, 'store'])->name('coa.store');
 Route::delete('/coa/{id}', [CoaController::class, 'destroy'])->name('coa.destroy');
-Route::get('/coa/edit', function () {
-    return view('masterdata.coa.edit');
-});
+Route::get('/coa/edit/{id}', [CoaController::class, 'edit'])->name('coa.edit');
+Route::put('/coa/{id}', [CoaController::class, 'update'])->name('coa.update');
+
 
 
 // uom
