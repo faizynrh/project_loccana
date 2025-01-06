@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CoaController;
+use App\Http\Controllers\UomDataController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -49,4 +50,16 @@ Route::get('/coa/add', [CoaController::class, 'create'])->name('coa.create');
 Route::post('/coa/add', [CoaController::class, 'store'])->name('coa.store');
 Route::get('/coa/edit', function () {
     return view('masterdata.coa.edit');
+});
+
+
+// uom
+Route::get('/uom', [UomDataController::class, 'index'])->name('uom.index'); //jika api mati maka gunakan yang bawah
+
+// Route::get('/uom', function () {
+//     return view('masterdata.uom.uom');
+// });
+
+Route::get('/uom-tambah', function () {
+    return view('tambah-uom');
 });

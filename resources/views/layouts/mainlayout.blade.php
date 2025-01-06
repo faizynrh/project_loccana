@@ -36,7 +36,7 @@
                                 style="color: #919FAC;">Items</a></li>
                         <li><a href="#" class="nav-link text-decoration-none d-block py-2"
                                 style="color: #919FAC;">User</a></li>
-                        <li><a href="#" class="nav-link text-decoration-none d-block py-2"
+                        <li><a href="/uom" class="nav-link text-decoration-none d-block py-2"
                                 style="color: #919FAC;">UOM</a></li>
                         <li><a href="/price" class="nav-link text-decoration-none d-block py-2"
                                 style="color: #919FAC;">Price</a></li>
