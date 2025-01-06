@@ -1,10 +1,6 @@
 @extends('layouts.mainlayout')
 @section('content')
     <link rel="stylesheet" href="{{ asset('assets/datatables/datatables.min.css') }}">
-
-    {{-- <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
-    --}}
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <div class="container mt-2 bg-white rounded-top">
         <h5>Chart Of Account</h5>
         @if (session('success'))
@@ -45,9 +41,13 @@
                                 <a href="coa/edit" class="btn btn-sm btn-warning mb-2" title="Edit">
                                     <i class="bi bi-pencil"></i>
                                 </a>
-                                <button class="btn btn-sm btn-danger mb-2" title="Hapus">
-                                    <i class="bi bi-trash"></i>
-                                </button>
+                                <form action="{{ route('coa.destroy', $coa->id) }}" method="POST" style="display:inline;">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-sm btn-danger mb-2" title="Hapus">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </form>
                                 <button class="btn btn-sm btn-danger w-100" title="Lihat">
                                     <i class="bi bi-search">
                                         <label for="">Hide</label>
@@ -93,11 +93,5 @@
             </tbody> --}}
         </table>
     </div>
-    {{-- <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script> --}}
-    <script src="{{ asset('assets/datatables/datatables.min.js') }}"></script>
-    <script>
-        $(document).ready(function() {
-            $('#tablecoa').DataTable({});
-        });
-    </script>
+
 @endsection
