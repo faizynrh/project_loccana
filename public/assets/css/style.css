@@ -1,0 +1,23 @@
+    .table-striped {
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    .table-striped th,
+    .table-striped td {
+        border: 1px solid #ccc; /* Warna abu untuk garis */
+        padding: 8px;
+        text-align: left;
+    }
+
+    .table-striped thead th {
+        background-color: #f2f2f2; /* Warna latar belakang untuk header */
+    }
+
+    .table-striped tbody tr:nth-child(even) {
+        background-color: #f9f9f9; /* Warna latar untuk baris genap */
+    }
+
+    .table-striped tbody tr:hover {
+        background-color: #eaeaea; /* Warna saat baris dihover */
+    }

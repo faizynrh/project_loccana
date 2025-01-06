@@ -26,11 +26,11 @@
                 </div>
                 <div class="mb-3">
                     <label><strong>Simbol UoM *</strong></label>
-                    <input type="text" placeholder="Simbol" name="uom_symbol">
+                    <input type="text" placeholder="Simbol" name="uom_code">
                 </div>
                 <div class="mb-3">
                     <label><strong>Keterangan UoM *</strong></label>
-                    <textarea cols="30" rows="4" name="uom_description"></textarea>
+                    <textarea cols="30" rows="4" name="description"></textarea>
                 </div>
                 <div class="mb-3">
                     <label></label> <!-- Label kosong untuk menjaga alur flexbox -->

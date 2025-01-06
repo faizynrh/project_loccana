@@ -10,3 +10,7 @@ import 'bootstrap-icons/font/bootstrap-icons.css';
 $(document).ready(function() {
     $('#tablecoa').DataTable();
 });
+$(document).ready(function() {
+    $('#tableuom').DataTable();
+});
+

@@ -60,6 +60,5 @@ Route::get('/uom', [UomDataController::class, 'index'])->name('uom.index'); //ji
 //     return view('masterdata.uom.uom');
 // });
 
-Route::get('/uom-tambah', function () {
-    return view('tambah-uom');
-});
+Route::get('/uom-tambah', [UomDataController::class, 'create'])->name('uom.create');
+Route::post('/uom-tambah', [UomDataController::class, 'store'])->name('uom.store'); //jika api mati maka gunakan yang bawah'] () {

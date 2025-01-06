@@ -1,70 +1,67 @@
 @extends('layouts.mainlayout')
 @section('content')
 
-<link rel="stylesheet" href="{{ asset('assets/datatables/datatables.min.css') }}">
-
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<div class="container mt-2 bg-white rounded-top">
-    <h5>Unit of Measurement</h5>
-
-    @if (session('success'))
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            {{ session('success') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    <!-- Main Content -->
+    <div class="content">
+    <div class="header" style="margin-top: 50px">
+        <h3>Unit of Measurement</h3>
+        <div class="d-flex justify-content-between align-items-center">
+            <a href="/uom-tambah" class="btn btn-primary"><strong>+</strong></a>
         </div>
-    @endif
+    </div>
 
-    @if ($errors->any())
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            @foreach ($errors->all() as $error)
-                <p>{{ $error }}</p>
-            @endforeach
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    @endif
-
-    <a href="/uom-tambah" class="btn btn-primary btn-lg fw-bold mt-1 mb-2">+</a>
-
-    <table class="table table-striped table-bordered mt-3" id="tableuom">
-        <thead>
+        <table class="table table-striped table-bordered mt-3" id="tableuom">
+            <thead>
+                <tr>
+                    <th scope="col">No</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Simbol</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Option</th>
+                </tr>
+            </thead>
+            <tbody>
+    @if (!empty($data['data']))
+        @foreach ($data['data'] as $index => $item)
             <tr>
-                <th scope="col" class="col-1">No</th>
-                <th scope="col" class="col-3">Name</th>
-                <th scope="col" class="col-2">Symbol</th>
-                <th scope="col" class="col-3">Description</th>
-                <th scope="col" class="col-2">Option</th>
+                <td>{{ $index + 1 }}</td>
+                <td>{{ $item['name'] ?? 'N/A' }}</td>
+                <td>{{ $item['symbol'] ?? 'N/A' }}</td>
+                <td>{{ $item['description'] ?? 'N/A' }}</td>
+                <td>
+                    <a href="/uom-edit/{{ $item['id'] }}" class="btn btn-warning">
+                        <i class='bx bx-edit' style="color: #ffffff"></i>
+                    </a>
+                    <button class="btn btn-danger">
+                        <i class='bx bx-trash' style='color:#ffffff'></i>
+                    </button>
+                </td>
             </tr>
-        </thead>
-        <tbody>
-            @forelse($data['table'] as $index => $item)
-                <tr>
-                    <td>{{ $index + 1 }}</td>
-                    <td>{{ $item['name'] ?? 'N/A' }}</td>
-                    <td>{{ $item['symbol'] ?? 'N/A' }}</td>
-                    <td>{{ $item['description'] ?? 'N/A' }}</td>
-                    <td>
-                        <a href="/uom-edit/{{ $item['id'] }}" class="btn btn-sm btn-warning mb-2" title="Edit">
-                            <i class="bi bi-pencil"></i>
-                        </a>
-                        <button class="btn btn-sm btn-danger mb-2" title="Delete">
-                            <i class="bi bi-trash"></i>
-                        </button>
-                    </td>
-                </tr>
-            @empty
-                <tr>
-                    <td colspan="5">No data available.</td>
-                </tr>
-            @endforelse
-        </tbody>
+        @endforeach
+    @else
+        <tr>
+            <td colspan="5" class="text-center">No data available</td>
+        </tr>
+    @endif
+</tbody>
+
     </table>
 
-    <script src="{{ asset('assets/datatables/datatables.min.js') }}"></script>
-    <script>
-        $(document).ready(function() {
-            $('#tableuom').DataTable({});
-        });
-    </script>
+    <!-- Info jumlah data -->
+    <div class="d-flex justify-content-between my-3">
+        {{-- <div>
+            Showing {{ $filteredItems }} of {{ $totalItems }} entries
+        </div> --}}
+        <!-- Pagination -->
+        <nav aria-label="Page navigation">
+            <ul class="pagination">
+                <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+                <li class="page-item"><a class="page-link" href="#">1</a></li>
+                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                <li class="page-item"><a class="page-link" href="#">Next</a></li>
+            </ul>
+        </nav>
+    </div>
 </div>
-
 @endsection
