@@ -93,9 +93,5 @@
             </tbody> --}}
         </table>
     </div>
-    <script>
-        $(document).ready(function() {
-            $('#tablecoa').DataTable({});
-        });
-    </script>
+
 @endsection
