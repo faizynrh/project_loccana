@@ -4,12 +4,8 @@
         <h5>Items</h5>
         <form class="d-flex align-items-center justify-content-between" role="search">
             <a href="items/add" class="btn btn-primary">+ Tambah Item</a>
-            <div class="d-flex align-items-center">
-                <label for="search-input" class="me-2 mb-0">Search:</label>
-                <input id="search-input" class="form-control w-75" type="search" aria-label="Search">
-            </div>
         </form>
-        <table class="table table-striped table-bordered mt-3">
+        <table class="table table-striped table-bordered mt-3" id="tableitems">
             <thead>
                 <tr>
                     <th scope="col">No</th>
@@ -25,7 +21,7 @@
             <tbody>
                 <tr>
                     <th scope="row">1</th>
-                    <td>Mark</td>
+                    <td>Usep</td>
                     <td>Otto</td>
                     <td>@mdo</td>
                     <td>Mark</td>
@@ -85,20 +81,6 @@
                 </tr>
             </tbody>
         </table>
-        <nav aria-label="...">
-            <ul class="pagination justify-content-end">
-                <li class="page-item disabled">
-                    <a class="page-link">Previous</a>
-                </li>
-                <li class="page-item"><a class="page-link" href="#">1</a></li>
-                <li class="page-item active" aria-current="page">
-                    <a class="page-link" href="#">2</a>
-                </li>
-                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                <li class="page-item">
-                    <a class="page-link" href="#">Next</a>
-                </li>
-            </ul>
-        </nav>
+
     </div>
 @endsection

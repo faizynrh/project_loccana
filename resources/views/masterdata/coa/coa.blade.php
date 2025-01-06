@@ -30,29 +30,44 @@
                 </tr>
             </thead>
             <tbody>
-                @if (!empty($data['data']))
-                    @foreach ($data['data'] as $item)
+                @if (!empty($data['data']['coa']))
+                    @foreach ($data['data']['coa'] as $item)
                         <tr>
                             <td>{{ $loop->iteration }}</td>
                             <td>{{ $item['id'] ?? '-' }}</td>
-                            <td>{{ $item['coa_code'] ?? '-' }}</td>
-                            <td>{{ $item['coa_name'] ?? '-' }}</td>
+                            <td>{{ $item['coa'] ?? '-' }}</td>
+                            <td>{{ $item['description'] ?? '-' }}</td>
                             <td>
-                                <a href="coa/edit" class="btn btn-sm btn-warning mb-2" title="Edit">
+                                <a href="{{ route('coa.edit', $item['id']) }}" class="btn btn-sm btn-warning mb-2"
+                                    title="Edit">
                                     <i class="bi bi-pencil"></i>
                                 </a>
-                                <form action="{{ route('coa.destroy', $coa->id) }}" method="POST" style="display:inline;">
+                                <form action="{{ route('coa.destroy', $item['id']) }}" method="POST"
+                                    id="delete{{ $item['id'] }}" style="display:inline;">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn btn-sm btn-danger mb-2" title="Hapus">
+                                    <button type="button" class="btn btn-sm btn-danger mb-2" title="Hapus"
+                                        onclick="confirmDelete({{ $item['id'] }})">
                                         <i class="bi bi-trash"></i>
                                     </button>
                                 </form>
-                                <button class="btn btn-sm btn-danger w-100" title="Lihat">
-                                    <i class="bi bi-search">
-                                        <label for="">Hide</label>
-                                    </i>
-                                </button>
+
+                                <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+                                <script>
+                                    function confirmDelete(id) {
+                                        Swal.fire({
+                                            title: 'Apakah kamu yakin?',
+                                            text: 'Data ini akan dihapus secara permanen!',
+                                            icon: 'warning',
+                                            showCancelButton: true,
+                                            reverseButtons: true
+                                        }).then((result) => {
+                                            if (result.isConfirmed) {
+                                                document.getElementById('delete' + id).submit();
+                                            }
+                                        });
+                                    }
+                                </script>
                             </td>
                         </tr>
                     @endforeach
@@ -62,6 +77,9 @@
                     </tr>
                 @endif
             </tbody>
+
+
+
             {{-- <tbody>
                 @if (!empty($data))
                     @foreach ($data as $item)

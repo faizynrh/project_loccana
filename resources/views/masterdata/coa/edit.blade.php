@@ -4,47 +4,52 @@
         <h5 class="mb-3 text-primary fw-bold text-decoration-underline">Update Chart Of Account</h5>
         <p>Harap isi data yang telah ditandai dengan <span class="text-danger bg-light px-1">*</span>, dan masukkan data
             dengan benar.</p>
-        <form action="" method="">
+        <form action="{{ route('coa.update', $id) }}" method="POST">
+            @csrf
+            @method('PUT')
+
             <div class="row mb-3 align-items-center">
                 <div class="col-md-3">
-                    <label for="parent" class="form-label fw-bold mb-0">Parent <span class="text-danger">*</span></label>
+                    <label for="parent_account" class="form-label fw-bold mb-0">Parent <span
+                            class="text-danger">*</span></label>
                 </div>
                 <div class="col-md-9">
-                    <select class="form-select" id="parent">
-                        <option value="" selected disabled></option>
-                        <option value="tanpaparent">-- Tanpa Parent --</option>
-                        <option value="">lorem</option>
+                    <select name="parent_account" class="form-select" id="parent_account">
+                        <option value="" selected disabled>Pilih Parent</option>
+                        <option value="0" {{ $coa['parent'] == 0 ? 'selected' : '' }}>-- Tanpa Parent --</option>
+                        <!-- Tambahkan opsi parent lainnya jika ada -->
                     </select>
                 </div>
             </div>
 
             <div class="row mb-3 align-items-center">
                 <div class="col-md-3">
-                    <label for="coa" class="form-label fw-bold mb-0">COA <span class="text-danger">*</span></label>
+                    <label for="coa_code" class="form-label fw-bold mb-0">COA <span class="text-danger">*</span></label>
                 </div>
                 <div class="col-md-9">
-                    <input type="text" class="form-control" id="coa" placeholder="COA">
+                    <input type="text" name="coa_code" class="form-control" id="coa_code"
+                        value="{{ $coa['coa'] ?? '' }}" placeholder="COA">
                 </div>
             </div>
 
             <div class="row mb-3 align-items-center">
                 <div class="col-md-3">
-                    <label for="keterangancoa" class="form-label fw-bold mb-0">Keterangan COA <span
+                    <label for="description" class="form-label fw-bold mb-0">Keterangan COA <span
                             class="text-danger">*</span></label>
                 </div>
                 <div class="col-md-9">
-                    <textarea class="form-control" id="keterangancoa" rows="5"></textarea>
+                    <textarea name="description" class="form-control" id="description" rows="5">{{ $coa['description'] ?? '' }}</textarea>
                 </div>
             </div>
 
             <div class="row mb-3 align-items-center">
                 <div class="col-md-3">
-                    <label for="parent" class="form-label fw-bold mb-0">Show/Hide <span
+                    <label for="show_hide" class="form-label fw-bold mb-0">Show/Hide <span
                             class="text-danger">*</span></label>
                 </div>
                 <div class="col-md-9">
-                    <select class="form-select" id="parent">
-                        <option value="" selected disabled></option>
+                    <select name="show_hide" class="form-select" id="show_hide">
+                        <option value="" selected disabled>Pilih Status</option>
                         <option value="show">Show</option>
                         <option value="hide">Hide</option>
                     </select>

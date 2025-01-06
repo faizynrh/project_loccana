@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class CoaController extends Controller
 {
@@ -112,9 +113,7 @@ class CoaController extends Controller
         //     'body' => $apiResponse->body(),
         //     'json' => $apiResponse->json()
         // ]);
-
-        // $responseData = json_decode($apiResponse->body(), true);
-
+        $responseData = $apiResponse->json();
         if (
             $apiResponse->successful() &&
             isset($responseData['success'])
@@ -141,10 +140,79 @@ class CoaController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit($id)
     {
-        //
+        $tokenurl = 'https://gateway.apicentrum.site/oauth2/token';
+        $apiurl = 'https://gateway-internal.apicentrum.site/t/loccana.com/loccana/masterdata/coa/1.0.0/masterdata/coa/' . $id;
+        $clientid = 'OsqY1VGEgsgEQxLffrDs126FfVsa';
+        $clientsecret = 'AnOU_SENF6BjI1MY32OXmiKQEPMa';
+
+        $tokenResponse = Http::asForm()->post($tokenurl, [
+            'grant_type' => 'client_credentials',
+            'client_id' => $clientid,
+            'client_secret' => $clientsecret,
+        ]);
+
+        if (!$tokenResponse->successful()) {
+            return back()->withErrors('Gagal mendapatkan token');
+        }
+
+        $accessToken = $tokenResponse->json()['access_token'];
+
+        $apiResponse = Http::withHeaders([
+            'Authorization' => 'Bearer ' . $accessToken,
+            'Content-Type' => 'application/json'
+        ])->get($apiurl);
+
+        dd($apiResponse->json());
     }
+
+
+
+    public function update(Request $request, string $id)
+    {
+        $request->validate([
+            'coa_code' => 'required|string',
+            'description' => 'required|string',
+            'parent_account' => 'required|numeric',
+            'show_hide' => 'required|string',
+        ]);
+
+        $tokenurl = 'https://gateway.apicentrum.site/oauth2/token';
+        $apiurl = 'https://gateway-internal.apicentrum.site/t/loccana.com/loccana/masterdata/coa/1.0.0/masterdata/coa/' . $id;
+        $clientid = 'OsqY1VGEgsgEQxLffrDs126FfVsa';
+        $clientsecret = 'AnOU_SENF6BjI1MY32OXmiKQEPMa';
+
+        $tokenResponse = Http::asForm()->post($tokenurl, [
+            'grant_type' => 'client_credentials',
+            'client_id' => $clientid,
+            'client_secret' => $clientsecret,
+        ]);
+
+        if (!$tokenResponse->successful()) {
+            return back()->withErrors('Gagal mendapatkan token');
+        }
+
+        $accessToken = $tokenResponse->json()['access_token'];
+
+        $apiResponse = Http::withHeaders([
+            'Authorization' => 'Bearer ' . $accessToken,
+            'Content-Type' => 'application/json'
+        ])->put($apiurl, [
+            'coa' => $request->input('coa_code'),
+            'description' => $request->input('description'),
+            'parent' => $request->input('parent_account'),
+            'show_hide' => $request->input('show_hide'),
+        ]);
+
+        if ($apiResponse->successful()) {
+            return redirect()->route('coa.index')->with('success', 'Data COA berhasil diperbarui');
+        } else {
+            return back()->withErrors('Gagal memperbarui data: ' . $apiResponse->body());
+        }
+    }
+
+
 
     /**
      * Update the specified resource in storage.
@@ -177,7 +245,7 @@ class CoaController extends Controller
             'Authorization' => 'Bearer ' . $accessToken,
             'Content-Type' => 'application/json'
         ])->delete($apiurl);
-
+        // dd($apiResponse->json());
         if ($apiResponse->successful()) {
             return redirect()->route('coa')
                 ->with('success', 'Data COA berhasil dihapus');
