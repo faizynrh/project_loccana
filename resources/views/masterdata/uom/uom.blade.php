@@ -45,7 +45,7 @@
                         <td>{{ $item['symbol'] ?? '-' }}</td>
                         <td>{{ $item['description'] ?? '-' }}</td>
                         <td>
-                            <a href="/uom-edit/{{ $item['id'] }}" class="btn btn-sm btn-warning mb-2">
+                            <a href="/uom/edit/{{ $item['id'] }}" class="btn btn-sm btn-warning mb-2">
                                 <i class="bi bi-pencil"></i>
                             </a>
                             <form action="{{ route('uom.destroy', $item['id']) }}" method="POST"
