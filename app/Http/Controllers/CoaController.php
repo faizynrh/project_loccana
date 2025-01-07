@@ -121,7 +121,37 @@ class CoaController extends Controller
     }
     public function show(string $id)
     {
-        //
+        $tokenurl = 'https://gateway.apicentrum.site/oauth2/token';
+        $apiurl = 'https://gateway-internal.apicentrum.site/t/loccana.com/loccana/masterdata/coa/1.0.0/masterdata/coa/' . $id;
+        $clientid = 'OsqY1VGEgsgEQxLffrDs126FfVsa';
+        $clientsecret = 'AnOU_SENF6BjI1MY32OXmiKQEPMa';
+
+        $tokenResponse = Http::asForm()->post($tokenurl, [
+            'grant_type' => 'client_credentials',
+            'client_id' => $clientid,
+            'client_secret' => $clientsecret,
+        ]);
+
+        if (!$tokenResponse->successful()) {
+            return back()->withErrors('Gagal mendapatkan token');
+        }
+
+        $accessToken = $tokenResponse->json()['access_token'];
+
+        $apiResponse = Http::withHeaders([
+            'Authorization' => 'Bearer ' . $accessToken,
+            'Content-Type' => 'application/json'
+        ])->get($apiurl);
+
+        // dd($apiResponse->json());
+
+        if ($apiResponse->successful()) {
+            $coa = $apiResponse->json()['data'];
+            dd($coa);
+            return view('masterdata.coa.detail', compact('coa', 'id'));
+        } else {
+            return back()->withErrors('Gagal mengambil data COA: ' . $apiResponse->status());
+        }
     }
 
     public function edit($id)

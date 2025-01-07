@@ -47,7 +47,7 @@ Route::get('/price/edit', function () {
 
 //coa
 Route::get('/coa', [CoaController::class, 'index'])->name('coa');
-
+Route::get('/coa/detail/{id}', [CoaController::class, 'show'])->name('coa.show');
 Route::get('/coa/add', [CoaController::class, 'create'])->name('coa.create');
 Route::post('/coa/add', [CoaController::class, 'store'])->name('coa.store');
 Route::delete('/coa/{id}', [CoaController::class, 'destroy'])->name('coa.destroy');

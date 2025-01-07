@@ -34,7 +34,7 @@
             <tbody>
                 @if (!empty($data['data']['coa']))
                     @foreach ($data['data']['coa'] as $item)
-                        <tr>
+                        <tr style="cursor: pointer" onclick="window.location='{{ route('coa.show', $item['id']) }}';">
                             {{-- <td>{{ $loop->iteration }}</td> --}}
                             <td>{{ $item['id'] }}</td>
                             <td>{{ $item['parent'] }}</td>
@@ -54,8 +54,6 @@
                                         <i class="bi bi-trash"></i>
                                     </button>
                                 </form>
-
-
                             </td>
                         </tr>
                     @endforeach
@@ -65,7 +63,6 @@
                     </tr>
                 @endif
             </tbody>
-
             <script>
                 function confirmDelete(id) {
                     Swal.fire({
