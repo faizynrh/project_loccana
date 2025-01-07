@@ -8,9 +8,6 @@ use RealRashid\SweetAlert\Facades\Alert;
 
 class CoaController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         $tokenurl = 'https://gateway.apicentrum.site/oauth2/token';
@@ -57,18 +54,10 @@ class CoaController extends Controller
         }
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
         return view('masterdata.coa.add');
     }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         $request->validate([
@@ -129,17 +118,10 @@ class CoaController extends Controller
             );
         }
     }
-    /**
-     * Display the specified resource.
-     */
     public function show(string $id)
     {
         //
     }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
 
     public function edit($id)
     {
@@ -165,34 +147,55 @@ class CoaController extends Controller
             'Content-Type' => 'application/json'
         ])->get($apiurl);
 
+        // dd($apiResponse->json());
+
         if ($apiResponse->successful()) {
-            $coa = $apiResponse->json();
-            // if (empty($coa)) {
-            //     return back()->withErrors('Data COA tidak ditemukan.');
-            // }
-            // dd($apiResponse->body());
-            dd($coa);
-            return view('masterdata.coa.edit', [
-                'id' => $id,
-                'coa' => $coa
-            ]);
+            $coa = $apiResponse->json()['data'];
+            // dd($coa);
+            return view('masterdata.coa.edit', compact('coa', 'id'));
         } else {
             return back()->withErrors('Gagal mengambil data COA: ' . $apiResponse->status());
         }
     }
+    public function update(Request $request, string $id)
+    {
+        $tokenurl = 'https://gateway.apicentrum.site/oauth2/token';
+        $apiurl = 'https://gateway-internal.apicentrum.site/t/loccana.com/loccana/masterdata/coa/1.0.0/masterdata/coa/' . $id;
+        $clientid = 'OsqY1VGEgsgEQxLffrDs126FfVsa';
+        $clientsecret = 'AnOU_SENF6BjI1MY32OXmiKQEPMa';
 
+        $tokenResponse = Http::asForm()->post($tokenurl, [
+            'grant_type' => 'client_credentials',
+            'client_id' => $clientid,
+            'client_secret' => $clientsecret,
+        ]);
 
+        if (!$tokenResponse->successful()) {
+            return back()->withErrors('Gagal mendapatkan token');
+        }
 
-    public function update(Request $request, string $id) {}
+        $accessToken = $tokenResponse->json()['access_token'];
 
-    /**
-     * Update the specified resource in storage.
-     */
+        $data = [
+            'parent_account_id' => $request->parent_name === 'tanpaparent' ? null : $request->parent_name,
+            'account_code' => $request->account_code,
+            'description' => $request->keterangancoa,
+            'status' => $request->showhide,
+        ];
 
+        $apiResponse = Http::withHeaders([
+            'Authorization' => 'Bearer ' . $accessToken,
+            'Content-Type' => 'application/json'
+        ])->put($apiurl, $data);
 
-    /**
-     * Remove the specified resource from storage.
-     */
+        // dd($apiResponse->json());
+
+        if ($apiResponse->successful()) {
+            return redirect()->route('coa')->with('success', 'Data COA berhasil diperbarui!');
+        } else {
+            return back()->withErrors('Gagal memperbarui data COA: ' . $apiResponse->status());
+        }
+    }
     public function destroy($id)
     {
         $tokenurl = 'https://gateway.apicentrum.site/oauth2/token';

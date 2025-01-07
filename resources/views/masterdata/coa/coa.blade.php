@@ -2,7 +2,7 @@
 @section('content')
     {{-- <link rel="stylesheet" href="{{ asset('assets/datatables/datatables.min.css') }}"> --}}
     <div class="container mt-3 bg-white rounded-top">
-        <div class="p-3">
+        <div class="p-2">
             <h5 class="fw-bold ">Chart Of Account</h5>
         </div>
         @if (session('success'))
