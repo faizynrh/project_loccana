@@ -55,10 +55,6 @@ Route::put('/coa/{id}', [CoaController::class, 'update'])->name('coa.update');
 
 // uom
 Route::get('/uom', [UomDataController::class, 'index'])->name('uom.index'); //jika api mati maka gunakan yang bawah
-
-// Route::get('/uom', function () {
-//     return view('masterdata.uom.uom');
-// });
-
 Route::get('/uom-tambah', [UomDataController::class, 'create'])->name('uom.create');
 Route::post('/uom-tambah', [UomDataController::class, 'store'])->name('uom.store'); //jika api mati maka gunakan yang bawah'] () {
+Route::delete('/uom-delete/{id}', [UomDataController::class, 'destroy'])->name('uom.destroy');
