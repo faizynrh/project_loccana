@@ -1,11 +1,11 @@
 @extends('layouts.mainlayout')
 @section('content')
-    <div class="container mt-3 bg-white">
-        <h5>Items</h5>
-        <form class="d-flex align-items-center justify-content-between" role="search">
-            <a href="items/add" class="btn btn-primary">+ Tambah Item</a>
-        </form>
-        <table class="table table-striped table-bordered mt-3" id="tableitems">
+    <div class="container mt-3 bg-white rounded-top">
+        <div class="p-1">
+            <h5 class="fw-bold ">Items</h5>
+        </div>
+        <a href="/items/add" class="btn btn-primary fw-bold mt-1 mb-2">+ Tambah Item</a>
+        <table class="table table-striped table-bordered mt-3" id="tablecoa">
             <thead>
                 <tr>
                     <th scope="col">No</th>

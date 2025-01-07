@@ -1,14 +1,10 @@
 @extends('layouts.mainlayout')
 @section('content')
-    <div class="container mt-3">
-        <h5>Price Management</h5>
-        <form class="d-flex align-items-center justify-content-end" role="search">
-            <div class="d-flex align-items-center">
-                <label for="search-input" class="me-2 mb-0">Search:</label>
-                <input id="search-input" class="form-control w-75" type="search" aria-label="Search">
-            </div>
-        </form>
-        <table class="table table-striped table-bordered mt-3">
+    <div class="container mt-3 bg-white rounded-top">
+        <div class="p-2">
+            <h5 class="fw-bold ">Price Management</h5>
+        </div>
+        <table class="table table-striped table-bordered mt-3" id="tablecoa">
             <thead>
                 <tr>
                     <th scope="col">No</th>
@@ -24,12 +20,12 @@
             <tbody>
                 <tr>
                     <th scope="row">1</th>
-                    <td>Mark</td>
-                    <td>Otto</td>
-                    <td>@mdo</td>
-                    <td>Mark</td>
-                    <td>Otto</td>
-                    <td>@mdo</td>
+                    <td>AIT0101</td>
+                    <td>Aldes 50/10 WG 20.00 gr</td>
+                    <td>PT. ADVANSIA INDOTANI</td>
+                    <td>1.724.118</td>
+                    <td>1.670.000</td>
+                    <td>Setuju</td>
                     <td><a href="price/edit" class="btn btn-sm btn-warning" title="Edit">
                             <i class="bi bi-pencil"></i>
                         </a>
@@ -69,20 +65,5 @@
                 </tr>
             </tbody>
         </table>
-        <nav aria-label="...">
-            <ul class="pagination justify-content-end">
-                <li class="page-item disabled">
-                    <a class="page-link">Previous</a>
-                </li>
-                <li class="page-item"><a class="page-link" href="#">1</a></li>
-                <li class="page-item active" aria-current="page">
-                    <a class="page-link" href="#">2</a>
-                </li>
-                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                <li class="page-item">
-                    <a class="page-link" href="#">Next</a>
-                </li>
-            </ul>
-        </nav>
     </div>
 @endsection
