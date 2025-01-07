@@ -7,6 +7,16 @@
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         @endif
+
+        @if ($errors->any())
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                @foreach ($errors->all() as $error)
+                    <p>{{ $error }}</p>
+                @endforeach
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
+
         <!-- Main Content -->
 
         <h3 style="font-size: 18px; padding-top:25px; font-weight: 700">Unit of Measurement</h3>
@@ -35,12 +45,18 @@
                         <td>{{ $item['symbol'] ?? '-' }}</td>
                         <td>{{ $item['description'] ?? '-' }}</td>
                         <td>
-                            <a href="/uom-edit/{{ $item['id'] }}" class="btn btn-warning">
+                            <a href="/uom-edit/{{ $item['id'] }}" class="btn btn-sm btn-warning mb-2">
                                 <i class="bi bi-pencil"></i>
                             </a>
-                            <button class="btn btn-danger">
-                                <i class="bi bi-trash"></i>
-                            </button>
+                            <form action="{{ route('uom.destroy', $item['id']) }}" method="POST"
+                                id="delete{{ $item['id'] }}" style="display:inline;">
+                                @csrf
+                                @method('DELETE')
+                                <button type="button" class="btn btn-sm btn-danger mb-2" title="Hapus"
+                                    onclick="confirmDelete({{ $item['id'] }})">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </form>
                         </td>
                     </tr>
                 @endforeach
@@ -58,4 +74,20 @@
             Showing {{ $filteredItems }} of {{ $totalItems }} entries
         </div> --}}
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        function confirmDelete(id) {
+            Swal.fire({
+                title: 'Apakah kamu yakin?',
+                text: 'Data ini akan dihapus secara permanen!',
+                icon: 'warning',
+                showCancelButton: true,
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('delete' + id).submit();
+                }
+            });
+        }
+    </script>
 @endsection
