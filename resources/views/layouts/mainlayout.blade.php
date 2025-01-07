@@ -14,13 +14,13 @@
     <div id="sidebar" class="bg-white border-end"
         style="width: 220px; min-height: 100vh; transition: width 0.3s; overflow-y:auto; overflow-x: hidden;">
         <div class="p-3">
-            <a href="/home">
+            <a href="/">
                 <img id="sidebar-logo" class="fixed-top" src="{{ asset('assets/images/name.png') }}"
                     style="width: 165px; position: sticky; top: 0; z-index: 10; background-color: white;" alt=""
                     srcset="">
             </a>
             <ul class="list-unstyled mt-4">
-                <li><a href="/home" class="text-decoration-none d-block py-2" style="color: #919FAC;">Home</a></li>
+                <li><a href="/" class="text-decoration-none d-block py-2" style="color: #919FAC;">Home</a></li>
                 <li><a href="#" class="text-decoration-none d-block py-2 mb-2" style="color: #919FAC;">Profile</a>
                 </li>
                 <li class="nav-item">
