@@ -61,3 +61,4 @@ Route::get('/uom', [UomDataController::class, 'index'])->name('uom.index'); //ji
 Route::get('/uom-tambah', [UomDataController::class, 'create'])->name('uom.create');
 Route::post('/uom-tambah', [UomDataController::class, 'store'])->name('uom.store'); //jika api mati maka gunakan yang bawah'] () {
 Route::delete('/uom-delete/{id}', [UomDataController::class, 'destroy'])->name('uom.destroy');
+Route::get('/uom/edit/{id}', [UomDataController::class, 'edit'])->name('uom.edit');
