@@ -103,6 +103,28 @@
                                 style="color: #919FAC;">Report</a></li>
                     </ul>
                 </div>
+                <li class="nav-item">
+                    <a class="nav-link text-decoration-none d-block py-2 position-relative"
+                        style="color: #919FAC; cursor: pointer;" data-bs-toggle="collapse" href="#PenjualanCollapse"
+                        role="button" aria-expanded="false" aria-controls="PenjualanCollapse">
+                        <i class="bi bi-pc-display me-2"></i> Penjualan
+                        <i class="bi bi-chevron-down position-absolute end-0 top-50 translate-middle-y"></i>
+                    </a>
+                </li>
+                <div class="collapse" id="PenjualanCollapse">
+                    <ul class="nav flex-column ps-3">
+                        <li><a href="#" class="nav-link text-decoration-none d-block py-2"
+                                style="color: #919FAC;">Penjualan</a></li>
+                        <li><a href="#" class="nav-link text-decoration-none d-block py-2"
+                                style="color: #919FAC;">Range Price Management</a></li>
+                        <li><a href="#" class="nav-link text-decoration-none d-block py-2"
+                                style="color: #919FAC;">Retur</a></li>
+                        <li><a href="#" class="nav-link text-decoration-none d-block py-2"
+                                style="color: #919FAC;">Dasar Penjualan</a></li>
+                        <li><a href="#" class="nav-link text-decoration-none d-block py-2"
+                                style="color: #919FAC;">Report</a></li>
+                    </ul>
+                </div>
             </ul>
         </div>
     </div>
@@ -129,7 +151,6 @@
                 </div>
             </div>
         </nav>
-
         <div class="container flex-grow-1 p-3 bg-body-tertiary">
             @yield('content')
         </div>
@@ -151,15 +172,18 @@
                 logo.src = '{{ asset('assets/images/logo.png') }}';
                 logo.style.width = '55px';
 
+                // Mengubah label untuk Master Data, Procurement, Inventory, dan Penjualan
                 const headersToHide = sidebar.querySelectorAll(
-                    'a[href="#masterDataCollapse"], a[href="#procurementCollapse"], a[href="#inventoryCollapse"]'
+                    'a[href="#masterDataCollapse"], a[href="#procurementCollapse"], a[href="#inventoryCollapse"], a[href="#PenjualanCollapse"]'
                 );
                 headersToHide.forEach(header => {
-                    header.innerHTML = header.innerHTML.replace(/Master Data|Procurement|Inventory/g, '');
+                    header.innerHTML = header.innerHTML.replace(
+                        /Master Data|Procurement|Inventory|Penjualan/g, '');
                 });
 
                 const collapseElements = sidebar.querySelectorAll(
-                    '#masterDataCollapse, #procurementCollapse, #inventoryCollapse');
+                    '#masterDataCollapse, #procurementCollapse, #inventoryCollapse, #PenjualanCollapse'
+                );
                 collapseElements.forEach(collapse => {
                     collapse.classList.remove('show');
                 });
@@ -169,8 +193,9 @@
                 logo.src = '{{ asset('assets/images/name.png') }}';
                 logo.style.width = '165px';
 
+                // Mengembalikan label untuk Master Data, Procurement, Inventory, dan Penjualan
                 const headersToRestore = sidebar.querySelectorAll(
-                    'a[href="#masterDataCollapse"], a[href="#procurementCollapse"], a[href="#inventoryCollapse"]'
+                    'a[href="#masterDataCollapse"], a[href="#procurementCollapse"], a[href="#inventoryCollapse"], a[href="#PenjualanCollapse"]'
                 );
                 headersToRestore.forEach(header => {
                     if (header.getAttribute('href') === '#masterDataCollapse') {
@@ -182,6 +207,9 @@
                     } else if (header.getAttribute('href') === '#inventoryCollapse') {
                         header.innerHTML = header.innerHTML.includes('Inventory') ? header.innerHTML :
                             header.innerHTML + ' Inventory';
+                    } else if (header.getAttribute('href') === '#PenjualanCollapse') {
+                        header.innerHTML = header.innerHTML.includes('Penjualan') ? header.innerHTML :
+                            header.innerHTML + ' Penjualan';
                     }
                 });
             }
