@@ -140,6 +140,7 @@ class CoaController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
+
     public function edit($id)
     {
         $tokenurl = 'https://gateway.apicentrum.site/oauth2/token';
@@ -169,7 +170,7 @@ class CoaController extends Controller
             // if (empty($coa)) {
             //     return back()->withErrors('Data COA tidak ditemukan.');
             // }
-            dd($apiResponse->body());
+            // dd($apiResponse->body());
             dd($coa);
             return view('masterdata.coa.edit', [
                 'id' => $id,

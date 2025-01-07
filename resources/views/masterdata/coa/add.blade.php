@@ -1,7 +1,10 @@
 @extends('layouts.mainlayout')
 @section('content')
     <div class="container mt-3 bg-white rounded-top">
-        <h5 class="mb-3 text-primary fw-bold text-decoration-underline">Tambah Chart Of Account</h5>
+        <div class="p-3">
+            <h5 class="mb-3 text-primary fw-bold text-decoration-underline" style="text-underline-offset: 13px; ">
+                Tambah Chart Of Account</h5>
+        </div>
         <p>Harap isi data yang telah ditandai dengan <span class="text-danger bg-light px-1">*</span>, dan masukkan data
             dengan benar.</p>
         @if (session('success'))

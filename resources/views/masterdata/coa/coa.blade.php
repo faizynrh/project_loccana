@@ -1,9 +1,9 @@
 @extends('layouts.mainlayout')
 @section('content')
     <link rel="stylesheet" href="{{ asset('assets/datatables/datatables.min.css') }}">
-    <div class="container mt-2 bg-white rounded-top">
+    <div class="container mt-3 bg-white rounded-top">
         <div class="p-3">
-            <h5>Chart Of Account</h5>
+            <h5 class="fw-bold ">Chart Of Account</h5>
         </div>
         @if (session('success'))
             <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -35,10 +35,11 @@
                 @if (!empty($data['data']['coa']))
                     @foreach ($data['data']['coa'] as $item)
                         <tr>
-                            <td>{{ $loop->iteration }}</td>
-                            <td>{{ $item['id'] ?? '-' }}</td>
-                            <td>{{ $item['coa'] ?? '-' }}</td>
-                            <td>{{ $item['description'] ?? '-' }}</td>
+                            {{-- <td>{{ $loop->iteration }}</td> --}}
+                            <td>{{ $item['id'] }}</td>
+                            <td>{{ $item['parent'] }}</td>
+                            <td>{{ $item['coa'] }}</td>
+                            <td>{{ $item['description'] }}</td>
                             <td>
                                 <a href="{{ route('coa.edit', $item['id']) }}" class="btn btn-sm btn-warning mb-2"
                                     title="Edit">

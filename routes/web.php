@@ -14,13 +14,16 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () {
+//     return view('welcome');
+// });
 
 //home
-Route::get('/home', function () {
+Route::get('/', function () {
     return view('home');
+});
+Route::get('/coba', function () {
+    return view('masterdata.coa.edit');
 });
 
 //items
