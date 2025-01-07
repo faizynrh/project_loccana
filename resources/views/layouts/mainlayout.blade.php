@@ -10,15 +10,17 @@
     <title>Distributor & Sales System</title>
 </head>
 
-<body class="d-flex" style="height: 100vh; margin: 0;">
+<body class="d-flex bg-body-tertiary" style="height: 100vh; margin: 0;">
     <div id="sidebar" class="bg-white border-end"
-        style="width: 220px; min-height: 100vh; transition: width 0.3s; overflow-y:auto">
+        style="width: 220px; min-height: 100vh; transition: width 0.3s; overflow-y:auto; overflow-x: hidden;">
         <div class="p-3">
-            <img id="sidebar-logo" src="{{ asset('assets/images/name.png') }}"
-                style="width: 165px; position: sticky; top: 0; z-index: 10; background-color: white;" alt=""
-                srcset="">
-            <ul class="list-unstyled">
-                <li><a href="#" class="text-decoration-none d-block py-2" style="color: #919FAC;">Home</a></li>
+            <a href="/home">
+                <img id="sidebar-logo" class="fixed-top" src="{{ asset('assets/images/name.png') }}"
+                    style="width: 165px; position: sticky; top: 0; z-index: 10; background-color: white;" alt=""
+                    srcset="">
+            </a>
+            <ul class="list-unstyled mt-4">
+                <li><a href="/home" class="text-decoration-none d-block py-2" style="color: #919FAC;">Home</a></li>
                 <li><a href="#" class="text-decoration-none d-block py-2 mb-2" style="color: #919FAC;">Profile</a>
                 </li>
                 <li class="nav-item">
@@ -135,6 +137,7 @@
         </footer>
     </div>
 
+
     <script>
         const toggleSidebar = document.getElementById('toggleSidebar');
         const sidebar = document.getElementById('sidebar');
@@ -144,11 +147,41 @@
             if (sidebar.style.width === '220px' || sidebar.style.width === '') {
                 sidebar.style.width = '90px';
                 logo.src = '{{ asset('assets/images/logo.png') }}';
-                logo.style.width = '55px'
+                logo.style.width = '55px';
+
+                const headersToHide = sidebar.querySelectorAll(
+                    'a[href="#masterDataCollapse"], a[href="#procurementCollapse"], a[href="#inventoryCollapse"]'
+                );
+                headersToHide.forEach(header => {
+                    header.innerHTML = header.innerHTML.replace(/Master Data|Procurement|Inventory/g, '');
+                });
+
+                const collapseElements = sidebar.querySelectorAll(
+                    '#masterDataCollapse, #procurementCollapse, #inventoryCollapse');
+                collapseElements.forEach(collapse => {
+                    collapse.classList.remove('show');
+                });
+
             } else {
                 sidebar.style.width = '220px';
                 logo.src = '{{ asset('assets/images/name.png') }}';
-                logo.style.width = '165px'
+                logo.style.width = '165px';
+
+                const headersToRestore = sidebar.querySelectorAll(
+                    'a[href="#masterDataCollapse"], a[href="#procurementCollapse"], a[href="#inventoryCollapse"]'
+                );
+                headersToRestore.forEach(header => {
+                    if (header.getAttribute('href') === '#masterDataCollapse') {
+                        header.innerHTML = header.innerHTML.includes('Master Data') ? header.innerHTML :
+                            header.innerHTML + ' Master Data';
+                    } else if (header.getAttribute('href') === '#procurementCollapse') {
+                        header.innerHTML = header.innerHTML.includes('Procurement') ? header.innerHTML :
+                            header.innerHTML + ' Procurement';
+                    } else if (header.getAttribute('href') === '#inventoryCollapse') {
+                        header.innerHTML = header.innerHTML.includes('Inventory') ? header.innerHTML :
+                            header.innerHTML + ' Inventory';
+                    }
+                });
             }
         });
     </script>
