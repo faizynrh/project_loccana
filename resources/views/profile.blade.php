@@ -7,8 +7,7 @@
         </div>
 
         <div class="text-center" style="margin-bottom: 40px;">
-            <img src="assets/images/profile.jpg" alt="Profile Picture" class="rounded-circle"
-                style="width:350px; height: auto;">
+            <img src="assets/images/profile.jpg" alt="Profile Picture" class="rounded-circle" style="width:350px;">
         </div>
 
         <form action="#" method="POST" enctype="multipart/form-data">

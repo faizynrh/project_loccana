@@ -68,7 +68,12 @@ Route::get('/uom-tambah', [UomDataController::class, 'create'])->name('uom.creat
 Route::post('/uom-tambah', [UomDataController::class, 'store'])->name('uom.store'); //jika api mati maka gunakan yang bawah'] () {
 Route::delete('/uom-delete/{id}', [UomDataController::class, 'destroy'])->name('uom.destroy');
 Route::get('/uom/edit/{id}', [UomDataController::class, 'edit'])->name('uom.edit');
+Route::put('/uom/update/{id}', [UomDataController::class, 'update'])->name('uom.update');
 
+// principal
+Route::get('/principal', function () {
+    return view('masterdata.principal.principal');
+});
 
 //gudang
 route::get('/gudang', function () {

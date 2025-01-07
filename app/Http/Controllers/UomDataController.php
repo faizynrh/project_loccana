@@ -37,10 +37,13 @@ class UomDataController extends Controller
             'Content-Type' => 'application/json'
         ])->post($apiurl, []);
 
+        // dd($apiResponse->json());
+
         if ($apiResponse->successful()) {
             $data = $apiResponse->json();
             // dd($data);
 
+            // dd($data);
             return view('masterdata.uom.uom', ['data' => $data['data']]);
         } else {
             // return response([
@@ -94,6 +97,7 @@ class UomDataController extends Controller
 
         $responseData = $apiResponse->json();
 
+        // dd($data);
         if ($apiResponse->successful() && isset($responseData['success']) && $responseData['success'] === true) {
             return redirect()->route('uom.index')
                 ->with('success', $responseData['message'] ?? 'Data UoM berhasil ditambahkan.');
@@ -176,6 +180,8 @@ class UomDataController extends Controller
             'Authorization' => 'Bearer ' . $accessToken
         ])->get($apiurl);
 
+        // dd($apiResponse->json());
+
         if ($apiResponse->successful()) {
             $uomData = $apiResponse->json();
 
@@ -186,6 +192,46 @@ class UomDataController extends Controller
             }
         } else {
             return back()->withErrors('Gagal mengambil data UoM dari API.');
+        }
+    }
+
+    public function update(Request $request, $id)
+    {
+        $tokenurl = 'https://gateway.apicentrum.site/oauth2/token';
+        $apiurl = "https://gateway-internal.apicentrum.site/t/loccana.com/loccana/masterdata/1.0.0/uoms/{$id}";
+        $clientid = 'OsqY1VGEgsgEQxLffrDs126FfVsa';
+        $clientsecret = 'AnOU_SENF6BjI1MY32OXmiKQEPMa';
+
+        $tokenResponse = Http::asForm()->post($tokenurl, [
+            'grant_type' => 'client_credentials',
+            'client_id' => $clientid,
+            'client_secret' => $clientsecret,
+        ]);
+
+        if (!$tokenResponse->successful()) {
+            return back()->withErrors('Gagal mendapatkan token');
+        }
+
+        $accessToken = $tokenResponse->json()['access_token'];
+
+        $data = [
+            'name' => $request->name,
+            'description' => $request->description,
+            'status' => $request->status,
+        ];
+
+        $apiResponse = Http::withHeaders([
+            'Authorization' => 'Bearer ' . $accessToken,
+            'Content-Type' => 'application/json'
+        ])->put($apiurl, $data);
+
+        if ($apiResponse->successful()) {
+            return redirect()->route('uom.index')
+                ->with('success', 'Data UoM berhasil diperbarui.');
+        } else {
+            return back()->withErrors(
+                'Gagal memperbarui data: ' . $apiResponse->body()
+            );
         }
     }
 }
