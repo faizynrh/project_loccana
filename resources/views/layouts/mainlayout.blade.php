@@ -21,7 +21,8 @@
             </a>
             <ul class="list-unstyled mt-4">
                 <li><a href="/" class="text-decoration-none d-block py-2" style="color: #919FAC;">Home</a></li>
-                <li><a href="#" class="text-decoration-none d-block py-2 mb-2" style="color: #919FAC;">Profile</a>
+                <li><a href="/profile" class="text-decoration-none d-block py-2 mb-2"
+                        style="color: #919FAC;">Profile</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link text-decoration-none d-block py-2 position-relative"
@@ -106,7 +107,7 @@
     </div>
 
     <div id="konten" class="d-flex flex-column flex-grow-1 w-100" style="overflow-y: auto; height: 100vh;">
-        <nav class="navbar navbar-expand-lg" style="background-color: #006DF0">
+        <nav class="navbar navbar-expand-lg" style="background-color: #006DF0; position: sticky; top: 0;">
             <div class="container-fluid">
                 <span class="navbar-brand" id="toggleSidebar">
                     <i class="bi bi-list text-white" style="font-size: 24px; cursor: pointer;"></i>
@@ -120,7 +121,7 @@
                             Lorem
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end">
-                            <li><a class="dropdown-item" href="#">My Profile</a></li>
+                            <li><a class="dropdown-item" href="/profile">My Profile</a></li>
                             <li><a class="dropdown-item" href="#">Logout</a></li>
                         </ul>
                     </div>
