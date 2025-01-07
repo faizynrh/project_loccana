@@ -22,7 +22,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         @endif
-        <form action="{{ route('coa.store') }}" method="POST">
+        <form action="{{ route('coa.store') }}" method="POST" id="createForm">
             @csrf
             <div class="row mb-3 align-items-center">
                 <div class="col-md-3">
@@ -57,12 +57,30 @@
                 </div>
             </div>
 
-            <div class="row">
+            <div class="row mb-3">
                 <div class="col-md-12 text-end">
-                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <button type="button" class="btn btn-primary" id="submitButton">Submit</button>
                     <button type="reset" class="btn btn-secondary ms-2">Batal</button>
                 </div>
             </div>
         </form>
+
+        <script>
+            document.getElementById('submitButton').addEventListener('click', function(event) {
+                Swal.fire({
+                    title: 'Apakah Anda yakin?',
+                    text: 'Data yang dimasukkan akan disimpan!',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Ya, Simpan!',
+                    cancelButtonText: 'Batal',
+                    reverseButtons: true
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        document.getElementById('createForm').submit();
+                    }
+                });
+            });
+        </script>
     </div>
 @endsection

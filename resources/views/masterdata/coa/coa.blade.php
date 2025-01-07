@@ -55,22 +55,7 @@
                                     </button>
                                 </form>
 
-                                <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-                                <script>
-                                    function confirmDelete(id) {
-                                        Swal.fire({
-                                            title: 'Apakah kamu yakin?',
-                                            text: 'Data ini akan dihapus secara permanen!',
-                                            icon: 'warning',
-                                            showCancelButton: true,
-                                            reverseButtons: true
-                                        }).then((result) => {
-                                            if (result.isConfirmed) {
-                                                document.getElementById('delete' + id).submit();
-                                            }
-                                        });
-                                    }
-                                </script>
+
                             </td>
                         </tr>
                     @endforeach
@@ -81,7 +66,21 @@
                 @endif
             </tbody>
 
-
+            <script>
+                function confirmDelete(id) {
+                    Swal.fire({
+                        title: 'Apakah kamu yakin?',
+                        text: 'Data ini akan dihapus secara permanen!',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        reverseButtons: true
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            document.getElementById('delete' + id).submit();
+                        }
+                    });
+                }
+            </script>
 
             {{-- <tbody>
                 @if (!empty($data))

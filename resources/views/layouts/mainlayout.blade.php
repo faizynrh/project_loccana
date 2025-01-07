@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="icon" href="{{ asset('assets/images/icon.png') }}" type="image/png">
+    <link rel="stylesheet" href="{{ asset('assets/sweetalert/sweetalert2.min.css') }}">
     @vite('resources/js/app.js')
     <title>Distributor & Sales System</title>
 </head>
@@ -138,7 +139,7 @@
         </footer>
     </div>
 
-
+    <script src="{{ asset('assets/sweetalert/sweetalert2.all.min.js') }}"></script>
     <script>
         const toggleSidebar = document.getElementById('toggleSidebar');
         const sidebar = document.getElementById('sidebar');

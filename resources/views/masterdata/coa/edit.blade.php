@@ -11,7 +11,6 @@
         <form action="{{ route('coa.update', $id) }}" method="post" id="updateForm">
             @csrf
             @method('put')
-
             <div class="row mb-3 align-items-center">
                 <div class="col-md-3">
                     <label for="parent_name" class="form-label fw-bold mb-0">Parent <span
@@ -23,10 +22,7 @@
                         <option value="tanpaparent" {{ $coa['parent_account_id'] === null ? 'selected' : '' }}>
                             -- Tanpa Parent --
                         </option>
-                        <option value="{{ $coa['parent_account_id'] }}"
-                            {{ $coa['parent_account_id'] !== null ? 'selected' : '' }}>
-                            {{ $coa['parent_name'] ?? 'Parent Tidak Diketahui' }}
-                        </option>
+                        <option value="lorem" {{ $coa['parent_account_id'] === 1 ? 'selected' : '' }}>lorem</option>
                     </select>
                 </div>
             </div>
@@ -73,7 +69,6 @@
             </div>
         </form>
 
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script>
             document.getElementById('submitButton').addEventListener('click', function(event) {
                 Swal.fire({
