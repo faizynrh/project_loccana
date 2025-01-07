@@ -20,9 +20,9 @@
             </div>
         @endif
 
-        <form action="{{ route('uom.store') }}" method="POST">
+        <form action="{{ route('uom.update', $uom['id']) }}" method="POST">
             @csrf
-
+            @method('PUT')
             <div class="form-container">
                 <div class="row mb-3 align-items-center">
                     <div class="col-md-3">
@@ -41,7 +41,7 @@
                     </div>
                     <div class="col-md-9">
                         <input type="text" placeholder="Simbol" class="form-control" name="uom_code"
-                            value="{{ $uom['symbol'] }}" required>
+                            {{-- {{ $uom['symbol'] }} --}} value="" required>
                     </div>
                 </div>
                 <div class="row mb-3 align-items-center">
@@ -50,7 +50,7 @@
                                 class="text-danger">*</span></label>
                     </div>
                     <div class="col-md-9">
-                        <textarea cols="30" rows="4" name="description" class="form-control">{{-- {{ $uom['description'] }} --}}</textarea>
+                        <textarea cols="30" rows="4" name="description" class="form-control">{{ $uom['description'] }}</textarea>
 
                     </div>
                 </div>

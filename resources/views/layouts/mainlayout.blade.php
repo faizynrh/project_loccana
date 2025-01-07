@@ -17,8 +17,8 @@
         <div class="p-3">
             <a href="/">
                 <img id="sidebar-logo" class="fixed-top" src="{{ asset('assets/images/name.png') }}"
-                    style="width: 165px; position: sticky; top: 0; z-index: 10; background-color: white;" alt=""
-                    srcset="">
+                    style="width: 165px; position: sticky; top: 0; z-index: 999; background-color: white;"
+                    alt="" srcset="">
             </a>
             <ul class="list-unstyled mt-4">
                 <li><a href="/" class="text-decoration-none d-block py-2" style="color: #919FAC;">Home</a></li>
@@ -43,7 +43,7 @@
                                 style="color: #919FAC;">UOM</a></li>
                         <li><a href="/price" class="nav-link text-decoration-none d-block py-2"
                                 style="color: #919FAC;">Price</a></li>
-                        <li><a href="#" class="nav-link text-decoration-none d-block py-2"
+                        <li><a href="/principal" class="nav-link text-decoration-none d-block py-2"
                                 style="color: #919FAC;">Principal</a></li>
                         <li><a href="#" class="nav-link text-decoration-none d-block py-2"
                                 style="color: #919FAC;">Customer</a></li>
