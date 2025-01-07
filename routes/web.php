@@ -22,6 +22,12 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('home');
 });
+
+//profile
+Route::get('/profile', function () {
+    return view('profile');
+});
+
 Route::get('/coba', function () {
     return view('masterdata.coa.edit');
 });
