@@ -16,4 +16,10 @@ $(document).ready(function () {
 $(document).ready(function () {
     $('#tableuom').DataTable();
 });
+$(document).ready(function () {
+    $('#tableinformasi').DataTable();
+});
+$(document).ready(function () {
+    $('#tableprincipal').DataTable();
+});
 

@@ -75,8 +75,32 @@ Route::get('/uom/edit/{id}', [UomDataController::class, 'edit'])->name('uom.edit
 Route::put('/uom/update/{id}', [UomDataController::class, 'update'])->name('uom.update');
 Route::get('/uom/show/{id}', [UomDataController::class, 'show'])->name('uom.show');
 
+// informasi
+route::get('/informasi', function () {
+    return view('masterdata.informasi.informasi');
+});
+route::get('/tambah-informasi', function () {
+    return view('masterdata.informasi.tambah-informasi');
+});
 
+//customer
+route::get('/customer', function () {
+    return view('masterdata.customer.customer');
+});
+route::get('/customer/add', function () {
+    return view('masterdata.customer.add-customer');
+});
+route::get('/customer/edit', function () {
+    return view('masterdata.customer.edit-customer');
+});
 
+//principal
+route::get('/principal', function () {
+    return view('masterdata.principal.principal');
+});
+route::get('/principal/add', function () {
+    return view('masterdata.principal.tambah-principal');
+});
 
 
 //gudang
