@@ -227,7 +227,7 @@
                 );
                 headersToHide.forEach(header => {
                     header.innerHTML = header.innerHTML.replace(
-                        /Master Data|Procurement|Inventory|Penjualan|Accounting|CashBank/g, '');
+                        /Master Data|Procurement|Inventory|Penjualan|Cash Bank|Accounting|/g, '');
                 });
 
                 const collapseElements = sidebar.querySelectorAll(
@@ -262,8 +262,8 @@
                         header.innerHTML = header.innerHTML.includes('Accounting') ? header.innerHTML :
                             header.innerHTML + ' Accounting';
                     } else if (header.getAttribute('href') === '#CashBankCollapse') {
-                        header.innerHTML = header.innerHTML.includes('CashBank') ? header.innerHTML :
-                            header.innerHTML + ' CashBank';
+                        header.innerHTML = header.innerHTML.includes('Cash Bank') ? header.innerHTML :
+                            header.innerHTML + ' Cash Bank';
                     }
                 });
             }
