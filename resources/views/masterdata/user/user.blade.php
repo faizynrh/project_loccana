@@ -22,7 +22,8 @@
             <tbody>
                 <tr>
                     <td>1</td>
-                    <td></td>
+                    <td><img src="https://via.placeholder.com/40" alt="User" class="rounded-circle me-2"
+                            style="width: 40px; height: 40px;"></td>
                     <td>Adinda Nazmilla</td>
                     <td>dinda</td>
                     <td>Manager</td>

@@ -122,3 +122,6 @@ route::get('/gudang/edit', function () {
 route::get('/user', function () {
     return view('masterdata.user.user');
 });
+route::get('/user/add', function () {
+    return view('masterdata.user.add');
+});
