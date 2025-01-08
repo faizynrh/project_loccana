@@ -53,7 +53,7 @@
                                 @csrf
                                 @method('DELETE')
                                 <button type="button" class="btn btn-sm btn-danger mb-2" title="Hapus"
-                                    onclick="confirmDelete({{ $item['id'] }})">
+                                    onclick="event.stopPropagation(); confirmDelete({{ $item['id'] }})">
                                     <i class="bi bi-trash"></i>
                                 </button>
                             </form>
