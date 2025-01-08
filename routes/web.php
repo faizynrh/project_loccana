@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CoaController;
+use App\Http\Controllers\ItemController;
 use App\Http\Controllers\Principal;
 use App\Http\Controllers\UomDataController;
 use App\Http\Controllers\PrincipalController;
@@ -34,9 +35,11 @@ Route::get('/coba', function () {
 });
 
 //items
-Route::get('/items', function () {
-    return view('masterdata.items.items');
-});
+// Route::get('/items', function () {
+//     return view('masterdata.items.items');
+// });
+Route::get('/items', [ItemController::class, 'index'])->name('items');
+
 Route::get('/items/add', function () {
     return view('masterdata.items.add');
 });

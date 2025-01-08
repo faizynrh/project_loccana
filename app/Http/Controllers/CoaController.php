@@ -47,10 +47,8 @@ class CoaController extends Controller
 
             if ($apiResponse->successful()) {
                 $data = $apiResponse->json();
-                // dd($apiResponse->json());
                 return view('masterdata.coa.coa', ['data' => $data]);
             } else {
-                // return view('masterdata.coa.coa');
                 return response()->json([
                     'message' => 'Failed to fetch data from API',
                     'status' => $apiResponse->status(),
