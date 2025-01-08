@@ -1,7 +1,9 @@
 <?php
 
 use App\Http\Controllers\CoaController;
+use App\Http\Controllers\Principal;
 use App\Http\Controllers\UomDataController;
+use App\Http\Controllers\PrincipalController;
 use Illuminate\Support\Facades\Route;
 /*
 |--------------------------------------------------------------------------
@@ -69,10 +71,9 @@ Route::delete('/uom-delete/{id}', [UomDataController::class, 'destroy'])->name('
 Route::get('/uom/edit/{id}', [UomDataController::class, 'edit'])->name('uom.edit');
 Route::put('/uom/update/{id}', [UomDataController::class, 'update'])->name('uom.update');
 
-// principal
-Route::get('/principal', function () {
-    return view('masterdata.principal.principal');
-});
+
+
+
 
 //gudang
 route::get('/gudang', function () {
