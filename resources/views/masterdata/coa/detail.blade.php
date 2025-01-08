@@ -6,7 +6,12 @@
                 Detail Chart Of Account
             </h5>
         </div>
-        {{-- <div class="row mb-3 align-items-center">
+        <div class="row mb-3">
+            <div class="col-md-12 text-end">
+                <a href="{{ route('coa') }}" class="btn btn-primary">Back</a>
+            </div>
+        </div>
+        <div class="row mb-3 align-items-center">
             <div class="col-md-3">
                 <label for="parent_name" class="form-label fw-bold mb-0">Parent <span class="text-danger">*</span></label>
             </div>
@@ -51,9 +56,9 @@
                     <option value="hide">Hide</option>
                 </select>
             </div>
-        </div> --}}
+        </div>
 
-        <div class="row mb-3">
+        {{-- <div class="row mb-3">
             <div class="col-md-12 text-end">
                 <a href="{{ route('coa') }}" class="btn btn-primary">Back</a>
             </div>
@@ -175,7 +180,7 @@
                 <input type="text" class="form-control" id="company_id" name="company_id"
                     value="{{ $coa['company_id'] ?? '' }}" readonly>
             </div>
-        </div>
+        </div> --}}
 
 
         <script>
