@@ -39,7 +39,7 @@
             {{-- {{ dd($data) }} --}}
             @if (!empty($data['table']))
                 @foreach ($data['table'] as $index => $item)
-                    <tr>
+                    <tr style="cursor: pointer" onclick="window.location='{{ route('uom.show', $item['id']) }}';">
                         <td>{{ $loop->iteration }}</td>
                         <td>{{ $item['name'] ?? '-' }}</td>
                         <td>{{ $item['symbol'] ?? '-' }}</td>

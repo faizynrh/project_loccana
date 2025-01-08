@@ -234,4 +234,48 @@ class UomDataController extends Controller
             );
         }
     }
+    public function show($id)
+    {
+        $tokenurl = 'https://gateway.apicentrum.site/oauth2/token';
+        $apiurl = "https://gateway-internal.apicentrum.site/t/loccana.com/loccana/masterdata/1.0.0/uoms/{$id}";
+        $clientid = 'OsqY1VGEgsgEQxLffrDs126FfVsa';
+        $clientsecret = 'AnOU_SENF6BjI1MY32OXmiKQEPMa';
+
+        // Get token
+        $tokenResponse = Http::asForm()->post($tokenurl, [
+            'grant_type' => 'client_credentials',
+            'client_id' => $clientid,
+            'client_secret' => $clientsecret,
+        ]);
+
+        if (!$tokenResponse->successful()) {
+            return back()->withErrors('Gagal mendapatkan token.');
+        }
+
+        $tokenData = $tokenResponse->json();
+        if (!isset($tokenData['access_token'])) {
+            return back()->withErrors('Token tidak tersedia dalam respons.');
+        }
+
+        $accessToken = $tokenData['access_token'];
+
+        // Get UoM data
+        $apiResponse = Http::withHeaders([
+            'Authorization' => 'Bearer ' . $accessToken
+        ])->get($apiurl);
+
+        // dd($apiResponse->json());
+
+        if ($apiResponse->successful()) {
+            $uomData = $apiResponse->json();
+
+            if (isset($uomData['data'])) {
+                return view('masterdata.uom.detail-uom', ['uom' => $uomData['data']]);
+            } else {
+                return back()->withErrors('Data UoM tidak ditemukan.');
+            }
+        } else {
+            return back()->withErrors('Gagal mengambil data UoM dari API.');
+        }
+    }
 }

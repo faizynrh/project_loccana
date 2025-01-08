@@ -20,7 +20,7 @@
             </div>
         @endif
 
-        <form action="{{ route('uom.store') }}" method="POST">
+        <form action="{{ route('uom.store') }}" method="POST" id="addForm">
             @csrf
 
             <div class="form-container">
@@ -54,12 +54,28 @@
                 <div class="row mb-3 align-items-center">
                     <div class="col-md-3"></div> <!-- Kosongkan kolom ini agar button sejajar di sebelah kanan -->
                     <div class="col-md-9 d-flex gap-3"> <!-- Gunakan flexbox agar button sejajar -->
-                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <button type="button" class="btn btn-primary" id="submitButton">Submit</button>
                         <button type="button" class="btn btn-secondary" onclick="history.back()">Batal</button>
                     </div>
                 </div>
             </div>
         </form>
     </div>
-
+    <script>
+        document.getElementById('submitButton').addEventListener('click', function(event) {
+            Swal.fire({
+                title: 'Apakah kamu yakin?',
+                text: 'Data yang dimasukkan akan disimpan!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Ya, Simpan!',
+                cancelButtonText: 'Batal',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('addForm').submit();
+                }
+            });
+        });
+    </script>
 @endsection
