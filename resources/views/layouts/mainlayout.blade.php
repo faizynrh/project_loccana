@@ -51,7 +51,7 @@
                                 style="color: #919FAC;">Informasi</a></li>
                         <li><a href="/coa" class="nav-link text-decoration-none d-block py-2"
                                 style="color: #919FAC;">COA</a></li>
-                        <li><a href="#" class="nav-link text-decoration-none d-block py-2"
+                        <li><a href="/gudang" class="nav-link text-decoration-none d-block py-2"
                                 style="color: #919FAC;">Gudang</a></li>
                     </ul>
                 </div>
@@ -174,7 +174,6 @@
                 logo.src = '{{ asset('assets/images/logo.png') }}';
                 logo.style.width = '55px';
 
-                // Mengubah label untuk Master Data, Procurement, Inventory, dan Penjualan
                 const headersToHide = sidebar.querySelectorAll(
                     'a[href="#masterDataCollapse"], a[href="#procurementCollapse"], a[href="#inventoryCollapse"], a[href="#PenjualanCollapse"]'
                 );
@@ -195,7 +194,6 @@
                 logo.src = '{{ asset('assets/images/name.png') }}';
                 logo.style.width = '165px';
 
-                // Mengembalikan label untuk Master Data, Procurement, Inventory, dan Penjualan
                 const headersToRestore = sidebar.querySelectorAll(
                     'a[href="#masterDataCollapse"], a[href="#procurementCollapse"], a[href="#inventoryCollapse"], a[href="#PenjualanCollapse"]'
                 );
