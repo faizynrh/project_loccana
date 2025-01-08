@@ -1,7 +1,9 @@
 <?php
 
 use App\Http\Controllers\CoaController;
+use App\Http\Controllers\GudangController;
 use App\Http\Controllers\ItemController;
+use App\Http\Controllers\PriceController;
 use App\Http\Controllers\Principal;
 use App\Http\Controllers\UomDataController;
 use App\Http\Controllers\PrincipalController;
@@ -44,9 +46,11 @@ Route::get('/items/edit', function () {
 });
 
 //price
-Route::get('/price', function () {
-    return view('masterdata.price.price');
-});
+// Route::get('/price', function () {
+//     return view('masterdata.price.price');
+// });
+Route::get('/price', [PriceController::class, 'index'])->name('price');
+
 Route::get('/price/edit', function () {
     return view('masterdata.price.edit');
 });
@@ -76,14 +80,21 @@ Route::get('/uom/show/{id}', [UomDataController::class, 'show'])->name('uom.show
 
 
 //gudang
-route::get('/gudang', function () {
-    return view('masterdata.gudang.gudang');
-});
+Route::get('/gudang', [GudangController::class, 'index'])->name('gudang');
 
-route::get('/gudang/add', function () {
-    return view('masterdata.gudang.add');
-});
+// route::get('/gudang', function () {
+//     return view('masterdata.gudang.gudang');
+// });
+
+Route::get('/gudang/add', [GudangController::class, 'create'])->name('gudang.create');
+
+Route::post('/gudang/add', [GudangController::class, 'store'])->name('gudang.store');
 
 route::get('/gudang/edit', function () {
     return view('masterdata.gudang.edit');
+});
+
+//user
+route::get('/user', function () {
+    return view('masterdata.user.user');
 });

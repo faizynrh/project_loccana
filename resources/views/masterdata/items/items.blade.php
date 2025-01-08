@@ -5,7 +5,7 @@
             <h5 class="fw-bold ">Items</h5>
         </div>
         <a href="/items/add" class="btn btn-primary fw-bold mt-1 mb-2">+ Tambah Item</a>
-        <table class="table table-striped table-bordered mt-3" id="tablecoa">
+        <table class="table table-striped table-bordered mt-3" id="tableitems">
             <thead>
                 <tr>
                     <th scope="col">No</th>

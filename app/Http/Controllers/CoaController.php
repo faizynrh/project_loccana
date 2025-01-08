@@ -77,7 +77,7 @@ class CoaController extends Controller
                 'parent_account_id' => $request->input('parent_account_id', 0),
                 'account_type_id' => $request->input('account_type_id', 0),
                 'description' => $request->input('description'),
-                'company_id' => 0
+                'company_id' => $request->input('company_id', 0),
             ];
 
             $apiResponse = Http::withHeaders([
@@ -90,6 +90,10 @@ class CoaController extends Controller
                 $apiResponse->successful() &&
                 isset($responseData['success'])
             ) {
+                dd([
+                    'input_data' => $data,         // Data yang dikirim ke API
+                    'api_response' => $responseData // Respons API
+                ]);
 
                 return redirect()->route('coa')
                     ->with('success', $responseData['message'] ?? 'Coa Berhasil Ditambahkan');
