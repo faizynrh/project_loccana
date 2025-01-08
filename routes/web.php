@@ -75,6 +75,9 @@ Route::get('/uom/show/{id}', [UomDataController::class, 'show'])->name('uom.show
 route::get('/informasi', function () {
     return view('masterdata.informasi.informasi');
 });
+route::get('/tambah-informasi', function () {
+    return view('masterdata.informasi.tambah-informasi');
+});
 
 
 //gudang

@@ -21,11 +21,11 @@
 
         <h3 style="font-size: 18px; padding-top:25px; font-weight: 700">Management Informasi</h3>
         <div class="d-flex justify-content-between align-items-center">
-            <a href="/uom-tambah" class="btn btn-primary"><strong>+</strong></a>
+            <a href="/tambah-informasi" class="btn btn-primary"><strong>+</strong></a>
         </div>
 
 
-        <table class="table table-striped table-bordered mt-3" id="tableuom">
+        <table class="table table-striped table-bordered mt-3" id="tableinformasi">
             <thead>
                 <tr>
                     <th scope="col">No</th>
@@ -76,7 +76,7 @@
         </div> --}}
         </div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    {{-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         function confirmDelete(id) {
             Swal.fire({
@@ -91,5 +91,5 @@
                 }
             });
         }
-    </script>
+    </script> --}}
 @endsection

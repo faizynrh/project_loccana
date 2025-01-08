@@ -45,9 +45,9 @@
                                 style="color: #919FAC;">Price</a></li>
                         <li><a href="/principal" class="nav-link text-decoration-none d-block py-2"
                                 style="color: #919FAC;">Principal</a></li>
-                        <li><a href="#" class="nav-link text-decoration-none d-block py-2"
+                        <li><a href="/principal" class="nav-link text-decoration-none d-block py-2"
                                 style="color: #919FAC;">Customer</a></li>
-                        <li><a href="#" class="nav-link text-decoration-none d-block py-2"
+                        <li><a href="/informasi" class="nav-link text-decoration-none d-block py-2"
                                 style="color: #919FAC;">Informasi</a></li>
                         <li><a href="/coa" class="nav-link text-decoration-none d-block py-2"
                                 style="color: #919FAC;">COA</a></li>
