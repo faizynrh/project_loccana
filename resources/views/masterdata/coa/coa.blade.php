@@ -34,10 +34,11 @@
             <tbody>
                 @if (!empty($data['data']['coa']))
                     @foreach ($data['data']['coa'] as $item)
-                        <tr style="cursor: pointer" onclick="window.location='{{ route('coa.show', $item['id']) }}';">
+                        <tr>
                             {{-- <td>{{ $loop->iteration }}</td> --}}
                             <td>{{ $item['id'] }}</td>
-                            <td>{{ $item['parent'] }}</td>
+                            <td style="cursor: pointer" onclick="window.location='{{ route('coa.show', $item['id']) }}';">
+                                {{ $item['parent'] }}</td>
                             <td>{{ $item['coa'] }}</td>
                             <td>{{ $item['description'] }}</td>
                             <td>

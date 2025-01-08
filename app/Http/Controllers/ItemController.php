@@ -67,51 +67,74 @@ class ItemController extends Controller
         }
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
+        return view('masterdata.items.add');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         //
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function show($id)
     {
-        //
+        try {
+            $apiurl = 'https://gateway-internal.apicentrum.site/t/loccana.com/master/items/1.0.0/items/' . $id;
+            $accessToken = $this->getAccessToken();
+
+            $apiResponse = Http::withHeaders([
+                'Authorization' => 'Bearer ' . $accessToken,
+                'Content-Type' => 'application/json'
+            ])->get($apiurl);
+
+            if ($apiResponse->successful()) {
+                $coa = $apiResponse->json()['data'];
+                return view('masterdata.items.detail', compact('coa', 'id'));
+            } else {
+                return back()->withErrors('Gagal mengambil data COA: ' . $apiResponse->status());
+            }
+        } catch (\Exception $e) {
+            return back()->withErrors($e->getMessage());
+        }
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(string $id)
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, string $id)
     {
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(string $id)
     {
-        //
+        try {
+            $apiurl = 'https://gateway-internal.apicentrum.site/t/loccana.com/master/items/1.0.0/items/' . $id;
+            $accessToken = $this->getAccessToken();
+
+            $apiResponse = Http::withHeaders([
+                'Authorization' => 'Bearer ' . $accessToken,
+                'Content-Type' => 'application/json'
+            ])->delete($apiurl);
+            dd([
+                'status_code' => $apiResponse->status(),
+                'headers' => $apiResponse->headers(),
+                'body' => $apiResponse->json(),
+                'url' => $apiurl,
+            ]);
+            if ($apiResponse->successful()) {
+                return redirect()->route('items')
+                    ->with('success', 'Data Items Berhasil Dihapus!');
+            } else {
+                return back()->withErrors(
+                    'Gagal menghapus data: ' . $apiResponse->body()
+                );
+            }
+        } catch (\Exception $e) {
+            return back()->withErrors($e->getMessage());
+        }
     }
 }
