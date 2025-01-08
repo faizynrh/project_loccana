@@ -125,54 +125,6 @@
                                 style="color: #919FAC;">Report</a></li>
                     </ul>
                 </div>
-                <li class="nav-item">
-                    <a class="nav-link text-decoration-none d-block py-2 position-relative"
-                        style="color: #919FAC; cursor: pointer;" data-bs-toggle="collapse" href="#CashBankCollapse"
-                        role="button" aria-expanded="false" aria-controls="CashBankCollapse">
-                        <i class="bi bi-pc-display me-2"></i>Cash Bank
-                        <i class="bi bi-chevron-down position-absolute end-0 top-50 translate-middle-y"></i>
-                    </a>
-                </li>
-                <div class="collapse" id="CashBankCollapse">
-                    <ul class="nav flex-column ps-3">
-                        <li><a href="#" class="nav-link text-decoration-none d-block py-2"
-                                style="color: #919FAC;">Hutang</a></li>
-                        <li><a href="#" class="nav-link text-decoration-none d-block py-2"
-                                style="color: #919FAC;">Piutang</a></li>
-                        <li><a href="#" class="nav-link text-decoration-none d-block py-2"
-                                style="color: #919FAC;">Pemasukan</a></li>
-                        <li><a href="#" class="nav-link text-decoration-none d-block py-2"
-                                style="color: #919FAC;">Pengeluaran</a></li>
-                    </ul>
-                </div>
-                <li class="nav-item">
-                    <a class="nav-link text-decoration-none d-block py-2 position-relative"
-                        style="color: #919FAC; cursor: pointer;" data-bs-toggle="collapse" href="#AccountingCollapse"
-                        role="button" aria-expanded="false" aria-controls="AccountingCollapse">
-                        <i class="bi bi-pc-display me-2"></i>Accounting
-                        <i class="bi bi-chevron-down position-absolute end-0 top-50 translate-middle-y"></i>
-                    </a>
-                </li>
-                <div class="collapse" id="AccountingCollapse">
-                    <ul class="nav flex-column ps-3">
-                        <li><a href="#" class="nav-link text-decoration-none d-block py-2"
-                                style="color: #919FAC;">Jurnal Penyesuaian</a></li>
-                        <li><a href="#" class="nav-link text-decoration-none d-block py-2"
-                                style="color: #919FAC;">Asset</a></li>
-                        <li><a href="#" class="nav-link text-decoration-none d-block py-2"
-                                style="color: #919FAC;">Buku Besar Pembantu</a></li>
-                        <li><a href="#" class="nav-link text-decoration-none d-block py-2"
-                                style="color: #919FAC;">Laba Rugi</a></li>
-                        <li><a href="#" class="nav-link text-decoration-none d-block py-2"
-                                style="color: #919FAC;">Neraca</a></li>
-                        <li><a href="#" class="nav-link text-decoration-none d-block py-2"
-                                style="color: #919FAC;">Report Cash</a></li>
-                        <li><a href="#" class="nav-link text-decoration-none d-block py-2"
-                                style="color: #919FAC;">Report Hutang</a></li>
-                        <li><a href="#" class="nav-link text-decoration-none d-block py-2"
-                                style="color: #919FAC;">Report Piutang</a></li>
-                    </ul>
-                </div>
             </ul>
         </div>
     </div>
@@ -223,15 +175,15 @@
                 logo.style.width = '55px';
 
                 const headersToHide = sidebar.querySelectorAll(
-                    'a[href="#masterDataCollapse"], a[href="#procurementCollapse"], a[href="#inventoryCollapse"], a[href="#PenjualanCollapse"],a[href="#AccountingCollapse"], a[href="#CashBankCollapse"]'
+                    'a[href="#masterDataCollapse"], a[href="#procurementCollapse"], a[href="#inventoryCollapse"], a[href="#PenjualanCollapse"]'
                 );
                 headersToHide.forEach(header => {
                     header.innerHTML = header.innerHTML.replace(
-                        /Master Data|Procurement|Inventory|Penjualan|Cash Bank|Accounting|/g, '');
+                        /Master Data|Procurement|Inventory|Penjualan/g, '');
                 });
 
                 const collapseElements = sidebar.querySelectorAll(
-                    '#masterDataCollapse, #procurementCollapse, #inventoryCollapse, #PenjualanCollapse, #AccountingCollapse, #CashBankCollapse'
+                    '#masterDataCollapse, #procurementCollapse, #inventoryCollapse, #PenjualanCollapse'
                 );
                 collapseElements.forEach(collapse => {
                     collapse.classList.remove('show');
@@ -243,7 +195,7 @@
                 logo.style.width = '165px';
 
                 const headersToRestore = sidebar.querySelectorAll(
-                    'a[href="#masterDataCollapse"], a[href="#procurementCollapse"], a[href="#inventoryCollapse"], a[href="#PenjualanCollapse"],a[href="#AccountingCollapse"], a[href="#CashBankCollapse"]'
+                    'a[href="#masterDataCollapse"], a[href="#procurementCollapse"], a[href="#inventoryCollapse"], a[href="#PenjualanCollapse"]'
                 );
                 headersToRestore.forEach(header => {
                     if (header.getAttribute('href') === '#masterDataCollapse') {
@@ -258,12 +210,6 @@
                     } else if (header.getAttribute('href') === '#PenjualanCollapse') {
                         header.innerHTML = header.innerHTML.includes('Penjualan') ? header.innerHTML :
                             header.innerHTML + ' Penjualan';
-                    } else if (header.getAttribute('href') === '#AccountingCollapse') {
-                        header.innerHTML = header.innerHTML.includes('Accounting') ? header.innerHTML :
-                            header.innerHTML + ' Accounting';
-                    } else if (header.getAttribute('href') === '#CashBankCollapse') {
-                        header.innerHTML = header.innerHTML.includes('Cash Bank') ? header.innerHTML :
-                            header.innerHTML + ' Cash Bank';
                     }
                 });
             }

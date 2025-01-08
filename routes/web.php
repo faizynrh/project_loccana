@@ -37,6 +37,7 @@ Route::get('/coba', function () {
 //items
 Route::get('/items', [ItemController::class, 'index'])->name('items');
 Route::get('/items/add', [ItemController::class, 'create'])->name('items.create');
+Route::post('/items/add', [ItemController::class, 'store'])->name('items.store');
 Route::get('/items/delete/{id}', [ItemController::class, 'destroy'])->name('items.destroy');
 Route::get('/items/edit', function () {
     return view('masterdata.items.edit');
