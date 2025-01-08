@@ -70,6 +70,7 @@ Route::post('/uom-tambah', [UomDataController::class, 'store'])->name('uom.store
 Route::delete('/uom-delete/{id}', [UomDataController::class, 'destroy'])->name('uom.destroy');
 Route::get('/uom/edit/{id}', [UomDataController::class, 'edit'])->name('uom.edit');
 Route::put('/uom/update/{id}', [UomDataController::class, 'update'])->name('uom.update');
+Route::get('/uom/show/{id}', [UomDataController::class, 'show'])->name('uom.show');
 
 
 
