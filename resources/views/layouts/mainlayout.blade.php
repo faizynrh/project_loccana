@@ -130,7 +130,8 @@
     </div>
 
     <div id="konten" class="d-flex flex-column flex-grow-1 w-100" style="overflow-y: auto; height: 100vh;">
-        <nav class="navbar navbar-expand-lg" style="background-color: #006DF0; position: sticky; top: 0;">
+        <nav class="navbar navbar-expand-lg"
+            style="background-color: #006DF0; position: sticky; top: 0; z-index: 1050;">
             <div class="container-fluid">
                 <span class="navbar-brand" id="toggleSidebar">
                     <i class="bi bi-list text-white" style="font-size: 24px; cursor: pointer;"></i>
@@ -151,6 +152,7 @@
                 </div>
             </div>
         </nav>
+
         <div class="container flex-grow-1 p-3 bg-body-tertiary">
             @yield('content')
         </div>
