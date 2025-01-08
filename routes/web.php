@@ -79,6 +79,25 @@ route::get('/tambah-informasi', function () {
     return view('masterdata.informasi.tambah-informasi');
 });
 
+//customer
+route::get('/customer', function () {
+    return view('masterdata.customer.customer');
+});
+route::get('/customer/add', function () {
+    return view('masterdata.customer.add-customer');
+});
+route::get('/customer/edit', function () {
+    return view('masterdata.customer.edit-customer');
+});
+
+//principal
+route::get('/principal', function () {
+    return view('masterdata.principal.principal');
+});
+route::get('/principal/add', function () {
+    return view('masterdata.principal.tambah-principal');
+});
+
 
 //gudang
 route::get('/gudang', function () {
