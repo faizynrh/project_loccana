@@ -74,8 +74,8 @@ class CoaController extends Controller
             $data = [
                 'account_name' => $request->input('account_name'),
                 'account_code' => $request->input('account_code'),
-                'parent_account_id' => $request->input('parent_account_id') ?? 0,
-                'account_type_id' => $request->input('account_type_id') ?? 0,
+                'parent_account_id' => $request->input('parent_account_id', 0),
+                'account_type_id' => $request->input('account_type_id', 0),
                 'description' => $request->input('description'),
                 'company_id' => 0
             ];

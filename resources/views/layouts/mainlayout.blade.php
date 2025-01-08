@@ -9,6 +9,34 @@
     <link rel="stylesheet" href="{{ asset('assets/sweetalert/sweetalert2.min.css') }}">
     @vite('resources/js/app.js')
     <title>Distributor & Sales System</title>
+    <style>
+        #external-dropdown-container {
+            background-color: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 10px;
+            min-width: 200px;
+        }
+
+        #external-dropdown-container .external-dropdown ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        #external-dropdown-container .external-dropdown ul li a {
+            display: block;
+            padding: 10px 15px;
+            color: #919FAC;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+        }
+
+        #external-dropdown-container .external-dropdown ul li a:hover {
+            background-color: #f0f0f0;
+        }
+    </style>
 </head>
 
 <body class="d-flex bg-body-tertiary" style="height: 100vh; margin: 0;">
@@ -168,12 +196,33 @@
         const sidebar = document.getElementById('sidebar');
         const logo = document.getElementById('sidebar-logo');
 
+        // Kontainer dropdown eksternal
+        const externalDropdownContainer = document.createElement('div');
+        externalDropdownContainer.id = 'external-dropdown-container';
+        externalDropdownContainer.style.position = 'fixed';
+        externalDropdownContainer.style.left = '90px';
+        externalDropdownContainer.style.top = '50px';
+        externalDropdownContainer.style.zIndex = '1060';
+        externalDropdownContainer.style.display = 'none';
+        document.body.appendChild(externalDropdownContainer);
+
+        // Fungsi untuk membuat dropdown eksternal
+        function createExternalDropdown(collapseElement) {
+            const dropdownContent = collapseElement.innerHTML;
+            const dropdownWrapper = document.createElement('div');
+            dropdownWrapper.className = 'external-dropdown';
+            dropdownWrapper.innerHTML = dropdownContent;
+            return dropdownWrapper;
+        }
+
         toggleSidebar.addEventListener('click', () => {
             if (sidebar.style.width === '220px' || sidebar.style.width === '') {
+                // Sidebar ditutup
                 sidebar.style.width = '90px';
                 logo.src = '{{ asset('assets/images/logo.png') }}';
                 logo.style.width = '55px';
 
+                // Sembunyikan teks pada header
                 const headersToHide = sidebar.querySelectorAll(
                     'a[href="#masterDataCollapse"], a[href="#procurementCollapse"], a[href="#inventoryCollapse"], a[href="#PenjualanCollapse"]'
                 );
@@ -182,6 +231,7 @@
                         /Master Data|Procurement|Inventory|Penjualan/g, '');
                 });
 
+                // Tutup semua collapse internal
                 const collapseElements = sidebar.querySelectorAll(
                     '#masterDataCollapse, #procurementCollapse, #inventoryCollapse, #PenjualanCollapse'
                 );
@@ -190,28 +240,70 @@
                 });
 
             } else {
+                // Sidebar dibuka kembali
                 sidebar.style.width = '220px';
                 logo.src = '{{ asset('assets/images/name.png') }}';
                 logo.style.width = '165px';
 
+                // Sembunyikan dropdown eksternal
+                externalDropdownContainer.style.display = 'none';
+                externalDropdownContainer.innerHTML = '';
+
+                // Kembalikan teks pada header
                 const headersToRestore = sidebar.querySelectorAll(
                     'a[href="#masterDataCollapse"], a[href="#procurementCollapse"], a[href="#inventoryCollapse"], a[href="#PenjualanCollapse"]'
                 );
                 headersToRestore.forEach(header => {
-                    if (header.getAttribute('href') === '#masterDataCollapse') {
-                        header.innerHTML = header.innerHTML.includes('Master Data') ? header.innerHTML :
-                            header.innerHTML + ' Master Data';
-                    } else if (header.getAttribute('href') === '#procurementCollapse') {
-                        header.innerHTML = header.innerHTML.includes('Procurement') ? header.innerHTML :
-                            header.innerHTML + ' Procurement';
-                    } else if (header.getAttribute('href') === '#inventoryCollapse') {
-                        header.innerHTML = header.innerHTML.includes('Inventory') ? header.innerHTML :
-                            header.innerHTML + ' Inventory';
-                    } else if (header.getAttribute('href') === '#PenjualanCollapse') {
-                        header.innerHTML = header.innerHTML.includes('Penjualan') ? header.innerHTML :
-                            header.innerHTML + ' Penjualan';
+                    const originalText = header.getAttribute('data-original-text');
+                    if (originalText) {
+                        header.innerHTML = originalText;
                     }
                 });
+            }
+        });
+
+        // Event listener untuk setiap header collapse
+        const collapseHeaders = sidebar.querySelectorAll(
+            'a[href="#masterDataCollapse"], a[href="#procurementCollapse"], a[href="#inventoryCollapse"], a[href="#PenjualanCollapse"]'
+        );
+
+        collapseHeaders.forEach(header => {
+            // Simpan teks asli
+            header.setAttribute('data-original-text', header.innerHTML);
+
+            header.addEventListener('click', (e) => {
+                // Cek apakah sidebar dalam keadaan tertutup
+                if (sidebar.style.width === '90px' || sidebar.style.width === '90px') {
+                    e.preventDefault();
+
+                    // Identifikasi collapse yang sesuai
+                    const targetCollapseId = header.getAttribute('href').replace('#', '');
+                    const targetCollapse = document.getElementById(targetCollapseId);
+
+                    // Bersihkan dan atur ulang kontainer dropdown eksternal
+                    externalDropdownContainer.innerHTML = '';
+
+                    // Buat dropdown eksternal
+                    const externalDropdown = createExternalDropdown(targetCollapse);
+                    externalDropdownContainer.appendChild(externalDropdown);
+
+                    // Toggle tampilan dropdown eksternal
+                    externalDropdownContainer.style.display =
+                        externalDropdownContainer.style.display === 'none' ? 'block' : 'none';
+                }
+            });
+        });
+
+        // Tutup dropdown eksternal jika klik di luar
+        document.addEventListener('click', (e) => {
+            if (sidebar.style.width === '90px') {
+                const isClickInsideDropdown =
+                    externalDropdownContainer.contains(e.target) ||
+                    Array.from(collapseHeaders).some(header => header.contains(e.target));
+
+                if (!isClickInsideDropdown) {
+                    externalDropdownContainer.style.display = 'none';
+                }
             }
         });
     </script>

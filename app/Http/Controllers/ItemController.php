@@ -74,7 +74,46 @@ class ItemController extends Controller
 
     public function store(Request $request)
     {
-        //
+        try {
+            $apiurl = 'https://gateway-internal.apicentrum.site/t/loccana.com/master/items/1.0.0/items';
+            $accessToken = $this->getAccessToken();
+
+            $data = [
+                'name' => $request->input('name'),
+                'description' => $request->input('description'),
+                'unit_of_measure_id' => $request->input('unit_of_measure_id', 0),
+                'item_type_id' => $request->input('item_type_id', 0),
+                'item_category_id' => $request->input('item_category_id'),
+                'sku' => $request->input('sku'), //
+                'company_id' => $request->input('company_id', 0),
+            ];
+
+            $apiResponse = Http::withHeaders([
+                'Authorization' => 'Bearer ' . $accessToken,
+                'Content-Type' => 'application/json'
+            ])->post($apiurl, $data);
+
+            $responseData = $apiResponse->json();
+            dd([
+                'sent_data' => $data,
+                'api_response_status' => $apiResponse->status(),
+                'api_response_body' => $responseData,
+            ]);
+            if (
+                $apiResponse->successful() &&
+                isset($responseData['success'])
+            ) {
+                return redirect()->route('items')
+                    ->with('success', $responseData['message'] ?? 'Item Berhasil Ditambahkan');
+            } else {
+                return back()->withErrors(
+                    'Gagal menambahkan data: ' .
+                        ($responseData['message'] ?? $apiResponse->body())
+                );
+            }
+        } catch (\Exception $e) {
+            return back()->withErrors($e->getMessage());
+        }
     }
 
     public function show($id)
@@ -90,7 +129,7 @@ class ItemController extends Controller
 
             if ($apiResponse->successful()) {
                 $coa = $apiResponse->json()['data'];
-                return view('masterdata.items.detail', compact('coa', 'id'));
+                return view('masterdata.items.detail', compact(' ', 'id'));
             } else {
                 return back()->withErrors('Gagal mengambil data COA: ' . $apiResponse->status());
             }
