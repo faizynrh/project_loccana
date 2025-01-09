@@ -4,6 +4,21 @@
         <div class="p-1">
             <h5 class="fw-bold ">Items</h5>
         </div>
+        @if (session('success'))
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ session('success') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
+
+        @if ($errors->any())
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                @foreach ($errors->all() as $error)
+                    <p>{{ $error }}</p>
+                @endforeach
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
         <a href="/items/add" class="btn btn-primary fw-bold mt-1 mb-2">+ Tambah Item</a>
         <table class="table table-striped table-bordered mt-3" id="tableitems">
             <thead>
@@ -20,67 +35,54 @@
             </thead>
             <tbody>
                 <tr>
-                    <th scope="row">1</th>
-                    <td>Usep</td>
-                    <td>Otto</td>
-                    <td>@mdo</td>
-                    <td>Mark</td>
-                    <td>Otto</td>
-                    <td>@mdo</td>
-                    <td>
-                        <a href="items/edit" class="btn btn-sm btn-warning" title="Edit">
-                            <i class="bi bi-pencil"></i>
-                        </a>
-                        <button class="btn btn-sm btn-danger" title="Hapus">
-                            <i class="bi bi-trash"></i>
-                        </button>
-                        <button class="btn btn-sm btn-success" title="Lihat">
-                            <i class="bi bi-eye"></i>
-                        </button>
-                    </td>
+                    @if (!empty($data['data']['table']))
+                        @foreach ($data['data']['table'] as $item)
+                            <td>{{ $loop->iteration }}</td>
+                            <td>{{ $item['item_code'] }}</td>
+                            <td>{{ $item['item_name'] }}</td>
+                            <td>{{ $item['item_description'] }}</td>
+                            <td>{{ $item['uom_name'] }}</td>
+                            <td></td>
+                            <td></td>
+                            <td>
+                                <a href="{{ route('items.detail', $item['id']) }}" class="btn btn-sm btn-info mb-2"
+                                    title="Detail">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+                                <a href="{{ route('items.edit', $item['id']) }}" class="btn btn-sm btn-warning mb-2"
+                                    title="Edit">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <form action="{{ route('items.destroy', $item['id']) }}" method="POST"
+                                    id="delete{{ $item['id'] }}" style="display:inline;">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="button" class="btn btn-sm btn-danger mb-2" title="Hapus"
+                                        onclick="confirmDelete({{ $item['id'] }})">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </form>
+                            </td>
                 </tr>
-                <tr>
-                    <th scope="row">2</th>
-                    <td>Mark</td>
-                    <td>Otto</td>
-                    <td>@mdo</td>
-                    <td>Mark</td>
-                    <td>Otto</td>
-                    <td>@mdo</td>
-                    <td>
-                        <button class="btn btn-sm btn-warning" title="Edit">
-                            <i class="bi bi-pencil"></i>
-                        </button>
-                        <button class="btn btn-sm btn-danger" title="Hapus">
-                            <i class="bi bi-trash"></i>
-                        </button>
-                        <button class="btn btn-sm btn-success" title="Lihat">
-                            <i class="bi bi-eye"></i>
-                        </button>
-                    </td>
-                </tr>
-                <tr>
-                    <th scope="row">3</th>
-                    <td>Mark</td>
-                    <td>Otto</td>
-                    <td>@mdo</td>
-                    <td>Mark</td>
-                    <td>Otto</td>
-                    <td>@mdo</td>
-                    <td>
-                        <button class="btn btn-sm btn-warning" title="Edit">
-                            <i class="bi bi-pencil"></i>
-                        </button>
-                        <button class="btn btn-sm btn-danger" title="Hapus">
-                            <i class="bi bi-trash"></i>
-                        </button>
-                        <button class="btn btn-sm btn-success" title="Lihat">
-                            <i class="bi bi-eye"></i>
-                        </button>
-                    </td>
+                @endforeach
+                @endif
                 </tr>
             </tbody>
         </table>
-
+        <script>
+            function confirmDelete(id) {
+                Swal.fire({
+                    title: 'Apakah kamu yakin?',
+                    text: 'Data ini akan dihapus secara permanen!',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    reverseButtons: true
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        document.getElementById('delete' + id).submit();
+                    }
+                });
+            }
+        </script>
     </div>
 @endsection

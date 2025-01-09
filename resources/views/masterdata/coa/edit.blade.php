@@ -13,40 +13,41 @@
             @method('put')
             <div class="row mb-3 align-items-center">
                 <div class="col-md-3">
-                    <label for="parent_name" class="form-label fw-bold mb-0">Parent <span
+                    <label for="parent_account_id" class="form-label fw-bold mb-0">Parent <span
                             class="text-danger">*</span></label>
                 </div>
                 <div class="col-md-9">
-                    <select class="form-select" id="parent_name" name="parent_name">
-                        <option value="" selected disabled>Pilih Parent</option>
-                        <option value="tanpaparent" {{ $coa['parent_account_id'] === null ? 'selected' : '' }}>
-                            -- Tanpa Parent --
-                        </option>
-                        <option value="lorem" {{ $coa['parent_account_id'] === 1 ? 'selected' : '' }}>lorem</option>
+                    <select class="form-select" id="parent_account_id" name="parent_account_id" required>
+                        @if ($coa['parent_account_id'] === null)
+                            <option value="0">Tanpa Parent
+                            </option>
+                            <option value="111">masuk</option>
+                        @else
+                            <option value="{{ $coa['parent_account_id'] }}">{{ $coa['parent_name'] }}
+                            </option>
+                            <option value="masuk">masuk</option>
+                        @endif
                     </select>
                 </div>
             </div>
-
             <div class="row mb-3 align-items-center">
                 <div class="col-md-3">
                     <label for="account_code" class="form-label fw-bold mb-0">COA <span class="text-danger">*</span></label>
                 </div>
                 <div class="col-md-9">
                     <input type="text" class="form-control" id="account_code" name="account_code" placeholder="COA"
-                        value="{{ $coa['account_code'] ?? '' }}" required>
+                        value="{{ $coa['account_code'] ?? '' }}">
                 </div>
             </div>
-
             <div class="row mb-3 align-items-center">
                 <div class="col-md-3">
-                    <label for="keterangancoa" class="form-label fw-bold mb-0">Keterangan COA <span
+                    <label for="description" class="form-label fw-bold mb-0">Keterangan COA <span
                             class="text-danger">*</span></label>
                 </div>
                 <div class="col-md-9">
-                    <textarea class="form-control" id="keterangancoa" name="keterangancoa" rows="5" required>{{ $coa['description'] ?? '' }}</textarea>
+                    <textarea class="form-control" id="description" name="description" rows="5" required>{{ $coa['description'] ?? '' }}</textarea>
                 </div>
             </div>
-
             <div class="row mb-3 align-items-center">
                 <div class="col-md-3">
                     <label for="showhide" class="form-label fw-bold mb-0">Show/Hide <span
@@ -64,7 +65,7 @@
             <div class="row">
                 <div class="col-md-12 text-end">
                     <button type="button" class="btn btn-primary" id="submitButton">Submit</button>
-                    <button type="reset" class="btn btn-secondary ms-2">Batal</button>
+                    <a href="{{ route('coa') }}" class="btn btn-secondary ms-2">Batal</a>
                 </div>
             </div>
         </form>

@@ -86,15 +86,15 @@ class CoaController extends Controller
             ])->post($apiurl, $data);
 
             $responseData = $apiResponse->json();
+
+            // dd([
+            //     'data' => $data,
+            //     'apiResponse' => $apiResponse,
+            // ]);
             if (
                 $apiResponse->successful() &&
                 isset($responseData['success'])
             ) {
-                dd([
-                    'input_data' => $data,         // Data yang dikirim ke API
-                    'api_response' => $responseData // Respons API
-                ]);
-
                 return redirect()->route('coa')
                     ->with('success', $responseData['message'] ?? 'Coa Berhasil Ditambahkan');
             } else {
@@ -152,7 +152,6 @@ class CoaController extends Controller
         }
     }
 
-
     public function update(Request $request, $id)
     {
         try {
@@ -160,16 +159,22 @@ class CoaController extends Controller
             $accessToken = $this->getAccessToken();
 
             $data = [
-                'parent_account_id' => $request->parent_name === 'tanpaparent' ? null : $request->parent_name,
+                'account_name' => $request->account_name,
                 'account_code' => $request->account_code,
-                'description' => $request->keterangancoa,
-                'status' => $request->showhide,
+                'parent_account_id' => $request->parent_account_id,
+                'account_type_id' => $request->account_type_id,
+                'description' => $request->description,
             ];
 
             $apiResponse = Http::withHeaders([
                 'Authorization' => 'Bearer ' . $accessToken,
                 'Content-Type' => 'application/json'
             ])->put($apiurl, $data);
+
+            // dd([
+            //     'data' => $data,
+            //     'apiResponse' => $apiResponse
+            // ]);
 
             if ($apiResponse->successful()) {
                 return redirect()->route('coa')->with('success', 'Data COA berhasil diperbarui!');
@@ -190,7 +195,6 @@ class CoaController extends Controller
                 'Authorization' => 'Bearer ' . $accessToken,
                 'Content-Type' => 'application/json'
             ])->delete($apiurl);
-            // dd($apiResponse->json());
             if ($apiResponse->successful()) {
                 return redirect()->route('coa')
                     ->with('success', 'Data COA berhasil dihapus');
