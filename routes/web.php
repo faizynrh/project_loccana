@@ -1,23 +1,14 @@
 <?php
 
-<<<<<<< HEAD
+
 use App\Http\Controllers\masterdata\CoaController;
 use App\Http\Controllers\masterdata\GudangController;
 use App\Http\Controllers\masterdata\ItemController;
 use App\Http\Controllers\masterdata\PriceController;
-use App\Http\Controllers\masterdata\Principal;
 use App\Http\Controllers\masterdata\UomDataController;
+use App\Http\Controllers\masterdata\CustomerController;
 use App\Http\Controllers\masterdata\PrincipalController;
-=======
-use App\Http\Controllers\CoaController;
-use App\Http\Controllers\CustomerController;
-use App\Http\Controllers\GudangController;
-use App\Http\Controllers\ItemController;
-use App\Http\Controllers\PriceController;
-use App\Http\Controllers\Principal;
-use App\Http\Controllers\UomDataController;
-use App\Http\Controllers\PrincipalController;
->>>>>>> 254920b0e737fcdd58636ff614a2ab03032b555b
+
 use Illuminate\Support\Facades\Route;
 /*
 |--------------------------------------------------------------------------
@@ -106,9 +97,7 @@ route::get('/customer/edit', function () {
 });
 
 //principal
-route::get('/principal', function () {
-    return view('masterdata.principal.principal');
-});
+Route::get('/principal', [PrincipalController::class, 'index'])->name('principal.index');
 route::get('/principal/add', function () {
     return view('masterdata.principal.tambah-principal');
 });
