@@ -44,8 +44,8 @@
                         Sorry, the page you are looking for might have been removed,
                         had its name changed, or is temporarily unavailable.
                     </p>
-                    <a href="/" class="btn btn-primary">
-                        <i class="bi bi-house-door me-2"></i>Back to Home
+                    <a href="/dashboard" class="btn btn-primary">
+                        <i class="bi bi-house-door me-2"></i>Back to Dashboard
                     </a>
                 </div>
             </div>

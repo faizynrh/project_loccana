@@ -1,6 +1,6 @@
 @extends('layouts.mainlayout')
 @section('content')
-    <div class="container mt-2 bg-white rounded-top">
+    <div class="container mt-2 bg-white rounded-top w-100">
         @if (session('success'))
             <div class="alert alert-success alert-dismissible fade show" role="alert">
                 {{ session('success') }}
@@ -25,15 +25,37 @@
         </div>
 
 
-        <table class="table table-striped table-bordered mt-3" id="tableuom">
+        <table class="table table-striped table-bordered mt-3">
+            <thead>
+                <tr>
+                    <th colspan="12" class="text-center">PO</th>
+                    <th colspan="7" class="text-center">Receiving</th>
+                </tr>
+            </thead>
             <thead>
                 <tr>
                     <th scope="col">No</th>
-                    <th scope="col">Name</th>
-                    <th scope="col">Simbol</th>
-                    <th scope="col">Description</th>
-                    <th scope="col">Option</th>
+                    <th scope="col">Tanggal PO</th>
+                    <th scope="col">Nomor PO</th>
+                    <th scope="col">Principle</th>
+                    <th scope="col">Kode Produk</th>
+                    <th scope="col">Produk</th>
+                    <th scope="col">Kemasan</th>
+                    <th scope="col">Qlt</th>
+                    <th scope="col">QBox</th>
+                    <th scope="col">Tgl RC</th>
+                    <th scope="col">SJ/SPPB</th>
+                    <th scope="col">TotalRC</th>
+                    <th scope="col">Original PO</th>
+                    <th scope="col">Dispro</th>
+                    <th scope="col">Bonus</th>
+                    <th scope="col">Titipan</th>
+                    <th scope="col">Sisa Po</th>
+                    <th scope="col">Sisa Box</th>
+                    <th scope="col">Keterangan</th>
                 </tr>
+
+
             </thead>
             <tbody>
                 {{-- {{ dd($data) }} --}}
@@ -66,7 +88,7 @@
                     @endforeach
                 @else
                     <tr>
-                        <td colspan="5" class="text-center">No data available</td>
+                        <td colspan="19" class="text-center">No data available</td>
                     </tr>
                 @endif
             </tbody>

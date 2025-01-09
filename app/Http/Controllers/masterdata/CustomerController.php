@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\masterdata;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 
@@ -45,6 +46,8 @@ class CustomerController extends Controller
                 'limit' => 10,
                 'offset' => 0,
                 'company_id' => 0,
+                'is_customer' => true,
+                'is_supplier' => false
             ]);
 
             if ($apiResponse->successful()) {

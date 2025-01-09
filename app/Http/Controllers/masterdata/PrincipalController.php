@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\masterdata;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 
@@ -43,19 +44,21 @@ class PrincipalController extends Controller
                 'limit' => 10,
                 'offset' => 0,
                 'company_id' => 0,
+                'is_customer' => false,
+                'is_supplier' => true
             ]);
 
             if ($apiResponse->successful()) {
                 $data = $apiResponse->json();
                 dd($data);
-                return view('masterdata.customer.customer', ['data' => $data['data']]);
+                return view('masterdata.principal.principal', ['data' => $data['data']]);
             } else {
                 // return response([
                 //     'message' => 'Gagal mendapatkan data',
                 //     'status' => $apiResponse->status(),
                 //     'error' => $apiResponse->json(),
                 // ]);
-                return view('masterdata.customer.customer');
+                return view('masterdata.principal.principal');
             }
         } catch (\Exception $e) {
             return back()->withErrors($e->getMessage());

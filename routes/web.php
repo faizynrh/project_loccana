@@ -1,12 +1,20 @@
 <?php
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 70cef363d12cf6520c6dfd0ae512f783038d8835
 use App\Http\Controllers\masterdata\CoaController;
 use App\Http\Controllers\masterdata\GudangController;
 use App\Http\Controllers\masterdata\ItemController;
 use App\Http\Controllers\masterdata\PriceController;
-use App\Http\Controllers\masterdata\Principal;
 use App\Http\Controllers\masterdata\UomDataController;
+use App\Http\Controllers\masterdata\CustomerController;
 use App\Http\Controllers\masterdata\PrincipalController;
+<<<<<<< HEAD
+=======
+
+>>>>>>> 70cef363d12cf6520c6dfd0ae512f783038d8835
 use Illuminate\Support\Facades\Route;
 /*
 |--------------------------------------------------------------------------
@@ -101,13 +109,17 @@ route::get('/customer/edit', function () {
 });
 
 //principal
-route::get('/principal', function () {
-    return view('masterdata.principal.principal');
-});
+Route::get('/principal', [PrincipalController::class, 'index'])->name('principal.index');
 route::get('/principal/add', function () {
     return view('masterdata.principal.tambah-principal');
 });
 
+<<<<<<< HEAD
+=======
+
+//gudang
+Route::get('/gudang', [GudangController::class, 'index'])->name('gudang');
+>>>>>>> 70cef363d12cf6520c6dfd0ae512f783038d8835
 
 
 //user
@@ -122,4 +134,10 @@ route::get('/user/add', function () {
 //dasarpembelian
 route::get('/dasarpembelian', function () {
     return view('procurement.dasarpembelian.dasarpembelian');
+});
+
+
+//rekap po
+route::get('/rekappo', function () {
+    return view('procurement.rekappo.rekappo');
 });
