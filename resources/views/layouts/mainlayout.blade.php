@@ -15,6 +15,24 @@
         font-size: 12px;
         /* Ukuran font kecil untuk sidebar yang lebih kecil */
     }
+
+    @font-face {
+        font-family: 'Roboto', sans-serif;
+        src: url('{{ asset('assets/font/static/Roboto-Regular.ttf') }}') format('truetype');
+        font-weight: normal;
+        font-style: normal;
+    }
+
+    @font-face {
+        font-family: 'Roboto', sans-serif;
+        src: url('{{ asset('assets/font/static/Roboto-Bold.ttf') }}') format('truetype');
+        font-weight: bold;
+        font-style: normal;
+    }
+
+    * {
+        font-family: 'roboto', sans-serif;
+    }
 </style>
 
 <body class="d-flex bg-body-tertiary" style="height: 100vh; margin: 0;">
