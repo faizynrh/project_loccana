@@ -10,6 +10,12 @@
     @vite('resources/js/app.js')
     <title>Distributor & Sales System</title>
 </head>
+<style>
+    .small-text {
+        font-size: 12px;
+        /* Ukuran font kecil untuk sidebar yang lebih kecil */
+    }
+</style>
 
 <body class="d-flex bg-body-tertiary" style="height: 100vh; margin: 0;">
     <div id="sidebar" class="bg-white border-end"
@@ -21,7 +27,9 @@
                     alt="" srcset="">
             </a>
             <ul class="list-unstyled mt-4">
-                <li><a href="/" class="text-decoration-none d-block py-2" style="color: #919FAC;">Home</a></li>
+                <li><a href="/dashboard" class="text-decoration-none d-block py-2" style="color: #919FAC;"
+                        id="dashboard">Dashboard</a>
+                </li>
                 <li><a href="/profile" class="text-decoration-none d-block py-2 mb-2"
                         style="color: #919FAC;">Profile</a>
                 </li>
@@ -194,7 +202,7 @@
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end">
                             <li><a class="dropdown-item" href="/profile">My Profile</a></li>
-                            <li><a class="dropdown-item" href="#">Logout</a></li>
+                            <li><a class="dropdown-item" href="/">Logout</a></li>
                         </ul>
                     </div>
                 </div>
@@ -215,19 +223,23 @@
         const toggleSidebar = document.getElementById('toggleSidebar');
         const sidebar = document.getElementById('sidebar');
         const logo = document.getElementById('sidebar-logo');
+        const dashboardLink = document.getElementById('dashboard'); // Ambil elemen Dashboard
 
         toggleSidebar.addEventListener('click', () => {
             if (sidebar.style.width === '220px' || sidebar.style.width === '') {
+                // Jika sidebar diperbesar, kecilkan sidebar
                 sidebar.style.width = '90px';
                 logo.src = '{{ asset('assets/images/logo.png') }}';
                 logo.style.width = '55px';
 
+                // Menyembunyikan teks header
                 const headersToHide = sidebar.querySelectorAll(
                     'a[href="#masterDataCollapse"], a[href="#procurementCollapse"], a[href="#inventoryCollapse"], a[href="#PenjualanCollapse"], a[href="#CashBankCollapse"], a[href="#AccountingCollapse"]'
                 );
                 headersToHide.forEach(header => {
                     header.innerHTML = header.innerHTML.replace(
-                        /Master Data|Procurement|Inventory|Penjualan|Cash Bank|Accounting/g, '');
+                        /Master Data|Procurement|Inventory|Penjualan|Cash Bank|Accounting/g, ''
+                    );
                 });
 
                 const collapseElements = sidebar.querySelectorAll(
@@ -237,11 +249,17 @@
                     collapse.classList.remove('show');
                 });
 
+                // Ubah ukuran teks Dashboard menjadi lebih kecil
+                dashboardLink.classList.add('small-text');
+                dashboardLink.innerHTML = "Dashboard"; // Shortened text for smaller sidebar
+
             } else {
+                // Jika sidebar diperkecil, perbesar sidebar
                 sidebar.style.width = '220px';
                 logo.src = '{{ asset('assets/images/name.png') }}';
                 logo.style.width = '165px';
 
+                // Mengembalikan teks header
                 const headersToRestore = sidebar.querySelectorAll(
                     'a[href="#masterDataCollapse"], a[href="#procurementCollapse"], a[href="#inventoryCollapse"], a[href="#PenjualanCollapse"], a[href="#CashBankCollapse"], a[href="#AccountingCollapse"]'
                 );
@@ -266,6 +284,10 @@
                             header.innerHTML + ' Accounting';
                     }
                 });
+
+                // Kembalikan ukuran teks Dashboard ke normal
+                dashboardLink.classList.remove('small-text');
+                dashboardLink.innerHTML = "Dashboard"; // Full text for expanded sidebar
             }
         });
     </script>

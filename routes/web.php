@@ -26,6 +26,10 @@ Route::get('/', function () {
     return view('home');
 });
 
+Route::get('/dashboard', function () {
+    return view('dashboard');
+});
+
 Route::get('/profile', function () {
     return view('profile');
 });
@@ -97,7 +101,6 @@ route::get('/principal', function () {
 route::get('/principal/add', function () {
     return view('masterdata.principal.tambah-principal');
 });
-
 
 //gudang
 route::get('/gudang', function () {
