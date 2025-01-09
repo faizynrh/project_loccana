@@ -1,12 +1,12 @@
 <?php
 
-use App\Http\Controllers\CoaController;
-use App\Http\Controllers\GudangController;
-use App\Http\Controllers\ItemController;
-use App\Http\Controllers\PriceController;
-use App\Http\Controllers\Principal;
-use App\Http\Controllers\UomDataController;
-use App\Http\Controllers\PrincipalController;
+use App\Http\Controllers\masterdata\CoaController;
+use App\Http\Controllers\masterdata\GudangController;
+use App\Http\Controllers\masterdata\ItemController;
+use App\Http\Controllers\masterdata\PriceController;
+use App\Http\Controllers\masterdata\Principal;
+use App\Http\Controllers\masterdata\UomDataController;
+use App\Http\Controllers\masterdata\PrincipalController;
 use Illuminate\Support\Facades\Route;
 /*
 |--------------------------------------------------------------------------
