@@ -14,7 +14,8 @@
                             class="text-danger">*</span></label>
                 </div>
                 <div class="col-md-9">
-                    <input type="text" class="form-control" id="kodeitem" placeholder="Kode Item">
+                    <input type="text" class="form-control" id="kodeitem" name="kode_item"
+                        value="{{ $data[0]['kode_item'] }}" placeholder="Kode Item" disabled>
                 </div>
             </div>
 
@@ -24,7 +25,8 @@
                             class="text-danger">*</span></label>
                 </div>
                 <div class="col-md-9">
-                    <input type="text" class="form-control" id="namaitem" placeholder="Nama Item">
+                    <input type="text" class="form-control" id="namaitem" placeholder="Nama Item"
+                        value="{{ $data[0]['nama_item'] }}" disabled>
                 </div>
             </div>
 
@@ -34,7 +36,8 @@
                             class="text-danger">*</span></label>
                 </div>
                 <div class="col-md-9">
-                    <input type="text" class="form-control" id="hargaatas" placeholder="Harga Atas">
+                    <input type="text" class="form-control" id="hargaatas" value="{{ $data[0]['harga_atas'] }}"
+                        placeholder="Harga Atas">
                 </div>
             </div>
 
@@ -44,7 +47,8 @@
                             class="text-danger">*</span></label>
                 </div>
                 <div class="col-md-9">
-                    <input type="text" class="form-control" id="hargabawah" placeholder="Harga Bawah">
+                    <input type="text" class="form-control" id="hargabawah" value="{{ $data[0]['harga_bawah'] }}"
+                        placeholder="Harga Bawah">
                 </div>
             </div>
             <div class="row mb-3 align-items-center">
@@ -52,7 +56,8 @@
                     <label for="hargapokok" class="form-label fw-bold mb-0">Harga Pokok
                 </div>
                 <div class="col-md-9">
-                    <input type="text" class="form-control" id="hargapokok" placeholder="Harga Pokok" disabled>
+                    <input type="text" class="form-control" id="hargapokok" value="{{ $data[0]['harga_pokok'] }}"
+                        placeholder="Harga Pokok" disabled>
                 </div>
             </div>
             <div class="row mb-3 align-items-center">
@@ -61,13 +66,14 @@
                             class="text-danger">*</span></label>
                 </div>
                 <div class="col-md-9">
-                    <input type="text" class="form-control" id="hargabeli" placeholder="Harga Beli">
+                    <input type="text" class="form-control" id="hargabeli"
+                        value="{{ $data[0]['harga_beli'] }}"placeholder="Harga Beli">
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-12 text-end">
                     <button type="submit" class="btn btn-primary">Submit</button>
-                    <button type="reset" class="btn btn-secondary ms-2">Batal</button>
+                    <a href="{{ route('price') }}" class="btn btn-secondary ms-2">Batal</a>
                 </div>
             </div>
         </form>

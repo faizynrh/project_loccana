@@ -4,6 +4,21 @@
         <div class="p-2">
             <h5 class="fw-bold ">Price Management</h5>
         </div>
+        @if (session('success'))
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ session('success') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
+
+        @if ($errors->any())
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                @foreach ($errors->all() as $error)
+                    <p>{{ $error }}</p>
+                @endforeach
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
         <table class="table table-striped table-bordered mt-3" id="tableprice">
             <thead>
                 <tr>
@@ -28,17 +43,42 @@
                             <td>{{ $item['harga_pokok'] }}</td>
                             <td>{{ $item['harga_beli'] }}</td>
                             <td></td>
-                            <td><a href="price/edit" class="btn btn-sm btn-warning" title="Edit">
-                                    <i class="bi bi-pencil"></i>
-                                </a>
-                                <button class="btn btn-sm btn-success" title="Lihat">
-                                    <i class="bi bi-check"></i>
-                                </button>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <a href="{{ route('price.edit', $item['id']) }}" class="btn btn-sm btn-warning me-2"
+                                        title="Edit">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <form id="approve{{ $item['id'] }}"
+                                        action="{{ route('price.approve', $item['id']) }}" method="POST">
+                                        @csrf
+                                        @method('PUT')
+                                        <button type="button" class="btn btn-sm btn-success me-2" title="Approve"
+                                            onclick="confirmApprove({{ $item['id'] }})">
+                                            <i class="bi bi-check"></i>
+                                        </button>
+                                    </form>
+                                </div>
                             </td>
                 </tr>
                 @endforeach
                 @endif
             </tbody>
         </table>
+        <script>
+            function confirmApprove(id) {
+                Swal.fire({
+                    title: 'Apakah kamu yakin?',
+                    text: 'Pastikan ini data yang akan di approve',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    reverseButtons: true
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        document.getElementById('approve' + id).submit();
+                    }
+                });
+            }
+        </script>
     </div>
 @endsection
