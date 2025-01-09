@@ -7,24 +7,41 @@
         </div>
         <p>Harap isi data yang telah ditandai dengan <span class="text-danger bg-light px-1">*</span>, dan masukkan data
             dengan benar.</p>
-        <form action="" method="">
+        @if (session('success'))
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ session('success') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
+
+        @if ($errors->any())
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                @foreach ($errors->all() as $error)
+                    <p>{{ $error }}</p>
+                @endforeach
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
+        <form action="{{ route('gudang.store') }}" method="POST">
+            @csrf
             <div class="row mb-3 align-items-center">
                 <div class="col-md-3">
-                    <label for="kodegudang" class="form-label fw-bold mb-0">Kode Gudang<span
+                    <label for="kode_gudang" class="form-label fw-bold mb-0">Kode Gudang<span
                             class="text-danger">*</span></label>
                 </div>
                 <div class="col-md-9">
-                    <input type="text" class="form-control" id="kodegudang" placeholder="Kode Gudang">
+                    <input type="text" class="form-control" id="kode_gudang" name="kode_gudang"
+                        placeholder="Kode Gudang">
                 </div>
             </div>
 
             <div class="row mb-3 align-items-center">
                 <div class="col-md-3">
-                    <label for="namagudang" class="form-label fw-bold mb-0">Nama Gudang <span
+                    <label for="name" class="form-label fw-bold mb-0">Nama Gudang <span
                             class="text-danger">*</span></label>
                 </div>
                 <div class="col-md-9">
-                    <input type="text" class="form-control" id="namagudang" placeholder="Nama Gudang">
+                    <input type="text" class="form-control" id="name" name="name" placeholder="Nama Gudang">
                 </div>
             </div>
 
@@ -33,7 +50,7 @@
                     <label for="pic" class="form-label fw-bold mb-0">PIC <span class="text-danger">*</span></label>
                 </div>
                 <div class="col-md-9">
-                    <select class="form-select" id="pic">
+                    <select class="form-select" id="pic" name="pic">
                         <option value="" selected disabled>Supervisor</option>
                         <option value="agus">Agus</option>
                         <option value="hendra">Hendra</option>
@@ -43,11 +60,11 @@
 
             <div class="row mb-3 align-items-center">
                 <div class="col-md-3">
-                    <label for="principal" class="form-label fw-bold mb-0">Alamat Gudang <span
+                    <label for="location" class="form-label fw-bold mb-0">Alamat Gudang <span
                             class="text-danger">*</span></label>
                 </div>
                 <div class="col-md-9">
-                    <input type="text" class="form-control" id="principal" placeholder="Alamat Gudang">
+                    <input type="text" class="form-control" id="location" name="location" placeholder="Alamat Gudang">
                 </div>
             </div>
 

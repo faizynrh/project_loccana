@@ -14,6 +14,18 @@ $(document).ready(function () {
     $('#tableitems').DataTable();
 });
 $(document).ready(function () {
+    $('#tableprice').DataTable();
+});
+$(document).ready(function () {
+    $('#tablegudang').DataTable();
+});
+$(document).ready(function () {
+    $('#tableuser').DataTable();
+});
+$(document).ready(function () {
+    $('#tableinformasi').DataTable();
+});
+$(document).ready(function () {
     $('#tableuom').DataTable();
 });
 $(document).ready(function () {

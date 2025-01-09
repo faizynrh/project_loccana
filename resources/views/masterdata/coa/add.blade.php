@@ -32,8 +32,8 @@
                 <div class="col-md-9">
                     <select class="form-select" id="account_name" name="account_name">
                         <option value="" selected disabled></option>
-                        <option value="1">-- Tanpa Parent --</option>
-                        <option value="2">lorem</option>
+                        <option value="tanpaparent">-- Tanpa Parent --</option>
+                        <option value="lorem">lorem</option>
                     </select>
                 </div>
             </div>
