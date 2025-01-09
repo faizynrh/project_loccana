@@ -99,7 +99,7 @@
                                 style="color: #919FAC;">Dasar Pembelian</a></li>
                         <li><a href="#" class="nav-link text-decoration-none d-block py-2"
                                 style="color: #919FAC;">Invoice</a></li>
-                        <li><a href="#" class="nav-link text-decoration-none d-block py-2"
+                        <li><a href="/rekappo" class="nav-link text-decoration-none d-block py-2"
                                 style="color: #919FAC;">Rekap PO</a></li>
                         <li><a href="#" class="nav-link text-decoration-none d-block py-2"
                                 style="color: #919FAC;">Retur</a></li>

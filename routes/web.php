@@ -102,6 +102,7 @@ route::get('/principal/add', function () {
     return view('masterdata.principal.tambah-principal');
 });
 
+
 //gudang
 Route::get('/gudang', [GudangController::class, 'index'])->name('gudang');
 
@@ -129,4 +130,10 @@ route::get('/user/add', function () {
 //dasarpembelian
 route::get('/dasarpembelian', function () {
     return view('procurement.dasarpembelian.dasarpembelian');
+});
+
+
+//rekap po
+route::get('/rekappo', function () {
+    return view('procurement.rekappo.rekappo');
 });
