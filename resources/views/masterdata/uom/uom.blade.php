@@ -39,12 +39,16 @@
                 {{-- {{ dd($data) }} --}}
                 @if (!empty($data['table']))
                     @foreach ($data['table'] as $index => $item)
-                        <tr style="cursor: pointer" onclick="window.location='{{ route('uom.show', $item['id']) }}';">
+                        <tr>
                             <td>{{ $loop->iteration }}</td>
                             <td>{{ $item['name'] ?? '-' }}</td>
                             <td>{{ $item['symbol'] ?? '-' }}</td>
                             <td>{{ $item['description'] ?? '-' }}</td>
                             <td>
+                                <button onclick="window.location='{{ route('uom.show', $item['id']) }}';"
+                                    class="btn btn-sm btn-info mb-2">
+                                    <i class="bi bi-eye"></i>
+                                </button>
                                 <a href="/uom/edit/{{ $item['id'] }}" class="btn btn-sm btn-warning mb-2">
                                     <i class="bi bi-pencil"></i>
                                 </a>
