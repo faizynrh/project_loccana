@@ -7,7 +7,7 @@
         </div>
         <p>Harap isi data yang telah ditandai dengan <span class="text-danger bg-light px-1">*</span>, dan masukkan data
             dengan benar.</p>
-        <form action="{{ route('items.store') }}" method="POST">
+        <form action="{{ route('items.store') }}" method="POST" id="createForm">
             @csrf
             <div class="row mb-3 align-items-center">
                 <div class="col-md-3">
@@ -66,6 +66,17 @@
 
             <div class="row mb-3 align-items-center">
                 <div class="col-md-3">
+                    <label for="unitperbox" class="form-label fw-bold mb-0">Unit Per Box<span
+                            class="text-danger">*</span></label>
+                </div>
+                <div class="col-md-9">
+                    <input type="number" class="form-control" id="unit_of_measure_id" name="unit_of_measure_id"
+                        placeholder="Quantity">
+                </div>
+            </div>
+
+            <div class="row mb-3 align-items-center">
+                <div class="col-md-3">
                     <label for="tipebarang" class="form-label fw-bold mb-0">Tipe Barang <span
                             class="text-danger">*</span></label>
                 </div>
@@ -107,11 +118,27 @@
 
             <div class="row">
                 <div class="col-md-12 text-end">
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                    <button type="reset" class="btn btn-secondary ms-2">Batal</button>
+                    <button type="button" class="btn btn-primary" id="submitButton">Submit</button>
+                    <a href="{{ route('items') }}" class="btn btn-secondary ms-2">Batal</a>
                 </div>
             </div>
         </form>
-
+        <script>
+            document.getElementById('submitButton').addEventListener('click', function(event) {
+                Swal.fire({
+                    title: 'Apakah Anda yakin?',
+                    text: 'Data yang dimasukkan akan disimpan!',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Ya, Simpan!',
+                    cancelButtonText: 'Batal',
+                    reverseButtons: true
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        document.getElementById('createForm').submit();
+                    }
+                });
+            });
+        </script>
     </div>
 @endsection

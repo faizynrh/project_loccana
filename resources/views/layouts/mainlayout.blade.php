@@ -69,7 +69,7 @@
                                 style="color: #919FAC;">Purchase Order</a></li>
                         <li><a href="#" class="nav-link text-decoration-none d-block py-2"
                                 style="color: #919FAC;">Penerimaan Barang</a></li>
-                        <li><a href="#" class="nav-link text-decoration-none d-block py-2"
+                        <li><a href="/dasarpembelian" class="nav-link text-decoration-none d-block py-2"
                                 style="color: #919FAC;">Dasar Pembelian</a></li>
                         <li><a href="#" class="nav-link text-decoration-none d-block py-2"
                                 style="color: #919FAC;">Invoice</a></li>

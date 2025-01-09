@@ -32,18 +32,16 @@ Route::get('/profile', function () {
     return view('profile');
 });
 
-Route::get('/coba', function () {
-    return view('masterdata.coa.edit');
-});
 
 //items
 Route::get('/items', [ItemController::class, 'index'])->name('items');
 Route::get('/items/add', [ItemController::class, 'create'])->name('items.create');
 Route::post('/items/add', [ItemController::class, 'store'])->name('items.store');
-Route::get('/items/delete/{id}', [ItemController::class, 'destroy'])->name('items.destroy');
-Route::get('/items/edit', function () {
-    return view('masterdata.items.edit');
-});
+Route::delete('/items/delete/{id}', [ItemController::class, 'destroy'])->name('items.destroy');
+Route::get('/items/edit/{id}', [ItemController::class, 'edit'])->name('items.edit');
+Route::put('/items/edit/{id}', [ItemController::class, 'update'])->name('items.update');
+Route::get('/items/detail/{id}', [ItemController::class, 'show'])->name('items.detail');
+
 
 //price
 // Route::get('/price', function () {
@@ -57,12 +55,12 @@ Route::get('/price/edit', function () {
 
 //coa
 Route::get('/coa', [CoaController::class, 'index'])->name('coa');
-Route::get('/coa/detail/{id}', [CoaController::class, 'show'])->name('coa.show');
+Route::get('/coa/detail/{id}', [CoaController::class, 'show'])->name('coa.detail');
 Route::get('/coa/add', [CoaController::class, 'create'])->name('coa.create');
 Route::post('/coa/add', [CoaController::class, 'store'])->name('coa.store');
-Route::delete('/coa/{id}', [CoaController::class, 'destroy'])->name('coa.destroy');
+Route::delete('/coa/delete{id}', [CoaController::class, 'destroy'])->name('coa.destroy');
 Route::get('/coa/edit/{id}', [CoaController::class, 'edit'])->name('coa.edit');
-Route::put('/coa/{id}', [CoaController::class, 'update'])->name('coa.update');
+Route::put('/coa/edit/{id}', [CoaController::class, 'update'])->name('coa.update');
 
 
 
@@ -124,4 +122,10 @@ route::get('/user', function () {
 });
 route::get('/user/add', function () {
     return view('masterdata.user.add');
+});
+
+
+//dasarpembelian
+route::get('/dasarpembelian', function () {
+    return view('procurement.dasarpembelian.dasarpembelian');
 });

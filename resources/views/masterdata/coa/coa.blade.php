@@ -1,6 +1,5 @@
 @extends('layouts.mainlayout')
 @section('content')
-    {{-- <link rel="stylesheet" href="{{ asset('assets/datatables/datatables.min.css') }}"> --}}
     <div class="container mt-3 bg-white rounded-top">
         <div class="p-2">
             <h5 class="fw-bold ">Chart Of Account</h5>
@@ -11,7 +10,6 @@
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         @endif
-
         @if ($errors->any())
             <div class="alert alert-danger alert-dismissible fade show" role="alert">
                 @foreach ($errors->all() as $error)
@@ -36,32 +34,36 @@
                     @foreach ($data['data']['coa'] as $item)
                         <tr>
                             <td>{{ $loop->iteration }}</td>
-                            {{-- <td>{{ $item['id'] }}</td> --}}
-                            <td style="cursor: pointer" onclick="window.location='{{ route('coa.show', $item['id']) }}';">
-                                {{ $item['parent'] }}</td>
+                            <td>{{ $item['parent'] }}</td>
                             <td>{{ $item['coa'] }}</td>
                             <td>{{ $item['description'] }}</td>
                             <td>
-                                <a href="{{ route('coa.edit', $item['id']) }}" class="btn btn-sm btn-warning mb-2"
-                                    title="Edit">
-                                    <i class="bi bi-pencil"></i>
+                                <div class="d-flex mb-2">
+                                    <a href="{{ route('coa.detail', $item['id']) }}" class="btn btn-sm btn-info me-2"
+                                        title="Detail">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                    <a href="{{ route('coa.edit', $item['id']) }}" class="btn btn-sm btn-warning me-2"
+                                        title="Edit">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <form action="{{ route('coa.destroy', $item['id']) }}" method="POST"
+                                        id="delete{{ $item['id'] }}" style="display:inline;">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="button" class="btn btn-sm btn-danger" title="Hapus"
+                                            onclick="confirmDelete({{ $item['id'] }})">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                                <a href="" class="btn btn-sm btn-danger w-100" title="Hide">
+                                    <i class="bi bi-search me-1"></i> Hide
                                 </a>
-                                <form action="{{ route('coa.destroy', $item['id']) }}" method="POST"
-                                    id="delete{{ $item['id'] }}" style="display:inline;">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="button" class="btn btn-sm btn-danger mb-2" title="Hapus"
-                                        onclick="confirmDelete({{ $item['id'] }})">
-                                        <i class="bi bi-trash"></i>
-                                    </button>
-                                </form>
                             </td>
+
                         </tr>
                     @endforeach
-                @else
-                    <tr>
-                        <td colspan="5">No data available.</td>
-                    </tr>
                 @endif
             </tbody>
             <script>
@@ -79,37 +81,6 @@
                     });
                 }
             </script>
-
-            {{-- <tbody>
-                @if (!empty($data))
-                    @foreach ($data as $item)
-                        <tr>
-                            <td>{{ $loop->iteration }}</td>
-                            <td>{{ $item['id'] ?? '-' }}</td>
-                            <td>{{ $item['coa_code'] ?? '-' }}</td>
-                            <td>{{ $item['coa_name'] ?? '-' }}</td>
-                            <td>
-                                <a href="coa/edit" class="btn btn-sm btn-warning mb-2" title="Edit">
-                                    <i class="bi bi-pencil"></i>
-                                </a>
-                                <button class="btn btn-sm btn-danger mb-2" title="Hapus">
-                                    <i class="bi bi-trash"></i>
-                                </button>
-                                <button class="btn btn-sm btn-danger w-100" title="Lihat">
-                                    <i class="bi bi-search">
-                                        <label for="">Hide</label>
-                                    </i>
-                                </button>
-                            </td>
-                        </tr>
-                    @endforeach
-                @else
-                    <tr>
-                        <td colspan="5">No data available.</td>
-                    </tr>
-                @endif
-            </tbody> --}}
         </table>
     </div>
-
 @endsection
