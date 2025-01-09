@@ -1,165 +1,89 @@
-@extends('layouts.mainlayout')
-@section('content')
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
-    <link rel="stylesheet" href="assets/css/homestyle.css">
+<!DOCTYPE html>
+<html lang="id">
 
-    <!-- Top Cards -->
-    <div class="top-cards">
-        <div class="card small-card">
-            <div class="card-title">
-                <i class="fas fa-dollar-sign icon"></i>
-                Total Revenue
-            </div>
-            <div class="card-value">$24,500</div>
-            <div class="card-subtitle">
-                <i class="fas fa-arrow-up positive"></i>
-                <span class="positive">+15%</span> from last month
-            </div>
-            <div class="progress-bar">
-                <div class="progress" style="width: 75%"></div>
-            </div>
-        </div>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PT. Endira Alda</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <style>
+        .custom-bg {
+            background: linear-gradient(135deg, #5689E6, #5FA3E7, #87CEEB);
+        }
 
-        <div class="card small-card">
-            <div class="card-title">
-                <i class="fas fa-users icon"></i>
-                New Users
-            </div>
-            <div class="card-value">1,240</div>
-            <div class="card-subtitle">
-                <i class="fas fa-arrow-up positive"></i>
-                <span class="positive">+8%</span> from last month
-            </div>
-            <div class="progress-bar">
-                <div class="progress" style="width: 65%"></div>
-            </div>
-        </div>
+        .btn-next {
+            background-color: white;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
 
-        <div class="card large-card">
-            <div class="card-title">
-                <i class="fas fa-chart-line icon"></i>
-                Performance Overview
-            </div>
-            <div style="display: flex; justify-content: space-between;">
-                <div>
-                    <div class="card-value">89%</div>
-                    <div class="card-subtitle">Overall Growth</div>
-                </div>
-                <div style="text-align: right;">
-                    <div class="card-value positive">↑ 12%</div>
-                    <div class="card-subtitle">vs last week</div>
-                </div>
-            </div>
-            <div class="progress-bar">
-                <div class="progress" style="width: 89%"></div>
-            </div>
-        </div>
-    </div>
+        .btn-next:hover {
+            transform: translateX(10px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
 
-    <!-- Bottom Section -->
-    <div class="bottom-section">
-        <!-- Chart Card -->
-        <div class="card">
-            <div class="card-title">
-                <i class="fas fa-chart-bar icon"></i>
-                Monthly Analytics
-            </div>
-            <div class="chart-container">
-                <canvas id="myChart"></canvas>
-            </div>
-        </div>
+        .list-decor::before {
+            content: "✔";
+            color: #FFD700;
+            margin-right: 10px;
+        }
 
-        <!-- Todo List Card -->
-        <div class="card">
-            <div class="card-title">
-                <i class="fas fa-tasks icon"></i>
-                Reminders
-            </div>
-            <ul class="todo-list">
-                <li class="todo-item">
-                    <span class="checkbox"></span>
-                    <div>
-                        Review quarterly reports
-                        <span class="tag tag-blue">Priority</span>
-                    </div>
-                </li>
-                <li class="todo-item">
-                    <span class="checkbox done"></span>
-                    <div>
-                        Team meeting at 2 PM
-                        <span class="tag tag-green">Completed</span>
-                    </div>
-                </li>
-                <li class="todo-item">
-                    <span class="checkbox"></span>
-                    <div>
-                        Update project timeline
-                        <span class="tag tag-blue">In Progress</span>
-                    </div>
-                </li>
-                <li class="todo-item">
-                    <span class="checkbox"></span>
-                    <div>
-                        Client presentation
-                        <span class="tag tag-blue">Upcoming</span>
-                    </div>
-                </li>
-            </ul>
-        </div>
-    </div>
+        .floating {
+            animation: float 3s ease-in-out infinite;
+        }
 
-    <script>
-        // Initialize Chart
-        const ctx = document.getElementById('myChart').getContext('2d');
-        new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-                datasets: [{
-                    label: 'Monthly Performance',
-                    data: [400, 300, 600, 800, 500, 700],
-                    fill: true,
-                    borderColor: '#4299e1',
-                    backgroundColor: 'rgba(66, 153, 225, 0.1)',
-                    tension: 0.4,
-                    borderWidth: 2,
-                    pointBackgroundColor: '#4299e1',
-                    pointBorderColor: '#fff',
-                    pointBorderWidth: 2,
-                    pointRadius: 4,
-                    pointHoverRadius: 6
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        display: false
-                    }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        grid: {
-                            borderDash: [2, 2]
-                        }
-                    },
-                    x: {
-                        grid: {
-                            display: false
-                        }
-                    }
-                }
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0);
             }
-        });
 
-        // Add click functionality to checkboxes
-        document.querySelectorAll('.checkbox').forEach(checkbox => {
-            checkbox.addEventListener('click', () => {
-                checkbox.classList.toggle('done');
-            });
-        });
-    </script>
-@endsection
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+    </style>
+</head>
+
+<body class="custom-bg min-h-screen flex items-center">
+    <div class="container mx-auto px-4">
+        <div class="flex flex-wrap items-center justify-between">
+            <!-- Left Section -->
+            <div class="w-full lg:w-1/2 text-white mb-8 lg:mb-0">
+                <h1 class="text-4xl lg:text-6xl font-bold mb-6 leading-tight">
+                    Selamat Datang di <span class="text-yellow-300">PT. Endira Alda</span>
+                </h1>
+                {{-- <p class="text-lg mb-8 opacity-90">
+                    Kami menghadirkan solusi inovatif dan berkelanjutan untuk membangun masa depan yang lebih baik.
+                </p>
+                <ul class="mb-8 space-y-4">
+                    <li class="list-decor">Solusi Bisnis Inovatif</li>
+                    <li class="list-decor">Pelayanan Terbaik</li>
+                    <li class="list-decor">Keberlanjutan untuk Semua</li>
+                </ul> --}}
+                <a href="/dashboard"
+                    class="btn-next px-8 py-3 rounded-full text-blue-600 font-semibold inline-block hover:shadow-lg text-center">
+                    Selanjutnya
+                </a>
+            </div>
+
+            <!-- Right Section -->
+            <div class="w-full lg:w-1/2 flex justify-center">
+                <div class="relative">
+                    <!-- Lingkaran sebagai Background -->
+                    <div
+                        class="absolute inset-0 bg-gradient-to-t from-blue-500 via-transparent to-transparent opacity-40 rounded-full">
+                    </div>
+
+                    <!-- Gambar dengan Lingkaran -->
+                    <div class="relative rounded-full overflow-hidden w-100 h-90 mx-auto">
+                        <img src="assets/images/img-home.png" alt="Modern Business Illustration"
+                            class="max-w-full h-auto object-cover relative z-10">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
