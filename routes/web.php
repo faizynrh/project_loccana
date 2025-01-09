@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CoaController;
+use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\GudangController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\PriceController;
@@ -88,9 +89,7 @@ route::get('/tambah-informasi', function () {
 });
 
 //customer
-route::get('/customer', function () {
-    return view('masterdata.customer.customer');
-});
+Route::get('/customer', [CustomerController::class, 'index'])->name('customer.index');
 route::get('/customer/add', function () {
     return view('masterdata.customer.tambah-customer');
 });
