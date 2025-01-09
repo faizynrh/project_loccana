@@ -92,7 +92,7 @@ route::get('/customer', function () {
     return view('masterdata.customer.customer');
 });
 route::get('/customer/add', function () {
-    return view('masterdata.customer.add-customer');
+    return view('masterdata.customer.tambah-customer');
 });
 route::get('/customer/edit', function () {
     return view('masterdata.customer.edit-customer');
