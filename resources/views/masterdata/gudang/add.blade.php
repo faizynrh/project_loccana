@@ -22,7 +22,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         @endif
-        <form action="{{ route('gudang.store') }}" method="POST">
+        <form action="{{ route('gudang.store') }}" method="POST" id="createForm">
             @csrf
             <div class="row mb-3 align-items-center">
                 <div class="col-md-3">
@@ -70,10 +70,27 @@
 
             <div class="row">
                 <div class="col-md-12 text-end">
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                    <button type="reset" class="btn btn-secondary ms-2">Batal</button>
+                    <button type="button" class="btn btn-primary" id="submitButton">Submit</button>
+                    <a href="{{ route('gudang') }}" class="btn btn-secondary ms-2">Batal</a>
                 </div>
             </div>
         </form>
+        <script>
+            document.getElementById('submitButton').addEventListener('click', function(event) {
+                Swal.fire({
+                    title: 'Apakah Anda yakin?',
+                    text: 'Data yang dimasukkan akan disimpan!',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Ya, Simpan!',
+                    cancelButtonText: 'Batal',
+                    reverseButtons: true
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        document.getElementById('createForm').submit();
+                    }
+                });
+            });
+        </script>
     </div>
 @endsection

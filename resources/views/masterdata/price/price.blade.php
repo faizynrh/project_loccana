@@ -35,7 +35,7 @@
             <tbody>
                 <tr>
                     @if (!empty($data))
-                        @foreach ($data['data'] as $item)
+                        @foreach ($data['data']['table'] as $item)
                             <td>{{ $loop->iteration }}</td>
                             <td>{{ $item['kode_item'] }}</td>
                             <td>{{ $item['nama_item'] }}</td>
@@ -69,7 +69,7 @@
             function confirmApprove(id) {
                 Swal.fire({
                     title: 'Apakah kamu yakin?',
-                    text: 'Pastikan ini data yang akan di approve',
+                    text: 'Pastikan ini data yang akan disetujui',
                     icon: 'warning',
                     showCancelButton: true,
                     reverseButtons: true

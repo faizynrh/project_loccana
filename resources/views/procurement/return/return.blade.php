@@ -2,7 +2,7 @@
 @section('content')
     <div class="container mt-3 bg-white rounded-top">
         <div class="p-2">
-            <h5 class="fw-bold ">Chart Of Account</h5>
+            <h5 class="fw-bold ">List Return Pembelian</h5>
         </div>
         @if (session('success'))
             <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -22,44 +22,38 @@
         <table class="table table-striped table-bordered mt-3" id="tablecoa">
             <thead>
                 <tr>
-                    <th scope="col" class="col-1">No</th>
-                    <th scope="col" class="col-5">Parent</th>
-                    <th scope="col" class="col-2">COA</th>
-                    <th scope="col" class="col-3">Keterangan</th>
-                    <th scope="col" class="col-2">Option</th>
+                    <th scope="col">Invoice</th>
+                    <th scope="col">Principle</th>
+                    <th scope="col">Tanggal</th>
+                    <th scope="col">Pengaju</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Action</th>
                 </tr>
             </thead>
             <tbody>
-                @if (!empty($data['data']['coa']))
-                    @foreach ($data['data']['coa'] as $item)
+                @if (!empty($data['data']['table']))
+                    @foreach ($data['data']['table'] as $item)
                         <tr>
-                            <td>{{ $loop->iteration }}</td>
-                            <td>{{ $item['parent'] }}</td>
-                            <td>{{ $item['coa'] }}</td>
-                            <td>{{ $item['description'] }}</td>
+                            <td>{{ $item['invoice'] }}</td>
+                            <td>{{ $item['principle'] }}</td>
+                            <td>{{ $item['tgl_return'] }}</td>
+                            <td>{{ $item['pengaju'] }}</td>
+                            <td>{{ $item['status'] }}</td>
                             <td>
                                 <div class="d-flex mb-2">
-                                    <a href="{{ route('coa.detail', $item['id']) }}" class="btn btn-sm btn-info me-2"
-                                        title="Detail">
+                                    <a href="" class="btn btn-sm btn-info me-2" title="Detail">
                                         <i class="bi bi-eye"></i>
                                     </a>
-                                    <a href="{{ route('coa.edit', $item['id']) }}" class="btn btn-sm btn-warning me-2"
-                                        title="Edit">
-                                        <i class="bi bi-pencil"></i>
-                                    </a>
-                                    <form action="{{ route('coa.destroy', $item['id']) }}" method="POST"
-                                        id="delete{{ $item['id'] }}" style="display:inline;">
+                                    <form action="" method="POST" id="" style="display:inline;">
                                         @csrf
                                         @method('DELETE')
                                         <button type="button" class="btn btn-sm btn-danger" title="Hapus"
-                                            onclick="confirmDelete({{ $item['id'] }})">
+                                            onclick="confirmDelete({{ $item['id_return'] }})">
                                             <i class="bi bi-trash"></i>
                                         </button>
                                     </form>
                                 </div>
-                                <a href="" class="btn btn-sm btn-danger w-100" title="Hide">
-                                    <i class="bi bi-search me-1"></i> Hide
-                                </a>
+
                             </td>
                         </tr>
                     @endforeach

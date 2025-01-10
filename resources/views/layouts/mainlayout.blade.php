@@ -101,9 +101,9 @@
                                 style="color: #919FAC;">Invoice</a></li>
                         <li><a href="/rekappo" class="nav-link text-decoration-none d-block py-2"
                                 style="color: #919FAC;">Rekap PO</a></li>
-                        <li><a href="#" class="nav-link text-decoration-none d-block py-2"
+                        <li><a href="/return" class="nav-link text-decoration-none d-block py-2"
                                 style="color: #919FAC;">Retur</a></li>
-                        <li><a href="#" class="nav-link text-decoration-none d-block py-2"
+                        <li><a href="/report" class="nav-link text-decoration-none d-block py-2"
                                 style="color: #919FAC;">Report</a></li>
                     </ul>
                 </div>
@@ -125,7 +125,7 @@
                                 style="color: #919FAC;">Stock In Transit</a></li>
                         <li><a href="#" class="nav-link text-decoration-none d-block py-2"
                                 style="color: #919FAC;">Transfer Stock</a></li>
-                        <li><a href="#" class="nav-link text-decoration-none d-block py-2"
+                        <li><a href="" class="nav-link text-decoration-none d-block py-2"
                                 style="color: #919FAC;">Report</a></li>
                     </ul>
                 </div>

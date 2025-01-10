@@ -8,7 +8,10 @@ use App\Http\Controllers\masterdata\PriceController;
 use App\Http\Controllers\masterdata\UomDataController;
 use App\Http\Controllers\masterdata\CustomerController;
 use App\Http\Controllers\masterdata\PrincipalController;
+use App\Http\Controllers\procurement\DasarPembelianController;
 use App\Http\Controllers\procurement\RekappoController;
+use App\Http\Controllers\procurement\ReportController;
+use App\Http\Controllers\procurement\ReturnController;
 use Illuminate\Support\Facades\Route;
 /*
 |--------------------------------------------------------------------------
@@ -52,6 +55,7 @@ Route::get('/items/detail/{id}', [ItemController::class, 'show'])->name('items.d
 //price
 Route::get('/price', [PriceController::class, 'index'])->name('price');
 Route::get('/price/edit/{id}', [PriceController::class, 'edit'])->name('price.edit');
+Route::put('/price/edit/{id}', [PriceController::class, 'update'])->name('price.update');
 Route::put('/price/approve/{id}', [PriceController::class, 'approve'])->name('price.approve');
 
 
@@ -68,6 +72,7 @@ Route::put('/coa/edit/{id}', [CoaController::class, 'update'])->name('coa.update
 Route::get('/gudang', [GudangController::class, 'index'])->name('gudang');
 Route::get('/gudang/add', [GudangController::class, 'create'])->name('gudang.create');
 Route::get('/gudang/edit/{id}', [GudangController::class, 'edit'])->name('gudang.edit');
+Route::put('/gudang/edit/{id}', [GudangController::class, 'update'])->name('gudang.update');
 Route::post('/gudang/add', [GudangController::class, 'store'])->name('gudang.store');
 Route::delete('/gudang/delete{id}', [GudangController::class, 'destroy'])->name('gudang.destroy');
 
@@ -126,10 +131,13 @@ route::get('/user/add', function () {
 
 
 //dasarpembelian
-route::get('/dasarpembelian', function () {
-    return view('procurement.dasarpembelian.dasarpembelian');
-});
+Route::get('/dasarpembelian', [DasarPembelianController::class, 'index'])->name('dasarpembelian');
 
+//report
+Route::get('/report', [ReportController::class, 'index'])->name('report');
+
+//return
+Route::get('/return', [ReturnController::class, 'index'])->name('return');
 
 //rekap po
 Route::get('/rekappo', [RekappoController::class, 'index'])->name('rekappo.index');

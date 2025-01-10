@@ -34,7 +34,7 @@
             <tbody>
                 <tr>
                     @if (!empty($data))
-                        @foreach ($data['data'] as $item)
+                        @foreach ($data['data']['table'] as $item)
                             <td>{{ $loop->iteration }}</td>
                             <td>{{ $item['kode_gudang'] }}</td>
                             <td>{{ $item['nama_gudang'] }}</td>

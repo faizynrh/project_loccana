@@ -91,12 +91,10 @@ class GudangController extends Controller
                 $apiResponse->successful() &&
                 isset($responseData['success'])
             ) {
-                dd($request->all());
-
-                dd([
-                    'input_data' => $data,         // Data yang dikirim ke API
-                    'api_response' => $responseData // Respons API
-                ]);
+                // dd([
+                //     'input_data' => $data,         // Data yang dikirim ke API
+                //     'api_response' => $responseData // Respons API
+                // ]);
                 return redirect()->route('gudang')
                     ->with('success', $responseData['message'] ?? 'Gudang Berhasil Ditambahkan');
             } else {
@@ -133,7 +131,7 @@ class GudangController extends Controller
             ])->get($apiurl);
 
             if ($apiResponse->successful()) {
-                dd($apiResponse->json());
+                // dd($apiResponse->json());
                 $data = $apiResponse->json()['data'];
                 return view('masterdata.gudang.edit', compact('data', 'id'));
             } else {
@@ -149,7 +147,35 @@ class GudangController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        try {
+            $apiurl = 'https://gateway-internal.apicentrum.site/t/loccana.com/masterdata/warehouse/1.0.0/warehouse/' . $id;
+            $accessToken = $this->getAccessToken();
+
+            $data = [
+                'name' => $request->name,
+                'location' => $request->location,
+                'description' => $request->description,
+                'capacity' => $request->capacity,
+            ];
+
+            $apiResponse = Http::withHeaders([
+                'Authorization' => 'Bearer ' . $accessToken,
+                'Content-Type' => 'application/json'
+            ])->put($apiurl, $data);
+
+            // dd([
+            //     'data' => $data,
+            //     'apiResponse' => $apiResponse
+            // ]);
+
+            if ($apiResponse->successful()) {
+                return redirect()->route('gudang')->with('success', 'Data Gudang berhasil diperbarui!');
+            } else {
+                return back()->withErrors('Gagal memperbarui data Gudang: ' . $apiResponse->status());
+            }
+        } catch (\Exception $e) {
+            return back()->withErrors($e->getMessage());
+        }
     }
 
     /**

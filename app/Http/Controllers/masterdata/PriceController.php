@@ -67,9 +67,14 @@ class PriceController extends Controller
                 'Authorization' => 'Bearer ' . $accessToken,
                 'Content-Type' => 'application/json'
             ])->get($apiurl);
+            // dd([
+            //     'status_code' => $apiResponse->status(),
+            //     'headers' => $apiResponse->headers(),
+            //     'body' => $apiResponse->json(),
+            //     'url' => $apiurl,
+            // ]);
             if ($apiResponse->successful()) {
                 $data = $apiResponse->json()['data'];
-                dd($data);
                 return view('masterdata.price.edit', compact('data', 'id'));
             } else {
                 return back()->withErrors('Gagal mengambil data Price: ' . $apiResponse->status());
@@ -97,7 +102,6 @@ class PriceController extends Controller
                 'Authorization' => 'Bearer ' . $accessToken,
                 'Content-Type' => 'application/json'
             ])->put($apiurl, $data);
-
             if ($apiResponse->successful()) {
                 return redirect()->route('price')->with('success', 'Data Price berhasil diperbarui!');
             } else {
@@ -115,16 +119,16 @@ class PriceController extends Controller
             $accessToken = $this->getAccessToken();
             // dd($accessToken);
             $data = [
-                'status' => 'Approve',
+                'status' => 'Setuju',
             ];
 
             $apiResponse = Http::withHeaders([
                 'Authorization' => 'Bearer ' . $accessToken,
                 'Content-Type' => 'application/json'
             ])->put($apiurl, $data);
-            dd($data);
+            // dd($data);
             if ($apiResponse->successful()) {
-                return redirect()->route('price')->with('success', 'Price Berhasil Diapprove');
+                return redirect()->route('price')->with('success', 'Data Berhasil Disetujui!');
             } else {
                 return back()->withErrors('Gagal Approve Price: ' . $apiResponse->status());
             }
