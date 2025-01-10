@@ -1,6 +1,5 @@
 <?php
 
-
 use App\Http\Controllers\masterdata\CoaController;
 use App\Http\Controllers\masterdata\GudangController;
 use App\Http\Controllers\masterdata\ItemController;
@@ -9,6 +8,7 @@ use App\Http\Controllers\masterdata\UomDataController;
 use App\Http\Controllers\masterdata\CustomerController;
 use App\Http\Controllers\masterdata\PrincipalController;
 use App\Http\Controllers\procurement\RekappoController;
+
 use Illuminate\Support\Facades\Route;
 /*
 |--------------------------------------------------------------------------
@@ -50,14 +50,10 @@ Route::get('/items/detail/{id}', [ItemController::class, 'show'])->name('items.d
 
 
 //price
-// Route::get('/price', function () {
-//     return view('masterdata.price.price');
-// });
 Route::get('/price', [PriceController::class, 'index'])->name('price');
+Route::get('/price/edit/{id}', [PriceController::class, 'edit'])->name('price.edit');
+Route::put('/price/approve/{id}', [PriceController::class, 'approve'])->name('price.approve');
 
-Route::get('/price/edit', function () {
-    return view('masterdata.price.edit');
-});
 
 //coa
 Route::get('/coa', [CoaController::class, 'index'])->name('coa');
@@ -67,6 +63,13 @@ Route::post('/coa/add', [CoaController::class, 'store'])->name('coa.store');
 Route::delete('/coa/delete{id}', [CoaController::class, 'destroy'])->name('coa.destroy');
 Route::get('/coa/edit/{id}', [CoaController::class, 'edit'])->name('coa.edit');
 Route::put('/coa/edit/{id}', [CoaController::class, 'update'])->name('coa.update');
+
+//gudang
+Route::get('/gudang', [GudangController::class, 'index'])->name('gudang');
+Route::get('/gudang/add', [GudangController::class, 'create'])->name('gudang.create');
+Route::get('/gudang/edit/{id}', [GudangController::class, 'edit'])->name('gudang.edit');
+Route::post('/gudang/add', [GudangController::class, 'store'])->name('gudang.store');
+Route::delete('/gudang/delete{id}', [GudangController::class, 'destroy'])->name('gudang.destroy');
 
 
 
@@ -79,6 +82,7 @@ Route::get('/uom/edit/{id}', [UomDataController::class, 'edit'])->name('uom.edit
 Route::put('/uom/update/{id}', [UomDataController::class, 'update'])->name('uom.update');
 Route::get('/uom/show/{id}', [UomDataController::class, 'show'])->name('uom.show');
 
+
 // informasi
 route::get('/informasi', function () {
     return view('masterdata.informasi.informasi');
@@ -88,7 +92,9 @@ route::get('/tambah-informasi', function () {
 });
 
 //customer
-Route::get('/customer', [CustomerController::class, 'index'])->name('customer.index');
+route::get('/customer', function () {
+    return view('masterdata.customer.customer');
+});
 route::get('/customer/add', function () {
     return view('masterdata.customer.tambah-customer');
 });
@@ -102,21 +108,10 @@ route::get('/principal/add', function () {
     return view('masterdata.principal.tambah-principal');
 });
 
-
 //gudang
 Route::get('/gudang', [GudangController::class, 'index'])->name('gudang');
 
-// route::get('/gudang', function () {
-//     return view('masterdata.gudang.gudang');
-// });
 
-Route::get('/gudang/add', [GudangController::class, 'create'])->name('gudang.create');
-
-Route::post('/gudang/add', [GudangController::class, 'store'])->name('gudang.store');
-
-route::get('/gudang/edit', function () {
-    return view('masterdata.gudang.edit');
-});
 
 //user
 route::get('/user', function () {

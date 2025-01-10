@@ -41,20 +41,9 @@ class PriceController extends Controller
                 'offset' => 0,
                 'company_id' => 0,
             ]);
-            // dd([
-            //     'status_code' => $apiResponse->status(),
-            //     'headers' => $apiResponse->headers(),
-            //     'body' => $apiResponse->json(),
-            //     'url' => $apiurl,
-            //     'request_data' => [
-            //         'search' => '',
-            //         'limit' => 10,
-            //         'offset' => 0,
-            //         'company_id' => 0,
-            //     ],
-            // ]);
             if ($apiResponse->successful()) {
                 $data = $apiResponse->json();
+                // dd($data);
                 return view('masterdata.price.price', ['data' => $data]);
             } else {
                 return response()->json([
@@ -78,13 +67,12 @@ class PriceController extends Controller
                 'Authorization' => 'Bearer ' . $accessToken,
                 'Content-Type' => 'application/json'
             ])->get($apiurl);
-
             if ($apiResponse->successful()) {
                 $data = $apiResponse->json()['data'];
                 dd($data);
                 return view('masterdata.price.edit', compact('data', 'id'));
             } else {
-                return back()->withErrors('Gagal mengambil data COA: ' . $apiResponse->status());
+                return back()->withErrors('Gagal mengambil data Price: ' . $apiResponse->status());
             }
         } catch (\Exception $e) {
             return back()->withErrors($e->getMessage());
@@ -95,14 +83,14 @@ class PriceController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            $apiurl = 'https://gateway-internal.apicentrum.site/t/loccana.com/loccana/masterdata/coa/1.0.0/masterdata/coa/' . $id;
+            $apiurl = 'https://gateway-internal.apicentrum.site/t/loccana.com/masterdata/price/1.0.0/price-manajement/' . $id;
             $accessToken = $this->getAccessToken();
 
             $data = [
-                'parent_account_id' => $request->parent_name === 'tanpaparent' ? null : $request->parent_name,
-                'account_code' => $request->account_code,
-                'description' => $request->keterangancoa,
-                'status' => $request->showhide,
+                'harga_atas' => $request->harga_atas ?? 0,
+                'harga_bawah' => $request->harga_bawah ?? 0,
+                'harga_pokok' => $request->harga_pokok ?? 0,
+                'harga_beli' => $request->harga_beli ?? 0,
             ];
 
             $apiResponse = Http::withHeaders([
@@ -111,20 +99,37 @@ class PriceController extends Controller
             ])->put($apiurl, $data);
 
             if ($apiResponse->successful()) {
-                return redirect()->route('coa')->with('success', 'Data COA berhasil diperbarui!');
+                return redirect()->route('price')->with('success', 'Data Price berhasil diperbarui!');
             } else {
-                return back()->withErrors('Gagal memperbarui data COA: ' . $apiResponse->status());
+                return back()->withErrors('Gagal memperbarui data Price: ' . $apiResponse->status());
             }
         } catch (\Exception $e) {
             return back()->withErrors($e->getMessage());
         }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function approve(Request $request, $id)
     {
-        //
+        try {
+            $apiurl = 'https://gateway-internal.apicentrum.site/t/loccana.com/masterdata/price/1.0.0/price-manajement/approve/' . $id;
+            $accessToken = $this->getAccessToken();
+            // dd($accessToken);
+            $data = [
+                'status' => 'Approve',
+            ];
+
+            $apiResponse = Http::withHeaders([
+                'Authorization' => 'Bearer ' . $accessToken,
+                'Content-Type' => 'application/json'
+            ])->put($apiurl, $data);
+            dd($data);
+            if ($apiResponse->successful()) {
+                return redirect()->route('price')->with('success', 'Price Berhasil Diapprove');
+            } else {
+                return back()->withErrors('Gagal Approve Price: ' . $apiResponse->status());
+            }
+        } catch (\Exception $e) {
+            return back()->withErrors($e->getMessage());
+        }
     }
 }

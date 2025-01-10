@@ -123,7 +123,25 @@ class GudangController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        try {
+            $apiurl = 'https://gateway-internal.apicentrum.site/t/loccana.com/masterdata/warehouse/1.0.0/warehouse/' . $id;
+            $accessToken = $this->getAccessToken();
+
+            $apiResponse = Http::withHeaders([
+                'Authorization' => 'Bearer ' . $accessToken,
+                'Content-Type' => 'application/json'
+            ])->get($apiurl);
+
+            if ($apiResponse->successful()) {
+                dd($apiResponse->json());
+                $data = $apiResponse->json()['data'];
+                return view('masterdata.gudang.edit', compact('data', 'id'));
+            } else {
+                return back()->withErrors('Gagal mengambil data COA: ' . $apiResponse->status());
+            }
+        } catch (\Exception $e) {
+            return back()->withErrors($e->getMessage());
+        }
     }
 
     /**
@@ -139,6 +157,24 @@ class GudangController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        try {
+            $apiurl = 'https://gateway-internal.apicentrum.site/t/loccana.com/masterdata/warehouse/1.0.0/warehouse/' . $id;
+            $accessToken = $this->getAccessToken();
+
+            $apiResponse = Http::withHeaders([
+                'Authorization' => 'Bearer ' . $accessToken,
+                'Content-Type' => 'application/json'
+            ])->delete($apiurl);
+            if ($apiResponse->successful()) {
+                return redirect()->route('gudang')
+                    ->with('success', 'Data Gudang berhasil dihapus');
+            } else {
+                return back()->withErrors(
+                    'Gagal menghapus data: ' . $apiResponse->body()
+                );
+            }
+        } catch (\Exception $e) {
+            return back()->withErrors($e->getMessage());
+        }
     }
 }
