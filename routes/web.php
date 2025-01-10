@@ -8,7 +8,7 @@ use App\Http\Controllers\masterdata\PriceController;
 use App\Http\Controllers\masterdata\UomDataController;
 use App\Http\Controllers\masterdata\CustomerController;
 use App\Http\Controllers\masterdata\PrincipalController;
-
+use App\Http\Controllers\procurement\RekappoController;
 use Illuminate\Support\Facades\Route;
 /*
 |--------------------------------------------------------------------------
@@ -134,6 +134,4 @@ route::get('/dasarpembelian', function () {
 
 
 //rekap po
-route::get('/rekappo', function () {
-    return view('procurement.rekappo.rekappo');
-});
+Route::get('/rekappo', [RekappoController::class, 'index'])->name('rekappo.index');
