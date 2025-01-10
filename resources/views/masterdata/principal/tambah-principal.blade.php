@@ -18,7 +18,7 @@
             </div>
         @endif
 
-        <form action="{{ route('uom.store') }}" method="POST" id="addForm">
+        <form action="{{ route('principal.store') }}" method="POST" id="addForm">
             @csrf
             <div class="row">
                 <div class="col-md-4 mb-3">
@@ -45,8 +45,7 @@
             <div class="row">
                 <div class="col-md-4 mb-3">
                     <label for="kode" class="form-label fw-bold">Nama</label>
-                    <input type="text" name="kode" placeholder="Kode Principal" class="form-control" id="kode"
-                        required>
+                    <input type="text" name="nama" placeholder="Nama" class="form-control" id="kode" required>
                 </div>
 
                 {{-- bank1 --}}
@@ -84,7 +83,7 @@
             <div class="row">
                 <div class="col-md-4 mb-3">
                     <label for="notelp" class="form-label fw-bold">No. Telp</label>
-                    <input type="text" name="notelp" placeholder="No. Telp" class="form-control" id="notelp"
+                    <input type="number" name="notelp" placeholder="No. Telp" class="form-control" id="notelp"
                         required>
                 </div>
 
@@ -100,7 +99,7 @@
             <div class="row">
                 <div class="col-md-4 mb-3">
                     <label for="fax" class="form-label fw-bold">Fax</label>
-                    <input type="text" name="fax" placeholder="Fax" class="form-control" id="fax"
+                    <input type="number" name="fax" placeholder="Fax" class="form-control" id="fax"
                         required>
                 </div>
             </div>

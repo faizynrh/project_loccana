@@ -21,7 +21,7 @@
 
         <h3 style="font-size: 18px; padding-top:25px; font-weight: 700">List Principal</h3>
         <div class="d-flex justify-content-between align-items-center">
-            <a href="/principal/add" class="btn btn-primary"><strong>+</strong></a>
+            <a href="/principal-tambah" class="btn btn-primary"><strong>+</strong></a>
         </div>
 
         <table class="table table-striped table-bordered mt-3" id="tableprincipal">
@@ -40,16 +40,16 @@
                 @if (!empty($data['table']))
                     @foreach ($data['table'] as $index => $item)
                         <tr style="cursor: pointer" onclick="window.location='{{ route('uom.show', $item['id']) }}';">
-                            <td>{{ $loop->iteration }}</td>
+                            <td>{{ $item['id'] }}</td>
+                            <td>{{ $item['company_id'] ?? '-' }}</td>
+                            <td>{{ $item['partner_type'] ?? '-' }}</td>
                             <td>{{ $item['name'] ?? '-' }}</td>
-                            <td>{{ $item['symbol'] ?? '-' }}</td>
-                            <td>{{ $item['description'] ?? '-' }}</td>
-                            <td>{{ $item['description'] ?? '-' }}</td>
+                            <td>{{ $item['contact_info'] ?? '-' }}</td>
                             <td>
-                                <a href="/uom/edit/{{ $item['id'] }}" class="btn btn-sm btn-warning mb-2">
+                                <a href="/principal/edit/{id}" class="btn btn-sm btn-warning mb-2">
                                     <i class="bi bi-pencil"></i>
                                 </a>
-                                <form action="{{ route('uom.destroy', $item['id']) }}" method="POST"
+                                <form action="{{ route('principal.destroy', $item['id']) }}" method="POST"
                                     id="delete{{ $item['id'] }}" style="display:inline;">
                                     @csrf
                                     @method('DELETE')

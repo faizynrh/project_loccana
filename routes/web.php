@@ -110,9 +110,11 @@ route::get('/customer/edit', function () {
 
 //principal
 Route::get('/principal', [PrincipalController::class, 'index'])->name('principal.index');
-route::get('/principal/add', function () {
-    return view('masterdata.principal.tambah-principal');
-});
+Route::get('/principal-tambah', [PrincipalController::class, 'create'])->name('principal.create');
+Route::post('/principal-tambah', [PrincipalController::class, 'store'])->name('principal.store');
+Route::delete('/principal-delete/{id}', [PrincipalController::class, 'destroy'])->name('principal.destroy');
+Route::get('/principal/edit/{id}', [PrincipalController::class, 'edit'])->name('principal.edit');
+Route::put('/principal/update/{id}', [PrincipalController::class, 'update'])->name('principal.update');
 
 
 //gudang
