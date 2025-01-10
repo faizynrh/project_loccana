@@ -43,6 +43,9 @@ $(document).ready(function () {
 $(document).ready(function () {
     $('#tableinvoice').DataTable();
 });
+$(document).ready(function () {
+    $('#tablerekappo').DataTable();
+});
 
 
 

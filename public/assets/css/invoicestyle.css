@@ -1,0 +1,103 @@
+ * {
+            font-size: 14px;
+    }
+
+        .form-control {
+            margin-bottom: 8px;
+        }
+
+        textarea.form-control {
+            height: 100px;
+            /* Standardize textarea height */
+        }
+
+        .ship-to-textarea {
+            height: 150px;
+            /* Larger height for shipping address */
+        }
+
+        .keterangan-textarea {
+            height: 120px;
+            /* Medium height for keterangan */
+        }
+
+        .alamat-textarea {
+            height: 120px;
+            /* Medium height for alamat */
+        }
+
+
+        .table-container {
+            width: 100%;
+            max-width: 1000px;
+        }
+
+        .main-title {
+            text-align: left;
+            font-weight: bold;
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+
+        .custom-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .custom-table th {
+            padding: 8px;
+            text-align: left;
+            border: none;
+        }
+
+        .thick-border {
+            border-bottom: 2px solid #000;
+        }
+
+        .input-row td {
+            padding: 8px;
+        }
+
+        .input-box {
+            width: 100%;
+            padding: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .code-column {
+            width: 40%;
+        }
+
+        .qty-column {
+            width: 15%;
+        }
+
+        .price-column {
+            width: 15%;
+        }
+
+        .discount-column {
+            width: 10%;
+        }
+
+        .total-column {
+            width: 20%;
+        }
+
+        .summary-row td {
+            padding: 8px;
+            text-align: right;
+        }
+
+        .summary-label {
+            font-weight: normal;
+        }
+
+        .summary-value {
+            width: 20%;
+        }
+
+        .discount-input {
+            width: 80%;
+        }

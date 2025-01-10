@@ -5,7 +5,7 @@
         <h3
             style="text-decoration: underline; padding-top:25px; font-size: 18px; color: #0044ff; text-underline-offset: 13px; font-weight: bold; padding-bottom: 10px">
             Rekap Purchase Order</h3>
-        <table class="table table-striped table-bordered mt-3" id="tableuom">
+        <table class="table table-striped table-bordered mt-3" id="tablerekappo">
             <thead>
                 <tr>
                     <th colspan="12" class="text-center">PO</th>
