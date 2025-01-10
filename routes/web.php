@@ -8,7 +8,6 @@ use App\Http\Controllers\masterdata\PriceController;
 use App\Http\Controllers\masterdata\UomDataController;
 use App\Http\Controllers\masterdata\CustomerController;
 use App\Http\Controllers\masterdata\PrincipalController;
-use App\Http\Controllers\procurement\DasarPembelianController;
 use App\Http\Controllers\procurement\RekappoController;
 use App\Http\Controllers\procurement\ReportController;
 use App\Http\Controllers\procurement\ReturnController;
@@ -141,3 +140,10 @@ Route::get('/return', [ReturnController::class, 'index'])->name('return');
 
 //rekap po
 Route::get('/rekappo', [RekappoController::class, 'index'])->name('rekappo.index');
+
+// invoice
+Route::get('/invoice', [InvoiceController::class, 'index'])->name('invoice.index');
+route::get('/invoice-tambah', function () {
+    return view('procurement.invoice.tambah-invoice');
+});
+Route::delete('/invoice-delete/{no_invoice}', [InvoiceController::class, 'destroy'])->name('invoice.destroy');

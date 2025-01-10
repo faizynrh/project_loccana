@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 
-class RekappoController extends Controller
+class InvoiceController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -33,16 +33,17 @@ class RekappoController extends Controller
     {
         //
         try {
-            $apiurl = 'https://gateway-internal.apicentrum.site/t/loccana.com/procurement/rekap-po/1.0.0/lists';
+            $apiurl = 'https://gateway-internal.apicentrum.site/t/loccana.com/procurement/invoice/1.0.0/invoice/lists';
             $accessToken = $this->getAccessToken();
 
             $apiResponse = Http::withHeaders([
                 'Authorization' => 'Bearer ' . $accessToken,
                 'Content-Type' => 'application/json'
             ])->post($apiurl, [
-                'partner_id' => 0,
-                'year' => '2025',
+                'status' => "semua_invoice",
+                'year' => '0',
                 'month' => '0',
+                'search' => '',
                 'company_id' => 0,
                 'limit' => 0,
                 'offset' => 0
@@ -51,14 +52,14 @@ class RekappoController extends Controller
             if ($apiResponse->successful()) {
                 $data = $apiResponse->json();
                 // dd($data);
-                return view('procurement.rekappo.rekappo', ['data' => $data['data']]);
+                return view('procurement.invoice.invoice', ['data' => $data['data']]);
             } else {
                 // return response([
                 //     'message' => 'Gagal mendapatkan data',
                 //     'status' => $apiResponse->status(),
                 //     'error' => $apiResponse->json(),
                 // ]);
-                return view('procurement.rekappo.rekappo');
+                return view('procurement.invoice.invoice');
             }
         } catch (\Exception $e) {
             return back()->withErrors($e->getMessage());
@@ -108,5 +109,30 @@ class RekappoController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id) {}
+
+
+    public function destroy(string $no_invoice)
+    {
+        try {
+            // Menyesuaikan URL API menggunakan no_invoice
+            $apiurl = 'https://gateway-internal.apicentrum.site/t/loccana.com/procurement/invoice/1.0.0/invoice/' . $no_invoice;
+            $accessToken = $this->getAccessToken();
+
+            $apiResponse = Http::withHeaders([
+                'Authorization' => 'Bearer ' . $accessToken,
+                'Content-Type' => 'application/json'
+            ])->delete($apiurl);
+
+            if ($apiResponse->successful()) {
+                return redirect()->route('invoice.index')
+                    ->with('success', 'Data Invoice dihapus');
+            } else {
+                return back()->withErrors(
+                    'Gagal menghapus data: ' . $apiResponse->body()
+                );
+            }
+        } catch (\Exception $e) {
+            return back()->withErrors($e->getMessage());
+        }
+    }
 }

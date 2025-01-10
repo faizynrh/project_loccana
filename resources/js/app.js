@@ -40,6 +40,9 @@ $(document).ready(function () {
 $(document).ready(function () {
     $('#tabledasarpembelian').DataTable();
 });
+$(document).ready(function () {
+    $('#tableinvoice').DataTable();
+});
 
 
 
