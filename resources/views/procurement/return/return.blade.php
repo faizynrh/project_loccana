@@ -18,7 +18,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         @endif
-        <a href="/coa/add" class="btn btn-primary btn-lg fw-bold mt-1 mb-2">+</a>
+        <a href="/return/add" class="btn btn-primary btn-lg fw-bold mt-1 mb-2">+</a>
         <table class="table table-striped table-bordered mt-3" id="tablecoa">
             <thead>
                 <tr>
@@ -41,7 +41,8 @@
                             <td>{{ $item['status'] }}</td>
                             <td>
                                 <div class="d-flex mb-2">
-                                    <a href="" class="btn btn-sm btn-info me-2" title="Detail">
+                                    <a href="{{ route('return.detail', $item['id_return']) }}"
+                                        class="btn btn-sm btn-info me-2" title="Detail">
                                         <i class="bi bi-eye"></i>
                                     </a>
                                     <form action="" method="POST" id="" style="display:inline;">
@@ -53,7 +54,6 @@
                                         </button>
                                     </form>
                                 </div>
-
                             </td>
                         </tr>
                     @endforeach
