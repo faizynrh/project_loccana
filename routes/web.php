@@ -139,6 +139,10 @@ Route::get('/report', [ReportController::class, 'index'])->name('report');
 
 //return
 Route::get('/return', [ReturnController::class, 'index'])->name('return');
+Route::get('/return/detail/{id}', [ReturnController::class, 'show'])->name('return.detail');
+route::get('/return/add', function () {
+    return view('procurement.return.add');
+});
 
 //rekap po
 Route::get('/rekappo', [RekappoController::class, 'index'])->name('rekappo.index');

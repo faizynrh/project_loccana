@@ -72,9 +72,27 @@ class ReturnController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show($id)
     {
-        //
+        try {
+            $apiurl = 'https://gateway-internal.apicentrum.site/t/loccana.com/procurement/return/1.0.0/return/' . $id;
+            $accessToken = $this->getAccessToken();
+
+            $apiResponse = Http::withHeaders([
+                'Authorization' => 'Bearer ' . $accessToken,
+                'Content-Type' => 'application/json'
+            ])->get($apiurl);
+
+            if ($apiResponse->successful()) {
+                $data = $apiResponse->json()['data'];
+                // dd($data);
+                return view('procurement.return.detail', compact('data', 'id'));
+            } else {
+                return back()->withErrors('Gagal mengambil data Retur: ' . $apiResponse->status());
+            }
+        } catch (\Exception $e) {
+            return back()->withErrors($e->getMessage());
+        }
     }
 
     /**
