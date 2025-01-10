@@ -6,28 +6,28 @@
             <h5 class="mb-3 text-primary fw-bold text-decoration-underline" style="text-underline-offset: 13px; ">
                 Report Dasar Pembelian</h5>
         </div>
-        <div class="row g-3">
+        <div class="row g-3 align-items-end">
             <div class="col">
-                <label for="inputState" class="form-label">State</label>
+                <label for="inputState" class="form-label">Principle</label>
                 <select id="inputState" class="form-select">
-                    <option selected>Choose...</option>
-                    <option>...</option>
+                    <option selected>Semua Principle</option>
+                    <option>PT. ADVANSIA INDOTANI</option>
                 </select>
             </div>
             <div class="col">
-                <label for="inputEmail4" class="form-label">Email</label>
-                <input type="text" class="form-control" placeholder="First nae" aria-label="First name">
+                <label for="inputEmail4" class="form-label">Tanggal Awal</label>
+                <input type="date" class="form-control" placeholder="First name" aria-label="First name">
             </div>
             <div class="col">
-                <label for="inputState" class="form-label">State</label>
-                <input type="text" class="form-control" placeholder="Last name" aria-label="Last name">
+                <label for="inputState" class="form-label">Tanggal Akhir</label>
+                <input type="date" class="form-control" placeholder="Last name" aria-label="Last name">
             </div>
-            <div class="col">
-                <label for="inputState" class="form-label">button</label>
-                <button type="submit" class=" form-control btn btn-primary">Submit</button>
+            <div class="col-auto">
+                <button type="submit" class="btn btn-primary">Submit</button>
             </div>
         </div>
-        <table class="table table-striped table-bordered mt-3">
+
+        <table class="table table-striped table-bordered mt-3" id="tabledasarpembelian">
             <thead>
                 <tr>
                     <th scope="col">Tanggal</th>
@@ -42,23 +42,9 @@
                 </tr>
             </thead>
             <tbody>
-                {{-- <tr>
-                    <td>1</td>
-                    <td><img src="https://via.placeholder.com/40" alt="User" class="rounded-circle me-2"
-                            style="width: 40px; height: 40px;"></td>
-                    <td>Adinda Nazmilla</td>
-                    <td>dinda</td>
-                    <td>Manager</td>
-                    <td> Wilayah 2</td>
-                    <td><button class="btn btn-sm btn-primary">Aktif</button></td>
-                    <td><a href="user/edit" class="btn btn-sm btn-warning" title="Edit">
-                            <i class="bi bi-pencil"></i>
-                        </a>
-                        <button class="btn btn-sm btn-danger" title="Hapus">
-                            <i class="bi bi-trash"></i>
-                        </button>
-                    </td>
-                </tr> --}}
+                <tr>
+                    <td></td>
+                </tr>
             </tbody>
         </table>
     </div>

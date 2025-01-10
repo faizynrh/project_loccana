@@ -37,4 +37,9 @@ $(document).ready(function () {
 $(document).ready(function () {
     $('#tableCustomer').DataTable();
 });
+$(document).ready(function () {
+    $('#tabledasarpembelian').DataTable();
+});
+
+
 
