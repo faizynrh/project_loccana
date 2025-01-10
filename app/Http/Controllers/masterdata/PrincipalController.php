@@ -184,8 +184,8 @@ class PrincipalController extends Controller
             ])->put($apiurl, $data);
 
             if ($apiResponse->successful()) {
-                return redirect()->route('uom.index')
-                    ->with('success', 'Data UoM berhasil diperbarui.');
+                return redirect()->route('principal.index')
+                    ->with('success', 'Data Principal berhasil diperbarui.');
             } else {
                 return back()->withErrors(
                     'Gagal memperbarui data: ' . $apiResponse->body()

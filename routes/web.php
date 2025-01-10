@@ -116,6 +116,13 @@ Route::delete('/principal-delete/{id}', [PrincipalController::class, 'destroy'])
 Route::get('/principal/edit/{id}', [PrincipalController::class, 'edit'])->name('principal.edit');
 Route::put('/principal/update/{id}', [PrincipalController::class, 'update'])->name('principal.update');
 
+// customer
+// Route::get('/customer', [PrincipalController::class, 'index'])->name('customer.index');
+// Route::get('/customer-tambah', [PrincipalController::class, 'create'])->name('customer.create');
+// Route::post('/customer-tambah', [PrincipalController::class, 'store'])->name('customer.store');
+// Route::delete('/customer-delete/{id}', [PrincipalController::class, 'destroy'])->name('customer.destroy');
+// Route::get('/customer/edit/{id}', [PrincipalController::class, 'edit'])->name('customer.edit');
+// Route::put('/customer/update/{id}', [PrincipalController::class, 'update'])->name('customer.update');
 
 //gudang
 Route::get('/gudang', [GudangController::class, 'index'])->name('gudang');
