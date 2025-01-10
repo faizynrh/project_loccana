@@ -1,9 +1,6 @@
 <?php
 
-<<<<<<< HEAD
 
-=======
->>>>>>> 79b27c5fe40326c67e33b45b0edf7a9fc75e3dda
 use App\Http\Controllers\masterdata\CoaController;
 use App\Http\Controllers\masterdata\GudangController;
 use App\Http\Controllers\masterdata\ItemController;
@@ -11,11 +8,7 @@ use App\Http\Controllers\masterdata\PriceController;
 use App\Http\Controllers\masterdata\UomDataController;
 use App\Http\Controllers\masterdata\CustomerController;
 use App\Http\Controllers\masterdata\PrincipalController;
-<<<<<<< HEAD
-=======
 use App\Http\Controllers\procurement\RekappoController;
->>>>>>> 79b27c5fe40326c67e33b45b0edf7a9fc75e3dda
-
 use Illuminate\Support\Facades\Route;
 /*
 |--------------------------------------------------------------------------
@@ -115,15 +108,12 @@ route::get('/principal/add', function () {
     return view('masterdata.principal.tambah-principal');
 });
 
-<<<<<<< HEAD
 
 //gudang
 Route::get('/gudang', [GudangController::class, 'index'])->name('gudang');
-=======
 //gudang
 Route::get('/gudang', [GudangController::class, 'index'])->name('gudang');
 
->>>>>>> 79b27c5fe40326c67e33b45b0edf7a9fc75e3dda
 
 
 //user
