@@ -11,6 +11,8 @@ use App\Http\Controllers\masterdata\PrincipalController;
 use App\Http\Controllers\procurement\RekappoController;
 use App\Http\Controllers\procurement\ReportController;
 use App\Http\Controllers\procurement\ReturnController;
+use App\Http\Controllers\procurement\InvoiceController;
+use App\Http\Controllers\procurement\DasarPembelianController;
 use Illuminate\Support\Facades\Route;
 /*
 |--------------------------------------------------------------------------
