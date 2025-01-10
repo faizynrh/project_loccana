@@ -1,5 +1,6 @@
 <?php
 
+
 use App\Http\Controllers\masterdata\CoaController;
 use App\Http\Controllers\masterdata\GudangController;
 use App\Http\Controllers\masterdata\ItemController;
@@ -9,7 +10,6 @@ use App\Http\Controllers\masterdata\CustomerController;
 use App\Http\Controllers\masterdata\PrincipalController;
 use App\Http\Controllers\procurement\InvoiceController;
 use App\Http\Controllers\procurement\RekappoController;
-
 use Illuminate\Support\Facades\Route;
 /*
 |--------------------------------------------------------------------------
@@ -109,6 +109,9 @@ route::get('/principal/add', function () {
     return view('masterdata.principal.tambah-principal');
 });
 
+
+//gudang
+Route::get('/gudang', [GudangController::class, 'index'])->name('gudang');
 //gudang
 Route::get('/gudang', [GudangController::class, 'index'])->name('gudang');
 

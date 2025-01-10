@@ -38,9 +38,11 @@ $(document).ready(function () {
     $('#tableCustomer').DataTable();
 });
 $(document).ready(function () {
-    $('#tablerekappo').DataTable();
+    $('#tabledasarpembelian').DataTable();
 });
 $(document).ready(function () {
     $('#tableinvoice').DataTable();
 });
+
+
 
