@@ -7,6 +7,7 @@ use App\Http\Controllers\masterdata\PriceController;
 use App\Http\Controllers\masterdata\UomDataController;
 use App\Http\Controllers\masterdata\CustomerController;
 use App\Http\Controllers\masterdata\PrincipalController;
+use App\Http\Controllers\procurement\InvoiceController;
 use App\Http\Controllers\procurement\RekappoController;
 
 use Illuminate\Support\Facades\Route;
@@ -130,3 +131,10 @@ route::get('/dasarpembelian', function () {
 
 //rekap po
 Route::get('/rekappo', [RekappoController::class, 'index'])->name('rekappo.index');
+
+// invoice
+Route::get('/invoice', [InvoiceController::class, 'index'])->name('invoice.index');
+route::get('/invoice-tambah', function () {
+    return view('procurement.invoice.tambah-invoice');
+});
+Route::delete('/invoice-delete/{no_invoice}', [InvoiceController::class, 'destroy'])->name('invoice.destroy');
