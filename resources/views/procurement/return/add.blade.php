@@ -1,5 +1,14 @@
 @extends('layouts.mainlayout')
 @section('content')
+    <style>
+        .table tfoot tr {
+            border: none !important;
+        }
+
+        .table tfoot td {
+            border: none !important;
+        }
+    </style>
     <div class="container mt-3 bg-white">
         <div class="p-3">
             <h5 class="mb-3 text-primary fw-bold text-decoration-underline" style="text-underline-offset: 13px; ">
@@ -73,7 +82,46 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr style="border-bottom: 2px solid #000;"> <!-- Border tebal antar baris -->
+
+                    <tr style="border-bottom: 1px solid #000;">
+                        <td><input type="text" class="form-control bg-body-secondary" readonly></td>
+                        <td><input type="number" class="form-control bg-body-secondary" readonly>
+                        </td>
+                        <td><input type="number" class="form-control bg-body-secondary" readonly>
+                        </td>
+                        <td><input type="number" class="form-control bg-body-secondary" readonly>
+                        </td>
+                        <td><input type="number" class="form-control bg-body-secondary" readonly>
+                        </td>
+                        <td><input type="number" class="form-control bg-body-secondary" readonly>
+                        </td>
+                        <td><input type="number" class="form-control bg-body-secondary" readonly>
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="6" class="text-end">Sub Total</td>
+                        <td class="text-end fw-bold">0
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="6" class="text-end">Diskon</td>
+                        <td class="text-end fw-bold">0
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="6" class="text-end">VAT/PPN</td>
+                        <td class="text-end fw-bold">0
+                        </td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #000;">
+                        <td colspan="6" class="text-end">Total</td>
+                        <td class="text-end fw-bold">0
+                        </td>
+                    </tr>
+                </tfoot>
+                {{-- <tr style="border-bottom: 2px solid #000;"> <!-- Border tebal antar baris -->
                         <td><input type="text" class="form-control bg-body-secondary" value="IDG0602Fujiwan 4"
                                 readonly>
                         </td>
@@ -112,7 +160,7 @@
                         <td colspan="6" class="text-end">Total</td>
                         <td><input type="number" class="form-control" value="0" readonly></td>
                     </tr>
-                </tfoot>
+                </tfoot> --}}
             </table>
 
             <div class="row">
