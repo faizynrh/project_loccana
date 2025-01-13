@@ -21,14 +21,25 @@
 
         <h3 style="font-size: 18px; padding-top:25px; font-weight: 700">List Invoice</h3>
         <div class="d-flex justify-content-between align-items-center mb-3">
-            <a href="/invoice-tambah" class="btn btn-primary"><strong>+</strong></a>
+
         </div>
 
 
         <div class="filter-container d-flex align-items-center">
-            <select id="filter-bulan" class="form-control me-2">
+            <a href="/invoice-tambah" class="btn btn-primary"><strong>+</strong></a>
+            <select id="filter-invoice" class="form-control" style="width: 150px">
+                <option value="">Semua Invoice</option>
+                <option value="Sudah Lunas">Sudah Lunas</option>
+                <option value="Belum Lunas">Belum Lunas</option>
+            </select>
+            <select id="filter-tahun" class="form-control" style="width: 150px">
                 <option value="">ALL</option>
-                <option value="01">Januari</option>
+                <option value="2025">2025</option>
+                <option value="2024" selected>2024</option>
+            </select>
+            <select id="filter-bulan" class="form-control" style="width: 150px">
+                <option value="">ALL</option>
+                <option value="01" selected>Januari</option>
                 <option value="02">Februari</option>
                 <option value="03">Maret</option>
                 <option value="04">April</option>
@@ -41,16 +52,7 @@
                 <option value="11">November</option>
                 <option value="12">Desember</option>
             </select>
-
-            <select id="filter-tahun" class="form-control">
-                <option value="">ALL</option>
-                <option value="2025">2025</option>
-                <option value="2024">2024</option>
-            </select>
         </div>
-
-
-
         <table class="table table-striped table-bordered mt-3" id="tableinvoice">
             <thead>
                 <tr>
@@ -80,7 +82,7 @@
                             <td>
                                 @if (!empty($item['no_invoice']))
                                     <button onclick="window.location='{{ route('uom.show', $item['no_invoice']) }}';"
-                                        class="btn btn-sm btn-info mb-2">
+                                        class="btn btn-sm btn-info mb-1">
                                         <i class="bi bi-eye"></i>
                                     </button>
                                     <a href="/uom/edit/{{ $item['no_invoice'] }}" class="btn btn-sm btn-warning mb-2">

@@ -54,11 +54,15 @@ var table = $('#tableinvoice').DataTable();
 $('#filter-bulan').on('change', function () {
     var selectedMonth = $(this).val();
     var regex = selectedMonth ? '^\\d{4}-' + selectedMonth + '-\\d{2}$' : '';
-    table.column(3).search(regex, true, false).draw(); // Gunakan regex untuk mencocokkan format tanggal
+    table.column(3).search(regex, true, false).draw();
 });
 $('#filter-tahun').on('change', function () {
         var selectedYear = $(this).val();
         table.column(3).search(selectedYear ? selectedYear : '', true, false).draw();
+    });
+    $('#filter-invoice').on('change', function () {
+        var selectedinvoice = $(this).val();
+        table.column(7).search(selectedinvoice ? selectedinvoice : '', true, false).draw();
     });
 });
 

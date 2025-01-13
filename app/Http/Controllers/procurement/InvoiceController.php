@@ -5,6 +5,7 @@ namespace App\Http\Controllers\procurement;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class InvoiceController extends Controller
 {
@@ -75,6 +76,7 @@ class InvoiceController extends Controller
     public function create()
     {
         //
+        return view('procurement.invoice.tambah-invoice');
     }
 
     /**
@@ -83,6 +85,57 @@ class InvoiceController extends Controller
     public function store(Request $request)
     {
         //
+        try {
+
+            $apiurl = 'https://gateway-internal.apicentrum.site/t/loccana.com/procurement/invoice/1.0.0/invoice';
+            $accessToken = $this->getAccessToken();
+            // $request->validate([
+            //     'uom_name' => 'required|string|max:255',
+            //     'uom_code' => 'required|string|max:10',
+            //     'description' => 'required|string|max:500'
+            // ]);
+            $data = [
+                'nodo' => $request->input('nodo'),
+                'nopurchaseorder' => $request->input('nopurchaseorder'),
+                'tanggal' => $request->input('tanggal'),
+                'principal' => $request->input('principal'),
+                'alamat' => $request->input('alamat'),
+                'att' => $request->input('att'),
+                'notelp' => $request->input('notelp'),
+                'fax' => $request->input('fax'),
+                'ship' => $request->input('ship'),
+                'email' => $request->input('email'),
+                'telp' => $request->input('Telp/Fax'),
+                'vat' => $request->input('vat'),
+                'term' => $request->input('term'),
+                'keterangan' => $request->input('keterangan'),
+                'noinvoice' => $request->input('noinvoice'),
+                'tglinvoice' => $request->input('tglinvoice'),
+                'tgljatuhtempo' => $request->input('tgljatuhtempo'),
+                'keteranganinvoice' => $request->input('keteranganinvoice'),
+                'fakturpajak' => $request->input('fakturpajak')
+            ];
+
+            $apiResponse = Http::withHeaders([
+                'Authorization' => 'Bearer ' . $accessToken
+            ])->post($apiurl, $data);
+
+            $responseData = $apiResponse->json();
+
+            // dd($data);
+            if ($apiResponse->successful() && isset($responseData['success']) && $responseData['success'] === true) {
+                return redirect()->route('invoice.index')
+                    ->with('success', $responseData['message'] ?? 'Data Invoice berhasil ditambahkan.');
+            } else {
+                Log::error('Error saat menambahkan Invoice: ' . $apiResponse->body());
+                return back()->withErrors(
+                    'Gagal menambahkan data: ' .
+                        ($responseData['message'] ?? $apiResponse->body())
+                );
+            }
+        } catch (\Exception $e) {
+            return back()->withErrors($e->getMessage());
+        }
     }
 
     /**

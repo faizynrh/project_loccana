@@ -177,7 +177,6 @@ Route::get('/rekappo', [RekappoController::class, 'index'])->name('rekappo.index
 
 // invoice
 Route::get('/invoice', [InvoiceController::class, 'index'])->name('invoice.index');
-route::get('/invoice-tambah', function () {
-    return view('procurement.invoice.tambah-invoice');
-});
 Route::delete('/invoice-delete/{no_invoice}', [InvoiceController::class, 'destroy'])->name('invoice.destroy');
+Route::get('/invoice-tambah', [InvoiceController::class, 'create'])->name('invoice.create');
+Route::post('/invoice-tambah', [InvoiceController::class, 'store'])->name('invoice.store');
