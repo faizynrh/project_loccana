@@ -59,11 +59,8 @@
             <div class="row">
                 <div class="col-md-6 mb-3">
                     <label for="wilayah" class="form-label fw-bold">Wilayah</label>
-                    <select name="wilayah" placeholder="No. Telp" class="form-select" id="wilayah" required>
-                        <option selected disabled>Pilih Wilayah</option>
-                        <option value="1">Wilayah 1</option>
-                        <option value="2">Wilayah 2</option>
-                    </select>
+                    <input name="wilayah" placeholder="wilayah" class="form-control" id="wilayah"
+                        value="{{ $customer['wilayah'] ?? '' }}" readonly>
                 </div>
                 <div class="col-md-6 mb-3">
                     <label for="distrik" class="form-label fw-bold">Distrik</label>
