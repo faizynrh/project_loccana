@@ -1,6 +1,6 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
-import 'bootstrap';
+// import 'bootstrap';
 import 'datatables.net-dt/css/dataTables.dataTables.min.css';
 import 'datatables.net';
 import $ from 'jquery';
