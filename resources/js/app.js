@@ -9,9 +9,41 @@ import 'bootstrap-icons/font/bootstrap-icons.css';
 
 
 $(document).ready(function () {
-    $('#tablecoa').DataTable();
+    const tableIds = [
+        'tablecoa',
+        'tableitems',
+        'tableprice',
+        'tablegudang',
+        'tableuser',
+        'tableinformasi',
+        'tableuom',
+        'tableprincipal',
+        'tableCustomer',
+        'tabledasarpembelian',
+        'tableinvoice',
+        'tablerekappo',
+        'tablecustomer'
+    ];
+
+    tableIds.forEach(function (id) {
+        $('#' + id).DataTable();
+    });
 });
+
 $(document).ready(function () {
+<<<<<<< HEAD
+    var table = $('#tablepenerimaan').DataTable();
+
+    $('#yearSelect').change(function () {
+        var year = $(this).val();
+        table.column(1).search(year).draw();
+    });
+
+    $('#monthSelect').change(function () {
+        var month = $(this).val();
+        table.column(2).search(month).draw();
+    });
+=======
     $('#tableitems').DataTable();
 });
 $(document).ready(function () {
@@ -46,6 +78,7 @@ $(document).ready(function () {
 });
 $(document).ready(function () {
     $('#tablecustomer').DataTable();
+>>>>>>> d4c5ebc14f088d40613b50157f713156b2767719
 })
 
 $(document).ready(function () {

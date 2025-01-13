@@ -31,8 +31,8 @@
                 </tr>
             </thead>
             <tbody>
-                @if (!empty($data['data']))
-                    @foreach ($data['data'] as $item)
+                @if (!empty($data['data']['table']))
+                    @foreach ($data['data']['table'] as $item)
                         <tr>
                             <td>{{ $item['invoice'] }}</td>
                             <td>{{ $item['principle'] }}</td>

@@ -82,16 +82,8 @@ class ReturnController extends Controller
                 'Authorization' => 'Bearer ' . $accessToken,
                 'Content-Type' => 'application/json'
             ])->get($apiurl);
-            dd([
-                'status' => $apiResponse->status(),
-                'headers' => $apiResponse->headers(),
-                'body' => $apiResponse->json(),
-                'url' => $apiurl
-            ]);
-            dd($apiResponse);
             if ($apiResponse->successful()) {
                 $data = $apiResponse->json()['data'];
-                dd($data);
                 return view('procurement.return.detail', compact('data', 'id'));
             } else {
                 return back()->withErrors('Gagal mengambil data Retur: ' . $apiResponse->status());

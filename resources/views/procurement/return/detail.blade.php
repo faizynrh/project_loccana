@@ -8,7 +8,12 @@
         .table tfoot td {
             border: none !important;
         }
+
+        .table tfoot tr.total-border {
+            border-top: 3px solid #000 !important;
+        }
     </style>
+
     <div class="container mt-3 bg-white">
         <div class="p-3">
             <h5 class="mb-3 text-primary fw-bold text-decoration-underline" style="text-underline-offset: 13px; ">
@@ -130,7 +135,7 @@
                             <td class="text-end fw-bold">0
                             </td>
                         </tr>
-                        <tr style="border-bottom: 1px solid #000;">
+                        <tr class="total-border">
                             <td colspan="6" class="text-end">Total</td>
                             <td class="text-end fw-bold">0
                             </td>

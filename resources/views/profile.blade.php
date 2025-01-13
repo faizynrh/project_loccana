@@ -21,11 +21,13 @@
             <div class="form-group d-flex mb-4">
                 <div class="mr-3" style="flex: 1; padding-right: 15px;">
                     <label for="name">Nama</label>
-                    <input type="text" id="name" name="name" class="form-control">
+                    <input type="text" id="name" name="name"
+                        value="{{ Session::get('user_info')['username'] ?? 'Guest' }}" class="form-control">
                 </div>
                 <div style="flex: 1; padding-left: 15px;">
                     <label for="username">Username</label>
-                    <input type="text" id="username" name="username" class="form-control">
+                    <input type="text" id="username" name="username"
+                        value="{{ Session::get('user_info')['username'] ?? 'Guest' }}" class="form-control">
                 </div>
             </div>
 
