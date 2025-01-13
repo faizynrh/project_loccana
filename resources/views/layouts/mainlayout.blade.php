@@ -13,7 +13,6 @@
 <style>
     .small-text {
         font-size: 12px;
-        /* Ukuran font kecil untuk sidebar yang lebih kecil */
     }
 
     @font-face {
@@ -238,6 +237,16 @@
 
     <script src="{{ asset('assets/sweetalert/sweetalert2.all.min.js') }}"></script>
     <script>
+        document.querySelectorAll('.nav-link[data-bs-toggle="collapse"]').forEach(link => {
+            link.addEventListener('click', function(event) {
+                document.querySelectorAll('.collapse.show').forEach(openCollapse => {
+                    if (!openCollapse.contains(event.target)) {
+                        openCollapse.classList.remove('show');
+                    }
+                });
+            });
+        });
+
         const toggleSidebar = document.getElementById('toggleSidebar');
         const sidebar = document.getElementById('sidebar');
         const logo = document.getElementById('sidebar-logo');
