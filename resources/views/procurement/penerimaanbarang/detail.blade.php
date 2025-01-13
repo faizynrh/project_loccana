@@ -3,7 +3,7 @@
     <div class="container mt-3 bg-white">
         <div class="p-3">
             <h5 class="mb-3 text-primary fw-bold text-decoration-underline" style="text-underline-offset: 13px; ">
-                Update Penerimaan Barang</h5>
+                Detail Penerimaan Barang</h5>
         </div>
         <div class="container">
             <div class="row mb-3">
@@ -34,15 +34,18 @@
                 </div>
                 <div class="col-md-6">
                     <label for="nomorInvoice" class="form-label fw-bold mt-2 mb-1 small">No DO</label>
-                    <input type="text" class="form-control" id="nomorInvoice" placeholder="No DO">
+                    <input type="text" class="form-control bg-body-secondary" id="nomorInvoice" placeholder="No DO"
+                        readonly>
                     <label for="nomorInvoice" class="form-label fw-bold mt-2 mb-1 small">Tanggal DO</label>
-                    <input type="date" class="form-control" id="nomorInvoice">
+                    <input type="date" class="form-control bg-body-secondary" id="nomorInvoice" readonly>
                     <label for="nomorInvoice" class="form-label fw-bold mt-2 mb-1 small">Angkutan</label>
-                    <input type="text" class="form-control" id="nomorInvoice" placeholder="Angkutan">
+                    <input type="text" class="form-control bg-body-secondary" id="nomorInvoice" placeholder="Angkutan"
+                        readonly>
                     <label for="nomorInvoice" class="form-label fw-bold mt-2 mb-1 small">No Polisi</label>
-                    <input type="text" class="form-control" id="nomorInvoice" placeholder="No Polisi">
+                    <input type="text" class="form-control bg-body-secondary" id="nomorInvoice" placeholder="No Polisi"
+                        readonly>
                     <label for="nomorInvoice" class="form-label fw-bold mt-2 mb-1 small">Gudang</label>
-                    <input type="text" class="form-control bg-body-secondary" id="nomorInvoice"
+                    <input type="text" class="form-control bg-body-secondary bg-body-secondary" id="nomorInvoice"
                         placeholder="Gudang Utama" readonly>
                 </div>
             </div>
@@ -52,8 +55,8 @@
             <table class="table mt-3">
                 <thead>
                     <tr style="border-bottom: 3px solid #000;">
-                        <th style="width: 140px">Kode</th>
-                        <th style="width: 90px"></th>
+                        <th style="width: 110px">Kode</th>
+                        <th style="width: 70px"></th>
                         <th style="width: 45px">Order (Kg/Lt)</th>
                         <th style="width: 45px">Sisa (Kg/Lt)</th>
                         <th style="width: 45px">Diterima</th>
@@ -67,46 +70,43 @@
                 <tbody id="tableBody">
                     <tr style="border-bottom: 2px solid #000;">
                         <td>
-                            <textarea type="text" class="form-control w-100" readonly rows="3">SYI0301 Alika 247 SC 50.00 ml</textarea>
+                            <p class="fw-bold">SYI0301 Alika 247 SC 50.00 ml</p>
                         </td>
                         <td>
-                            <textarea class="form-control" value="0" rows="3">Box @ 100</textarea>
+                            <p class="fw-bold">Box @ 50</p>
                         </td>
-                        <td><input type="text" class="form-control bg-body-secondary" value="150,000" readonly></td>
-                        <td><input type="text" class="form-control bg-body-secondary" value="0,000" readonly></td>
-                        <td><input type="text" class="form-control bg-body-secondary" value="150,000" readonly></td>
-                        <td><input type="text" class="form-control" value="0.00"></td>
-                        <td><input type="text" class="form-control" value="0.00"></td>
-                        <td><input type="text" class="form-control" value="0.00"></td>
-                        <td><input type="text" class="form-control" value="0.00"></td>
-                        <td><input type="text" class="form-control" placeholder="Note">
+                        <td>
+                            <p class="fw-bold">250,000</p>
+                        </td>
+                        <td>
+                            <p class="fw-bold">250,000</p>
+                        </td>
+                        <td>
+                            <p class="fw-bold">250,000</p>
+                        </td>
+                        <td>
+                            <p class="fw-bold">Gudang Utama</p>
+                        </td>
+                        <td>
+                            <p class="fw-bold">0,000</p>
+                        </td>
+                        <td>
+                            <p class="fw-bold">0,000</p>
+                        </td>
+                        <td>
+                            <p class="fw-bold">0,000</p>
+                        </td>
+                        <td>
+                            <p class="fw-bold"></p>
                         </td>
                     </tr>
                 </tbody>
             </table>
             <div class="row">
                 <div class="col-md-12 text-end">
-                    <button type="button" class="btn btn-primary" id="submitButton">Submit</button>
-                    <a href="/penerimaanbarang" class="btn btn-secondary ms-2">Batal</a>
+                    <a href="/penerimaanbarang" class="btn btn-primary ms-2">Batal</a>
                 </div>
             </div>
         </div>
-        <script>
-            document.getElementById('submitButton').addEventListener('click', function(event) {
-                Swal.fire({
-                    title: 'Apakah Anda yakin?',
-                    text: 'Data yang dimasukkan akan disimpan!',
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonText: 'Ya, Simpan!',
-                    cancelButtonText: 'Batal',
-                    reverseButtons: true
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        document.getElementById('createForm').submit();
-                    }
-                });
-            });
-        </script>
     </div>
 @endsection

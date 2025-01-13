@@ -45,7 +45,8 @@
                                         class="btn btn-sm btn-info me-2" title="Detail">
                                         <i class="bi bi-eye"></i>
                                     </a>
-                                    <form action="" method="POST" id="" style="display:inline;">
+                                    <form action="{{ route('return.destroy', $item['id_return']) }}" method="POST"
+                                        id="delete{{ $item['id_return'] }}" style="display:inline;">
                                         @csrf
                                         @method('DELETE')
                                         <button type="button" class="btn btn-sm btn-danger" title="Hapus"

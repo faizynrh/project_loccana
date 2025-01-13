@@ -82,10 +82,16 @@ class ReturnController extends Controller
                 'Authorization' => 'Bearer ' . $accessToken,
                 'Content-Type' => 'application/json'
             ])->get($apiurl);
-
+            dd([
+                'status' => $apiResponse->status(),
+                'headers' => $apiResponse->headers(),
+                'body' => $apiResponse->json(),
+                'url' => $apiurl
+            ]);
+            dd($apiResponse);
             if ($apiResponse->successful()) {
                 $data = $apiResponse->json()['data'];
-                // dd($data);
+                dd($data);
                 return view('procurement.return.detail', compact('data', 'id'));
             } else {
                 return back()->withErrors('Gagal mengambil data Retur: ' . $apiResponse->status());
@@ -116,6 +122,24 @@ class ReturnController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        try {
+            $apiurl = 'https://gateway-internal.apicentrum.site/t/loccana.com/procurement/return/1.0.0/return/' . $id;
+            $accessToken = $this->getAccessToken();
+
+            $apiResponse = Http::withHeaders([
+                'Authorization' => 'Bearer ' . $accessToken,
+                'Content-Type' => 'application/json'
+            ])->delete($apiurl);
+            if ($apiResponse->successful()) {
+                return redirect()->route('return')
+                    ->with('success', 'Data Retur berhasil dihapus');
+            } else {
+                return back()->withErrors(
+                    'Gagal menghapus data: ' . $apiResponse->body()
+                );
+            }
+        } catch (\Exception $e) {
+            return back()->withErrors($e->getMessage());
+        }
     }
 }

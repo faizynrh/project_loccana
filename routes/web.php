@@ -13,6 +13,7 @@ use App\Http\Controllers\procurement\ReportController;
 use App\Http\Controllers\procurement\ReturnController;
 use App\Http\Controllers\procurement\InvoiceController;
 use App\Http\Controllers\procurement\DasarPembelianController;
+use App\Http\Controllers\procurement\PenerimaanBarangController;
 use Illuminate\Support\Facades\Route;
 /*
 |--------------------------------------------------------------------------
@@ -130,6 +131,20 @@ route::get('/user/add', function () {
     return view('masterdata.user.add');
 });
 
+//penerimaan barang
+// Route::get('/penerimaan_barang', [PenerimaanBarangController::class, 'index'])->name('penerimaan_barang');
+route::get('/penerimaanbarang', function () {
+    return view('procurement.penerimaanbarang.penerimaan');
+});
+route::get('/penerimaanbarang/add', function () {
+    return view('procurement.penerimaanbarang.add');
+});
+route::get('/penerimaanbarang/edit', function () {
+    return view('procurement.penerimaanbarang.edit');
+});
+route::get('/penerimaanbarang/detail', function () {
+    return view('procurement.penerimaanbarang.detail');
+});
 
 //dasarpembelian
 Route::get('/dasarpembelian', [DasarPembelianController::class, 'index'])->name('dasarpembelian');
@@ -139,10 +154,12 @@ Route::get('/report', [ReportController::class, 'index'])->name('report');
 
 //return
 Route::get('/return', [ReturnController::class, 'index'])->name('return');
+Route::delete('/return/delete/{id}', [ReturnController::class, 'destroy'])->name('return.destroy');
 Route::get('/return/detail/{id}', [ReturnController::class, 'show'])->name('return.detail');
 route::get('/return/add', function () {
     return view('procurement.return.add');
 });
+
 
 //rekap po
 Route::get('/rekappo', [RekappoController::class, 'index'])->name('rekappo.index');

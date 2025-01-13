@@ -88,7 +88,7 @@
                     </thead>
                     <tbody>
                         @if (!empty($data['items']))
-                            @foreach ($data['items'] as $index => $item)
+                            @foreach ($data['items'] as $item)
                                 <tr style="border-bottom: 1px solid #000;">
                                     <td><input type="text" class="form-control bg-body-secondary"
                                             value="{{ $item['kode'] }}" readonly></td>

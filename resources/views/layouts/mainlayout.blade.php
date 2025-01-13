@@ -93,7 +93,7 @@
                     <ul class="nav flex-column ps-3">
                         <li><a href="#" class="nav-link text-decoration-none d-block py-2"
                                 style="color: #919FAC;">Purchase Order</a></li>
-                        <li><a href="#" class="nav-link text-decoration-none d-block py-2"
+                        <li><a href="/penerimaanbarang" class="nav-link text-decoration-none d-block py-2"
                                 style="color: #919FAC;">Penerimaan Barang</a></li>
                         <li><a href="/dasarpembelian" class="nav-link text-decoration-none d-block py-2"
                                 style="color: #919FAC;">Dasar Pembelian</a></li>
@@ -241,16 +241,14 @@
         const toggleSidebar = document.getElementById('toggleSidebar');
         const sidebar = document.getElementById('sidebar');
         const logo = document.getElementById('sidebar-logo');
-        const dashboardLink = document.getElementById('dashboard'); // Ambil elemen Dashboard
+        const dashboardLink = document.getElementById('dashboard');
 
         toggleSidebar.addEventListener('click', () => {
             if (sidebar.style.width === '220px' || sidebar.style.width === '') {
-                // Jika sidebar diperbesar, kecilkan sidebar
                 sidebar.style.width = '90px';
                 logo.src = '{{ asset('assets/images/logo.png') }}';
                 logo.style.width = '55px';
 
-                // Menyembunyikan teks header
                 const headersToHide = sidebar.querySelectorAll(
                     'a[href="#masterDataCollapse"], a[href="#procurementCollapse"], a[href="#inventoryCollapse"], a[href="#PenjualanCollapse"], a[href="#CashBankCollapse"], a[href="#AccountingCollapse"]'
                 );
@@ -267,17 +265,14 @@
                     collapse.classList.remove('show');
                 });
 
-                // Ubah ukuran teks Dashboard menjadi lebih kecil
                 dashboardLink.classList.add('small-text');
-                dashboardLink.innerHTML = "Dashboard"; // Shortened text for smaller sidebar
+                dashboardLink.innerHTML = "Dashboard";
 
             } else {
-                // Jika sidebar diperkecil, perbesar sidebar
                 sidebar.style.width = '220px';
                 logo.src = '{{ asset('assets/images/name.png') }}';
                 logo.style.width = '165px';
 
-                // Mengembalikan teks header
                 const headersToRestore = sidebar.querySelectorAll(
                     'a[href="#masterDataCollapse"], a[href="#procurementCollapse"], a[href="#inventoryCollapse"], a[href="#PenjualanCollapse"], a[href="#CashBankCollapse"], a[href="#AccountingCollapse"]'
                 );
@@ -303,9 +298,8 @@
                     }
                 });
 
-                // Kembalikan ukuran teks Dashboard ke normal
                 dashboardLink.classList.remove('small-text');
-                dashboardLink.innerHTML = "Dashboard"; // Full text for expanded sidebar
+                dashboardLink.innerHTML = "Dashboard";
             }
         });
     </script>
