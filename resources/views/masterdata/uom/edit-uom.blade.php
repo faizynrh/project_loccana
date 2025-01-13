@@ -7,10 +7,6 @@
             style="text-decoration: underline; padding-top:25px; font-size: 18px; color: #0044ff; text-underline-offset: 13px; font-weight: bold; padding-bottom: 10px">
             Update UoM</h3>
         <p>Harap isi data yang telah ditandai dengan <code>*</code>, dan masukan data dengan benar</p>
-
-        <!-- Menampilkan Alert untuk Gagal -->
-
-
         @if ($errors->any())
             <div class="alert alert-danger alert-dismissible fade show" role="alert">
                 @foreach ($errors->all() as $error)
@@ -19,7 +15,6 @@
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         @endif
-
         <form action="{{ route('uom.update', $uom['id']) }}" method="POST" id="updateForm">
             @csrf
             @method('PUT')
@@ -55,8 +50,8 @@
                     </div>
                 </div>
                 <div class="row mb-3 align-items-center">
-                    <div class="col-md-3"></div> <!-- Kosongkan kolom ini agar button sejajar di sebelah kanan -->
-                    <div class="col-md-9 d-flex gap-3"> <!-- Gunakan flexbox agar button sejajar -->
+                    <div class="col-md-3"></div>
+                    <div class="col-md-9 d-flex gap-3">
                         <button type="button" class="btn btn-primary" id="submitButton">Submit</button>
                         <button type="button" class="btn btn-secondary" onclick="history.back()">Batal</button>
                     </div>

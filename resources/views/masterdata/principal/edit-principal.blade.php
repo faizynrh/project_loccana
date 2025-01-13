@@ -1,14 +1,10 @@
 @extends('layouts.mainlayout')
 @section('content')
 
-    <!-- Main Content -->
     <div class="container mt-2 bg-white rounded-top">
         <h3
             style="text-decoration: underline; padding-top:25px; font-size: 18px; color: #0044ff; text-underline-offset: 13px; font-weight: bold; padding-bottom: 10px">
-            Tambah Principal</h3>
-
-        <!-- Menampilkan Alert untuk Gagal -->
-
+            Edit Principal</h3>
         @if ($errors->any())
             <div class="alert alert-danger alert-dismissible fade show" role="alert">
                 @foreach ($errors->all() as $error)
@@ -28,7 +24,6 @@
                         required value="{{ $principal['id'] }}">
                 </div>
 
-                {{-- bank1 --}}
                 <div class="col-md-3 mb-4">
                     <label for="rekening" class="form-label fw-bold">Rekening Bank 1</label>
                     <input type="text" placeholder="Bank 1" name="bank1" class="form-control" id="rekening" required>
@@ -42,16 +37,12 @@
                 </div>
             </div>
 
-
-
             <div class="row">
                 <div class="col-md-4 mb-3">
                     <label for="kode" class="form-label fw-bold">Nama</label>
                     <input type="text" name="nama" placeholder="Nama" class="form-control" id="kode" required
                         value="{{ $principal['company_id'] }}">
                 </div>
-
-                {{-- bank1 --}}
                 <div class="col-md-3 mb-4">
                     <label for="rekening" class="form-label fw-bold">Rekening Bank 2</label>
                     <input type="text" placeholder="Bank 2" name="bank2" class="form-control" id="rekening" required>
@@ -70,8 +61,6 @@
                     <input type="text" name="alamat" placeholder="Alamat" class="form-control" id="Alamat" required
                         value="{{ $principal['partner_type'] }}">
                 </div>
-
-                {{-- bank1 --}}
                 <div class="col-md-3 mb-4">
                     <label for="rekening" class="form-label fw-bold">Rekening Bank 3</label>
                     <input type="text" placeholder="Bank 3" name="bank3" class="form-control" id="bank3" required>
@@ -90,8 +79,6 @@
                     <input type="number" name="notelp" placeholder="No. Telp" class="form-control" id="notelp"
                         required value="{{ $principal['contact_info'] }}">
                 </div>
-
-                {{-- bank1 --}}
                 <div class="col-md-3 mb-4">
                     <label for="notelp" class="form-label fw-bold">Status Show/Hide</label>
                     <select name="status" id="status" class="form-select">
@@ -114,11 +101,9 @@
                         required value="{{ $principal['name'] }}">
                 </div>
             </div>
-
-
             <div class="row mb-3 align-items-center">
-                <div class="col-md-3"></div> <!-- Kosongkan kolom ini agar button sejajar di sebelah kanan -->
-                <div class="col-md-9 d-flex gap-3"> <!-- Gunakan flexbox agar button sejajar -->
+                <div class="col-md-3"></div>
+                <div class="col-md-9 d-flex gap-3">
                     <button type="button" class="btn btn-primary" id="submitButton">Submit</button>
                     <button type="button" class="btn btn-secondary" onclick="history.back()">Batal</button>
                 </div>

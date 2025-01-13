@@ -115,14 +115,16 @@ Route::post('/principal-tambah', [PrincipalController::class, 'store'])->name('p
 Route::delete('/principal-delete/{id}', [PrincipalController::class, 'destroy'])->name('principal.destroy');
 Route::get('/principal/edit/{id}', [PrincipalController::class, 'edit'])->name('principal.edit');
 Route::put('/principal/update/{id}', [PrincipalController::class, 'update'])->name('principal.update');
+Route::get('/principal/show/{id}', [PrincipalController::class, 'show'])->name('principal.show');
 
 // customer
-// Route::get('/customer', [PrincipalController::class, 'index'])->name('customer.index');
-// Route::get('/customer-tambah', [PrincipalController::class, 'create'])->name('customer.create');
-// Route::post('/customer-tambah', [PrincipalController::class, 'store'])->name('customer.store');
-// Route::delete('/customer-delete/{id}', [PrincipalController::class, 'destroy'])->name('customer.destroy');
-// Route::get('/customer/edit/{id}', [PrincipalController::class, 'edit'])->name('customer.edit');
-// Route::put('/customer/update/{id}', [PrincipalController::class, 'update'])->name('customer.update');
+Route::get('/customer', [CustomerController::class, 'index'])->name('customer.index');
+Route::get('/customer-tambah', [CustomerController::class, 'create'])->name('customer.create');
+Route::post('/customer-tambah', [CustomerController::class, 'store'])->name('customer.store');
+Route::delete('/customer-delete/{id}', [CustomerController::class, 'destroy'])->name('customer.destroy');
+Route::get('/customer/edit/{id}', [CustomerController::class, 'edit'])->name('customer.edit');
+Route::put('/customer/update/{id}', [CustomerController::class, 'update'])->name('customer.update');
+Route::get('/customer/show/{id}', [CustomerController::class, 'show'])->name('customer.show');
 
 //gudang
 Route::get('/gudang', [GudangController::class, 'index'])->name('gudang');

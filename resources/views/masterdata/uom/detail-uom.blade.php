@@ -2,15 +2,9 @@
 @section('content')
     <!-- Main Content -->
     <div class="container mt-2 bg-white rounded-top">
-
         <h3
             style="text-decoration: underline; padding-top:25px; font-size: 18px; color: #0044ff; text-underline-offset: 13px; font-weight: bold; padding-bottom: 10px">
             Detail UoM</h3>
-        <p>Detail Data UoM</p>
-
-        <!-- Menampilkan Alert untuk Gagal -->
-
-
         <form action="{{ route('uom.update', $uom['id']) }}" method="POST" id="updateForm">
             @csrf
             @method('PUT')
@@ -46,8 +40,8 @@
                     </div>
                 </div>
                 <div class="row mb-3 align-items-center">
-                    <div class="col-md-3"></div> <!-- Kosongkan kolom ini agar button sejajar di sebelah kanan -->
-                    <div class="col-md-9 d-flex gap-3"> <!-- Gunakan flexbox agar button sejajar -->
+                    <div class="col-md-3"></div>
+                    <div class="col-md-9 d-flex gap-3">
                         <button type="button" class="btn btn-secondary" onclick="history.back()">Kembali</button>
                     </div>
                 </div>

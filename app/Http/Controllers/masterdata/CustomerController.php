@@ -7,14 +7,14 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
-class PrincipalController extends Controller
+class CustomerController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     private function getAccessToken()
     {
-        $tokenurl = env("API_TOKEN_URL");;
+        $tokenurl = env('API_TOKEN_URL');
         $clientid = env('API_CLIENT_ID');
         $clientsecret = env('API_CLIENT_SECRET');
 
@@ -30,6 +30,7 @@ class PrincipalController extends Controller
 
         return $tokenResponse->json()['access_token'];
     }
+
     public function index()
     {
         //
@@ -45,21 +46,21 @@ class PrincipalController extends Controller
                 'limit' => 10,
                 'offset' => 0,
                 'company_id' => 0,
-                'is_customer' => false,
-                'is_supplier' => true
+                'is_customer' => true,
+                'is_supplier' => false
             ]);
 
             if ($apiResponse->successful()) {
                 $data = $apiResponse->json();
                 // dd($data);
-                return view('masterdata.principal.principal', ['data' => $data['data']]);
+                return view('masterdata.customer.customer', ['data' => $data['data']]);
             } else {
                 // return response([
                 //     'message' => 'Gagal mendapatkan data',
                 //     'status' => $apiResponse->status(),
                 //     'error' => $apiResponse->json(),
                 // ]);
-                return view('masterdata.principal.principal');
+                return view('masterdata.customer.customer');
             }
         } catch (\Exception $e) {
             return back()->withErrors($e->getMessage());
@@ -71,8 +72,8 @@ class PrincipalController extends Controller
      */
     public function create()
     {
-        return view('masterdata.principal.tambah-principal');
         //
+        return view('masterdata.customer.tambah-customer');
     }
 
     /**
@@ -82,7 +83,6 @@ class PrincipalController extends Controller
     {
         //
         try {
-
             $apiurl = 'https://gateway-internal.apicentrum.site/t/loccana.com/loccana/masterdata/partner/1.0.0/partner';
             $accessToken = $this->getAccessToken();
             // $request->validate([
@@ -92,21 +92,20 @@ class PrincipalController extends Controller
             // ]);
             $data = [
                 'kode' => $request->input('kode'),
-                'bank1' => $request->input('bank1'),
-                'norek1' => $request->input('norek1'),
+                'nonpwp' => $request->input('nonpwp'),
                 'nama' => $request->input('nama'),
-                'bank2' => $request->input('bank2'),
-                'norek2' => $request->input('norek2'),
+                'pemiliknpwp' => $request->input('pemiliknpwp'),
+                'namakontak' => $request->input('namakontak'),
+                'alamatpemiliknpwp' => $request->input('alamatpemiliknpwp'),
+                'wilayah' => $request->input('wilayah'),
+                'distrik' => $request->input('distrik'),
                 'alamat' => $request->input('alamat'),
-                'bank3' => $request->input('bank3'),
-                'norek3' => $request->input('norek3'),
-                'notelp' => $request->input('notelp'),
-                'fax' => $request->input('fax'),
+                'kota' => $request->input('kota'),
+                'telepon' => $request->input('telepon'),
+                'group' => $request->input('group'),
                 'email' => $request->input('email'),
-                'status' => $request->input('status'),
+                'limitkredit' => $request->input('limitkredit'),
             ];
-
-
             $apiResponse = Http::withHeaders([
                 'Authorization' => 'Bearer ' . $accessToken
             ])->post($apiurl, $data);
@@ -115,10 +114,10 @@ class PrincipalController extends Controller
 
             // dd($data);
             if ($apiResponse->successful() && isset($responseData['success']) && $responseData['success'] === true) {
-                return redirect()->route('principal.index')
-                    ->with('success', $responseData['message'] ?? 'Data Principal berhasil ditambahkan.');
+                return redirect()->route('customer.index')
+                    ->with('success', $responseData['message'] ?? 'Data customer berhasil ditambahkan.');
             } else {
-                Log::error('Error saat menambahkan Principal: ' . $apiResponse->body());
+                Log::error('Error saat menambahkan customer: ' . $apiResponse->body());
                 return back()->withErrors(
                     'Gagal menambahkan data: ' .
                         ($responseData['message'] ?? $apiResponse->body())
@@ -147,15 +146,15 @@ class PrincipalController extends Controller
             // dd($apiResponse->json());
 
             if ($apiResponse->successful()) {
-                $principal = $apiResponse->json();
+                $customer = $apiResponse->json();
 
-                if (isset($principal['data'])) {
-                    return view('masterdata.principal.detail-principal', ['principal' => $principal['data']]);
+                if (isset($customer['data'])) {
+                    return view('masterdata.customer.detail-customer', ['customer' => $customer['data']]);
                 } else {
-                    return back()->withErrors('Data UoM tidak ditemukan.');
+                    return back()->withErrors('Data Customer tidak ditemukan.');
                 }
             } else {
-                return back()->withErrors('Gagal mengambil data UoM dari API.');
+                return back()->withErrors('Gagal mengambil data Customer dari API.');
             }
         } catch (\Exception $e) {
             return back()->withErrors($e->getMessage());
@@ -180,15 +179,15 @@ class PrincipalController extends Controller
             // dd($apiResponse->json());
 
             if ($apiResponse->successful()) {
-                $principal = $apiResponse->json();
+                $customer = $apiResponse->json();
 
-                if (isset($principal['data'])) {
-                    return view('masterdata.principal.edit-principal', ['principal' => $principal['data']]);
+                if (isset($customer['data'])) {
+                    return view('masterdata.customer.edit-customer', ['customer' => $customer['data']]);
                 } else {
-                    return back()->withErrors('Data UoM tidak ditemukan.');
+                    return back()->withErrors('Data Customer tidak ditemukan.');
                 }
             } else {
-                return back()->withErrors('Gagal mengambil data UoM dari API.');
+                return back()->withErrors('Gagal mengambil data Customer dari API.');
             }
         } catch (\Exception $e) {
             return back()->withErrors($e->getMessage());
@@ -207,20 +206,20 @@ class PrincipalController extends Controller
 
             $data = [
                 'kode' => $request->input('kode'),
-                'bank1' => $request->input('bank1'),
-                'norek1' => $request->input('norek1'),
+                'nonpwp' => $request->input('nonpwp'),
                 'nama' => $request->input('nama'),
-                'bank2' => $request->input('bank2'),
-                'norek2' => $request->input('norek2'),
+                'pemiliknpwp' => $request->input('pemiliknpwp'),
+                'namakontak' => $request->input('namakontak'),
+                'alamatpemiliknpwp' => $request->input('alamatpemiliknpwp'),
+                'wilayah' => $request->input('wilayah'),
+                'distrik' => $request->input('distrik'),
                 'alamat' => $request->input('alamat'),
-                'bank3' => $request->input('bank3'),
-                'norek3' => $request->input('norek3'),
-                'notelp' => $request->input('notelp'),
-                'fax' => $request->input('fax'),
+                'kota' => $request->input('kota'),
+                'telepon' => $request->input('telepon'),
+                'group' => $request->input('group'),
                 'email' => $request->input('email'),
-                'status' => $request->input('status'),
+                'limitkredit' => $request->input('limitkredit'),
             ];
-
 
             $apiResponse = Http::withHeaders([
                 'Authorization' => 'Bearer ' . $accessToken,
@@ -228,8 +227,8 @@ class PrincipalController extends Controller
             ])->put($apiurl, $data);
 
             if ($apiResponse->successful()) {
-                return redirect()->route('principal.index')
-                    ->with('success', 'Data Principal berhasil diperbarui.');
+                return redirect()->route('customer.index')
+                    ->with('success', 'Data customer berhasil diperbarui.');
             } else {
                 return back()->withErrors(
                     'Gagal memperbarui data: ' . $apiResponse->body()
@@ -256,8 +255,8 @@ class PrincipalController extends Controller
             ])->delete($apiurl);
             // dd($apiResponse->json());
             if ($apiResponse->successful()) {
-                return redirect()->route('principal.index')
-                    ->with('success', 'Data Principal berhasil dihapus');
+                return redirect()->route('customer.index')
+                    ->with('success', 'Data customer berhasil dihapus');
             } else {
                 return back()->withErrors(
                     'Gagal menghapus data: ' . $apiResponse->body()
