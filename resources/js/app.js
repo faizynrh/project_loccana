@@ -20,7 +20,6 @@ $(document).ready(function () {
         'tableprincipal',
         'tableCustomer',
         'tabledasarpembelian',
-        'tableinvoice',
         'tablerekappo',
         'tablecustomer'
     ];
@@ -29,57 +28,6 @@ $(document).ready(function () {
         $('#' + id).DataTable();
     });
 });
-
-$(document).ready(function () {
-<<<<<<< HEAD
-    var table = $('#tablepenerimaan').DataTable();
-
-    $('#yearSelect').change(function () {
-        var year = $(this).val();
-        table.column(1).search(year).draw();
-    });
-
-    $('#monthSelect').change(function () {
-        var month = $(this).val();
-        table.column(2).search(month).draw();
-    });
-=======
-    $('#tableitems').DataTable();
-});
-$(document).ready(function () {
-    $('#tableprice').DataTable();
-});
-$(document).ready(function () {
-    $('#tablegudang').DataTable();
-});
-$(document).ready(function () {
-    $('#tableuser').DataTable();
-});
-$(document).ready(function () {
-    $('#tableinformasi').DataTable();
-});
-$(document).ready(function () {
-    $('#tableuom').DataTable();
-});
-$(document).ready(function () {
-    $('#tableinformasi').DataTable();
-});
-$(document).ready(function () {
-    $('#tableprincipal').DataTable();
-});
-$(document).ready(function () {
-    $('#tableCustomer').DataTable();
-});
-$(document).ready(function () {
-    $('#tabledasarpembelian').DataTable();
-});
-$(document).ready(function () {
-    $('#tablerekappo').DataTable();
-});
-$(document).ready(function () {
-    $('#tablecustomer').DataTable();
->>>>>>> d4c5ebc14f088d40613b50157f713156b2767719
-})
 
 $(document).ready(function () {
 var table = $('#tableinvoice').DataTable();
