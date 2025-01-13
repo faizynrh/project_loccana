@@ -18,13 +18,14 @@
             </div>
         @endif
 
-        <form action="{{ route('principal.store') }}" method="POST" id="addForm">
+        <form action="{{ route('principal.update', $principal['id']) }}" method="POST" id="addForm">
             @csrf
+            @method('PUT')
             <div class="row">
                 <div class="col-md-4 mb-3">
                     <label for="kode" class="form-label fw-bold">Kode</label>
                     <input type="text" name="kode" placeholder="Kode Principal" class="form-control" id="kode"
-                        required>
+                        required value="{{ $principal['id'] }}">
                 </div>
 
                 {{-- bank1 --}}
@@ -42,10 +43,12 @@
             </div>
 
 
+
             <div class="row">
                 <div class="col-md-4 mb-3">
                     <label for="kode" class="form-label fw-bold">Nama</label>
-                    <input type="text" name="nama" placeholder="Nama" class="form-control" id="kode" required>
+                    <input type="text" name="nama" placeholder="Nama" class="form-control" id="kode" required
+                        value="{{ $principal['company_id'] }}">
                 </div>
 
                 {{-- bank1 --}}
@@ -64,7 +67,8 @@
             <div class="row">
                 <div class="col-md-4 mb-3">
                     <label for="Alamat" class="form-label fw-bold">Alamat</label>
-                    <input type="text" name="alamat" placeholder="Alamat" class="form-control" id="Alamat" required>
+                    <input type="text" name="alamat" placeholder="Alamat" class="form-control" id="Alamat" required
+                        value="{{ $principal['partner_type'] }}">
                 </div>
 
                 {{-- bank1 --}}
@@ -84,7 +88,7 @@
                 <div class="col-md-4 mb-3">
                     <label for="notelp" class="form-label fw-bold">No. Telp</label>
                     <input type="number" name="notelp" placeholder="No. Telp" class="form-control" id="notelp"
-                        required>
+                        required value="{{ $principal['contact_info'] }}">
                 </div>
 
                 {{-- bank1 --}}
@@ -107,7 +111,7 @@
                 <div class="col-md-4 mb-3">
                     <label for="Email" class="form-label fw-bold">Email</label>
                     <input type="text" name="email" placeholder="Email" class="form-control" id="email"
-                        required>
+                        required value="{{ $principal['name'] }}">
                 </div>
             </div>
 
