@@ -1,5 +1,11 @@
 @extends('layouts.mainlayout')
 @section('content')
+    <style>
+        input:read-only,
+        textarea:read-only {
+            background-color: #e5e6e7;
+        }
+    </style>
     <link rel="stylesheet" href="assets/css/invoicestyle.css">
     <!-- Main Content -->
     <div class="container mt-2 bg-white rounded-top">
@@ -17,7 +23,7 @@
             </div>
         @endif
 
-        <form action="{{ route('uom.store') }}" method="POST" id="addForm">
+        <form action="{{ route('invoice.store') }}" method="POST" id="addForm">
             @csrf
             <div class="row">
                 <!-- Kolom Kiri -->
@@ -27,45 +33,45 @@
                         <select type="text" name="nodo" class="form-control" id="nodo" required>
                             <option value="" disabled selected>Nomor PO</option>
                             <option value="1">Adj Kaos - PT. DHARMA GUNA WIBAWA - 2023-5-01</option>
-                            <option value="1">DGW/24-02/0835 - PT. DHARMA GUNA WIBAWA - 2024-02-29</option>
+                            <option value="2">DGW/24-02/0835 - PT. DHARMA GUNA WIBAWA - 2024-02-29</option>
                         </select>
                     </div>
 
                     <div class="mb-3">
                         <label for="nopurchaseorder" class="form-label fw-bold">No. Purchase Order</label>
                         <input type="text" name="nopurchaseorder" placeholder="No. Purchase Order" class="form-control"
-                            id="nopurchaseorder" required>
+                            id="nopurchaseorder" readonly>
                     </div>
 
                     <div class="mb-3">
                         <label for="tanggal" class="form-label fw-bold">Tanggal</label>
                         <input type="text" name="tanggal" placeholder="Tanggal Purchase Order" class="form-control"
-                            id="tanggal" required>
+                            id="tanggal" readonly>
                     </div>
 
                     <div class="mb-3">
                         <label for="principal" class="form-label fw-bold">Principal</label>
                         <input type="text" name="principal" placeholder="Principal" class="form-control" id="principal"
-                            required>
+                            readonly>
                     </div>
 
                     <div class="mb-4">
                         <label for="alamat" class="form-label fw-bold">Alamat</label>
-                        <textarea name="alamat" class="form-control alamat-textarea" id="alamat"></textarea>
+                        <textarea name="alamat" class="form-control alamat-textarea" id="alamat" readonly></textarea>
                     </div>
 
                     <div class="mb-3">
                         <label for="att" class="form-label fw-bold">Att</label>
-                        <input type="text" name="att" placeholder="Att" class="form-control" id="att" required>
+                        <input type="text" name="att" placeholder="Att" class="form-control" id="att" readonly>
                     </div>
                     <div class="mb-3">
                         <label for="notelp" class="form-label fw-bold">No Telp</label>
                         <input type="text" name="notelp" placeholder="Telephone" class="form-control" id="notelp"
-                            required>
+                            readonly>
                     </div>
                     <div class="mb-3">
                         <label for="Fax" class="form-label fw-bold">Fax</label>
-                        <input type="text" name="fax" placeholder="Fax" class="form-control" id="fax" required>
+                        <input type="text" name="fax" placeholder="Fax" class="form-control" id="fax" readonly>
                     </div>
 
                 </div>
@@ -74,36 +80,36 @@
                 <div class="col-md-6 ps-4">
                     <div class="mb-4">
                         <label for="ship" class="form-label fw-bold">Ship To:</label>
-                        <textarea name="ship" class="form-control ship-to-textarea" id="ship"></textarea>
+                        <textarea name="ship" class="form-control ship-to-textarea" id="ship" readonly></textarea>
                     </div>
 
                     <div class="mb-3">
                         <label for="email" class="form-label fw-bold">Email</label>
                         <input type="text" placeholder="Email" name="email" class="form-control" id="email"
-                            required>
+                            readonly>
                     </div>
 
                     <div class="mb-3">
                         <label for="telp" class="form-label fw-bold">Telp/Fax</label>
                         <input type="text" placeholder="Telp/Fax" name="Telp/Fax" class="form-control" id="telp"
-                            required>
+                            readonly>
                     </div>
 
                     <div class="mb-3">
                         <label for="vat" class="form-label fw-bold">VAT/PPN</label>
                         <input type="text" placeholder="VAT/PPN" name="vat" class="form-control" id="vat"
-                            required>
+                            readonly>
                     </div>
 
                     <div class="mb-3">
                         <label for="term" class="form-label fw-bold">Term Pembayaran</label>
                         <input type="text" placeholder="Term Pembayaran" name="term" class="form-control"
-                            id="term" required>
+                            id="term" readonly>
                     </div>
 
                     <div class="mb-4">
                         <label for="keterangan" class="form-label fw-bold">Keterangan</label>
-                        <textarea name="keterangan" class="form-control keterangan-textarea" id="keterangan"></textarea>
+                        <textarea name="keterangan" class="form-control keterangan-textarea" id="keterangan" readonly></textarea>
                     </div>
 
                     <div class="mb-3">
@@ -154,11 +160,11 @@
 
                 <!-- Input Row -->
                 <tr class="input-row">
-                    <td><input type="text" class="input-box"></td>
-                    <td><input type="text" class="input-box"></td>
-                    <td><input type="text" class="input-box"></td>
-                    <td><input type="text" class="input-box discount-input"></td>
-                    <td><input type="text" class="input-box"></td>
+                    <td><input type="text" class="input-box" name="kode" readonly></td>
+                    <td><input type="text" class="input-box" name="qty" readonly></td>
+                    <td><input type="text" class="input-box" name="harga"></td>
+                    <td><input type="text" class="input-box discount-input" name="diskon"></td>
+                    <td><input type="text" class="input-box" name="total" readonly></td>
                 </tr>
 
                 <!-- Thick Border -->
