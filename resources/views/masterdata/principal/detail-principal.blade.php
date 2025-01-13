@@ -88,10 +88,8 @@
                 </div>
                 <div class="col-md-3 mb-4">
                     <label for="notelp" class="form-label fw-bold">Status Show/Hide</label>
-                    <select name="status" id="status" class="form-select">
-                        <option value="show">Show</option>
-                        <option value="hide">Hide</option>
-                    </select>
+                    <input type="text" name="status" id="status" class="form-control" readonly>
+
                 </div>
             </div>
             <div class="row">
