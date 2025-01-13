@@ -42,13 +42,23 @@ $(document).ready(function () {
     $('#tabledasarpembelian').DataTable();
 });
 $(document).ready(function () {
-    $('#tableinvoice').DataTable();
-});
-$(document).ready(function () {
     $('#tablerekappo').DataTable();
 });
 $(document).ready(function () {
     $('#tablecustomer').DataTable();
 })
 
+$(document).ready(function () {
+var table = $('#tableinvoice').DataTable();
+
+$('#filter-bulan').on('change', function () {
+    var selectedMonth = $(this).val();
+    var regex = selectedMonth ? '^\\d{4}-' + selectedMonth + '-\\d{2}$' : '';
+    table.column(3).search(regex, true, false).draw(); // Gunakan regex untuk mencocokkan format tanggal
+});
+$('#filter-tahun').on('change', function () {
+        var selectedYear = $(this).val();
+        table.column(3).search(selectedYear ? selectedYear : '', true, false).draw();
+    });
+});
 

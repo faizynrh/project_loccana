@@ -6,9 +6,6 @@
         <h3
             style="text-decoration: underline; padding-top:25px; font-size: 18px; color: #0044ff; text-underline-offset: 13px; font-weight: bold; padding-bottom: 10px">
             Detail Principal</h3>
-
-
-
         @if ($errors->any())
             <div class="alert alert-danger alert-dismissible fade show" role="alert">
                 @foreach ($errors->all() as $error)
@@ -89,7 +86,6 @@
                 <div class="col-md-3 mb-4">
                     <label for="notelp" class="form-label fw-bold">Status Show/Hide</label>
                     <input type="text" name="status" id="status" class="form-control" readonly>
-
                 </div>
             </div>
             <div class="row">

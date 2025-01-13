@@ -49,6 +49,7 @@ class InvoiceController extends Controller
                 'offset' => 0
             ]);
 
+
             if ($apiResponse->successful()) {
                 $data = $apiResponse->json();
                 // dd($data);
@@ -65,6 +66,8 @@ class InvoiceController extends Controller
             return back()->withErrors($e->getMessage());
         }
     }
+
+
 
     /**
      * Show the form for creating a new resource.

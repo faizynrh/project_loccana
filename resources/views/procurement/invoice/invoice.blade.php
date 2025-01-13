@@ -17,12 +17,38 @@
             </div>
         @endif
 
-        <!-- Main Content -->
+
 
         <h3 style="font-size: 18px; padding-top:25px; font-weight: 700">List Invoice</h3>
-        <div class="d-flex justify-content-between align-items-center">
+        <div class="d-flex justify-content-between align-items-center mb-3">
             <a href="/invoice-tambah" class="btn btn-primary"><strong>+</strong></a>
         </div>
+
+
+        <div class="filter-container d-flex align-items-center">
+            <select id="filter-bulan" class="form-control me-2">
+                <option value="">ALL</option>
+                <option value="01">Januari</option>
+                <option value="02">Februari</option>
+                <option value="03">Maret</option>
+                <option value="04">April</option>
+                <option value="05">Mei</option>
+                <option value="06">Juni</option>
+                <option value="07">Juli</option>
+                <option value="08">Agustus</option>
+                <option value="09">September</option>
+                <option value="10">Oktober</option>
+                <option value="11">November</option>
+                <option value="12">Desember</option>
+            </select>
+
+            <select id="filter-tahun" class="form-control">
+                <option value="">ALL</option>
+                <option value="2025">2025</option>
+                <option value="2024">2024</option>
+            </select>
+        </div>
+
 
 
         <table class="table table-striped table-bordered mt-3" id="tableinvoice">
