@@ -180,3 +180,4 @@ Route::get('/invoice', [InvoiceController::class, 'index'])->name('invoice.index
 Route::delete('/invoice-delete/{no_invoice}', [InvoiceController::class, 'destroy'])->name('invoice.destroy');
 Route::get('/invoice-tambah', [InvoiceController::class, 'create'])->name('invoice.create');
 Route::post('/invoice-tambah', [InvoiceController::class, 'store'])->name('invoice.store');
+Route::get('/invoice/edit/{no_invoice}', [InvoiceController::class, 'edit'])->name('invoice.edit');

@@ -85,7 +85,7 @@
                                         class="btn btn-sm btn-info mb-1">
                                         <i class="bi bi-eye"></i>
                                     </button>
-                                    <a href="/uom/edit/{{ $item['no_invoice'] }}" class="btn btn-sm btn-warning mb-2">
+                                    <a href="/invoice/edit/{{ $item['no_invoice'] }}" class="btn btn-sm btn-warning mb-2">
                                         <i class="bi bi-pencil"></i>
                                     </a>
                                     <form action="{{ route('invoice.destroy', $item['no_invoice']) }}" method="POST"
@@ -138,6 +138,4 @@
             });
         }
     </script>
-
-
 @endsection

@@ -149,9 +149,34 @@ class InvoiceController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(string $no_invoice)
     {
         //
+        try {
+            $apiurl = "https://gateway-internal.apicentrum.site/t/loccana.com/procurement/invoice/1.0.0/invoice/{$no_invoice}";
+            $accessToken = $this->getAccessToken();
+            // Get UoM data
+            $apiResponse = Http::withHeaders([
+                'Authorization' => 'Bearer ' . $accessToken,
+                'Content-Type' => 'application/json'
+            ])->get($apiurl);
+
+            // dd($apiResponse->json());
+
+            if ($apiResponse->successful()) {
+                $invoice = $apiResponse->json();
+
+                if (isset($procurement['data'])) {
+                    return view('procurement.invoice.edit-invoice', ['invoice' => $invoice['data']]);
+                } else {
+                    return back()->withErrors('Data invoice tidak ditemukan.');
+                }
+            } else {
+                return back()->withErrors('Gagal mengambil data invoice dari API.');
+            }
+        } catch (\Exception $e) {
+            return back()->withErrors($e->getMessage());
+        }
     }
 
     /**
