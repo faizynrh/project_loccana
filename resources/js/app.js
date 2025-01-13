@@ -47,6 +47,8 @@ $(document).ready(function () {
 $(document).ready(function () {
     $('#tablerekappo').DataTable();
 });
-
+$(document).ready(function () {
+    $('#tablecustomer').DataTable();
+})
 
 
