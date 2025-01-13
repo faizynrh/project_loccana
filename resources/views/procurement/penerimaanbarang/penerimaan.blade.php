@@ -51,7 +51,7 @@
                 <option value="12" {{ $currentMonth == 12 ? 'selected' : '' }}>Desember</option>
             </select>
         </div>
-        <table class="table table-striped table-bordered mt-3" id="tablecoa">
+        <table class="table table-striped table-bordered mt-3" id="tablepenerimaan">
             <thead>
                 <tr>
                     <th scope="col">No</th>

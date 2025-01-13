@@ -61,10 +61,13 @@
                     <li class="list-decor">Pelayanan Terbaik</li>
                     <li class="list-decor">Keberlanjutan untuk Semua</li>
                 </ul> --}}
-                <a href="/dashboard"
-                    class="btn-next px-8 py-3 rounded-full text-blue-600 font-semibold inline-block hover:shadow-lg text-center">
-                    Selanjutnya
-                </a>
+                <div class="login-register">
+                    <a href="{{ route('oauth.redirect') }}"
+                        class="px-10 py-4 rounded-full bg-gradient-to-r from-yellow-400 to-yellow-500 text-white font-semibold inline-block shadow-lg hover:shadow-xl hover:from-yellow-500 hover:to-yellow-600 transition duration-300 ease-in-out transform hover:scale-105">
+                        Login
+                    </a>
+                </div>
+
             </div>
 
             <!-- Right Section -->

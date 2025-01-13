@@ -9,46 +9,39 @@ import 'bootstrap-icons/font/bootstrap-icons.css';
 
 
 $(document).ready(function () {
-    $('#tablecoa').DataTable();
+    const tableIds = [
+        'tablecoa',
+        'tableitems',
+        'tableprice',
+        'tablegudang',
+        'tableuser',
+        'tableinformasi',
+        'tableuom',
+        'tableprincipal',
+        'tableCustomer',
+        'tabledasarpembelian',
+        'tableinvoice',
+        'tablerekappo',
+        'tablecustomer'
+    ];
+
+    tableIds.forEach(function (id) {
+        $('#' + id).DataTable();
+    });
 });
+
 $(document).ready(function () {
-    $('#tableitems').DataTable();
-});
-$(document).ready(function () {
-    $('#tableprice').DataTable();
-});
-$(document).ready(function () {
-    $('#tablegudang').DataTable();
-});
-$(document).ready(function () {
-    $('#tableuser').DataTable();
-});
-$(document).ready(function () {
-    $('#tableinformasi').DataTable();
-});
-$(document).ready(function () {
-    $('#tableuom').DataTable();
-});
-$(document).ready(function () {
-    $('#tableinformasi').DataTable();
-});
-$(document).ready(function () {
-    $('#tableprincipal').DataTable();
-});
-$(document).ready(function () {
-    $('#tableCustomer').DataTable();
-});
-$(document).ready(function () {
-    $('#tabledasarpembelian').DataTable();
-});
-$(document).ready(function () {
-    $('#tableinvoice').DataTable();
-});
-$(document).ready(function () {
-    $('#tablerekappo').DataTable();
-});
-$(document).ready(function () {
-    $('#tablecustomer').DataTable();
+    var table = $('#tablepenerimaan').DataTable();
+
+    $('#yearSelect').change(function () {
+        var year = $(this).val();
+        table.column(1).search(year).draw();
+    });
+
+    $('#monthSelect').change(function () {
+        var month = $(this).val();
+        table.column(2).search(month).draw();
+    });
 })
 
 

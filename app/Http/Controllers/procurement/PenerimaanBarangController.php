@@ -4,15 +4,53 @@ namespace App\Http\Controllers\procurement;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 
 class PenerimaanBarangController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    private function getAccessToken()
+    {
+        $tokenurl = env('API_TOKEN_URL');
+        $clientid = env('API_CLIENT_ID');
+        $clientsecret = env('API_CLIENT_SECRET');
+
+        $tokenResponse = Http::asForm()->post($tokenurl, [
+            'grant_type' => 'client_credentials',
+            'client_id' => $clientid,
+            'client_secret' => $clientsecret,
+        ]);
+
+        if (!$tokenResponse->successful()) {
+            throw new \Exception('Failed to fetch access token');
+        }
+
+        return $tokenResponse->json()['access_token'];
+    }
     public function index()
     {
-        //
+        try {
+            $apiurl = 'https://gateway-internal.apicentrum.site/t/loccana.com/loccana/itemreceipt/1.0.0/item_receipt/1.0.0/lists';
+            $accessToken = $this->getAccessToken();
+
+            $apiResponse = Http::withHeaders([
+                'Authorization' => 'Bearer ' . $accessToken,
+                'Content-Type' => 'application/json'
+            ])->post($apiurl);
+
+            if ($apiResponse->successful()) {
+                $data = $apiResponse->json();
+                // dd($data);
+                return view('procurement.penerimaanbarang.penerimaan', ['data' => $data]);
+            } else {
+                return response()->json([
+                    'message' => 'Failed to fetch data from API',
+                    'status' => $apiResponse->status(),
+                    'error' => $apiResponse->json(),
+                ]);
+            }
+        } catch (\Exception $e) {
+            return back()->withErrors($e->getMessage());
+        }
     }
 
     /**

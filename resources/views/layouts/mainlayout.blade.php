@@ -215,11 +215,11 @@
                     <div class="dropdown me-3">
                         <a class="nav-link dropdown-toggle text-white" href="#" role="button"
                             data-bs-toggle="dropdown" aria-expanded="false">
-                            Lorem
+                            {{ Session::get('user_info')['username'] ?? 'Guest' }}
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end">
                             <li><a class="dropdown-item" href="/profile">My Profile</a></li>
-                            <li><a class="dropdown-item" href="/">Logout</a></li>
+                            <li><a class="dropdown-item" href="{{ route('oauth.logout') }}">Logout</a></li>
                         </ul>
                     </div>
                 </div>
