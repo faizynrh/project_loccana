@@ -39,9 +39,9 @@
                 <option value="Belum Lunas">Belum Lunas</option>
             </select>
             <select id="filter-tahun" class="form-select" style="width: 95px">
-                <option value="">ALL</option>
+                <option value="" selected>ALL</option>
                 <option value="2025">2025</option>
-                <option value="2024" selected>2024</option>
+                <option value="2024">2024</option>
             </select>
             <select id="filter-bulan" class="form-select" style="width: 135px">
                 <option value="" selected>ALL</option>
