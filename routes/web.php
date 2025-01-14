@@ -41,6 +41,11 @@ Route::get('/', function () {
     return view('home');
 })->name('home');
 
+Route::get('/login', function () {
+    return redirect('/');
+});
+
+
 
 Route::middleware('auth.login')->group(
     function () {
