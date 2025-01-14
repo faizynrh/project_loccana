@@ -19,7 +19,13 @@
 
 
 
-        <h3 style="font-size: 18px; padding-top:25px; font-weight: 700">List Invoice</h3>
+        <div class="p-2 d-flex justify-content-between align-items-center">
+            <h5 class="fw-bold">List Invoice</h5>
+            <div>
+                <h6 class="fw-bold">Total Per Bulan</h6>
+                <h4 class="fw-bold" id="totalPerBulan">Rp 0,00</h4>
+            </div>
+        </div>
         <div class="d-flex justify-content-between align-items-center mb-3">
 
         </div>
@@ -27,19 +33,19 @@
 
         <div class="filter-container d-flex align-items-center">
             <a href="/invoice-tambah" class="btn btn-primary"><strong>+</strong></a>
-            <select id="filter-invoice" class="form-control" style="width: 150px">
+            <select id="filter-invoice" class="form-select" style="width: 170px">
                 <option value="">Semua Invoice</option>
                 <option value="Sudah Lunas">Sudah Lunas</option>
                 <option value="Belum Lunas">Belum Lunas</option>
             </select>
-            <select id="filter-tahun" class="form-control" style="width: 150px">
-                <option value="">ALL</option>
+            <select id="filter-tahun" class="form-select" style="width: 95px">
+                <option value="" selected>ALL</option>
                 <option value="2025">2025</option>
-                <option value="2024" selected>2024</option>
+                <option value="2024">2024</option>
             </select>
-            <select id="filter-bulan" class="form-control" style="width: 150px">
-                <option value="">ALL</option>
-                <option value="01" selected>Januari</option>
+            <select id="filter-bulan" class="form-select" style="width: 135px">
+                <option value="" selected>ALL</option>
+                <option value="01">Januari</option>
                 <option value="02">Februari</option>
                 <option value="03">Maret</option>
                 <option value="04">April</option>
@@ -81,7 +87,7 @@
                             <td>{{ $item['status'] ?? '-' }}</td>
                             <td>
                                 @if (!empty($item['no_invoice']))
-                                    <button onclick="window.location='{{ route('uom.show', $item['no_invoice']) }}';"
+                                    <button onclick="window.location='{{ route('invoice.show', $item['no_invoice']) }}';"
                                         class="btn btn-sm btn-info mb-1">
                                         <i class="bi bi-eye"></i>
                                     </button>

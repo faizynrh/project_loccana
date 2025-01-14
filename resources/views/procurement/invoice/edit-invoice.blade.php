@@ -6,7 +6,8 @@
             background-color: #e5e6e7;
         }
     </style>
-    <link rel="stylesheet" href="assets/css/invoicestyle.css">
+
+    <link rel="stylesheet" href="{{ asset('assets/css/invoicestyle.css') }}">
     <!-- Main Content -->
     <div class="container mt-2 bg-white rounded-top">
         <h3
@@ -23,7 +24,7 @@
             </div>
         @endif
 
-        <form action="{{ route('invoice.store') }}" method="POST" id="addForm">
+        <form action="{{ route('invoice.update', $invoice['no_invoice']) }} " method="POST" id="addForm">
             @csrf
             @method('PUT')
             <div class="row">
@@ -109,7 +110,7 @@
                     <div class="mb-3">
                         <label for="term" class="form-label fw-bold">Term Pembayaran</label>
                         <input type="text" placeholder="Term Pembayaran" name="term" class="form-control"
-                            id="term" readonly value="{{ $invoice['term_bayar'] }}">
+                            id="term" readonly value="{{ $invoice['term_pembayaran'] }}">
                     </div>
 
                     <div class="mb-4">
@@ -133,13 +134,13 @@
                             class="form-control" id="tgljatuhtempo" value="{{ $invoice['tgl_jatuh_tempo'] }}">
                     </div>
                     <div class="mb-4">
-                        <label for="keteranganinvoice" class="form-label fw-bold">Keterangan</label>
-                        <textarea name="keteranganinvoice" class="form-control keteranganinvoice-textarea" id="keteranganinvoice">{{ $invoice['keteranganinvoice'] }}</textarea>
+                        <label for="keteranganinvoice" class="form-label fw-bold">Keterangan Invoice</label>
+                        <textarea name="keteranganinvoice" class="form-control keteranganinvoice-textarea" id="keteranganinvoice">{{ $invoice['keterangan_invoice'] }}</textarea>
                     </div>
                     <div class="mb-3">
                         <label for="fakturpajak" class="form-label fw-bold">Faktur Pajak</label>
                         <input type="text" placeholder="Faktur Pajak" name="fakturpajak" class="form-control"
-                            id="fakturpajak" value="{{ $invoice['fakturpajak'] }}">
+                            id="fakturpajak" value="{{ $invoice['faktur_pajak'] }}">
                     </div>
                 </div>
             </div>
@@ -164,13 +165,22 @@
                 </tr>
 
                 <!-- Input Row -->
-                <tr class="input-row">
-                    <td><input type="text" class="input-box" name="kode" readonly></td>
-                    <td><input type="text" class="input-box" name="qty" readonly></td>
-                    <td><input type="text" class="input-box" name="harga"></td>
-                    <td><input type="text" class="input-box discount-input" name="diskon"></td>
-                    <td><input type="text" class="input-box" name="total" readonly></td>
-                </tr>
+                @foreach ($items as $item)
+                    <tr class="input-row">
+                        <td><input type="text" class="input-box" name="kode" value="{{ $item['kode_item'] }}"
+                                readonly>
+                        </td>
+                        <td><input type="text" class="input-box" name="qty" value="{{ $item['qty_lt_kg'] }}"
+                                readonly>
+                        </td>
+                        <td><input type="text" class="input-box" name="harga" value="{{ $item['harga'] }}">
+                        </td>
+                        <td><input type="text" class="input-box discount-input" name="diskon"
+                                value="{{ $item['diskon'] }}"></td>
+                        <td><input type="text" class="input-box" name="total" readonly
+                                value="{{ $item['total_harga_barang'] }}"></td>
+                    </tr>
+                @endforeach
 
                 <!-- Thick Border -->
                 <tr class="thick-border">
@@ -180,23 +190,23 @@
                 <!-- Summary Rows -->
                 <tr class="summary-row">
                     <td colspan="3"></td>
-                    <td class="summary-label">Subtotal</td>
-                    <td class="summary-value">1,000,000</td>
+                    <td class="summary-label fw-bold">Subtotal</td>
+                    <td class="summary-value fw-bold">1,000,000</td>
                 </tr>
                 <tr class="summary-row">
                     <td colspan="3"></td>
-                    <td class="summary-label">Diskon</td>
-                    <td class="summary-value">100,000</td>
+                    <td class="summary-label fw-bold">Diskon</td>
+                    <td class="summary-value fw-bold">100,000</td>
                 </tr>
                 <tr class="summary-row">
                     <td colspan="3"></td>
-                    <td class="summary-label">Taxable</td>
-                    <td class="summary-value">900,000</td>
+                    <td class="summary-label fw-bold">Taxable</td>
+                    <td class="summary-value fw-bold">900,000</td>
                 </tr>
                 <tr class="summary-row">
                     <td colspan="3"></td>
-                    <td class="summary-label">VAT/PPN</td>
-                    <td class="summary-value">90,000</td>
+                    <td class="summary-label fw-bold">VAT/PPN</td>
+                    <td class="summary-value fw-bold">90,000</td>
                 </tr>
 
                 <!-- Final Thick Border -->
@@ -207,8 +217,8 @@
                 <!-- Total Row -->
                 <tr class="summary-row">
                     <td colspan="3"></td>
-                    <td class="summary-label">Total</td>
-                    <td class="summary-value">990,000</td>
+                    <td class="summary-label fw-bold">Total</td>
+                    <td class="summary-value fw-bold">990,000</td>
                 </tr>
             </table>
         </div>
@@ -236,6 +246,87 @@
                     document.getElementById('addForm').submit();
                 }
             });
+        });
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get all input rows
+            const inputRows = document.querySelectorAll('.input-row');
+
+            // Function to format number to currency
+            function formatCurrency(number) {
+                return new Intl.NumberFormat('id-ID').format(number);
+            }
+
+            // Function to parse currency string back to number
+            function parseCurrency(currencyString) {
+                return parseFloat(currencyString.replace(/[^\d.-]/g, '')) || 0;
+            }
+
+            // Function to calculate row total
+            function calculateRowTotal(row) {
+                const harga = parseCurrency(row.querySelector('input[name="harga"]').value);
+                const qty = parseCurrency(row.querySelector('input[name="qty"]').value);
+                const diskonPercent = parseCurrency(row.querySelector('input[name="diskon"]').value);
+
+                const total = harga * qty * (1 - (diskonPercent / 100));
+                row.querySelector('input[name="total"]').value = formatCurrency(total);
+                return total;
+            }
+
+            // Function to calculate all totals
+            function calculateTotals() {
+                // Calculate subtotal (sum of all row totals before any global discount)
+                let subtotal = 0;
+                inputRows.forEach(row => {
+                    const harga = parseCurrency(row.querySelector('input[name="harga"]').value);
+                    const qty = parseCurrency(row.querySelector('input[name="qty"]').value);
+                    subtotal += harga * qty;
+                });
+
+                // Get global discount amount
+                let totalDiskon = 0;
+                inputRows.forEach(row => {
+                    const harga = parseCurrency(row.querySelector('input[name="harga"]').value);
+                    const qty = parseCurrency(row.querySelector('input[name="qty"]').value);
+                    const diskonPercent = parseCurrency(row.querySelector('input[name="diskon"]').value);
+                    totalDiskon += (harga * qty * (diskonPercent / 100));
+                });
+
+                // Calculate taxable amount (subtotal - discount)
+                const taxable = subtotal - totalDiskon;
+
+                // Get VAT/PPN percentage and calculate tax amount
+                const vatPercentage = parseCurrency(document.getElementById('vat').value) || 0;
+                const vatAmount = taxable * (vatPercentage / 100);
+
+                // Calculate final total
+                const finalTotal = taxable + vatAmount;
+
+                // Update summary rows
+                const summaryRows = document.querySelectorAll('.summary-row');
+                summaryRows[0].querySelector('.summary-value').textContent = formatCurrency(subtotal);
+                summaryRows[1].querySelector('.summary-value').textContent = formatCurrency(totalDiskon);
+                summaryRows[2].querySelector('.summary-value').textContent = formatCurrency(taxable);
+                summaryRows[3].querySelector('.summary-value').textContent = formatCurrency(vatAmount);
+                summaryRows[4].querySelector('.summary-value').textContent = formatCurrency(finalTotal);
+            }
+
+            // Add event listeners to all input fields that affect calculations
+            inputRows.forEach(row => {
+                const inputs = row.querySelectorAll(
+                    'input[name="harga"], input[name="qty"], input[name="diskon"]');
+                inputs.forEach(input => {
+                    input.addEventListener('input', function() {
+                        calculateRowTotal(row);
+                        calculateTotals();
+                    });
+                });
+            });
+
+            // Add event listener to VAT/PPN field
+            document.getElementById('vat').addEventListener('input', calculateTotals);
+
+            // Initial calculation
+            calculateTotals();
         });
     </script>
 @endsection

@@ -180,5 +180,7 @@ Route::middleware('auth.login')->group(
         Route::get('/invoice-tambah', [InvoiceController::class, 'create'])->name('invoice.create');
         Route::post('/invoice-tambah', [InvoiceController::class, 'store'])->name('invoice.store');
         Route::get('/invoice/edit/{no_invoice}', [InvoiceController::class, 'edit'])->name('invoice.edit');
+        Route::put('/invoice/update/{no_invoice}', [InvoiceController::class, 'update'])->name('invoice.update');
+        Route::get('/invoice/detail/{no_invoice}', [InvoiceController::class, 'show'])->name('invoice.show');
     }
 );

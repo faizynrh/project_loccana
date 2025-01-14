@@ -30,7 +30,7 @@
                 <div class="col-md-6 pe-4">
                     <div class="mb-3">
                         <label for="nodo" class="form-label fw-bold">No. DO</label>
-                        <select type="text" name="nodo" class="form-control" id="nodo" required>
+                        <select type="text" name="nodo" class="form-select" id="nodo" required>
                             <option value="" disabled selected>Nomor PO</option>
                             <option value="1">Adj Kaos - PT. DHARMA GUNA WIBAWA - 2023-5-01</option>
                             <option value="2">DGW/24-02/0835 - PT. DHARMA GUNA WIBAWA - 2024-02-29</option>
