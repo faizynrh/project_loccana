@@ -141,33 +141,28 @@ class InvoiceController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(string $no_invoice)
     {
         //
-    }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $no_invoice)
-    {
-        //
         try {
             $apiurl = "https://gateway-internal.apicentrum.site/t/loccana.com/procurement/invoice/1.0.0/invoice/{$no_invoice}";
             $accessToken = $this->getAccessToken();
-            // Get UoM data
+
             $apiResponse = Http::withHeaders([
                 'Authorization' => 'Bearer ' . $accessToken,
                 'Content-Type' => 'application/json'
             ])->get($apiurl);
 
-            // dd($apiResponse->json());
-
             if ($apiResponse->successful()) {
                 $invoice = $apiResponse->json();
 
-                if (isset($procurement['data'])) {
-                    return view('procurement.invoice.edit-invoice', ['invoice' => $invoice['data']]);
+                if (isset($invoice['data']['no_invoice'])) {
+                    $data = [
+                        'invoice' => $invoice['data'],
+                        'items' => $invoice['data']['items'],
+                    ];
+                    return view('procurement.invoice.detail-invoice', $data);
                 } else {
                     return back()->withErrors('Data invoice tidak ditemukan.');
                 }
@@ -180,11 +175,87 @@ class InvoiceController extends Controller
     }
 
     /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(string $no_invoice)
+    {
+        try {
+            $apiurl = "https://gateway-internal.apicentrum.site/t/loccana.com/procurement/invoice/1.0.0/invoice/{$no_invoice}";
+            $accessToken = $this->getAccessToken();
+
+            $apiResponse = Http::withHeaders([
+                'Authorization' => 'Bearer ' . $accessToken,
+                'Content-Type' => 'application/json'
+            ])->get($apiurl);
+
+            if ($apiResponse->successful()) {
+                $invoice = $apiResponse->json();
+
+                if (isset($invoice['data']['no_invoice'])) {
+                    $data = [
+                        'invoice' => $invoice['data'],
+                        'items' => $invoice['data']['items'],
+                    ];
+                    return view('procurement.invoice.edit-invoice', $data);
+                } else {
+                    return back()->withErrors('Data invoice tidak ditemukan.');
+                }
+            } else {
+                return back()->withErrors('Gagal mengambil data invoice dari API.');
+            }
+        } catch (\Exception $e) {
+            return back()->withErrors($e->getMessage());
+        }
+    }
+
+
+    /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, string $no_invoice)
     {
         //
+        try {
+            $apiurl = "https://gateway-internal.apicentrum.site/t/loccana.com/procurement/invoice/1.0.0/invoice/{$no_invoice}";
+            $accessToken = $this->getAccessToken();
+
+            $data = [
+                'kode' => $request->input('kode'),
+                'tanggal' => $request->input('tanggal'),
+                'principal' => $request->input('principal'),
+                'alamat' => $request->input('alamat'),
+                'att' => $request->input('att'),
+                'notelp' => $request->input('notelp'),
+                'fax' => $request->input('fax'),
+                'ship' => $request->input('ship'),
+                'email' => $request->input('email'),
+                'telp' => $request->input('Telp/Fax'),
+                'vat' => $request->input('vat'),
+                'term' => $request->input('term'),
+                'keterangan' => $request->input('keterangan'),
+                'noinvoice' => $request->input('noinvoice'),
+                'tglinvoice' => $request->input('tglinvoice'),
+                'tgljatuhtempo' => $request->input('tgljatuhtempo'),
+                'keteranganinvoice' => $request->input('keteranganinvoice'),
+                'fakturpajak' => $request->input('fakturpajak')
+            ];
+
+            $apiResponse = Http::withHeaders([
+                'Authorization' => 'Bearer ' . $accessToken,
+                'Content-Type' => 'application/json'
+            ])->put($apiurl, $data);
+
+            if ($apiResponse->successful()) {
+                return redirect()->route('invoice.index')
+                    ->with('success', 'Data invoice berhasil diperbarui.');
+            } else {
+                return back()->withErrors(
+                    'Gagal memperbarui data: ' . $apiResponse->body()
+                );
+            }
+        } catch (\Exception $e) {
+            return back()->withErrors($e->getMessage());
+        }
     }
 
     /**
