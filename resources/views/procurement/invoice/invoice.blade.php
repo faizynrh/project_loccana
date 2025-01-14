@@ -19,7 +19,13 @@
 
 
 
-        <h3 style="font-size: 18px; padding-top:25px; font-weight: 700">List Invoice</h3>
+        <div class="p-2 d-flex justify-content-between align-items-center">
+            <h5 class="fw-bold">List Invoice</h5>
+            <div>
+                <h6 class="fw-bold">Total Per Bulan</h6>
+                <h4 class="fw-bold" id="totalPerBulan">Rp 0,00</h4>
+            </div>
+        </div>
         <div class="d-flex justify-content-between align-items-center mb-3">
 
         </div>
