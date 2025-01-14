@@ -7,6 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="icon" href="{{ asset('assets/images/icon.png') }}" type="image/png">
     <link rel="stylesheet" href="{{ asset('assets/sweetalert/sweetalert2.min.css') }}">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     @vite('resources/js/app.js')
     <title>Distributor & Sales System</title>
 </head>

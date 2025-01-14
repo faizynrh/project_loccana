@@ -5,6 +5,7 @@ namespace App\Http\Controllers\masterdata;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class ItemController extends Controller
 {
@@ -26,32 +27,45 @@ class ItemController extends Controller
 
         return $tokenResponse->json()['access_token'];
     }
-    public function index()
+    public function index(Request $request)
     {
+        // dd($request->all());
         try {
             $apiurl = 'https://gateway-internal.apicentrum.site/t/loccana.com/master/items/1.0.0/items/lists';
             $accessToken = $this->getAccessToken();
 
+            $limit = $request->input('length');
+            $offset = $request->input('start');
+
+            // dd($limit, $offset);
+
+            if ($offset === null) {
+                $offset = 0;
+            }
+
+            $search = $request->input('search.value');
+            if ($search === null) {
+                $search = "";
+            }
+
+            $requestBody = [
+                'search' => $search,
+                'limit' => $limit,
+                'offset' => $offset,
+                'company_id' => 2,
+            ];
+
             $apiResponse = Http::withHeaders([
                 'Authorization' => 'Bearer ' . $accessToken,
                 'Content-Type' => 'application/json'
-            ])->post($apiurl, [
-                'search' => '',
-                'limit' => 10,
-                'offset' => 0,
-                'company_id' => 0,
-            ]);
+            ])->post($apiurl, $requestBody);
+
+
             // dd([
-            //     'status_code' => $apiResponse->status(),
-            //     'headers' => $apiResponse->headers(),
-            //     'body' => $apiResponse->json(),
-            //     'url' => $apiurl,
-            //     'request_data' => [
-            //         'search' => '',
-            //         'limit' => 10,
-            //         'offset' => 0,
-            //         'company_id' => 0,
-            //     ],
+            //     $requestBody,
+            //     'api_response_status' => $apiResponse->status(),
+            //     'response' => $apiResponse,
+            //     'response_body' => $apiResponse->json(),
             // ]);
             if ($apiResponse->successful()) {
                 $data = $apiResponse->json();

@@ -1,5 +1,7 @@
 @extends('layouts.mainlayout')
 @section('content')
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
     <div class="container mt-3 bg-white rounded-top">
         <div class="p-1">
             <h5 class="fw-bold ">Items</h5>
@@ -20,7 +22,7 @@
             </div>
         @endif
         <a href="/items/add" class="btn btn-primary fw-bold mt-1 mb-2">+ Tambah Item</a>
-        <table class="table table-striped table-bordered mt-3" id="tableitems">
+        <table class="table table-striped table-bordered mt-3" id="tableitem">
             <thead>
                 <tr>
                     <th scope="col">No</th>
@@ -70,6 +72,20 @@
             </tbody>
         </table>
         <script>
+            $(document).ready(function() {
+                $('#tableitem').DataTable({
+                    ajax: {
+                        url: "route('items')",
+                        type: "GET",
+                        data: function(d) {
+                            d.length = d.length;
+                            d.start = d.start;
+                            return d;
+                        }
+                    },
+                });
+            });
+
             function confirmDelete(id) {
                 Swal.fire({
                     title: 'Apakah kamu yakin?',

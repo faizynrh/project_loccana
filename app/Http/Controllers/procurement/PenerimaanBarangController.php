@@ -35,11 +35,17 @@ class PenerimaanBarangController extends Controller
             $apiResponse = Http::withHeaders([
                 'Authorization' => 'Bearer ' . $accessToken,
                 'Content-Type' => 'application/json'
-            ])->post($apiurl);
-
+            ])->post($apiurl, [
+                'search' => '',
+                'month' => '0',
+                'year' => '2025',
+                'limit' => 10,
+                'offset' => 0,
+                'company_id' => 0,
+            ]);
             if ($apiResponse->successful()) {
                 $data = $apiResponse->json();
-                // dd($data);
+                dd($data);
                 return view('procurement.penerimaanbarang.penerimaan', ['data' => $data]);
             } else {
                 return response()->json([

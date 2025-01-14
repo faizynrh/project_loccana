@@ -54,6 +54,8 @@ Route::middleware('auth.login')->group(
             return view('profile');
         });
         //items
+
+        // Route::match(['get', 'post'], '/items', [ItemController::class, 'index'])->name('items');
         Route::get('/items', [ItemController::class, 'index'])->name('items');
         Route::get('/items/add', [ItemController::class, 'create'])->name('items.create');
         Route::post('/items/add', [ItemController::class, 'store'])->name('items.store');
@@ -143,10 +145,7 @@ Route::middleware('auth.login')->group(
         });
 
         //penerimaan barang
-        // Route::get('/penerimaanbarang', [PenerimaanBarangController::class, 'index'])->name('penerimaan_barang');
-        route::get('/penerimaanbarang', function () {
-            return view('procurement.penerimaanbarang.penerimaan');
-        });
+        Route::get('/penerimaanbarang', [PenerimaanBarangController::class, 'index'])->name('penerimaan_barang');
         route::get('/penerimaanbarang/add', function () {
             return view('procurement.penerimaanbarang.add');
         });
