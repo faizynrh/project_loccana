@@ -18,19 +18,21 @@ class UserController extends Controller
             $start = $request->input('start');
 
             // Log untuk debugging
-            Log::info('DataTables Request', [
-                'length' => $length,
-                'start' => $start
-            ]);
+            // Log::info('DataTables Request', [
+            //     'length' => $length,
+            //     'start' => $start,
+            //     'all_parameters' => $request->all() // Log semua parameter
+            // ]);
 
-            // Kembalikan response JSON dengan informasi length dan start
-            return response()->json([
-                'length' => $length ?? null,
-                'start' => $start ?? null,
-                'message' => 'Data retrieved successfully'
-            ]);
+            // Kembalikan response JSON dengan informasi lengkap
+            return view('masterdata.user.user');
+            // return response()->json([
+            //     'length' => $length ?? null,
+            //     'start' => $start ?? null,
+            //     'message' => 'Data retrieved successfully',
+            //     'connection_status' => 'connected'
+            // ]);
         } catch (\Exception $e) {
-            // Log error
             Log::error('Error in index method', [
                 'message' => $e->getMessage(),
                 'trace' => $e->getTraceAsString()
