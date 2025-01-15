@@ -1,7 +1,5 @@
 @extends('layouts.mainlayout')
 @section('content')
-    {{-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script> --}}
     <div class="container mt-3 bg-white rounded-top">
         <div class="p-1">
             <h5 class="fw-bold ">Items</h5>
@@ -73,25 +71,54 @@
         </table>
 
         <script>
-            // $('#tableitem').DataTable({
-            //     serverSide: true,
-            //     ajax: {
-            //         url: "{{ route('items') }}",
-            //         type: "GET",
-            //         contentType: 'application/json',
-            //         dataType: 'json',
-            //         data: function(d) {
-            //             console.log("Length: ", d.length);
-            //             console.log("Start: ", d.start);
-            //             console.log("AJAX Request Triggered");
-            //             return {
-            //                 length: d.length, // jumlah data per halaman
-            //                 start: d.start, // offset data
-            //                 search: d.search.value, // jika diperlukan, misalnya untuk pencarian
-            //             };
-            //         }
-            //     },
-            // });
+            $(document).ready(function() {
+                $('#tableitem').DataTable({
+                    serverSide: true,
+                    ajax: {
+                        url: '{{ route('items') }}', // Pastikan URL ini benar
+                        type: 'GET',
+                        data: function(d) {
+                            // Tambahkan parameter dari DataTable ke request
+                            d.search = d.search.value; // Pencarian
+                            d.limit = d.length; // Limit
+                            d.offset = d.start; // Offset
+                        }
+                    },
+                    columns: [{
+                            data: 'DT_RowIndex',
+                            orderable: false,
+                            searchable: false
+                        },
+                        {
+                            data: 'item_code'
+                        },
+                        {
+                            data: 'item_name'
+                        },
+                        {
+                            data: 'item_description'
+                        },
+                        {
+                            data: 'uom_name'
+                        },
+                        {
+                            data: 'unit_box'
+                        },
+                        {
+                            data: 'principal'
+                        },
+                        {
+                            data: 'action',
+                            orderable: false,
+                            searchable: false
+                        },
+                    ],
+                    order: [
+                        [1, 'asc']
+                    ],
+                });
+            });
+
 
             function confirmDelete(id) {
                 Swal.fire({
@@ -102,10 +129,13 @@
                     reverseButtons: true
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        document.getElementById('delete' + id).submit();
+                        // Implementasi delete logic
                     }
                 });
             }
         </script>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
+        integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous">
+    </script>
 @endsection

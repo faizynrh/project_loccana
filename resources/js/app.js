@@ -20,7 +20,6 @@ $(document).ready(function () {
         'tablerekappo',
         'tablecustomer',
         'tablepenerimaan',
-        'tableitem'
     ];
 
     tableIds.forEach(function (id) {

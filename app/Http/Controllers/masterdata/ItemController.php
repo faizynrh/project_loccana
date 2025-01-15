@@ -29,19 +29,36 @@ class ItemController extends Controller
     }
     public function index(Request $request)
     {
+
         try {
+            // Ambil parameter dari request DataTable tanpa nilai default
+            $limit = (int)$request->input('length');  // Tanpa nilai default
+            $offset = (int) $request->input('start');   // Tanpa nilai default
+            $search = $request->input('search.value'); // Tanpa nilai default
+
+            // Pastikan offset tidak null, set ke 0 jika null
+            if ($offset === null) {
+                $offset = 0;
+            }
+
+            // Tentukan URL API dan token
             $apiurl = 'https://gateway.apicentrum.site/t/loccana.com/master/items/1.0.0/items/lists';
             $accessToken = $this->getAccessToken();
+
+            // Kirim request ke API dengan parameter yang sesuai
             $apiResponse = Http::withHeaders([
                 'Authorization' => 'Bearer ' . $accessToken,
                 'Content-Type' => 'application/json'
             ])->post($apiurl, [
-                'search' => '',
-                'limit' => 10,
-                'offset' => 0,
-                'company_id' => 2,
+                'search' => $search ?? "",    // Jika tidak ada pencarian, kirim string kosong
+                'limit' => $limit,            // Parameter limit dari request
+                'offset' => $offset,          // Parameter offset dari request
+                'company_id' => 2,            // Parameter tambahan
             ]);
 
+            dd($apiResponse->json());
+            Log::info('API Response', ['response' => $apiResponse->json()]);
+            // Cek apakah API berhasil merespon
             if ($apiResponse->successful()) {
                 $data = $apiResponse->json();
                 return view('masterdata.items.items', ['data' => $data]);
@@ -56,6 +73,7 @@ class ItemController extends Controller
             return back()->withErrors($e->getMessage());
         }
     }
+
 
 
     public function create()
