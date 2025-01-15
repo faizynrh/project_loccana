@@ -71,18 +71,22 @@
                 </tr>
             </tbody>
         </table>
+
         <script>
-            $(document).ready(function() {
-                $('#tableitem').DataTable({
+            document.addEventListener('DOMContentLoaded', function() {
+                $('#usertable').DataTable({
+                    processing: true,
+                    serverSide: true,
                     ajax: {
-                        url: "route('items')",
-                        type: "GET",
-                        data: function(d) {
-                            d.length = d.length;
-                            d.start = d.start;
-                            return d;
+                        url: "{{ route('items') }}", // Pastikan route benar
+                        type: 'GET',
+                        error: function(xhr, error, thrown) {
+                            console.log('Ajax error:', xhr, error, thrown);
                         }
                     },
+                    drawCallback: function(settings) {
+                        console.log('DataTables settings:', settings);
+                    }
                 });
             });
 

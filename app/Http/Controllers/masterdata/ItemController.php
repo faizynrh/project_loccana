@@ -29,59 +29,63 @@ class ItemController extends Controller
     }
     public function index(Request $request)
     {
-        // dd($request->all());
         try {
             $apiurl = 'https://gateway-internal.apicentrum.site/t/loccana.com/master/items/1.0.0/items/lists';
             $accessToken = $this->getAccessToken();
 
             $limit = $request->input('length');
             $offset = $request->input('start');
-
-            // dd($limit, $offset);
-
             if ($offset === null) {
                 $offset = 0;
             }
-
             $search = $request->input('search.value');
-            if ($search === null) {
+            if ($search !== null) {
+                $search = $request->input('search.value');
+            } else {
                 $search = "";
             }
-
             $requestBody = [
                 'search' => $search,
                 'limit' => $limit,
                 'offset' => $offset,
                 'company_id' => 2,
             ];
+            dd($requestBody);
 
             $apiResponse = Http::withHeaders([
                 'Authorization' => 'Bearer ' . $accessToken,
                 'Content-Type' => 'application/json'
             ])->post($apiurl, $requestBody);
 
-
-            // dd([
-            //     $requestBody,
-            //     'api_response_status' => $apiResponse->status(),
-            //     'response' => $apiResponse,
-            //     'response_body' => $apiResponse->json(),
-            // ]);
             if ($apiResponse->successful()) {
                 $data = $apiResponse->json();
-                // dd($data);
-                return view('masterdata.items.items', ['data' => $data]);
+
+                return response()->json([
+                    'draw' => $request->input('draw'), // Dikirim oleh DataTable
+                    'recordsTotal' => $data['data']['jumlah'] ?? 0, // Total semua data
+                    'recordsFiltered' => $data['data']['jumlah_filter'] ?? 0, // Total data setelah filter
+                    'data' => $data['data']['table'] ?? [], // Data yang akan ditampilkan
+                ]);
             } else {
                 return response()->json([
-                    'message' => 'Failed to fetch data from API',
-                    'status' => $apiResponse->status(),
-                    'error' => $apiResponse->json(),
+                    'draw' => $request->input('draw'),
+                    'recordsTotal' => 0,
+                    'recordsFiltered' => 0,
+                    'data' => [],
+                    'error' => 'Failed to fetch data from API',
                 ]);
             }
         } catch (\Exception $e) {
-            return back()->withErrors($e->getMessage());
+            return response()->json([
+                'draw' => $request->input('draw'),
+                'recordsTotal' => 0,
+                'recordsFiltered' => 0,
+                'data' => [],
+                'error' => $e->getMessage(),
+            ]);
         }
     }
+
 
     public function create()
     {
