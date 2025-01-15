@@ -48,19 +48,10 @@
 <body class="custom-bg min-h-screen flex items-center">
     <div class="container mx-auto px-4">
         <div class="flex flex-wrap items-center justify-between">
-            <!-- Left Section -->
             <div class="w-full lg:w-1/2 text-white mb-8 lg:mb-0">
                 <h1 class="text-4xl lg:text-6xl font-bold mb-6 leading-tight">
                     Selamat Datang di <span class="text-yellow-300">PT. Endira Alda</span>
                 </h1>
-                {{-- <p class="text-lg mb-8 opacity-90">
-                    Kami menghadirkan solusi inovatif dan berkelanjutan untuk membangun masa depan yang lebih baik.
-                </p>
-                <ul class="mb-8 space-y-4">
-                    <li class="list-decor">Solusi Bisnis Inovatif</li>
-                    <li class="list-decor">Pelayanan Terbaik</li>
-                    <li class="list-decor">Keberlanjutan untuk Semua</li>
-                </ul> --}}
                 <div class="login-register">
                     <a href="{{ route('oauth.redirect') }}"
                         class="px-10 py-4 rounded-full bg-gradient-to-r from-yellow-400 to-yellow-500 text-white font-semibold inline-block shadow-lg hover:shadow-xl hover:from-yellow-500 hover:to-yellow-600 transition duration-300 ease-in-out transform hover:scale-105">
@@ -70,15 +61,12 @@
 
             </div>
 
-            <!-- Right Section -->
             <div class="w-full lg:w-1/2 flex justify-center">
                 <div class="relative">
-                    <!-- Lingkaran sebagai Background -->
                     <div
                         class="absolute inset-0 bg-gradient-to-t from-blue-500 via-transparent to-transparent opacity-40 rounded-full">
                     </div>
 
-                    <!-- Gambar dengan Lingkaran -->
                     <div class="relative rounded-full overflow-hidden w-100 h-90 mx-auto">
                         <img src="assets/images/img-home.png" alt="Modern Business Illustration"
                             class="max-w-full h-auto object-cover relative z-10">

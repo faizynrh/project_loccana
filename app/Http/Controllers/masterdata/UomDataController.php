@@ -29,7 +29,7 @@ class UomDataController extends Controller
 
         return $tokenResponse->json()['access_token'];
     }
-    public function index()
+    public function index(Request $request)
     {
         try {
             $apiurl = 'https://gateway-internal.apicentrum.site/t/loccana.com/loccana/masterdata/1.0.0/uoms/lists';
@@ -39,27 +39,43 @@ class UomDataController extends Controller
                 'Authorization' => 'Bearer ' . $accessToken,
                 'Content-Type' => 'application/json'
             ])->post($apiurl, [
-                'search' => '',
-                'limit' => 10,
-                'offset' => 0,
-                'company_id' => 0,
+                'search' => $request->input('search', ''),
+                'limit' => $request->input('limit', 10),
+                'offset' => $request->input('offset', 0),
+                'company_id' => $request->input('company_id', 0),
             ]);
 
             if ($apiResponse->successful()) {
                 $data = $apiResponse->json();
+
+                if ($request->ajax()) {
+                    return response()->json([
+                        'data' => $data['data'],
+                        'message' => 'Data fetched successfully'
+                    ]);
+                }
+
                 return view('masterdata.uom.uom', ['data' => $data['data']]);
             } else {
-                // return response([
-                //     'message' => 'Gagal mendapatkan data',
-                //     'status' => $apiResponse->status(),
-                //     'error' => $apiResponse->json(),
-                // ]);
+                if ($request->ajax()) {
+                    return response()->json([
+                        'message' => 'Failed to fetch data',
+                        'status' => $apiResponse->status(),
+                        'error' => $apiResponse->json()
+                    ], 500);
+                }
+
                 return view('masterdata.uom.uom');
             }
         } catch (\Exception $e) {
+            if ($request->ajax()) {
+                return response()->json(['error' => $e->getMessage()], 500);
+            }
+
             return back()->withErrors($e->getMessage());
         }
     }
+
 
     public function store(Request $request)
     {

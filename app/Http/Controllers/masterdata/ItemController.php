@@ -37,7 +37,7 @@ class ItemController extends Controller
             $limit = $request->input('length');
             $offset = $request->input('start');
 
-            // dd($limit, $offset);
+            dd($limit, $offset);
 
             if ($offset === null) {
                 $offset = 0;
