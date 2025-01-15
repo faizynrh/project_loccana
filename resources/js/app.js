@@ -3,15 +3,15 @@ import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 // import 'bootstrap';
 import 'datatables.net-dt/css/dataTables.dataTables.min.css';
 import 'datatables.net';
-import $, { data } from 'jquery';
 import 'bootstrap-icons/font/bootstrap-icons.css';
+import $ from 'jquery';
+
 
 $(document).ready(function () {
     const tableIds = [
         'tablecoa',
         'tableprice',
         'tablegudang',
-        'tableuser',
         'tableinformasi',
         'tableuom',
         'tableprincipal',
@@ -19,7 +19,8 @@ $(document).ready(function () {
         'tabledasarpembelian',
         'tablerekappo',
         'tablecustomer',
-        'tablepenerimaan'
+        'tablepenerimaan',
+        'tableitem'
     ];
 
     tableIds.forEach(function (id) {

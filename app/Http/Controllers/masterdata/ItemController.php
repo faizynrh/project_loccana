@@ -31,34 +31,18 @@ class ItemController extends Controller
     {
         // dd($request->all());
         try {
-            $apiurl = 'https://gateway-internal.apicentrum.site/t/loccana.com/master/items/1.0.0/items/lists';
+            $apiurl = 'https://gateway.apicentrum.site/t/loccana.com/master/items/1.0.0/items/lists';
             $accessToken = $this->getAccessToken();
-
-            $limit = $request->input('length');
-            $offset = $request->input('start');
-
-            dd($limit, $offset);
-
-            if ($offset === null) {
-                $offset = 0;
-            }
-
-            $search = $request->input('search.value');
-            if ($search === null) {
-                $search = "";
-            }
-
-            $requestBody = [
-                'search' => $search,
-                'limit' => $limit,
-                'offset' => $offset,
-                'company_id' => 2,
-            ];
 
             $apiResponse = Http::withHeaders([
                 'Authorization' => 'Bearer ' . $accessToken,
                 'Content-Type' => 'application/json'
-            ])->post($apiurl, $requestBody);
+            ])->post($apiurl, [
+                'search' => '',
+                'limit' => 10,
+                'offset' => 0,
+                'company_id' => 2,
+            ]);
 
 
             // dd([
@@ -69,7 +53,7 @@ class ItemController extends Controller
             // ]);
             if ($apiResponse->successful()) {
                 $data = $apiResponse->json();
-                // dd($data);
+
                 return view('masterdata.items.items', ['data' => $data]);
             } else {
                 return response()->json([
@@ -148,7 +132,7 @@ class ItemController extends Controller
                 // dd($data);
                 return view('masterdata.items.detail', compact('data', 'id'));
             } else {
-                return back()->withErrors('Gagal mengambil data COA: ' . $apiResponse->status());
+                return back()->withErrors('Gagal mengambil data item: ' . $apiResponse->status());
             }
         } catch (\Exception $e) {
             return back()->withErrors($e->getMessage());
@@ -170,7 +154,7 @@ class ItemController extends Controller
                 $data = $apiResponse->json()['data'];
                 return view('masterdata.items.edit', compact('data', 'id'));
             } else {
-                return back()->withErrors('Gagal mengambil data COA: ' . $apiResponse->status());
+                return back()->withErrors('Gagal mengambil data item: ' . $apiResponse->status());
             }
         } catch (\Exception $e) {
             return back()->withErrors($e->getMessage());
@@ -201,7 +185,7 @@ class ItemController extends Controller
                 // dd($data);
                 return redirect()->route('items')->with('success', 'Data Item Berhasil Diubah');
             } else {
-                return back()->withErrors('Gagal memperbarui data COA: ' . $apiResponse->status());
+                return back()->withErrors('Gagal memperbarui data item: ' . $apiResponse->status());
             }
         } catch (\Exception $e) {
             return back()->withErrors($e->getMessage());
