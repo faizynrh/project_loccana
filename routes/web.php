@@ -1,52 +1,32 @@
 <?php
 
-use App\Http\Controllers\ApiController;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ShowDashboard;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\masterdata\CoaController;
-use App\Http\Controllers\masterdata\GudangController;
 use App\Http\Controllers\masterdata\ItemController;
 use App\Http\Controllers\masterdata\PriceController;
+use App\Http\Controllers\masterdata\GudangController;
 use App\Http\Controllers\masterdata\UomDataController;
-use App\Http\Controllers\masterdata\CustomerController;
-use App\Http\Controllers\masterdata\PrincipalController;
-use App\Http\Controllers\procurement\RekappoController;
 use App\Http\Controllers\procurement\ReportController;
 use App\Http\Controllers\procurement\ReturnController;
+use App\Http\Controllers\masterdata\CustomerController;
 use App\Http\Controllers\procurement\InvoiceController;
+use App\Http\Controllers\procurement\RekappoController;
+use App\Http\Controllers\masterdata\PrincipalController;
 use App\Http\Controllers\procurement\DasarPembelianController;
 use App\Http\Controllers\procurement\PenerimaanBarangController;
-use App\Http\Controllers\ShowDashboard;
-use Illuminate\Support\Facades\Route;
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
-*/
-
-// Route::get('/', function () {
-//     return view('welcome');
-// });
-
-//home
 
 Route::get('/redirect', [AuthController::class, 'redirectToIdentityServer'])->name('oauth.redirect');
 Route::get('/callback', [AuthController::class, 'handleCallback'])->name('oauth.callback');
 Route::get('/logout', [AuthController::class, 'logout'])->name('oauth.logout');
-
 Route::get('/', function () {
     return view('home');
 })->name('home');
-
 Route::get('/login', function () {
     return redirect('/');
 });
-
-
 
 Route::middleware('auth.login')->group(
     function () {
@@ -54,8 +34,8 @@ Route::middleware('auth.login')->group(
         Route::get('/profile', function () {
             return view('profile');
         });
-        //items
 
+        //items
         // Route::match(['get', 'post'], '/items', [ItemController::class, 'index'])->name('items');
         Route::get('/items', [ItemController::class, 'index'])->name('items');
         Route::get('/items/add', [ItemController::class, 'create'])->name('items.create');
@@ -138,9 +118,9 @@ Route::middleware('auth.login')->group(
         Route::get('/gudang', [GudangController::class, 'index'])->name('gudang');
 
         //user
-        route::get('/user', function () {
-            return view('masterdata.user.user');
-        });
+        // route::get('/user', function () {
+        //     return view('masterdata.user.user');
+        // });
         route::get('/user/add', function () {
             return view('masterdata.user.add');
         });
@@ -185,3 +165,5 @@ Route::middleware('auth.login')->group(
         Route::get('/invoice/detail/{no_invoice}', [InvoiceController::class, 'show'])->name('invoice.show');
     }
 );
+
+Route::get('/user', [UserController::class, 'index'])->name('user');
