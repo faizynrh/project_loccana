@@ -40,24 +40,29 @@
         </table>
     </div>
     <script>
-        $(document).ready(function() {
-            $('#usertable').DataTable({
-                processing: true,
-                serverSide: true,
-                ajax: {
-                    url: '{{ route('user') }}',
-                    type: 'GET',
-                    data: function(d) {
-                        console.log('DataTables data sent:',
-                            d); // Debug untuk melihat data yang dikirim
-                    },
-                    dataType: 'json'
+        $('#usertable').DataTable({
+            serverSide: true,
+            processing: true,
+            stateSave: true,
+            ajax: {
+                url: "{{ route('user') }}",
+                type: "GET",
+                contentType: 'application/json',
+                dataType: 'json',
+                data: function(d) {
+                    console.log("Length: ", d.length);
+                    console.log("Start: ", d.start);
+                    console.log("AJAX Request Triggered");
+                    return {
+                        length: d.length, // jumlah data per halaman
+                        start: d.start, // offset data
+                        search: d.search.value, // jika diperlukan, misalnya untuk pencarian
+                    };
                 }
-            });
+            },
         });
     </script>
-    <!-- Pastikan urutan benar -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
+        integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous">
+    </script>
 @endsection

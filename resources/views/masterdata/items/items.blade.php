@@ -1,7 +1,7 @@
 @extends('layouts.mainlayout')
 @section('content')
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    {{-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script> --}}
     <div class="container mt-3 bg-white rounded-top">
         <div class="p-1">
             <h5 class="fw-bold ">Items</h5>
@@ -73,22 +73,25 @@
         </table>
 
         <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                $('#usertable').DataTable({
-                    processing: true,
-                    serverSide: true,
-                    ajax: {
-                        url: "{{ route('items') }}", // Pastikan route benar
-                        type: 'GET',
-                        error: function(xhr, error, thrown) {
-                            console.log('Ajax error:', xhr, error, thrown);
-                        }
-                    },
-                    drawCallback: function(settings) {
-                        console.log('DataTables settings:', settings);
-                    }
-                });
-            });
+            // $('#tableitem').DataTable({
+            //     serverSide: true,
+            //     ajax: {
+            //         url: "{{ route('items') }}",
+            //         type: "GET",
+            //         contentType: 'application/json',
+            //         dataType: 'json',
+            //         data: function(d) {
+            //             console.log("Length: ", d.length);
+            //             console.log("Start: ", d.start);
+            //             console.log("AJAX Request Triggered");
+            //             return {
+            //                 length: d.length, // jumlah data per halaman
+            //                 start: d.start, // offset data
+            //                 search: d.search.value, // jika diperlukan, misalnya untuk pencarian
+            //             };
+            //         }
+            //     },
+            // });
 
             function confirmDelete(id) {
                 Swal.fire({

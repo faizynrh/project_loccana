@@ -36,8 +36,6 @@ Route::middleware('auth.login')->group(
         });
 
         //items
-        // Route::match(['get', 'post'], '/items', [ItemController::class, 'index'])->name('items');
-        Route::get('/items', [ItemController::class, 'index'])->name('items');
         Route::get('/items/add', [ItemController::class, 'create'])->name('items.create');
         Route::post('/items/add', [ItemController::class, 'store'])->name('items.store');
         Route::delete('/items/delete/{id}', [ItemController::class, 'destroy'])->name('items.destroy');
@@ -167,3 +165,4 @@ Route::middleware('auth.login')->group(
 );
 
 Route::get('/user', [UserController::class, 'index'])->name('user');
+Route::get('/items', [ItemController::class, 'index'])->name('items');
