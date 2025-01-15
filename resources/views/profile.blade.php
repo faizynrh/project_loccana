@@ -12,12 +12,10 @@
 
         <form action="#" method="POST" enctype="multipart/form-data">
             @csrf
-            <!-- Foto Upload -->
             <div class="form-group mb-4">
                 <input type="file" id="profile_picture" width="10px" name="profile_picture" class="form-control">
             </div>
 
-            <!-- Nama & Username sejajar -->
             <div class="form-group d-flex mb-4">
                 <div class="mr-3" style="flex: 1; padding-right: 15px;">
                     <label for="name">Nama</label>
@@ -31,7 +29,6 @@
                 </div>
             </div>
 
-            <!-- Email & Telepon sejajar -->
             <div class="form-group d-flex mb-4">
                 <div class="mr-3" style="flex: 1; padding-right: 15px;">
                     <label for="email">Email</label>
@@ -43,13 +40,11 @@
                 </div>
             </div>
 
-            <!-- Alamat -->
             <div class="form-group mb-4">
                 <label for="address">Alamat</label>
                 <textarea id="address" name="address" class="form-control" rows="4"></textarea>
             </div>
 
-            <!-- Password & Konfirmasi Password sejajar -->
             <div class="form-group d-flex mb-4">
                 <div class="mr-3" style="flex: 1; padding-right: 15px;">
                     <label for="password">Password</label>

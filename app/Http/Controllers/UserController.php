@@ -12,15 +12,26 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        Log::info(json_encode($request->all()));
-        // dd($request->all());
         try {
-            $length = $request->input(key: 'length');
-            $start = $request->input(key: 'start');
-            $search = $request->input('search.value', '');
+            // Ambil length dan start
+            $length = $request->input('length');
+            $start = $request->input('start');
 
-            dump($length, $start, $search);
+            // Log untuk debugging
+            // Log::info('DataTables Request', [
+            //     'length' => $length,
+            //     'start' => $start,
+            //     'all_parameters' => $request->all() // Log semua parameter
+            // ]);
+
+            // Kembalikan response JSON dengan informasi lengkap
             return view('masterdata.user.user');
+            // return response()->json([
+            //     'length' => $length ?? null,
+            //     'start' => $start ?? null,
+            //     'message' => 'Data retrieved successfully',
+            //     'connection_status' => 'connected'
+            // ]);
         } catch (\Exception $e) {
             Log::error('Error in index method', [
                 'message' => $e->getMessage(),
@@ -33,7 +44,6 @@ class UserController extends Controller
             ], 500);
         }
     }
-
 
     /**
      * Show the form for creating a new resource.

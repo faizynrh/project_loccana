@@ -83,5 +83,54 @@
                 }
             });
         }
+        var tableUom = $('#tableuom').DataTable({
+            processing: true,
+            serverSide: true,
+            ajax: {
+                url: "{{ route('uom.index') }}", // Route ke controller index
+                type: "GET",
+                data: function(d) {
+                    d.search = $('#searchUomTable').val(); // Mengambil nilai pencarian
+                    d.limit = 10; // Limit data
+                    d.offset = d.start; // Offset dari datatables
+                },
+                error: function(response) {
+                    Swal.fire(
+                        'Error',
+                        response.statusText,
+                        'warning'
+                    );
+                }
+            },
+            columns: [{
+                    data: 'DT_RowIndex',
+                    searchable: false
+                },
+                {
+                    data: 'name',
+                    name: 'name'
+                },
+                {
+                    data: 'symbol',
+                    name: 'symbol'
+                },
+                {
+                    data: 'description',
+                    name: 'description'
+                },
+                {
+                    data: 'action',
+                    name: 'action',
+                    orderable: false,
+                    searchable: false
+                }
+            ],
+            bLengthChange: false,
+            bFilter: true,
+            bInfo: false
+        });
+        // tableUom.on('draw.dt', function() {
+        //     $('#searchUomTable').focus();
+        // });
     </script>
 @endsection
