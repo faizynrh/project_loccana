@@ -29,96 +29,115 @@ class ItemController extends Controller
         return $tokenResponse->json()['access_token'];
     }
 
-
+    // search di server
     public function index(Request $request)
     {
-        dump($request->all());
-        Log::info($request->all());
-        $length = $request->input('length'); // Default 10 item per page
-        $start = $request->input('start'); // Offset data
-        $search = $request->input('search'); // Query pencarian
-        dump($length, $start, $search);
-        try {
-            $apiurl = 'https://gateway.apicentrum.site/t/loccana.com/master/items/1.0.0/items/lists';
-            $accessToken = $this->getAccessToken();
-            $apiResponse = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $accessToken,
-                'Content-Type' => 'application/json'
-            ])->post($apiurl, [
-                'search' => '', // Kirimkan parameter pencarian ke API
-                'limit' => 10,
-                'offset' => 0,
-                'company_id' => 2,
-            ]);
+        if ($request->ajax()) {
+            try {
+                $length = $request->input('length', 0);
+                $start = $request->input('start', 0);
+                $search = $request->input('search.value', ''); // Ambil nilai search dari DataTables
 
-            if ($apiResponse->successful()) {
-                $data = $apiResponse->json();
-                // dd($data);
-                return view('masterdata.items.items', ['data' => $data]);
-            } else {
+                $apiurl = 'https://gateway.apicentrum.site/t/loccana.com/master/items/1.0.0/items/lists';
+                $accessToken = $this->getAccessToken();
+                $headers = [
+                    'Authorization' => 'Bearer ' . $accessToken,
+                    'Content-Type' => 'application/json'
+                ];
+
+                $requestbody = [
+                    'limit' => $length,
+                    'offset' => $start,
+                    'company_id' => 2,
+                ];
+
+                if (!empty($search)) {
+                    $requestbody['search'] = $search;
+                }
+
+                $apiResponse = Http::withHeaders($headers)->post($apiurl, $requestbody);
+
+                if ($apiResponse->successful()) {
+                    $data = $apiResponse->json();
+                    return response()->json([
+                        'draw' => $request->input('draw'),
+                        'recordsTotal' => $data['data']['total'] ?? 0,
+                        'recordsFiltered' => $data['data']['total'] ?? 0,
+                        'data' => $data['data']['table'] ?? [],
+                    ]);
+                }
+
                 return response()->json([
-                    'message' => 'Failed to fetch data from API',
-                    'status' => $apiResponse->status(),
-                    'error' => $apiResponse->json(),
-                ]);
+                    'error' => 'Failed to fetch data'
+                ], 500);
+            } catch (\Exception $e) {
+                return response()->json([
+                    'error' => $e->getMessage()
+                ], 500);
             }
-        } catch (\Exception $e) {
-            return back()->withErrors($e->getMessage());
         }
+
+        return view('masterdata.items.items');
     }
 
+
+    // search di datatable
     // public function index(Request $request)
     // {
-    //     $apiurl = 'https://gateway.apicentrum.site/t/loccana.com/master/items/1.0.0/items/lists';
-    //     $accessToken = $this->getAccessToken();
-    //     $limit = $request->input('length', 10); // Data per halaman
-    //     $offset = $request->input('start', 0);  // Offset
-    //     $search = $request->input('search.value', ''); // Pencarian
+    //     // Check if this is a DataTables AJAX request
+    //     if ($request->ajax()) {
+    //         try {
+    //             $length = $request->input('length', 10);
+    //             $start = $request->input('start', 0);
 
-    //     try {
-    //         // Kirim permintaan ke API
-    //         $apiResponse = Http::withHeaders([
-    //             'Authorization' => 'Bearer ' . $accessToken,
-    //             'Content-Type' => 'application/json',
-    //         ])->post($apiurl, [
-    //             'search' => $search,
-    //             'limit' => $limit,
-    //             'offset' => $offset,
-    //             'company_id' => 2,
-    //         ]);
+    //             $apiurl = 'https://gateway.apicentrum.site/t/loccana.com/master/items/1.0.0/items/lists';
+    //             $accessToken = $this->getAccessToken();
+    //             $apiResponse = Http::withHeaders([
+    //                 'Authorization' => 'Bearer ' . $accessToken,
+    //                 'Content-Type' => 'application/json'
+    //             ])->post($apiurl, [
+    //                 'limit' => $length,
+    //                 'offset' => $start,
+    //                 'company_id' => 2,
+    //             ]);
 
-    //         // Ambil data dari respons API
-    //         $responseData = $apiResponse->json();
-    //         $list = $responseData['data']['table'] ?? [];
-    //         $recordsTotal = $responseData['data']['jumlah'] ?? 0;
-    //         $recordsFiltered = $responseData['data']['jumlah_filter'] ?? 0;
+    //             if ($apiResponse->successful()) {
+    //                 $data = $apiResponse->json();
+    //                 $tableData = $data['data']['table'] ?? [];
 
-    //         // Pastikan $list adalah array
-    //         if (is_object($list)) {
-    //             $list = [$list];
+    //                 // Jika ada search value dari DataTables, filter data di sisi client
+    //                 if ($request->has('search') && !empty($request->input('search.value'))) {
+    //                     $search = strtolower($request->input('search.value'));
+    //                     $tableData = collect($tableData)->filter(function ($item) use ($search) {
+    //                             return str_contains(strtolower($item['item_code']), $search) ||
+    //                             str_contains(strtolower($item['item_name']), $search) ||
+    //                             str_contains(strtolower($item['item_description']), $search) ||
+    //                             str_contains(strtolower($item['uom_name']), $search) ||
+    //                             str_contains(strtolower($item['partner_name']), $search);
+    //                         })->values()->all();
+    //                 }
+
+    //                 return response()->json([
+    //                     'draw' => $request->input('draw'),
+    //                     'recordsTotal' => $data['data']['total'] ?? 0,
+    //                     'recordsFiltered' => count($tableData),
+    //                     'data' => $tableData,
+    //                 ]);
+    //             }
+
+    //             return response()->json([
+    //                 'error' => 'Failed to fetch data'
+    //             ], 500);
+    //         } catch (\Exception $e) {
+    //             return response()->json([
+    //                 'error' => $e->getMessage()
+    //             ], 500);
     //         }
-
-    //         // Format data sesuai dengan struktur DataTables
-    //         $response = [
-    //             'draw' => $request->input('draw', 0),
-    //             'recordsTotal' => $recordsTotal,
-    //             'recordsFiltered' => $recordsFiltered,
-    //             'data' => $list,
-    //         ];
-
-    //         return response()->json($response);
-    //     } catch (\Throwable $th) {
-    //         return response()->json([
-    //             'draw' => $request->input('draw', 0),
-    //             'recordsTotal' => 0,
-    //             'recordsFiltered' => 0,
-    //             'data' => [],
-    //             'error' => $th->getMessage(),
-    //         ]);
     //     }
+
+    //     // For the initial page load, just return the view
+    //     return view('masterdata.items.items');
     // }
-
-
 
     public function create()
     {
@@ -248,7 +267,7 @@ class ItemController extends Controller
     public function destroy(string $id)
     {
         try {
-            $apiurl = 'https://gateway-internal.apicentrum.site/t/loccana.com/master/items/1.0.0/items/' . $id;
+            $apiurl = 'https://gateway.apicentrum.site/t/loccana.com/master/items/1.0.0/items/' . $id;
             $accessToken = $this->getAccessToken();
 
             $apiResponse = Http::withHeaders([

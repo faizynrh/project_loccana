@@ -23,8 +23,6 @@
 
         <div class="d-flex justify-content-between align-items-center">
             <a href="/items/add" class="btn btn-primary fw-bold mt-1 mb-2">+ Tambah Item</a>
-            {{-- <input type="text" id="searchInput" name="searchInput" class="form-control w-25" placeholder="Search"
-                value="default_value"> --}}
         </div>
         <table class="table table-striped table-bordered mt-3" id="tableitem">
             <thead>
@@ -39,8 +37,8 @@
                     <th scope="col">Option</th>
                 </tr>
             </thead>
-            <tbody>
-                @foreach ($data['data']['table'] as $item)
+            {{-- <tbody>
+                @foreach ($data as $item)
                     <tr>
                         <td>{{ $loop->iteration }}</td>
                         <td>{{ $item['item_code'] }}</td>
@@ -70,29 +68,140 @@
                         </td>
                     </tr>
                 @endforeach
-            </tbody>
+            </tbody> --}}
         </table>
     </div>
+    {{-- search di server --}}
     <script>
         $(document).ready(function() {
             $('#tableitem').DataTable({
                 serverSide: true,
+                processing: true,
+                // pageLength: 1,
                 ajax: {
                     url: '{{ route('items') }}',
-                    type: 'GET',
-                    data: function(d) {
-                        let timestamp = new Date().getTime();
-                        console.log('Length:', d.length);
-                        console.log('Start:', d.start);
-                        console.log('Search:', d.search.value);
-                        return {
-                            length: d.length,
-                            start: d.start,
-                            search: d.search.value,
-                        };
+                    type: 'GET'
+                },
+                columns: [{
+                        data: null,
+                        render: function(data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+                    {
+                        data: 'item_code'
+                    },
+                    {
+                        data: 'item_name'
+                    },
+                    {
+                        data: 'item_description'
+                    },
+                    {
+                        data: 'uom_name'
+                    },
+                    {
+                        data: null,
+                        defaultContent: ''
+                    },
+                    {
+                        data: 'partner_name'
+                    },
+                    {
+                        data: null,
+                        render: function(data, type, row) {
+                            return `
+                    <a href="/items/detail/${row.id}" class="btn btn-sm btn-info mb-2" title="Detail">
+                        <i class="bi bi-eye"></i>
+                    </a>
+                    <a href="/items/edit/${row.id}" class="btn btn-sm btn-warning mb-2" title="Edit">
+                        <i class="bi bi-pencil"></i>
+                    </a>
+                    <form action="/items/delete/${row.id}" method="POST" id="delete${row.id}" style="display:inline;">
+                        @csrf
+                        @method('DELETE')
+                        <button type="button" class="btn btn-sm btn-danger mb-2" title="Hapus" onclick="confirmDelete(${row.id})">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </form>
+                `;
+                        }
                     }
-                }
+                ]
             });
         });
+
+        function confirmDelete(id) {
+            Swal.fire({
+                title: 'Apakah kamu yakin?',
+                text: 'Data ini akan dihapus secara permanen!',
+                icon: 'warning',
+                showCancelButton: true,
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('delete' + id).submit();
+                }
+            });
+        }
     </script>
+    {{-- search di datatable --}}
+    {{-- <script>
+        $(document).ready(function() {
+            $('#tableitem').DataTable({
+                serverSide: true,
+                processing: true,
+                ajax: {
+                    url: '{{ route('items') }}',
+                    type: 'GET'
+                },
+                columns: [{
+                        data: null,
+                        render: function(data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+                    {
+                        data: 'item_code'
+                    },
+                    {
+                        data: 'item_name'
+                    },
+                    {
+                        data: 'item_description'
+                    },
+                    {
+                        data: 'uom_name'
+                    },
+                    {
+                        data: null,
+                        defaultContent: ''
+                    }, // Unit Box column
+                    {
+                        data: 'partner_name'
+                    },
+                    {
+                        data: null,
+                        render: function(data, type, row) {
+                            return `
+                    <a href="/items/detail/${row.id}" class="btn btn-sm btn-info mb-2" title="Detail">
+                        <i class="bi bi-eye"></i>
+                    </a>
+                    <a href="/items/edit/${row.id}" class="btn btn-sm btn-warning mb-2" title="Edit">
+                        <i class="bi bi-pencil"></i>
+                    </a>
+                    <form action="/items/destroy/${row.id}" method="POST" id="delete${row.id}" style="display:inline;">
+                        @csrf
+                        @method('DELETE')
+                        <button type="button" class="btn btn-sm btn-danger mb-2" title="Hapus" onclick="confirmDelete(${row.id})">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </form>
+                `;
+                        }
+                    }
+                ]
+            });
+        });
+    </script> --}}
 @endsection
