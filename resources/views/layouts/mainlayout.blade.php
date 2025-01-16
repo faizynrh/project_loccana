@@ -671,7 +671,6 @@
                                     activeLink.classList.remove('collapsed');
                                 }
                             }
-
                             // Show popup with new content
                             const rect = this.getBoundingClientRect();
                             popupContainer.style.top = `${rect.top}px`;

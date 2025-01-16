@@ -13,7 +13,6 @@ $(document).ready(function () {
         'tableprice',
         'tablegudang',
         'tableinformasi',
-        'tableuom',
         'tableprincipal',
         'tableCustomer',
         'tabledasarpembelian',
