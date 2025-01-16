@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Yajra\DataTables\DataTables;
 
 class ItemController extends Controller
 {
@@ -27,45 +28,32 @@ class ItemController extends Controller
 
         return $tokenResponse->json()['access_token'];
     }
+
+
     public function index(Request $request)
     {
+        dump($request->all());
+        Log::info($request->all());
+        $length = $request->input('length'); // Default 10 item per page
+        $start = $request->input('start'); // Offset data
+        $search = $request->input('search'); // Query pencarian
+        dump($length, $start, $search);
         try {
-            // Ambil parameter dari request DataTable tanpa nilai default
-            $limit = (int)$request->input('length');  // Tanpa nilai default
-            $offset = (int) $request->input('start');   // Tanpa nilai default
-            $search = $request->input('search.value'); // Tanpa nilai default
-
-            // Pastikan offset tidak null, set ke 0 jika null
-            if ($offset === null) {
-                $offset = 0;
-            }
-
-            // Tentukan URL API dan token
             $apiurl = 'https://gateway.apicentrum.site/t/loccana.com/master/items/1.0.0/items/lists';
             $accessToken = $this->getAccessToken();
-
-
             $apiResponse = Http::withHeaders([
                 'Authorization' => 'Bearer ' . $accessToken,
                 'Content-Type' => 'application/json'
             ])->post($apiurl, [
-                'search' => $search ?? "",    // Jika tidak ada pencarian, kirim string kosong
-                'limit' => $limit,            // Parameter limit dari request
-                'offset' => $offset,          // Parameter offset dari request
-                'company_id' => 2,            // Parameter tambahan
+                'search' => '', // Kirimkan parameter pencarian ke API
+                'limit' => 10,
+                'offset' => 0,
+                'company_id' => 2,
             ]);
 
-
-
-            // dd([
-            //     $requestBody,
-            //     'api_response_status' => $apiResponse->status(),
-            //     'response' => $apiResponse,
-            //     'response_body' => $apiResponse->json(),
-            // ]);
             if ($apiResponse->successful()) {
                 $data = $apiResponse->json();
-
+                // dd($data);
                 return view('masterdata.items.items', ['data' => $data]);
             } else {
                 return response()->json([
@@ -78,6 +66,58 @@ class ItemController extends Controller
             return back()->withErrors($e->getMessage());
         }
     }
+
+    // public function index(Request $request)
+    // {
+    //     $apiurl = 'https://gateway.apicentrum.site/t/loccana.com/master/items/1.0.0/items/lists';
+    //     $accessToken = $this->getAccessToken();
+    //     $limit = $request->input('length', 10); // Data per halaman
+    //     $offset = $request->input('start', 0);  // Offset
+    //     $search = $request->input('search.value', ''); // Pencarian
+
+    //     try {
+    //         // Kirim permintaan ke API
+    //         $apiResponse = Http::withHeaders([
+    //             'Authorization' => 'Bearer ' . $accessToken,
+    //             'Content-Type' => 'application/json',
+    //         ])->post($apiurl, [
+    //             'search' => $search,
+    //             'limit' => $limit,
+    //             'offset' => $offset,
+    //             'company_id' => 2,
+    //         ]);
+
+    //         // Ambil data dari respons API
+    //         $responseData = $apiResponse->json();
+    //         $list = $responseData['data']['table'] ?? [];
+    //         $recordsTotal = $responseData['data']['jumlah'] ?? 0;
+    //         $recordsFiltered = $responseData['data']['jumlah_filter'] ?? 0;
+
+    //         // Pastikan $list adalah array
+    //         if (is_object($list)) {
+    //             $list = [$list];
+    //         }
+
+    //         // Format data sesuai dengan struktur DataTables
+    //         $response = [
+    //             'draw' => $request->input('draw', 0),
+    //             'recordsTotal' => $recordsTotal,
+    //             'recordsFiltered' => $recordsFiltered,
+    //             'data' => $list,
+    //         ];
+
+    //         return response()->json($response);
+    //     } catch (\Throwable $th) {
+    //         return response()->json([
+    //             'draw' => $request->input('draw', 0),
+    //             'recordsTotal' => 0,
+    //             'recordsFiltered' => 0,
+    //             'data' => [],
+    //             'error' => $th->getMessage(),
+    //         ]);
+    //     }
+    // }
+
 
 
     public function create()
