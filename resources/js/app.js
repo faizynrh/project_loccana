@@ -18,6 +18,7 @@ $(document).ready(function () {
         'tablerekappo',
         'tablecustomer',
         'tablepenerimaan',
+        'tableuom',
     ];
 
     tableIds.forEach(function (id) {

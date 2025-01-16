@@ -19,10 +19,7 @@
         <div class="d-flex justify-content-between align-items-center">
             <a href="/uom-tambah" class="btn btn-primary"><strong>+</strong></a>
         </div>
-        <div class="input-group">
-            <span class="input-group-text"><i class="ni ni-zoom-split-in"></i></span>
-            <input class="form-control" placeholder="Search" id="searchUomTable" type="text">
-        </div>
+
 
         <table class="table table-striped table-bordered mt-3" id="tableuom">
             <thead>
@@ -34,13 +31,42 @@
                     <th scope="col">Option</th>
                 </tr>
             </thead>
-            <tbody class="fw-bold text-gray-600" style="border:none;">
-
+            <tbody>
+                {{-- {{ dd($data) }} --}}
+                @if (!empty($data['table']))
+                    @foreach ($data['table'] as $index => $item)
+                        <tr>
+                            <td>{{ $loop->iteration }}</td>
+                            <td>{{ $item['name'] ?? '-' }}</td>
+                            <td>{{ $item['symbol'] ?? '-' }}</td>
+                            <td>{{ $item['description'] ?? '-' }}</td>
+                            <td>
+                                <button onclick="window.location='{{ route('uom.show', $item['id']) }}';"
+                                    class="btn btn-sm btn-info mb-2">
+                                    <i class="bi bi-eye"></i>
+                                </button>
+                                <a href="/uom/edit/{{ $item['id'] }}" class="btn btn-sm btn-warning mb-2">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <form action="{{ route('uom.destroy', $item['id']) }}" method="POST"
+                                    id="delete{{ $item['id'] }}" style="display:inline;">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="button" class="btn btn-sm btn-danger mb-2" title="Hapus"
+                                        onclick="event.stopPropagation(); confirmDelete({{ $item['id'] }})">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    @endforeach
+                @else
+                    <tr>
+                        <td colspan="5" class="text-center">No data available</td>
+                    </tr>
+                @endif
             </tbody>
-
         </table>
-        <div class="d-flex justify-content-between my-3">
-        </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
@@ -57,78 +83,5 @@
                 }
             });
         }
-
-        var tableUom = $('#uomTable').DataTable({
-            processing: true,
-            serverSide: true,
-            "searching": true,
-            "ordering": false,
-            ajax: {
-                "url": "{{ url('/uom') }}",
-                "error": function(response) {
-                    Swal.fire(
-                        'Error',
-                        response.statusText,
-                        'warning'
-                    )
-                }
-            },
-            drawCallback: function(settings) {
-                var api = this.api();
-                if (api.data().length === 0 && !api.page.info().recordsTotal) {
-                    toastr.options = {
-                        "closeButton": true,
-                        "debug": false,
-                        "newestOnTop": false,
-                        "progressBar": true,
-                        "positionClass": "toast-top-right",
-                        "preventDuplicates": false,
-                        "onclick": null,
-                        "showDuration": "300",
-                        "hideDuration": "1000",
-                        "timeOut": "5000",
-                        "extendedTimeOut": "1000",
-                        "showEasing": "swing",
-                        "hideEasing": "linear",
-                        "showMethod": "fadeIn",
-                        "hideMethod": "fadeOut"
-                    };
-                    var cari = $('#searchUomTable').val();
-                    toastr.warning("Data '" + cari + "' yang anda dicari tidak ditemukan!");
-                }
-            },
-            columns: [{
-                    data: 'DT_RowIndex',
-                    searchable: false
-                },
-                {
-                    data: 'name',
-                    name: 'name'
-                },
-                {
-                    data: 'symbol',
-                    name: 'symbol'
-                },
-                {
-                    data: 'description',
-                    name: 'description'
-                },
-                {
-                    data: 'status',
-                    name: 'status'
-                },
-                {
-                    data: 'action',
-                    name: 'action'
-                },
-            ],
-            "bLengthChange": false,
-            "bFilter": true,
-            "bInfo": false
-        });
-
-        tableUom.on('draw.dt', function() {
-            $('#searchUomTable').focus();
-        });
     </script>
 @endsection
