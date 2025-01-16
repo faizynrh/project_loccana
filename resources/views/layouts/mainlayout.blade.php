@@ -8,10 +8,8 @@
     <link rel="icon" href="{{ asset('assets/images/icon.png') }}" type="image/png">
     <link rel="stylesheet" href="{{ asset('assets/sweetalert/sweetalert2.min.css') }}">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <!-- CSS DataTables -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
 
-    <!-- jQuery di head -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
     @vite('resources/js/app.js')
@@ -321,6 +319,9 @@
         </footer>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
+    </script>
     <script src="{{ asset('assets/sweetalert/sweetalert2.all.min.js') }}"></script>
     <script>
         document.querySelectorAll('.nav-link[data-bs-toggle="collapse"]').forEach(link => {
@@ -339,6 +340,7 @@
         const dashboardLink = document.getElementById('dashboard');
 
         toggleSidebar.addEventListener('click', () => {
+
             if (sidebar.style.width === '220px' || sidebar.style.width === '') {
                 sidebar.style.width = '90px';
                 logo.src = '{{ asset('assets/images/logo.png') }}';
@@ -590,42 +592,53 @@
             });
 
             // Update existing toggleSidebar event listener
-            const existingToggleSidebar = toggleSidebar.onclick;
-            toggleSidebar.onclick = function() {
-                // Call existing toggle function
-                existingToggleSidebar.call(this);
+            // Cek apakah elemen toggleSidebar ada
+            if (toggleSidebar) {
+                // Simpan fungsi onclick yang ada
+                const existingToggleSidebar = toggleSidebar.onclick;
 
-                // Hide popup if visible
-                if (activePopup) {
-                    popupContainer.classList.remove('show');
-                    if (activeLink) {
-                        activeLink.classList.remove('collapsed');
+                // Tambahkan fungsionalitas baru saat klik
+                toggleSidebar.onclick = function() {
+                    // Panggil fungsi toggle yang sudah ada
+                    if (existingToggleSidebar) {
+                        existingToggleSidebar.call(this);
                     }
-                    activePopup = null;
-                    activeLink = null;
-                }
 
-                // Reset all chevrons when toggling sidebar
-                submenuTriggers.forEach(trigger => {
-                    trigger.classList.remove('collapsed');
-                });
-            };
-
-            // Handle window resize
-            let resizeTimer;
-            window.addEventListener('resize', function() {
-                clearTimeout(resizeTimer);
-                resizeTimer = setTimeout(function() {
+                    // Sembunyikan popup jika muncul
                     if (activePopup) {
-                        const trigger = document.querySelector(`[href="#${activePopup}"]`);
-                        if (trigger) {
-                            const rect = trigger.getBoundingClientRect();
-                            popupContainer.style.top = `${rect.top}px`;
+                        popupContainer.classList.remove('show');
+                        if (activeLink) {
+                            activeLink.classList.remove('collapsed');
                         }
+                        activePopup = null;
+                        activeLink = null;
                     }
-                }, 250);
-            });
+
+                    // Reset semua chevrons (submenu)
+                    submenuTriggers.forEach(trigger => {
+                        trigger.classList.remove('collapsed');
+                    });
+                };
+            } else {
+                console.error('Element #toggleSidebar tidak ditemukan.');
+            }
         });
+
+        // Handle window resize
+        let resizeTimer;
+        window.addEventListener('resize', function() {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(function() {
+                if (activePopup) {
+                    const trigger = document.querySelector(`[href="#${activePopup}"]`);
+                    if (trigger) {
+                        const rect = trigger.getBoundingClientRect();
+                        popupContainer.style.top = `${rect.top}px`;
+                    }
+                }
+            }, 250);
+        });
+
         document.addEventListener('DOMContentLoaded', function() {
             let activePopup = null;
             let activeLink = null;

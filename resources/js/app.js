@@ -1,10 +1,9 @@
+import $ from 'jquery';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
-// import 'bootstrap';
 import 'datatables.net-dt/css/dataTables.dataTables.min.css';
-import 'datatables.net';
+import dt from 'datatables.net';
 import 'bootstrap-icons/font/bootstrap-icons.css';
-import $ from 'jquery';
 
 
 $(document).ready(function () {
@@ -27,6 +26,7 @@ $(document).ready(function () {
 });
 
 $(document).ready(function () {
+
     var table = $('#tableinvoice').DataTable();
 
     $('#filter-bulan').on('change', function () {
