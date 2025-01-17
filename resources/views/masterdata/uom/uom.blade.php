@@ -46,7 +46,8 @@
                 // pageLength: 1,
                 ajax: {
                     url: '{{ route('uom.index') }}',
-                    type: 'GET'
+                    type: 'GET',
+
                 },
                 columns: [{
                         data: null,
@@ -84,7 +85,8 @@
                 `;
                         }
                     }
-                ]
+                ],
+
             });
         });
 

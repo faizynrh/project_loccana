@@ -39,6 +39,8 @@ class UomDataController extends Controller
                 $start = $request->input('start', 0);
                 $search = $request->input('search.value', '');
 
+
+
                 $apiurl = 'https://gateway.apicentrum.site/t/loccana.com/loccana/masterdata/1.0.0/uoms/lists';
                 $accessToken = $this->getAccessToken();
 
@@ -63,8 +65,8 @@ class UomDataController extends Controller
                     $data = $apiResponse->json();
                     return response()->json([
                         'draw' => $request->input('draw'),
-                        'recordsTotal' => $data['data']['total'] ?? 0,
-                        'recordsFiltered' => $data['data']['total'] ?? 0,
+                        'recordsTotal' => $data['data']['jumlah'] ?? 0,
+                        'recordsFiltered' => $data['data']['jumlah'] ?? 0,
                         'data' => $data['data']['table'] ?? [],
                     ]);
                 }
@@ -79,6 +81,7 @@ class UomDataController extends Controller
                 }
             }
         }
+
         return view('masterdata.uom.uom');
     }
 
