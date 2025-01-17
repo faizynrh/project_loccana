@@ -59,14 +59,20 @@ class ItemController extends Controller
 
                 if ($apiResponse->successful()) {
                     $data = $apiResponse->json();
+                    $jumlah_filter = $data['data']['jumlah_filter'] ?? 0;
+                    $jumlah = $data['data']['jumlah'] ?? 0;
+
+                    Log::info('Data pagination info', [
+                        'recordsFiltered' => $jumlah_filter,
+                        'recordsTotal' => $jumlah
+                    ]);
                     return response()->json([
                         'draw' => $request->input('draw'),
-                        'recordsTotal' => $data['data']['total'] ?? 0,
-                        'recordsFiltered' => $data['data']['total'] ?? 0,
+                        'recordsTotal' => $jumlah,
+                        'recordsFiltered' => $jumlah_filter,
                         'data' => $data['data']['table'] ?? [],
                     ]);
                 }
-
                 return response()->json([
                     'error' => 'Failed to fetch data'
                 ], 500);
@@ -141,23 +147,39 @@ class ItemController extends Controller
 
     public function create()
     {
-        return view('masterdata.items.add');
+        $uomResponse = Http::withHeaders([
+            'Authorization' => 'Bearer ' . $this->getAccessToken(),
+            'Content-Type' => 'application/json'
+        ])->get('https://gateway.apicentrum.site/t/loccana.com/loccana/masterdata/1.0.0/uoms/list-select');
+
+        $itemResponse = Http::withHeaders([
+            'Authorization' => 'Bearer ' . $this->getAccessToken(),
+            'Content-Type' => 'application/json'
+        ])->get('https://gateway.apicentrum.site/t/loccana.com/loccana/masterdata/item-types/1.0.0/item-types/list-select');
+
+        if ($uomResponse->successful() && $itemResponse->successful()) {
+            $uoms = $uomResponse->json();
+            $items = $itemResponse->json();
+            // dd($uoms, $items);
+            return view('masterdata.items.add', compact('uoms', 'items'));
+        } else {
+            return back()->withErrors('Gagal mengambil data dari API: UOM atau Item Types tidak tersedia.');
+        }
     }
 
     public function store(Request $request)
     {
         try {
-            $apiurl = 'https://gateway-internal.apicentrum.site/t/loccana.com/master/items/1.0.0/items';
+            $apiurl = 'https://gateway.apicentrum.site/t/loccana.com/master/items/1.0.0/items';
             $accessToken = $this->getAccessToken();
-
             $data = [
                 'name' => $request->input('name'),
                 'description' => $request->input('description'),
-                'unit_of_measure_id' => $request->input('unit_of_measure_id', 0),
-                'item_type_id' => $request->input('item_type_id', 0),
-                'item_category_id' => $request->input('item_category_id'),
+                'unit_of_measure_id' => $request->input('unit_of_measure_id'),
+                'item_type_id' => $request->input('item_type_id'),
+                'item_category_id' => $request->input('item_category_id', 1),
                 'sku' => $request->input('sku'), //
-                'company_id' => $request->input('company_id', 0),
+                'company_id' => $request->input('company_id', 2),
             ];
 
             $apiResponse = Http::withHeaders([
@@ -175,6 +197,7 @@ class ItemController extends Controller
                 $apiResponse->successful() &&
                 isset($responseData['success'])
             ) {
+                // dd($responseData);
                 return redirect()->route('items')
                     ->with('success', $responseData['message'] ?? 'Item Berhasil Ditambahkan');
             } else {
@@ -191,7 +214,7 @@ class ItemController extends Controller
     public function show($id)
     {
         try {
-            $apiurl = 'https://gateway-internal.apicentrum.site/t/loccana.com/master/items/1.0.0/items/' . $id;
+            $apiurl = 'https://gateway.apicentrum.site/t/loccana.com/master/items/1.0.0/items/' . $id;
             $accessToken = $this->getAccessToken();
 
             $apiResponse = Http::withHeaders([
@@ -199,10 +222,21 @@ class ItemController extends Controller
                 'Content-Type' => 'application/json'
             ])->get($apiurl);
 
-            if ($apiResponse->successful()) {
+            $uomResponse = Http::withHeaders([
+                'Authorization' => 'Bearer ' . $this->getAccessToken(),
+                'Content-Type' => 'application/json'
+            ])->get('https://gateway.apicentrum.site/t/loccana.com/loccana/masterdata/1.0.0/uoms/list-select');
+
+            $itemResponse = Http::withHeaders([
+                'Authorization' => 'Bearer ' . $this->getAccessToken(),
+                'Content-Type' => 'application/json'
+            ])->get('https://gateway.apicentrum.site/t/loccana.com/loccana/masterdata/item-types/1.0.0/item-types/list-select');
+            if ($uomResponse->successful() && $itemResponse->successful() && $apiResponse->successful()) {
+                $uoms = $uomResponse->json()['data'];
+                $items = $itemResponse->json()['data'];
                 $data = $apiResponse->json()['data'];
-                // dd($data);
-                return view('masterdata.items.detail', compact('data', 'id'));
+                // dd($data, $uoms, $items);
+                return view('masterdata.items.detail', compact('data', 'uoms', 'items', 'id'));
             } else {
                 return back()->withErrors('Gagal mengambil data item: ' . $apiResponse->status());
             }
@@ -214,7 +248,7 @@ class ItemController extends Controller
     public function edit(string $id)
     {
         try {
-            $apiurl = 'https://gateway-internal.apicentrum.site/t/loccana.com/master/items/1.0.0/items/' . $id;
+            $apiurl = 'https://gateway.apicentrum.site/t/loccana.com/master/items/1.0.0/items/' . $id;
             $accessToken = $this->getAccessToken();
 
             $apiResponse = Http::withHeaders([
@@ -222,9 +256,24 @@ class ItemController extends Controller
                 'Content-Type' => 'application/json'
             ])->get($apiurl);
 
-            if ($apiResponse->successful()) {
+            $uomResponse = Http::withHeaders([
+                'Authorization' => 'Bearer ' . $this->getAccessToken(),
+                'Content-Type' => 'application/json'
+            ])->get('https://gateway.apicentrum.site/t/loccana.com/loccana/masterdata/1.0.0/uoms/list-select');
+
+            $itemResponse = Http::withHeaders([
+                'Authorization' => 'Bearer ' . $this->getAccessToken(),
+                'Content-Type' => 'application/json'
+            ])->get('https://gateway.apicentrum.site/t/loccana.com/loccana/masterdata/item-types/1.0.0/item-types/list-select');
+
+            if ($uomResponse->successful() && $itemResponse->successful() && $apiResponse->successful()) {
+                $uoms = $uomResponse->json()['data'];
+                $items = $itemResponse->json()['data'];
                 $data = $apiResponse->json()['data'];
-                return view('masterdata.items.edit', compact('data', 'id'));
+
+                // dd($data, $uoms, $items);
+
+                return view('masterdata.items.edit', compact('data', 'uoms', 'items', 'id'));
             } else {
                 return back()->withErrors('Gagal mengambil data item: ' . $apiResponse->status());
             }
@@ -236,17 +285,19 @@ class ItemController extends Controller
     public function update(Request $request, string $id)
     {
         try {
-            $apiurl = 'https://gateway-internal.apicentrum.site/t/loccana.com/master/items/1.0.0/items/' . $id;
+            $apiurl = 'https://gateway.apicentrum.site/t/loccana.com/master/items/1.0.0/items/' . $id;
             $accessToken = $this->getAccessToken();
 
             $data = [
-                'name' => $request->item_name,
-                'description' => $request->item_description,
-                'unit_of_measure_id' => $request->uom_id,
+                'name' => $request->name,
+                'description' => $request->description,
+                'unit_of_measure_id' => $request->unit_of_measure_id,
                 'item_type_id' => $request->item_type_id,
-                'item_category_id' => $request->item_category_id,
-                'sku' => $request->item_code,
+                'item_category_id' => $request->input('item_category_id', 1),
+                'sku' => $request->sku,
             ];
+
+            // dd($data);
 
             $apiResponse = Http::withHeaders([
                 'Authorization' => 'Bearer ' . $accessToken,
