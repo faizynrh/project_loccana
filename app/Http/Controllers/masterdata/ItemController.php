@@ -30,16 +30,74 @@ class ItemController extends Controller
     }
 
     // search di server
+    // public function index(Request $request)
+    // {
+    //     if ($request->ajax()) {
+    //         try {
+    //             $length = $request->input('length', 0);
+    //             $start = $request->input('start', 0);
+    //             $search = $request->input('search.value', ''); // Ambil nilai search dari DataTables
+
+    //             $apiurl = 'https://gateway.apicentrum.site/t/loccana.com/master/items/1.0.0/items/lists';
+    //             $accessToken = $this->getAccessToken();
+    //             $headers = [
+    //                 'Authorization' => 'Bearer ' . $accessToken,
+    //                 'Content-Type' => 'application/json'
+    //             ];
+
+    //             $requestbody = [
+    //                 'limit' => $length,
+    //                 'offset' => $start,
+    //                 'company_id' => 2,
+    //             ];
+
+    //             if (!empty($search)) {
+    //                 $requestbody['search'] = $search;
+    //             }
+
+    //             $apiResponse = Http::withHeaders($headers)->post($apiurl, $requestbody);
+
+    //             if ($apiResponse->successful()) {
+    //                 $data = $apiResponse->json();
+    //                 $jumlah_filter = $data['data']['jumlah_filter'] ?? 0;
+    //                 $jumlah = $data['data']['jumlah'] ?? 0;
+
+    //                 Log::info('Data pagination info', [
+    //                     'recordsFiltered' => $jumlah_filter,
+    //                     'recordsTotal' => $jumlah
+    //                 ]);
+    //                 return response()->json([
+    //                     'draw' => $request->input('draw'),
+    //                     'recordsTotal' => $jumlah,
+    //                     'recordsFiltered' => $jumlah_filter,
+    //                     'data' => $data['data']['table'] ?? [],
+    //                 ]);
+    //             }
+    //             return response()->json([
+    //                 'error' => 'Failed to fetch data'
+    //             ], 500);
+    //         } catch (\Exception $e) {
+    //             return response()->json([
+    //                 'error' => $e->getMessage()
+    //             ], 500);
+    //         }
+    //     }
+
+    //     return view('masterdata.items.items');
+    // }
+
     public function index(Request $request)
     {
         if ($request->ajax()) {
             try {
-                $length = $request->input('length', 0);
+                $length = $request->input('length', 10);
                 $start = $request->input('start', 0);
-                $search = $request->input('search.value', ''); // Ambil nilai search dari DataTables
+                $search = $request->input('search.value', '');
+
 
                 $apiurl = 'https://gateway.apicentrum.site/t/loccana.com/master/items/1.0.0/items/lists';
                 $accessToken = $this->getAccessToken();
+
                 $headers = [
                     'Authorization' => 'Bearer ' . $accessToken,
                     'Content-Type' => 'application/json'
@@ -48,7 +106,7 @@ class ItemController extends Controller
                 $requestbody = [
                     'limit' => $length,
                     'offset' => $start,
-                    'company_id' => 2,
+                    'company_id' => 2
                 ];
 
                 if (!empty($search)) {
@@ -59,27 +117,22 @@ class ItemController extends Controller
 
                 if ($apiResponse->successful()) {
                     $data = $apiResponse->json();
-                    $jumlah_filter = $data['data']['jumlah_filter'] ?? 0;
-                    $jumlah = $data['data']['jumlah'] ?? 0;
-
-                    Log::info('Data pagination info', [
-                        'recordsFiltered' => $jumlah_filter,
-                        'recordsTotal' => $jumlah
-                    ]);
                     return response()->json([
                         'draw' => $request->input('draw'),
-                        'recordsTotal' => $jumlah,
-                        'recordsFiltered' => $jumlah_filter,
+                        'recordsTotal' => $data['data']['jumlah_filter'] ?? 0,
+                        'recordsFiltered' => $data['data']['jumlah'] ?? 0,
                         'data' => $data['data']['table'] ?? [],
                     ]);
                 }
                 return response()->json([
-                    'error' => 'Failed to fetch data'
+                    'error' => 'Failed to fetch data',
                 ], 500);
             } catch (\Exception $e) {
-                return response()->json([
-                    'error' => $e->getMessage()
-                ], 500);
+                if ($request->ajax()) {
+                    return response()->json([
+                        'error' => $e->getMessage(),
+                    ], 500);
+                }
             }
         }
 
