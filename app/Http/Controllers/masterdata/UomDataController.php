@@ -31,95 +31,122 @@ class UomDataController extends Controller
 
         return $tokenResponse->json()['access_token'];
     }
-    protected $client;
     public function index(Request $request)
     {
+        if ($request->ajax()) {
+            try {
+                $length = $request->input('length', 10);
+                $start = $request->input('start', 0);
+                $search = $request->input('search.value', '');
 
-        // Set API URL yang benar
-        $apiurl = "https://gateway.apicentrum.site/t/loccana.com/loccana/masterdata/1.0.0/uoms/lists";
 
-        // Ambil access token jika diperlukan untuk Authorization
-        $accessToken = $this->getAccessToken();
 
-        // Inisialisasi client Guzzle
-        $this->client = new Client();
+                $apiurl = 'https://gateway.apicentrum.site/t/loccana.com/loccana/masterdata/1.0.0/uoms/lists';
+                $accessToken = $this->getAccessToken();
 
-        // Dapatkan parameter limit dan offset dari request
-        $limit = $request->input('length');
-        $offset = $request->input('start');
+                $headers = [
+                    'Authorization' => 'Bearer ' . $accessToken,
+                    'Content-Type' => 'application/json'
+                ];
 
-        if ($offset === null) {
-            $offset = 0;
-        }
+                $requestbody = [
+                    'limit' => $length,
+                    'offset' => $start,
+                    'company_id' => 0
+                ];
 
-        // Ambil nilai pencarian jika ada
-        $search = $request->input('search.value');
-        if ($search !== null) {
-            $search = $request->input('search.value');
-        } else {
-            $search = '';
-        }
+                if (!empty($search)) {
+                    $requestbody['search'] = $search;
+                }
 
-        // Persiapkan parameter untuk API
-        $sendParams = [
-            "search" =>  $search,
-            "limit" => $limit,
-            "offset" => $offset
-        ];
+                $apiResponse = Http::withHeaders($headers)->post($apiurl, $requestbody);
 
-        // dd($sendParams);
-        try {
-            // Lakukan permintaan POST menggunakan Guzzle
-            $getList = $this->client->request('POST', $apiurl, [
-                'headers' => [
-                    'Content-Type' => 'application/json',
-                    'Authorization' => 'Bearer ' . $accessToken // Gunakan token yang diambil
-                ],
-                'json' => $sendParams
-            ]);
-
-            // Decode hasil JSON dari response
-            $getList = json_decode($getList->getBody()->getContents());
-            $lists = $getList->data->table;
-
-            if (is_object($lists)) {
-                $lists = [$lists];
+                if ($apiResponse->successful()) {
+                    $data = $apiResponse->json();
+                    return response()->json([
+                        'draw' => $request->input('draw'),
+                        'recordsTotal' => $data['data']['jumlah'] ?? 0,
+                        'recordsFiltered' => $data['data']['jumlah'] ?? 0,
+                        'data' => $data['data']['table'] ?? [],
+                    ]);
+                }
+                return response()->json([
+                    'error' => 'Failed to fetch data',
+                ], 500);
+            } catch (\Exception $e) {
+                if ($request->ajax()) {
+                    return response()->json([
+                        'error' => $e->getMessage(),
+                    ], 500);
+                }
             }
+        }
 
-            // Ambil total data untuk keperluan DataTables
-            $data['recordsTotal'] = $getList->data->jumlah_filter;
-            $data['recordsFiltered'] = $getList->data->jumlah;
+        return view('masterdata.uom.uom');
+    }
 
-            // Kembalikan data ke DataTables
-            return DataTables::of($lists)
-                ->addIndexColumn()
-                ->addColumn('action', function ($model) {
-                    $action = "<a onclick='info($model->id)' class='btn btn-sm btn-icon btn-info btn-hover-rise me-1'>
-                            <i class='bi bi-info-square'></i></a>";
-                    $action .= "<a onclick='edit($model->id)' class='btn btn-sm btn-icon btn-warning btn-hover-rise me-1'>
-                            <i class='bi bi-pencil-square'></i></a>";
-                    return $action;
-                })
-                ->addColumn('status', function ($model) {
-                    if ($model->status == 0) {
-                        $status = '<span class="badge py-3 px-4 fs-8 badge-success">Aktif</span>';
-                    } else {
-                        $status = '<span class="badge py-3 px-4 fs-8 badge-danger">Tidak Aktif</span>';
-                    }
 
-                    return $status;
-                })
-                ->rawColumns(['action', 'status'])
-                ->with('recordsTotal', $data['recordsTotal'])
-                ->with('recordsFiltered', $data['recordsFiltered'])
-                ->setOffset($offset)
-                ->make(true);
-        } catch (\GuzzleHttp\Exception\RequestException $e) {
-            // Tangani jika terjadi error pada API request
-            return response()->json(['error' => 'Gagal memanggil API: ' . $e->getMessage()]);
+    public function destroy($id)
+    {
+        try {
+            $apiurl = 'https://gateway.apicentrum.site/t/loccana.com/loccana/masterdata/1.0.0/uoms/' . $id;
+            $accessToken = $this->getAccessToken();
+
+            $apiResponse = Http::withHeaders([
+                'Authorization' => 'Bearer ' . $accessToken,
+                'Content-Type' => 'application/json'
+            ])->delete($apiurl);
+            // dd($apiResponse->json());
+            if ($apiResponse->successful()) {
+                return redirect()->route('uom.index')
+                    ->with('success', 'Data Uom berhasil dihapus');
+            } else {
+                return back()->withErrors(
+                    'Gagal menghapus data: ' . $apiResponse->body()
+                );
+            }
+        } catch (\Exception $e) {
+            return back()->withErrors($e->getMessage());
         }
     }
 
+    public function store(Request $request)
+    {
+        try {
+            $apiurl = 'https://gateway.apicentrum.site/t/loccana.com/loccana/masterdata/1.0.0/uoms';
+            $accessToken = $this->getAccessToken();
+            $data = [
+                'name' => (string)$request->input('uom_name'),
+                'symbol' => (string)$request->input('uom_symbol'),
+                'description' => (string)$request->input('description',)
+            ];
+
+            $apiResponse = Http::withHeaders([
+                'Authorization' => 'Bearer ' . $accessToken
+            ])->post($apiurl, $data);
+
+            $responseData = $apiResponse->json();
+
+            // dd($data);
+            if ($apiResponse->successful() && isset($responseData['success']) && $responseData['success'] === true) {
+                return redirect()->route('uom.index')
+                    ->with('success', $responseData['message'] ?? 'Data UoM berhasil ditambahkan.');
+            } else {
+                Log::error('Error saat menambahkan UoM: ' . $apiResponse->body());
+                return back()->withErrors(
+                    'Gagal menambahkan data: ' .
+                        ($responseData['message'] ?? $apiResponse->body())
+                );
+            }
+        } catch (\Exception $e) {
+            return back()->withErrors($e->getMessage());
+        }
+    }
+
+    public function create()
+    {
+        return view('masterdata.uom.tambah-uom');
+    }
     public function edit($id)
     {
         try {
@@ -155,7 +182,7 @@ class UomDataController extends Controller
 
             $data = [
                 'name' => $request->input('uom_name'),
-                'symbol' => $request->input('simbol'),
+                'symbol' => $request->input('uom_symbol'),
                 'description' => $request->input('description')
             ];
 
