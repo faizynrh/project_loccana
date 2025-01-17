@@ -80,9 +80,6 @@
                 ajax: {
                     url: '{{ route('items') }}',
                     type: 'GET',
-                    error: function(xhr, error, thrown) {
-                        console.log('DataTables error:', error);
-                    }
                 },
                 columns: [{
                         data: null,

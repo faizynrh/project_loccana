@@ -117,6 +117,11 @@ class ItemController extends Controller
 
                 if ($apiResponse->successful()) {
                     $data = $apiResponse->json();
+                    // Log::info([
+                    //     'draw' => $request->input('draw'),
+                    //     'recordsTotal' => $data['data']['jumlah'],
+                    //     'recordsFiltered' => $data['data']['jumlah_filter'],
+                    // ]);
                     return response()->json([
                         'draw' => $request->input('draw'),
                         'recordsTotal' => $data['data']['jumlah_filter'] ?? 0,
