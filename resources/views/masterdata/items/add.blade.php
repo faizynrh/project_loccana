@@ -5,19 +5,24 @@
             <h5 class="mb-3 text-primary fw-bold text-decoration-underline" style="text-underline-offset: 13px; ">
                 Tambah Item</h5>
         </div>
+        @if (session('success'))
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ session('success') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
+        @if ($errors->any())
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                @foreach ($errors->all() as $error)
+                    <p>{{ $error }}</p>
+                @endforeach
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
         <p>Harap isi data yang telah ditandai dengan <span class="text-danger bg-light px-1">*</span>, dan masukkan data
             dengan benar.</p>
         <form action="{{ route('items.store') }}" method="POST" id="createForm">
             @csrf
-            <div class="row mb-3 align-items-center">
-                <div class="col-md-3">
-                    <label for="sku" class="form-label fw-bold mb-0">Kode Item <span
-                            class="text-danger">*</span></label>
-                </div>
-                <div class="col-md-9">
-                    <input type="text" class="form-control" id="sku" name="sku" placeholder="Kode Item">
-                </div>
-            </div>
 
             <div class="row mb-3 align-items-center">
                 <div class="col-md-3">
@@ -25,7 +30,7 @@
                             class="text-danger">*</span></label>
                 </div>
                 <div class="col-md-9">
-                    <input type="text" class="form-control" id="name" name="name" placeholder="Nama Item">
+                    <input type="text" class="form-control" name="name" placeholder="Nama Item">
                 </div>
             </div>
 
@@ -35,11 +40,11 @@
                             class="text-danger">*</span></label>
                 </div>
                 <div class="col-md-9">
-                    <textarea class="form-control" id="description" name="description" rows="5"></textarea>
+                    <textarea class="form-control" name="description" rows="5"></textarea>
                 </div>
             </div>
 
-            <div class="row mb-3 align-items-center">
+            {{-- <div class="row mb-3 align-items-center">
                 <div class="col-md-3">
                     <label for="unit_of_measure_id" class="form-label fw-bold mb-0">Ukuran <span
                             class="text-danger">*</span></label>
@@ -48,23 +53,23 @@
                     <input type="number" class="form-control" id="unit_of_measure_id" name="unit_of_measure_id"
                         placeholder="Ukuran">
                 </div>
-            </div>
+            </div> --}}
 
             <div class="row mb-3 align-items-center">
                 <div class="col-md-3">
-                    <label for="satuan" class="form-label fw-bold mb-0">Satuan <span class="text-danger">*</span></label>
+                    <label for="satuan" class="form-label fw-bold mb-0">UOM<span class="text-danger">*</span></label>
                 </div>
                 <div class="col-md-9">
-                    <select class="form-select" id="satuan" name="item_category_id">
+                    <select class="form-select" name="unit_of_measure_id">
                         <option value="" selected disabled>Pilih Unit</option>
-                        <option value="1">Pcs</option>
-                        <option value="2">Kg</option>
-                        <option value="3">Lusin</option>
+                        @foreach ($uoms['data'] as $uom)
+                            <option value="{{ $uom['id'] }}">{{ $uom['name'] }}</option>
+                        @endforeach
                     </select>
                 </div>
             </div>
 
-            <div class="row mb-3 align-items-center">
+            {{-- <div class="row mb-3 align-items-center">
                 <div class="col-md-3">
                     <label for="unitperbox" class="form-label fw-bold mb-0">Unit Per Box<span
                             class="text-danger">*</span></label>
@@ -73,7 +78,7 @@
                     <input type="number" class="form-control" id="unit_of_measure_id" name="unit_of_measure_id"
                         placeholder="Quantity">
                 </div>
-            </div>
+            </div> --}}
 
             <div class="row mb-3 align-items-center">
                 <div class="col-md-3">
@@ -81,15 +86,16 @@
                             class="text-danger">*</span></label>
                 </div>
                 <div class="col-md-9">
-                    <select class="form-select" id="tipebarang" name="item_type_id">
+                    <select class="form-select" name="item_type_id">
                         <option value="" selected disabled>Pilih Tipe Barang</option>
-                        <option value="1">Pestisida</option>
-                        <option value="2">Non Pestisida</option>
+                        @foreach ($items['data'] as $item)
+                            <option value="{{ $item['id'] }}">{{ $item['name'] }}</option>
+                        @endforeach
                     </select>
                 </div>
             </div>
 
-            <div class="row mb-3 align-items-center">
+            {{-- <div class="row mb-3 align-items-center">
                 <div class="col-md-3">
                     <label for="principal" class="form-label fw-bold mb-0">Pajak <span class="text-danger">*</span></label>
                 </div>
@@ -100,9 +106,9 @@
                         <option value="0">0%</option>
                     </select>
                 </div>
-            </div>
+            </div> --}}
 
-            <div class="row mb-3 align-items-center">
+            {{-- <div class="row mb-3 align-items-center">
                 <div class="col-md-3">
                     <label for="principal" class="form-label fw-bold mb-0">Principal<span
                             class="text-danger">*</span></label>
@@ -114,8 +120,26 @@
                         <option value="CV.MITRA TANI ABADI JAYA">CV.MITRA TANI ABADI JAYA</option>
                     </select>
                 </div>
+            </div> --}}
+            <div class="row mb-3 align-items-center">
+                <div class="col-md-3">
+                    <label for="satuan" class="form-label fw-bold mb-0">Kategori Barang<span
+                            class="text-danger">*</span></label>
+                </div>
+                <div class="col-md-9">
+                    <select class="form-select" name="item_category_id">
+                        <option value="" selected disabled>Pilih Kategori</option>
+                    </select>
+                </div>
             </div>
-
+            <div class="row mb-3 align-items-center">
+                <div class="col-md-3">
+                    <label for="sku" class="form-label fw-bold mb-0">SKU<span class="text-danger">*</span></label>
+                </div>
+                <div class="col-md-9">
+                    <input type="text" class="form-control" name="sku" placeholder="Kode Item">
+                </div>
+            </div>
             <div class="row">
                 <div class="col-md-12 text-end">
                     <button type="button" class="btn btn-primary" id="submitButton">Submit</button>

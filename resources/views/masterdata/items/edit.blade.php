@@ -12,147 +12,76 @@
             @method('PUT')
             <div class="row mb-3 align-items-center">
                 <div class="col-md-3">
-                    <label for="item_code" class="form-label fw-bold mb-0">Kode Item <span
+                    <label for="name" class="form-label fw-bold mb-0">Nama Item <span
                             class="text-danger">*</span></label>
                 </div>
                 <div class="col-md-9">
-                    <input type="text" class="form-control" id="item_code" name="item_code"
-                        value="{{ $data['item_code'] ?? '' }}" placeholder="Kode Item">
+                    <input type="text" class="form-control" name="name" placeholder="Nama Item"
+                        value="{{ $data['item_name'] }}">
                 </div>
             </div>
 
             <div class="row mb-3 align-items-center">
                 <div class="col-md-3">
-                    <label for="item_name" class="form-label fw-bold mb-0">Nama Item <span
+                    <label for="description" class="form-label fw-bold mb-0">Deskripsi Item <span
                             class="text-danger">*</span></label>
                 </div>
                 <div class="col-md-9">
-                    <input type="text" class="form-control" id="item_name" name="item_name"
-                        value="{{ $data['item_name'] }}" placeholder="Nama Item">
+                    <textarea class="form-control" name="description" rows="5">{{ $data['item_description'] }}</textarea>
                 </div>
             </div>
-
             <div class="row mb-3 align-items-center">
                 <div class="col-md-3">
-                    <label for="item_description" class="form-label fw-bold mb-0">Deskripsi Item <span
-                            class="text-danger">*</span></label>
+                    <label for="satuan" class="form-label fw-bold mb-0">UOM<span class="text-danger">*</span></label>
                 </div>
                 <div class="col-md-9">
-                    <textarea class="form-control" id="item_description" name="item_description" rows="5">{{ $data['item_description'] }}</textarea>
-                </div>
-            </div>
-
-            <div class="row mb-3 align-items-center">
-                <div class="col-md-3">
-                    <label for="size_uom" class="form-label fw-bold mb-0">Ukuran <span class="text-danger">*</span></label>
-                </div>
-                <div class="col-md-9">
-                    <input type="number" class="form-control" id="size_uom" name="size_uom"
-                        value="{{ $data['size_uom'] }}" placeholder="Ukuran">
-                </div>
-            </div>
-
-            <div class="row mb-3 align-items-center">
-                <div class="col-md-3">
-                    <label for="uom_id" class="form-label fw-bold mb-0">Unit<span class="text-danger">*</span></label>
-                </div>
-                <div class="col-md-9">
-                    <select class="form-select" id="uom_id" name="uom_id">
-                        <option value="{{ $data['uom_id'] }}" selected>{{ $data['uom_name'] }}</option>
-                        <option value="pcs">Pcs</option>
-                        <option value="kg">Kg</option>
-                        <option value="lusin">Lusin</option>
+                    <select class="form-select" name="unit_of_measure_id">
+                        <option value="" selected disabled>Pilih Unit</option>
+                        @foreach ($uoms as $uom)
+                            <option value="{{ $uom['id'] }}" {{ $data['uom_id'] == $uom['id'] ? 'selected' : '' }}>
+                                {{ $uom['name'] }}
+                            </option>
+                        @endforeach
                     </select>
                 </div>
             </div>
-
             <div class="row mb-3 align-items-center">
                 <div class="col-md-3">
-                    <label for="unitperbox" class="form-label fw-bold mb-0">Unit Per Box <span
+                    <label for="tipebarang" class="form-label fw-bold mb-0">Tipe Barang <span
                             class="text-danger">*</span></label>
                 </div>
                 <div class="col-md-9">
-                    <input type="number" class="form-control" id="unitperbox" name="unitperbox" placeholder="Quantity"
-                        value="">
-                </div>
-            </div>
-
-            <div class="row mb-3 align-items-center">
-                <div class="col-md-3">
-                    <label for="status_show" class="form-label fw-bold mb-0">Status Item<span
-                            class="text-danger">*</span></label>
-                </div>
-                <div class="col-md-9">
-                    <select class="form-select" id="status_show" name="status_show">
-                        <option value="{{ $data['status'] }}" selected>{{ $data['status'] }}</option>
-                        <option value="999">tes</option>
+                    <select class="form-select" name="item_type_id">
+                        <option value="" selected disabled>Pilih Tipe Barang</option>
+                        @foreach ($items as $item)
+                            <option value="{{ $item['id'] }}"
+                                {{ $data['item_type_id'] == $item['id'] ? 'selected' : '' }}>
+                                {{ $item['name'] }}
+                            </option>
+                        @endforeach
                     </select>
                 </div>
             </div>
-
             <div class="row mb-3 align-items-center">
                 <div class="col-md-3">
-                    <label for="status_visibility" class="form-label fw-bold mb-0">Status Show<span
+                    <label for="satuan" class="form-label fw-bold mb-0">Kategori Barang<span
                             class="text-danger">*</span></label>
                 </div>
                 <div class="col-md-9">
-                    <select class="form-select" id="status_visibility" name="status_visibility">
-                        <option value="{{ $data['status'] }}" selected>{{ $data['status'] }}</option>
-                        <option value="999">show</option>
+                    <select class="form-select" name="item_category_id">
+                        <option value="" selected disabled>Pilih Kategori</option>
                     </select>
                 </div>
             </div>
-
-            <div class="row mb-3 align-items-center">
-                <div class="col-md-3" style="visibility: hidden">
-                    <label for="quantity" class="form-label fw-bold mb-0">Quantity<span
-                            class="text-danger">*</span></label>
-                </div>
-                <div class="col-md-9">
-                    <input type="number" class="form-control" id="quantity" placeholder="Quantity" value=""
-                        disabled>
-                </div>
-            </div>
-
             <div class="row mb-3 align-items-center">
                 <div class="col-md-3">
-                    <label for="item_type_id" class="form-label fw-bold mb-0">Tipe Barang <span
-                            class="text-danger">*</span></label>
+                    <label for="sku" class="form-label fw-bold mb-0">SKU<span class="text-danger">*</span></label>
                 </div>
                 <div class="col-md-9">
-                    <select class="form-select" id="item_type_id" name="item_type_id">
-                        <option value="{{ $data['item_type_id'] }}" selected>{{ $data['item_type_name'] }}</option>
-                        <option value="pestisida">Pestisida</option>
-                        <option value="nonpestisida">Non Pestisida</option>
-                    </select>
+                    <input type="text" class="form-control" name="sku" placeholder="Kode Item"
+                        value="{{ $data['item_code'] }}">
                 </div>
             </div>
-
-            <div class="row mb-3 align-items-center">
-                <div class="col-md-3">
-                    <label for="pajak" class="form-label fw-bold mb-0">Pajak <span
-                            class="text-danger">*</span></label>
-                </div>
-                <div class="col-md-9">
-                    <select class="form-select" id="pajak" name="pajak">
-                        <option value="{{ $data['vat'] }}" selected>{{ $data['vat'] }} %</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="row mb-3 align-items-center">
-                <div class="col-md-3">
-                    <label for="principal" class="form-label fw-bold mb-0">Principal <span
-                            class="text-danger">*</span></label>
-                </div>
-                <div class="col-md-9">
-                    <select class="form-select" id="principal" name="principal">
-                        <option value="PT ABC">PT ABC</option>
-                        <option value="PT DEF">PT DEF</option>
-                    </select>
-                </div>
-            </div>
-
             <div class="row">
                 <div class="col-md-12 text-end">
                     <button type="button" class="btn btn-primary" id="submitButton">Submit</button>

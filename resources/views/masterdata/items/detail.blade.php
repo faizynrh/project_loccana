@@ -8,110 +8,57 @@
         </div>
         <div class="row mb-3 align-items-center">
             <div class="col-md-3">
-                <label for="item_code" class="form-label fw-bold mb-0">Kode Item</label>
+                <label for="name" class="form-label fw-bold mb-0">Nama Item <span class="text-danger">*</span></label>
             </div>
             <div class="col-md-9">
-                <input type="text" class="form-control" id="item_code" name="item_code" value="{{ $data['item_code'] }}"
-                    readonly>
+                <input type="text" class="form-control" name="name" value="{{ $data['item_name'] }}" readonly>
+            </div>
+        </div>
+
+        <div class="row mb-3 align-items-center">
+            <div class="col-md-3">
+                <label for="description" class="form-label fw-bold mb-0">Deskripsi Item <span
+                        class="text-danger">*</span></label>
+            </div>
+            <div class="col-md-9">
+                <textarea class="form-control" name="description" rows="5" readonly>{{ $data['item_description'] }}</textarea>
             </div>
         </div>
         <div class="row mb-3 align-items-center">
             <div class="col-md-3">
-                <label for="item_name" class="form-label fw-bold mb-0">Nama Item</label>
+                <label for="unit_of_measure_id" class="form-label fw-bold mb-0">UOM <span
+                        class="text-danger">*</span></label>
             </div>
             <div class="col-md-9">
-                <input type="text" class="form-control" id="item_name" name="item_name" value="{{ $data['item_name'] }}"
-                    readonly>
+                <input type="text" class="form-control" name="name" value="{{ $data['uom_name'] }}" readonly>
+            </div>
+        </div>
+
+
+        <div class="row mb-3 align-items-center">
+            <div class="col-md-3">
+                <label for="tipebarang" class="form-label fw-bold mb-0">Tipe Barang <span
+                        class="text-danger">*</span></label>
+            </div>
+            <div class="col-md-9">
+                <input type="text" class="form-control" name="name" value="{{ $data['item_type_name'] }}" readonly>
             </div>
         </div>
         <div class="row mb-3 align-items-center">
             <div class="col-md-3">
-                <label for="item_description" class="form-label fw-bold mb-0">Deskripsi Item</label>
+                <label for="satuan" class="form-label fw-bold mb-0">Kategori Barang<span
+                        class="text-danger">*</span></label>
             </div>
             <div class="col-md-9">
-                <input type="text" class="form-control" id="item_description" name="item_description"
-                    value="{{ $data['item_description'] }}" readonly>
+                <input type="text" class="form-control" name="name" value="" readonly>
             </div>
         </div>
         <div class="row mb-3 align-items-center">
             <div class="col-md-3">
-                <label for="size_uom" class="form-label fw-bold mb-0">Ukuran</label>
+                <label for="sku" class="form-label fw-bold mb-0">SKU<span class="text-danger">*</span></label>
             </div>
             <div class="col-md-9">
-                <input type="text" class="form-control" id="size_uom" name="size_uom" value="{{ $data['size_uom'] }}"
-                    readonly>
-            </div>
-        </div>
-        <div class="row mb-3 align-items-center">
-            <div class="col-md-3">
-                <label for="uom_name" class="form-label fw-bold mb-0">Unit</label>
-            </div>
-            <div class="col-md-9">
-                <input type="text" class="form-control" id="uom_name" name="uom_name" value="{{ $data['uom_name'] }}"
-                    readonly>
-            </div>
-        </div>
-        <div class="row mb-3 align-items-center">
-            <div class="col-md-3">
-                <label for="parent_name" class="form-label fw-bold mb-0">Unit Per Box</label>
-            </div>
-            <div class="col-md-9">
-                <input type="text" class="form-control" id="parent_account_id" name="parent_account_id" value=""
-                    readonly>
-            </div>
-        </div>
-        <div class="row mb-3 align-items-center">
-            <div class="col-md-3">
-                <label for="status" class="form-label fw-bold mb-0">Status Item</label>
-            </div>
-            <div class="col-md-9">
-                <input type="text" class="form-control" id="status" name="status" value="{{ $data['status'] }}"
-                    readonly>
-            </div>
-        </div>
-        <div class="row mb-3 align-items-center">
-            <div class="col-md-3">
-                <label for="status" class="form-label fw-bold mb-0">Status Show</label>
-            </div>
-            <div class="col-md-9">
-                <input type="text" class="form-control" id="status" name="status" value="{{ $data['status'] }}"
-                    readonly>
-            </div>
-        </div>
-        <div class="row mb-3 align-items-center">
-            <div class="col-md-3">
-                <label for="parent_name" class="form-label fw-bold mb-0" style="visibility: hidden">Quantity</label>
-            </div>
-            <div class="col-md-9">
-                <input type="text" class="form-control" id="parent_account_id" name="parent_account_id" value=""
-                    readonly>
-            </div>
-        </div>
-        <div class="row mb-3 align-items-center">
-            <div class="col-md-3">
-                <label for="item_type_name" class="form-label fw-bold mb-0">Tipe Barang</label>
-            </div>
-            <div class="col-md-9">
-                <input type="text" class="form-control" id="item_type_name" name="item_type_name"
-                    value="{{ $data['item_type_name'] }}" readonly>
-            </div>
-        </div>
-        <div class="row mb-3 align-items-center">
-            <div class="col-md-3">
-                <label for="vat" class="form-label fw-bold mb-0">Pajak</label>
-            </div>
-            <div class="col-md-9">
-                <input type="text" class="form-control" id="vat" name="vat" value="{{ $data['vat'] }}"
-                    readonly>
-            </div>
-        </div>
-        <div class="row mb-3 align-items-center">
-            <div class="col-md-3">
-                <label for="parent_name" class="form-label fw-bold mb-0">Principal</label>
-            </div>
-            <div class="col-md-9">
-                <input type="text" class="form-control" id="parent_account_id" name="parent_account_id"
-                    value="" readonly>
+                <input type="text" class="form-control" name="sku" value="{{ $data['item_code'] }}" readonly>
             </div>
         </div>
         <div class="row mb-3">
