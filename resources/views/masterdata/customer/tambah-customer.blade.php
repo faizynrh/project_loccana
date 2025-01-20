@@ -23,8 +23,8 @@
             <div class="row">
                 <div class="col-md-6 mb-3">
                     <label for="kode" class="form-label fw-bold">Kode</label>
-                    <input type="text" name="kode" placeholder="Kode Principal" class="form-control" id="kode"
-                        required>
+                    <input type="text" name="partner_type_id" placeholder="partner_type_id" class="form-control"
+                        id="kode" required>
                 </div>
                 <div class="col-md-6 mb-3">
                     <label for="nonpwp" class="form-label fw-bold">No. NPWP</label>
@@ -36,7 +36,7 @@
             <div class="row">
                 <div class="col-md-6 mb-3">
                     <label for="nama" class="form-label fw-bold">Nama</label>
-                    <input type="text" name="nama" placeholder="Nama" class="form-control" id="nama" required>
+                    <input type="text" name="nama" placeholder="name" class="form-control" id="nama" required>
                 </div>
                 <div class="col-md-6 mb-3">
                     <label for="pemiliknpwp" class="form-label fw-bold">Pemilik NPWP</label>
@@ -48,12 +48,12 @@
             <div class="row">
                 <div class="col-md-6 mb-3">
                     <label for="namakontak" class="form-label fw-bold">Nama Kontak</label>
-                    <input type="text" name="namakontak" placeholder="Nama Kontak" class="form-control" id="namakontak"
-                        required>
+                    <input type="text" name="contact_info" placeholder="contact_info" class="form-control"
+                        id="namakontak" required>
                 </div>
                 <div class="col-md-6 mb-3">
                     <label for="alamatpemiliknpwp" class="form-label fw-bold">Alamat Pemilik NPWP</label>
-                    <input type="text" placeholder="Alamat Pemilik NPWP" name="alamatpemiliknpwp" class="form-control"
+                    <input type="text" placeholder="chart_of_account_id" name="chart_of_account_id" class="form-control"
                         id="alamatpemiliknpwp" required>
                 </div>
             </div>

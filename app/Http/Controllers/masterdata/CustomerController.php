@@ -111,20 +111,13 @@ class CustomerController extends Controller
             //     'description' => 'required|string|max:500'
             // ]);
             $data = [
-                'kode' => (string)$request->input('kode'),
-                'nonpwp' => (string)$request->input('nonpwp'),
                 'name' => (string)$request->input('nama'),
-                'pemiliknpwp' => (string)$request->input('pemiliknpwp'),
-                'namakontak' => (string)$request->input('namakontak'),
-                'alamatpemiliknpwp' => (string)$request->input('alamatpemiliknpwp'),
-                'wilayah' => (string)$request->input('wilayah'),
-                'distrik' => (string)$request->input('distrik'),
-                'alamat' => $request->input('alamat'),
-                'kota' => (string)$request->input('kota'),
-                'telepon' => (string)$request->input('telepon'),
-                'group' => (string)$request->input('group'),
-                'email' => (string)$request->input('email'),
-                'limitkredit' => (string)$request->input('limitkredit'),
+                'partner_type_id' => (string)$request->input('partner_type_id'),
+                'contact_info' => (string)$request->input('contact_info'),
+                'chart_of_account_id' => (string)$request->input('chart_of_account_id'),
+                'company_id' => 2,
+                'is_customer' => true,
+                'is_supplier' => false
             ];
             $apiResponse = Http::withHeaders([
                 'Authorization' => 'Bearer ' . $accessToken
@@ -186,7 +179,7 @@ class CustomerController extends Controller
     {
         //
         try {
-            $apiurl = "partner_type_id{$id}";
+            $apiurl = "https://gateway.apicentrum.site/t/loccana.com/loccana/masterdata/partner/1.0.0/partner/{$id}";
             $accessToken = $this->getAccessToken();
             $apiResponse = Http::withHeaders([
                 'Authorization' => 'Bearer ' . $accessToken,
@@ -217,64 +210,36 @@ class CustomerController extends Controller
     public function update(Request $request, string $id)
     {
         try {
-            // Validasi Input
-            $request->validate([
-                'kode' => 'required|string',
-                'nonpwp' => 'nullable|string',
-                'nama' => 'required|string',
-                'pemiliknpwp' => 'nullable|string',
-                'namakontak' => 'nullable|string',
-                'alamatpemiliknpwp' => 'nullable|string',
-                'wilayah' => 'nullable|string',
-                'distrik' => 'nullable|string',
-                'alamat' => 'required|string',
-                'kota' => 'nullable|string',
-                'telepon' => 'nullable|string',
-                'group' => 'nullable|string',
-                'email' => 'nullable|email',
-                'limitkredit' => 'nullable|numeric',
-            ]);
-
-            $apiurl = "https://gateway.apicentrum.site/t/loccana.com/loccana/masterdata/partner/1.0.0/partner/" . $id;
+            $apiurl = 'https://gateway.apicentrum.site/t/loccana.com/loccana/masterdata/partner/1.0.0/partner/' . $id;
             $accessToken = $this->getAccessToken();
 
             $data = [
-                'kode' => $request->input('kode'),
-                'nonpwp' => $request->input('nonpwp'),
-                'name' => $request->input('nama'),
-                'pemiliknpwp' => $request->input('pemiliknpwp'),
-                'namakontak' => $request->input('namakontak'),
-                'alamatpemiliknpwp' => $request->input('alamatpemiliknpwp'),
-                'wilayah' => $request->input('wilayah'),
-                'distrik' => $request->input('distrik'),
-                'alamat' => $request->input('alamat'),
-                'kota' => $request->input('kota'),
-                'telepon' => $request->input('telepon'),
-                'group' => $request->input('group'),
-                'email' => $request->input('email'),
-                'limitkredit' => $request->input('limitkredit'),
+                'name' => (string)$request->input('nama'),
+                'partner_type_id' => $request->input('partner_type_id'),
+                'contact_info' => $request->input('contact_info',),
+                'chart_of_account_id' => $request->input('chart_of_account_id',),
+                'company_id' => 2,
+                'is_customer' => true,
+                'is_supplier' => false
             ];
-
-            // Debugging payload jika diperlukan
-            // dd($data);
 
             $apiResponse = Http::withHeaders([
                 'Authorization' => 'Bearer ' . $accessToken,
-                'Content-Type' => 'application/json',
+                'Content-Type' => 'application/json'
             ])->put($apiurl, $data);
 
+            // dd([
+            //     'data' => $data,
+            //     'apiResponse' => $apiResponse->json(),
+            // ]);
+
             if ($apiResponse->successful()) {
-                return redirect()->route('customer.index')
-                    ->with('success', 'Data customer berhasil diperbarui.');
+                return redirect()->route('customer.index')->with('success', 'Data Customer berhasil diperbarui!');
             } else {
-                // Penanganan error lebih detail
-                $errorDetails = $apiResponse->json() ?: $apiResponse->body();
-                return back()->withErrors([
-                    'Gagal memperbarui data. Status: ' . $apiResponse->status() . '. Detail: ' . json_encode($errorDetails),
-                ]);
+                return back()->withErrors('Gagal memperbarui data Customer: ' . $apiResponse->status());
             }
         } catch (\Exception $e) {
-            return back()->withErrors('Error: ' . $e->getMessage());
+            return back()->withErrors($e->getMessage());
         }
     }
 

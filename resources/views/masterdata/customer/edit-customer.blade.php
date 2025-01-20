@@ -35,26 +35,26 @@
             <div class="row">
                 <div class="col-md-6 mb-3">
                     <label for="nama" class="form-label fw-bold">Nama</label>
-                    <input type="text" name="name" placeholder="Nama" class="form-control" id="nama" required
+                    <input type="text" name="nama" placeholder="Nama" class="form-control" id="nama" required
                         value="{{ $customer['name'] }}">
                 </div>
                 <div class="col-md-6 mb-3">
                     <label for="pemiliknpwp" class="form-label fw-bold">Pemilik NPWP</label>
-                    <input type="text" placeholder="Pemilik NPWP" name="pemiliknpwp" class="form-control"
-                        id="pemiliknpwp" required value="{{ $customer['company_id'] }}">
+                    <input type="text" placeholder="partner_type_id" name="partner_type_id" class="form-control"
+                        id="pemiliknpwp" required value="{{ $customer['partner_type_id'] }}">
                 </div>
             </div>
 
             <div class="row">
                 <div class="col-md-6 mb-3">
                     <label for="namakontak" class="form-label fw-bold">Nama Kontak</label>
-                    <input type="text" name="namakontak" placeholder="Nama Kontak" class="form-control" id="namakontak"
-                        required value="{{ $customer['contact_info'] }}">
+                    <input type="text" name="contact_info" placeholder="contact_info" class="form-control"
+                        id="namakontak" required value="{{ $customer['contact_info'] }}">
                 </div>
                 <div class="col-md-6 mb-3">
                     <label for="alamatpemiliknpwp" class="form-label fw-bold">Alamat Pemilik NPWP</label>
-                    <input type="text" placeholder="Alamat Pemilik NPWP" name="alamatpemiliknpwp" class="form-control"
-                        id="alamatpemiliknpwp" required>
+                    <input type="text" placeholder="Alamat Pemilik NPWP" value="{{ $customer['chart_of_account_id'] }}"
+                        name="chart_of_account_id" class="form-control" id="alamatpemiliknpwp" required>
                 </div>
             </div>
 
