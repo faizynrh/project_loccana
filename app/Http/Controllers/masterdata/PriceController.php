@@ -27,22 +27,30 @@ class PriceController extends Controller
 
         return $tokenResponse->json()['access_token'];
     }
+    private function getHeaders()
+    {
+        $accessToken = $this->getAccessToken();
+        return [
+            'Authorization' => 'Bearer ' . $accessToken,
+            'Content-Type' => 'application/json'
+        ];
+    }
+
+    private function getApiUrl()
+    {
+        $apiurl = env('API_URL');
+        return $apiurl;
+    }
     public function index(Request $request)
     {
         if ($request->ajax()) {
             try {
+                $headers = $this->getHeaders();
+                $apiurl = $this->getApiUrl() . '/masterdata/price/1.0.0/price-manajement/list';
+
                 $length = $request->input('length', 10);
                 $start = $request->input('start', 0);
                 $search = $request->input('search.value', '');
-
-
-                $apiurl = 'https://gateway.apicentrum.site/t/loccana.com/masterdata/price/1.0.0/price-manajement/list';
-                $accessToken = $this->getAccessToken();
-
-                $headers = [
-                    'Authorization' => 'Bearer ' . $accessToken,
-                    'Content-Type' => 'application/json'
-                ];
 
                 $requestbody = [
                     'limit' => $length,
@@ -58,11 +66,6 @@ class PriceController extends Controller
 
                 if ($apiResponse->successful()) {
                     $data = $apiResponse->json();
-                    // Log::info([
-                    //     'draw' => $request->input('draw'),
-                    //     'recordsTotal' => $data['data']['jumlah'],
-                    //     'recordsFiltered' => $data['data']['jumlah_filter'],
-                    // ]);
                     return response()->json([
                         'draw' => $request->input('draw'),
                         'recordsTotal' => $data['data']['jumlah_filter'] ?? 0,
@@ -88,22 +91,11 @@ class PriceController extends Controller
     public function edit($id)
     {
         try {
-            $apiurl = 'https://gateway.apicentrum.site/t/loccana.com/masterdata/price/1.0.0/price-manajement/' . $id;
-            $accessToken = $this->getAccessToken();
-
-            $apiResponse = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $accessToken,
-                'Content-Type' => 'application/json'
-            ])->get($apiurl);
-            // dd([
-            //     'status_code' => $apiResponse->status(),
-            //     'headers' => $apiResponse->headers(),
-            //     'body' => $apiResponse->json(),
-            //     'url' => $apiurl,
-            // ]);
+            $headers = $this->getHeaders();
+            $apiurl = $this->getApiUrl() . '/masterdata/price/1.0.0/price-manajement/' . $id;
+            $apiResponse = Http::withHeaders($headers)->get($apiurl);
             if ($apiResponse->successful()) {
                 $data = $apiResponse->json()['data'];
-                // dd($data);
                 return view('masterdata.price.edit', compact('data', 'id'));
             } else {
                 return back()->withErrors('Gagal mengambil data Price: ' . $apiResponse->status());
@@ -117,8 +109,8 @@ class PriceController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            $apiurl = 'https://gateway.apicentrum.site/t/loccana.com/masterdata/price/1.0.0/price-manajement/' . $id;
-            $accessToken = $this->getAccessToken();
+            $headers = $this->getHeaders();
+            $apiurl = $this->getApiUrl() . '/masterdata/price/1.0.0/price-manajement/' . $id;
 
             $data = [
                 'harga_atas' => $request->harga_atas ?? 0,
@@ -127,17 +119,7 @@ class PriceController extends Controller
                 'harga_beli' => $request->harga_beli ?? 0,
             ];
 
-            $apiResponse = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $accessToken,
-                'Content-Type' => 'application/json'
-            ])->put($apiurl, $data);
-            // dd([
-            //     'status_code' => $apiResponse->status(),
-            //     'headers' => $apiResponse->headers(),
-            //     'body' => $apiResponse->json(),
-            //     'url' => $apiurl,
-            //     'data' => $data
-            // ]);
+            $apiResponse = Http::withHeaders($headers)->put($apiurl, $data);
             if ($apiResponse->successful()) {
                 return redirect()->route('price')->with('success', 'Data Price berhasil diperbarui!');
             } else {
@@ -151,18 +133,15 @@ class PriceController extends Controller
     public function approve(Request $request, $id)
     {
         try {
-            $apiurl = 'https://gateway.apicentrum.site/t/loccana.com/masterdata/price/1.0.0/price-manajement/approve/' . $id;
-            $accessToken = $this->getAccessToken();
-            // dd($accessToken);
+            $headers = $this->getHeaders();
+            $apiurl = $this->getApiUrl() . '/masterdata/price/1.0.0/price-manajement/approve/' . $id;
+
             $data = [
                 'status' => 'approve',
             ];
 
-            $apiResponse = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $accessToken,
-                'Content-Type' => 'application/json'
-            ])->put($apiurl, $data);
-            // dd($data);
+            $apiResponse = Http::withHeaders($headers)->put($apiurl, $data);
+
             if ($apiResponse->successful()) {
                 return redirect()->route('price')->with('success', 'Data Berhasil Disetujui!');
             } else {

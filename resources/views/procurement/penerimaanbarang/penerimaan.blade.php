@@ -24,34 +24,34 @@
         @endif
         <div class="d-flex align-items-center">
             <a href="/penerimaanbarang/add" class="btn btn-primary me-2 fw-bold">+</a>
-            <select id="yearSelect" class="form-select me-2" style="width: auto;">
+            <select id="yearSelect" class="form-select me-2" name="year" style="width: auto;">
                 @php
                     $currentYear = now()->year;
                 @endphp
                 @for ($year = $currentYear; $year >= 2019; $year--)
-                    <option value="{{ $year }}">{{ $year }}</option>
+                    <option value="{{ $year }}" {{ $year == request('year') ? 'selected' : '' }}>{{ $year }}
+                    </option>
                 @endfor
             </select>
-            <select id="monthSelect" class="form-select me-2" style="width: auto;">
-                @php
-                    $currentMonth = now()->month;
-                @endphp
-                <option value="all" {{ $currentMonth == 0 ? 'selected' : '' }}>ALL</option>
-                <option value="1" {{ $currentMonth == 1 ? 'selected' : '' }}>Januari</option>
-                <option value="2" {{ $currentMonth == 2 ? 'selected' : '' }}>Februari</option>
-                <option value="3" {{ $currentMonth == 3 ? 'selected' : '' }}>Maret</option>
-                <option value="4" {{ $currentMonth == 4 ? 'selected' : '' }}>April</option>
-                <option value="5" {{ $currentMonth == 5 ? 'selected' : '' }}>Mei</option>
-                <option value="6" {{ $currentMonth == 6 ? 'selected' : '' }}>Juni</option>
-                <option value="7" {{ $currentMonth == 7 ? 'selected' : '' }}>Juli</option>
-                <option value="8" {{ $currentMonth == 8 ? 'selected' : '' }}>Agustus</option>
-                <option value="9" {{ $currentMonth == 9 ? 'selected' : '' }}>September</option>
-                <option value="10" {{ $currentMonth == 10 ? 'selected' : '' }}>Oktober</option>
-                <option value="11" {{ $currentMonth == 11 ? 'selected' : '' }}>November</option>
-                <option value="12" {{ $currentMonth == 12 ? 'selected' : '' }}>Desember</option>
+
+            <select id="monthSelect" class="form-select me-2" name="month" style="width: auto;">
+                <option value="0" {{ request('month') == 'all' ? 'selected' : '' }}>ALL</option>
+                <option value="1" {{ request('month') == '1' ? 'selected' : '' }}>Januari</option>
+                <option value="2" {{ request('month') == '2' ? 'selected' : '' }}>Februari</option>
+                <option value="3" {{ request('month') == '3' ? 'selected' : '' }}>Maret</option>
+                <option value="4" {{ request('month') == '4' ? 'selected' : '' }}>April</option>
+                <option value="5" {{ request('month') == '5' ? 'selected' : '' }}>Mei</option>
+                <option value="6" {{ request('month') == '6' ? 'selected' : '' }}>Juni</option>
+                <option value="7" {{ request('month') == '7' ? 'selected' : '' }}>Juli</option>
+                <option value="8" {{ request('month') == '8' ? 'selected' : '' }}>Agustus</option>
+                <option value="9" {{ request('month') == '9' ? 'selected' : '' }}>September</option>
+                <option value="10" {{ request('month') == '10' ? 'selected' : '' }}>Oktober</option>
+                <option value="11" {{ request('month') == '11' ? 'selected' : '' }}>November</option>
+                <option value="12" {{ request('month') == '12' ? 'selected' : '' }}>Desember</option>
             </select>
         </div>
-        <table class="table table-striped table-bordered mt-3" id="tablepenerimaan">
+        {{-- <div class="table-responsive"> --}}
+        <table class="table table-striped table-bordered mt-3" id="tabelpenerimaan">
             <thead>
                 <tr>
                     <th scope="col">No</th>
@@ -66,7 +66,7 @@
                     <th scope="col">Action</th>
                 </tr>
             </thead>
-            <tbody>
+            {{-- <tbody>
                 @if (!empty($data['data']['table']))
                     @foreach ($data['data']['table'] as $item)
                         <tr>
@@ -95,22 +95,115 @@
                         </tr>
                     @endforeach
                 @endif
-            </tbody>
-            <script>
-                function confirmDelete(id) {
-                    Swal.fire({
-                        title: 'Apakah kamu yakin?',
-                        text: 'Data ini akan dihapus secara permanen!',
-                        icon: 'warning',
-                        showCancelButton: true,
-                        reverseButtons: true
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            document.getElementById('delete' + id).submit();
-                        }
-                    });
-                }
-            </script>
+            </tbody> --}}
         </table>
+        {{-- </div> --}}
     </div>
+    <script>
+        $(document).ready(function() {
+            function reloadTable() {
+                var month = $('#monthSelect').val(); // Mendapatkan nilai bulan yang dipilih
+                var year = $('#yearSelect').val(); // Mendapatkan nilai tahun yang dipilih
+
+                $('#tabelpenerimaan').DataTable().ajax.reload();
+            }
+
+            // Menangani perubahan pada dropdown bulan
+            $('#monthSelect').change(function() {
+                reloadTable(); // Panggil fungsi untuk memuat ulang data tabel
+            });
+
+            // Menangani perubahan pada dropdown tahun
+            $('#yearSelect').change(function() {
+                reloadTable(); // Panggil fungsi untuk memuat ulang data tabel
+            });
+            $('#tabelpenerimaan').DataTable({
+                serverSide: true,
+                processing: true,
+                ajax: {
+                    url: '{{ route('penerimaan_barang') }}',
+                    type: 'GET',
+                    data: function(d) {
+                        // Mengirimkan bulan dan tahun yang dipilih sebagai data tambahan ke server
+                        d.month = $('#monthSelect').val();
+                        d.year = $('#yearSelect').val();
+                    }
+                },
+                columns: [{
+                        data: null,
+                        render: function(data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+                    {
+                        data: 'do_number'
+                    },
+                    {
+                        data: 'receipt_date'
+                    },
+                    {
+                        data: 'number_po'
+                    },
+                    {
+                        data: 'name'
+                    },
+                    {
+                        data: 'order_date'
+                    },
+                    {
+                        data: 'total_po'
+                    },
+                    {
+                        data: null,
+                        defaultContent: ''
+                    },
+                    {
+                        data: 'total_receive_price'
+                    }, {
+                        data: null,
+                        render: function(data, type, row) {
+                            return `
+                        <div class="d-flex mb-2">
+                                    <a href="/coa/detail/${row.id}" class="btn btn-sm btn-info me-2"
+                                        title="Detail">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                    <a href="/coa/edit/${row.id}" class="btn btn-sm btn-warning me-2"
+                                        title="Edit">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <form action="/coa/delete/${row.id}" method="POST"
+                                        id="delete${row.id}" style="display:inline;">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="button" class="btn btn-sm btn-danger" title="Hapus"
+                                            onclick="confirmDelete(${row.id})">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                                <a href="" class="btn btn-sm btn-danger" style="width:110px" title="Hide">
+                                    <i class="bi bi-search me-1"></i> Hide
+                                </a>
+                    `;
+                        }
+                    }
+                ]
+            });
+        });
+
+        function confirmDelete(id) {
+            Swal.fire({
+                title: 'Apakah kamu yakin?',
+                text: 'Data ini akan dihapus secara permanen!',
+                icon: 'warning',
+                showCancelButton: true,
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('delete' + id).submit();
+                }
+            });
+        }
+    </script>
 @endsection

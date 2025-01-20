@@ -5,6 +5,7 @@ namespace App\Http\Controllers\procurement;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class PenerimaanBarangController extends Controller
 {
@@ -26,37 +27,78 @@ class PenerimaanBarangController extends Controller
 
         return $tokenResponse->json()['access_token'];
     }
-    public function index()
+    public function index(Request $request)
     {
-        try {
-            $apiurl = 'https://gateway-internal.apicentrum.site/t/loccana.com/loccana/itemreceipt/1.0.0/item_receipt/1.0.0/lists';
-            $accessToken = $this->getAccessToken();
-
-            $apiResponse = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $accessToken,
-                'Content-Type' => 'application/json'
-            ])->post($apiurl, [
-                'search' => '',
-                'month' => '0',
-                'year' => '2025',
-                'limit' => 10,
-                'offset' => 0,
-                'company_id' => 0,
-            ]);
-            if ($apiResponse->successful()) {
-                $data = $apiResponse->json();
-                dd($data);
-                return view('procurement.penerimaanbarang.penerimaan', ['data' => $data]);
-            } else {
-                return response()->json([
-                    'message' => 'Failed to fetch data from API',
-                    'status' => $apiResponse->status(),
-                    'error' => $apiResponse->json(),
+        if ($request->ajax()) {
+            try {
+                $month = $request->input('month', 0);
+                $year = $request->input('year', 0);
+                $length = $request->input('length', 10);
+                $start = $request->input('start', 0);
+                $search = $request->input('search.value', '');
+                Log::info([
+                    'month' => $month,
+                    'year' => $year,
                 ]);
+
+
+                $apiurl = 'https://gateway.apicentrum.site/t/loccana.com/loccana/itemreceipt/1.0.0/item_receipt/1.0.0/lists';
+                $accessToken = $this->getAccessToken();
+
+                $headers = [
+                    'Authorization' => 'Bearer ' . $accessToken,
+                    'Content-Type' => 'application/json'
+                ];
+
+                $requestbody = [
+                    'month' => $month,
+                    'year' => $year,
+                    'limit' => $length,
+                    'offset' => $start,
+                    'company_id' => 0
+                ];
+
+                if (!empty($search)) {
+                    $requestbody['search'] = $search;
+                }
+
+                $apiResponse = Http::withHeaders($headers)->post($apiurl, $requestbody);
+                // dd($apiResponse);
+                // if ($apiResponse->failed()) {
+                //     return response()->json([
+                //         'error' => 'Failed to fetch data from API',
+                //         'message' => $apiResponse->body(),
+                //     ], 500);
+                // }
+
+                if ($apiResponse->successful()) {
+                    $data = $apiResponse->json();
+                    // Log::info([
+                    //     'draw' => $request->input('draw'),
+                    //     'recordsTotal' => $data['data']['jumlah'],
+                    //     'recordsFiltered' => $data['data']['jumlah_filter'],
+                    // ]);
+                    return response()->json([
+                        'draw' => $request->input('draw'),
+                        'recordsTotal' => $data['data']['jumlah_filter'] ?? 0,
+                        'recordsFiltered' => $data['data']['jumlah'] ?? 0,
+                        'data' => $data['data']['table'] ?? [],
+                    ]);
+                }
+                return response()->json([
+                    'error' => 'Failed to fetch data',
+                ], 500);
+            } catch (\Exception $e) {
+                if ($request->ajax()) {
+                    return response()->json([
+                        'error' => $e->getMessage(),
+                    ], 500);
+                }
             }
-        } catch (\Exception $e) {
-            return back()->withErrors($e->getMessage());
         }
+
+
+        return view('procurement.penerimaanbarang.penerimaan');
     }
 
     /**
