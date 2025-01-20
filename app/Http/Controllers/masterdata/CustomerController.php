@@ -31,41 +31,61 @@ class CustomerController extends Controller
         return $tokenResponse->json()['access_token'];
     }
 
-    public function index()
+    public function index(Request $request)
     {
         //
-        try {
-            $apiurl = 'https://gateway-internal.apicentrum.site/t/loccana.com/loccana/masterdata/partner/1.0.0/partner/lists';
-            $accessToken = $this->getAccessToken();
+        if ($request->ajax()) {
+            try {
+                $length = $request->input('length', 10);
+                $start = $request->input('start', 0);
+                $search = $request->input('search.value', '');
 
-            $apiResponse = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $accessToken,
-                'Content-Type' => 'application/json'
-            ])->post($apiurl, [
-                'search' => '',
-                'limit' => 10,
-                'offset' => 0,
-                'company_id' => 0,
-                'is_customer' => true,
-                'is_supplier' => false
-            ]);
+                $apiurl = 'https://gateway.apicentrum.site/t/loccana.com/loccana/masterdata/partner/1.0.0/partner/lists';
+                $accessToken = $this->getAccessToken();
 
-            if ($apiResponse->successful()) {
-                $data = $apiResponse->json();
-                // dd($data);
-                return view('masterdata.customer.customer', ['data' => $data['data']]);
-            } else {
-                // return response([
-                //     'message' => 'Gagal mendapatkan data',
-                //     'status' => $apiResponse->status(),
-                //     'error' => $apiResponse->json(),
-                // ]);
-                return view('masterdata.customer.customer');
+                $headers = [
+                    'Authorization' => 'Bearer ' . $accessToken,
+                    'Content-Type' => 'application/json'
+                ];
+
+                $requestbody = [
+                    'search' => '',
+                    'limit' => $length,
+                    'offset' => $start,
+                    'company_id' => 2,
+                    'is_customer' => true,
+                    'is_supplier' => false
+                ];
+
+                if (!empty($search)) {
+                    $requestbody['search'] = $search;
+                }
+
+                $apiResponse = Http::withHeaders($headers)->post($apiurl, $requestbody);
+
+                if ($apiResponse->successful()) {
+                    $data = $apiResponse->json();
+                    return response()->json([
+                        'draw' => $request->input('draw'),
+                        'recordsTotal' => $data['data']['jumlah_filter'] ?? 0,
+                        'recordsFiltered' => $data['data']['jumlah'] ?? 0,
+                        'data' => $data['data']['table'] ?? [],
+                    ]);
+                }
+                return response()->json([
+                    'error' => 'Failed to fetch data',
+                ], 500);
+            } catch (\Exception $e) {
+                if ($request->ajax()) {
+                    return response()->json([
+                        'error' => $e->getMessage(),
+                    ], 500);
+                }
             }
-        } catch (\Exception $e) {
-            return back()->withErrors($e->getMessage());
         }
+        return view('masterdata.customer.customer');
     }
+
 
     /**
      * Show the form for creating a new resource.
@@ -83,7 +103,7 @@ class CustomerController extends Controller
     {
         //
         try {
-            $apiurl = 'https://gateway-internal.apicentrum.site/t/loccana.com/loccana/masterdata/partner/1.0.0/partner';
+            $apiurl = 'https://gateway.apicentrum.site/t/loccana.com/loccana/masterdata/partner/1.0.0/partner';
             $accessToken = $this->getAccessToken();
             // $request->validate([
             //     'uom_name' => 'required|string|max:255',
@@ -91,20 +111,20 @@ class CustomerController extends Controller
             //     'description' => 'required|string|max:500'
             // ]);
             $data = [
-                'kode' => $request->input('kode'),
-                'nonpwp' => $request->input('nonpwp'),
-                'nama' => $request->input('nama'),
-                'pemiliknpwp' => $request->input('pemiliknpwp'),
-                'namakontak' => $request->input('namakontak'),
-                'alamatpemiliknpwp' => $request->input('alamatpemiliknpwp'),
-                'wilayah' => $request->input('wilayah'),
-                'distrik' => $request->input('distrik'),
+                'kode' => (string)$request->input('kode'),
+                'nonpwp' => (string)$request->input('nonpwp'),
+                'name' => (string)$request->input('nama'),
+                'pemiliknpwp' => (string)$request->input('pemiliknpwp'),
+                'namakontak' => (string)$request->input('namakontak'),
+                'alamatpemiliknpwp' => (string)$request->input('alamatpemiliknpwp'),
+                'wilayah' => (string)$request->input('wilayah'),
+                'distrik' => (string)$request->input('distrik'),
                 'alamat' => $request->input('alamat'),
-                'kota' => $request->input('kota'),
-                'telepon' => $request->input('telepon'),
-                'group' => $request->input('group'),
-                'email' => $request->input('email'),
-                'limitkredit' => $request->input('limitkredit'),
+                'kota' => (string)$request->input('kota'),
+                'telepon' => (string)$request->input('telepon'),
+                'group' => (string)$request->input('group'),
+                'email' => (string)$request->input('email'),
+                'limitkredit' => (string)$request->input('limitkredit'),
             ];
             $apiResponse = Http::withHeaders([
                 'Authorization' => 'Bearer ' . $accessToken
@@ -131,16 +151,14 @@ class CustomerController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show($id)
     {
         //
         try {
-            $apiurl = "https://gateway-internal.apicentrum.site/t/loccana.com/loccana/masterdata/partner/1.0.0/partner/. $id";
+            $apiurl = "https://gateway.apicentrum.site/t/loccana.com/loccana/masterdata/partner/1.0.0/partner/{$id}";
             $accessToken = $this->getAccessToken();
-            // Get UoM data
             $apiResponse = Http::withHeaders([
                 'Authorization' => 'Bearer ' . $accessToken,
-                'Content-Type' => 'application/json'
             ])->get($apiurl);
 
             // dd($apiResponse->json());
@@ -168,9 +186,8 @@ class CustomerController extends Controller
     {
         //
         try {
-            $apiurl = "https://gateway-internal.apicentrum.site/t/loccana.com/loccana/masterdata/partner/1.0.0/partner/. $id";
+            $apiurl = "https://gateway.apicentrum.site/t/loccana.com/loccana/masterdata/partner/1.0.0/partner/ {$id}";
             $accessToken = $this->getAccessToken();
-            // Get UoM data
             $apiResponse = Http::withHeaders([
                 'Authorization' => 'Bearer ' . $accessToken,
                 'Content-Type' => 'application/json'

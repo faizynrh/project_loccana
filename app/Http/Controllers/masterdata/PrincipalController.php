@@ -30,60 +30,75 @@ class PrincipalController extends Controller
 
         return $tokenResponse->json()['access_token'];
     }
-    public function index()
+    public function index(Request $request)
     {
         //
-        try {
-            $apiurl = 'https://gateway-internal.apicentrum.site/t/loccana.com/loccana/masterdata/partner/1.0.0/partner/lists';
-            $accessToken = $this->getAccessToken();
+        if ($request->ajax()) {
+            try {
+                $length = $request->input('length', 10);
+                $start = $request->input('start', 0);
+                $search = $request->input('search.value', '');
 
-            $apiResponse = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $accessToken,
-                'Content-Type' => 'application/json'
-            ])->post($apiurl, [
-                'search' => '',
-                'limit' => 10,
-                'offset' => 0,
-                'company_id' => 0,
-                'is_customer' => false,
-                'is_supplier' => true
-            ]);
+                $apiurl = 'https://gateway.apicentrum.site/t/loccana.com/loccana/masterdata/partner/1.0.0/partner/lists';
+                $accessToken = $this->getAccessToken();
 
-            if ($apiResponse->successful()) {
-                $data = $apiResponse->json();
-                // dd($data);
-                return view('masterdata.principal.principal', ['data' => $data['data']]);
-            } else {
-                // return response([
-                //     'message' => 'Gagal mendapatkan data',
-                //     'status' => $apiResponse->status(),
-                //     'error' => $apiResponse->json(),
-                // ]);
-                return view('masterdata.principal.principal');
+                $headers = [
+                    'Authorization' => 'Bearer ' . $accessToken,
+                    'Content-Type' => 'application/json'
+                ];
+
+                $requestbody = [
+                    'search' => '',
+                    'limit' => $length,
+                    'offset' => $start,
+                    'company_id' => 2,
+                    'is_customer' => false,
+                    'is_supplier' => true
+                ];
+
+                if (!empty($search)) {
+                    $requestbody['search'] = $search;
+                }
+
+                $apiResponse = Http::withHeaders($headers)->post($apiurl, $requestbody);
+
+                if ($apiResponse->successful()) {
+                    $data = $apiResponse->json();
+                    return response()->json([
+                        'draw' => $request->input('draw'),
+                        'recordsTotal' => $data['data']['jumlah_filter'] ?? 0,
+                        'recordsFiltered' => $data['data']['jumlah'] ?? 0,
+                        'data' => $data['data']['table'] ?? [],
+                    ]);
+                }
+                return response()->json([
+                    'error' => 'Failed to fetch data',
+                ], 500);
+            } catch (\Exception $e) {
+                if ($request->ajax()) {
+                    return response()->json([
+                        'error' => $e->getMessage(),
+                    ], 500);
+                }
             }
-        } catch (\Exception $e) {
-            return back()->withErrors($e->getMessage());
         }
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        return view('masterdata.principal.tambah-principal');
-        //
+        return view('masterdata.principal.principal');
     }
 
     /**
      * Store a newly created resource in storage.
      */
+    public function create()
+    {
+        //
+        return view('masterdata.principal.tambah-principal');
+    }
     public function store(Request $request)
     {
         //
         try {
 
-            $apiurl = 'https://gateway-internal.apicentrum.site/t/loccana.com/loccana/masterdata/partner/1.0.0/partner';
+            $apiurl = 'https://gateway.apicentrum.site/t/loccana.com/loccana/masterdata/partner/1.0.0/partner';
             $accessToken = $this->getAccessToken();
             // $request->validate([
             //     'uom_name' => 'required|string|max:255',
@@ -136,13 +151,14 @@ class PrincipalController extends Controller
     {
         //
         try {
-            $apiurl = "https://gateway-internal.apicentrum.site/t/loccana.com/loccana/masterdata/partner/1.0.0/partner/. $id";
+            $apiurl = "https://gateway.apicentrum.site/t/loccana.com/loccana/masterdata/partner/1.0.0/partner/" . $id;
             $accessToken = $this->getAccessToken();
             // Get UoM data
             $apiResponse = Http::withHeaders([
                 'Authorization' => 'Bearer ' . $accessToken,
                 'Content-Type' => 'application/json'
             ])->get($apiurl);
+            dd($apiResponse->status(), $apiResponse->json());
 
             // dd($apiResponse->json());
 
@@ -152,10 +168,10 @@ class PrincipalController extends Controller
                 if (isset($principal['data'])) {
                     return view('masterdata.principal.detail-principal', ['principal' => $principal['data']]);
                 } else {
-                    return back()->withErrors('Data UoM tidak ditemukan.');
+                    return back()->withErrors('Data Principal tidak ditemukan.');
                 }
             } else {
-                return back()->withErrors('Gagal mengambil data UoM dari API.');
+                return back()->withErrors('Gagal mengambil data Principal dari API.');
             }
         } catch (\Exception $e) {
             return back()->withErrors($e->getMessage());
@@ -185,10 +201,10 @@ class PrincipalController extends Controller
                 if (isset($principal['data'])) {
                     return view('masterdata.principal.edit-principal', ['principal' => $principal['data']]);
                 } else {
-                    return back()->withErrors('Data UoM tidak ditemukan.');
+                    return back()->withErrors('Data Principal tidak ditemukan.');
                 }
             } else {
-                return back()->withErrors('Gagal mengambil data UoM dari API.');
+                return back()->withErrors('Gagal mengambil data Principal dari API.');
             }
         } catch (\Exception $e) {
             return back()->withErrors($e->getMessage());

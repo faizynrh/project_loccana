@@ -12,11 +12,8 @@ $(document).ready(function () {
         'tableprice',
         'tablegudang',
         'tableinformasi',
-        'tableprincipal',
-        'tableCustomer',
         'tabledasarpembelian',
         'tablerekappo',
-        'tablecustomer',
         'tablepenerimaan',
     ];
 

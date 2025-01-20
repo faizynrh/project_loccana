@@ -84,17 +84,6 @@ Route::middleware('auth.login')->group(
             return view('masterdata.informasi.tambah-informasi');
         });
 
-        //customer
-        route::get('/customer', function () {
-            return view('masterdata.customer.customer');
-        });
-        route::get('/customer/add', function () {
-            return view('masterdata.customer.tambah-customer');
-        });
-        route::get('/customer/edit', function () {
-            return view('masterdata.customer.edit-customer');
-        });
-
         //principal
         Route::get('/principal', [PrincipalController::class, 'index'])->name('principal.index');
         Route::get('/principal-tambah', [PrincipalController::class, 'create'])->name('principal.create');
