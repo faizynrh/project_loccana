@@ -33,21 +33,30 @@
                     </option>
                 @endfor
             </select>
-
             <select id="monthSelect" class="form-select me-2" name="month" style="width: auto;">
                 <option value="0" {{ request('month') == 'all' ? 'selected' : '' }}>ALL</option>
-                <option value="1" {{ request('month') == '1' ? 'selected' : '' }}>Januari</option>
-                <option value="2" {{ request('month') == '2' ? 'selected' : '' }}>Februari</option>
-                <option value="3" {{ request('month') == '3' ? 'selected' : '' }}>Maret</option>
-                <option value="4" {{ request('month') == '4' ? 'selected' : '' }}>April</option>
-                <option value="5" {{ request('month') == '5' ? 'selected' : '' }}>Mei</option>
-                <option value="6" {{ request('month') == '6' ? 'selected' : '' }}>Juni</option>
-                <option value="7" {{ request('month') == '7' ? 'selected' : '' }}>Juli</option>
-                <option value="8" {{ request('month') == '8' ? 'selected' : '' }}>Agustus</option>
-                <option value="9" {{ request('month') == '9' ? 'selected' : '' }}>September</option>
-                <option value="10" {{ request('month') == '10' ? 'selected' : '' }}>Oktober</option>
-                <option value="11" {{ request('month') == '11' ? 'selected' : '' }}>November</option>
-                <option value="12" {{ request('month') == '12' ? 'selected' : '' }}>Desember</option>
+                @php
+                    $currentMonth = now()->month;
+                @endphp
+                <option value="1" {{ request('month') == '1' || $currentMonth == 1 ? 'selected' : '' }}>Januari
+                </option>
+                <option value="2" {{ request('month') == '2' || $currentMonth == 2 ? 'selected' : '' }}>Februari
+                </option>
+                <option value="3" {{ request('month') == '3' || $currentMonth == 3 ? 'selected' : '' }}>Maret</option>
+                <option value="4" {{ request('month') == '4' || $currentMonth == 4 ? 'selected' : '' }}>April</option>
+                <option value="5" {{ request('month') == '5' || $currentMonth == 5 ? 'selected' : '' }}>Mei</option>
+                <option value="6" {{ request('month') == '6' || $currentMonth == 6 ? 'selected' : '' }}>Juni</option>
+                <option value="7" {{ request('month') == '7' || $currentMonth == 7 ? 'selected' : '' }}>Juli</option>
+                <option value="8" {{ request('month') == '8' || $currentMonth == 8 ? 'selected' : '' }}>Agustus
+                </option>
+                <option value="9" {{ request('month') == '9' || $currentMonth == 9 ? 'selected' : '' }}>September
+                </option>
+                <option value="10" {{ request('month') == '10' || $currentMonth == 10 ? 'selected' : '' }}>Oktober
+                </option>
+                <option value="11" {{ request('month') == '11' || $currentMonth == 11 ? 'selected' : '' }}>November
+                </option>
+                <option value="12" {{ request('month') == '12' || $currentMonth == 12 ? 'selected' : '' }}>Desember
+                </option>
             </select>
         </div>
         {{-- <div class="table-responsive"> --}}
@@ -102,20 +111,17 @@
     <script>
         $(document).ready(function() {
             function reloadTable() {
-                var month = $('#monthSelect').val(); // Mendapatkan nilai bulan yang dipilih
-                var year = $('#yearSelect').val(); // Mendapatkan nilai tahun yang dipilih
+                var month = $('#monthSelect').val();
+                var year = $('#yearSelect').val();
 
                 $('#tabelpenerimaan').DataTable().ajax.reload();
             }
-
-            // Menangani perubahan pada dropdown bulan
             $('#monthSelect').change(function() {
-                reloadTable(); // Panggil fungsi untuk memuat ulang data tabel
+                reloadTable();
             });
 
-            // Menangani perubahan pada dropdown tahun
             $('#yearSelect').change(function() {
-                reloadTable(); // Panggil fungsi untuk memuat ulang data tabel
+                reloadTable();
             });
             $('#tabelpenerimaan').DataTable({
                 serverSide: true,
@@ -124,7 +130,6 @@
                     url: '{{ route('penerimaan_barang') }}',
                     type: 'GET',
                     data: function(d) {
-                        // Mengirimkan bulan dan tahun yang dipilih sebagai data tambahan ke server
                         d.month = $('#monthSelect').val();
                         d.year = $('#yearSelect').val();
                     }
