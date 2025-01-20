@@ -8,7 +8,6 @@ import 'bootstrap-icons/font/bootstrap-icons.css';
 
 $(document).ready(function () {
     const tableIds = [
-        'tablecoa',
         'tableinformasi',
         'tabledasarpembelian',
         'tablerekappo',

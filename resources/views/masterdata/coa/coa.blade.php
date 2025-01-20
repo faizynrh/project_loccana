@@ -29,7 +29,7 @@
                     <th scope="col" class="col-2">Option</th>
                 </tr>
             </thead>
-            <tbody>
+            {{-- <tbody>
                 @if (!empty($data['data']['coa']))
                     @foreach ($data['data']['coa'] as $item)
                         <tr>
@@ -64,8 +64,64 @@
                         </tr>
                     @endforeach
                 @endif
-            </tbody>
+            </tbody> --}}
             <script>
+                $(document).ready(function() {
+                    $('#tablecoa').DataTable({
+                        serverSide: true,
+                        processing: true,
+                        ajax: {
+                            url: '{{ route('coa') }}',
+                            type: 'GET',
+                        },
+                        columns: [{
+                                data: null,
+                                render: function(data, type, row, meta) {
+                                    return meta.row + meta.settings._iDisplayStart + 1;
+                                }
+                            },
+                            {
+                                data: 'parent'
+                            },
+                            {
+                                data: 'coa'
+                            },
+                            {
+                                data: 'description'
+                            },
+                            {
+                                data: null,
+                                render: function(data, type, row) {
+                                    return `
+                        <div class="d-flex mb-2">
+                                    <a href="/coa/detail/${row.id}" class="btn btn-sm btn-info me-2"
+                                        title="Detail">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                    <a href="/coa/edit/${row.id}" class="btn btn-sm btn-warning me-2"
+                                        title="Edit">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <form action="/coa/delete/${row.id}" method="POST"
+                                        id="delete${row.id}" style="display:inline;">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="button" class="btn btn-sm btn-danger" title="Hapus"
+                                            onclick="confirmDelete(${row.id})">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                                <a href="" class="btn btn-sm btn-danger" style="width:110px" title="Hide">
+                                    <i class="bi bi-search me-1"></i> Hide
+                                </a>
+                    `;
+                                }
+                            }
+                        ]
+                    });
+                });
+
                 function confirmDelete(id) {
                     Swal.fire({
                         title: 'Apakah kamu yakin?',

@@ -8,11 +8,11 @@
         </div>
         <div class="row mb-3 align-items-center">
             <div class="col-md-3">
-                <label for="parent_name" class="form-label fw-bold mb-0">Parent </label>
+                <label for="parent_name" class="form-label fw-bold mb-0">Parent</label>
             </div>
             <div class="col-md-9">
                 <input type="text" class="form-control" id="parent_account_id" name="parent_account_id"
-                    value="{{ $coa['parent_account_id'] ?? '' }}" readonly>
+                    value="{{ $data['parent_account_id'] ?? '' }}" readonly>
             </div>
         </div>
         <div class="row mb-3 align-items-center">
@@ -21,15 +21,15 @@
             </div>
             <div class="col-md-9">
                 <input type="text" class="form-control" id="account_code" name="account_code"
-                    value="{{ $coa['account_code'] ?? '' }}" readonly>
+                    value="{{ $data['account_code'] ?? '' }}" readonly>
             </div>
         </div>
         <div class="row mb-3 align-items-center">
             <div class="col-md-3">
-                <label for="keterangancoa" class="form-label fw-bold mb-0">Keterangan COA < </label>
+                <label for="keterangancoa" class="form-label fw-bold mb-0">Keterangan COA </label>
             </div>
             <div class="col-md-9">
-                <textarea class="form-control" id="keterangancoa" name="keterangancoa" rows="5" readonly>{{ $coa['description'] ?? '' }}</textarea>
+                <textarea class="form-control" id="keterangancoa" name="keterangancoa" rows="5" readonly>{{ $data['description'] ?? '' }}</textarea>
             </div>
         </div>
         <div class="row mb-3 align-items-center">

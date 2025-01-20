@@ -16,9 +16,7 @@
                 </div>
                 <div class="col-md-9">
                     <select class="form-select" id="parent_account_id" name="parent_account_id">
-                        <option value="" selected disabled></option>
-                        <option value="0">-- Tanpa Parent --</option>
-                        <option value="1">tes</option>
+                        <option value="" selected disabled>Pilih Parent</option>
                     </select>
                 </div>
             </div>
