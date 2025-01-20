@@ -31,22 +31,31 @@ class CoaController extends Controller
         return $tokenResponse->json()['access_token'];
     }
 
+    private function getHeaders()
+    {
+        $accessToken = $this->getAccessToken();
+        return [
+            'Authorization' => 'Bearer ' . $accessToken,
+            'Content-Type' => 'application/json'
+        ];
+    }
+
+    private function getApiUrl()
+    {
+        $apiurl = env('API_URL');
+        return $apiurl;
+    }
+
     public function index(Request $request)
     {
         if ($request->ajax()) {
             try {
+                $headers = $this->getHeaders();
+                $apiurl = $this->getApiUrl() . '/loccana/masterdata/coa/1.0.0/masterdata/coa/lists';
+
                 $length = $request->input('length', 10);
                 $start = $request->input('start', 0);
                 $search = $request->input('search.value', '');
-
-
-                $apiurl = 'https://gateway.apicentrum.site/t/loccana.com/loccana/masterdata/coa/1.0.0/masterdata/coa/lists';
-                $accessToken = $this->getAccessToken();
-
-                $headers = [
-                    'Authorization' => 'Bearer ' . $accessToken,
-                    'Content-Type' => 'application/json'
-                ];
 
                 $requestbody = [
                     'limit' => $length,

@@ -11,7 +11,6 @@ $(document).ready(function () {
         'tableinformasi',
         'tabledasarpembelian',
         'tablerekappo',
-        'tablepenerimaan',
     ];
 
     tableIds.forEach(function (id) {
