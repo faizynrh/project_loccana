@@ -28,22 +28,31 @@ class GudangController extends Controller
 
         return $tokenResponse->json()['access_token'];
     }
+
+    private function getHeaders()
+    {
+        $accessToken = $this->getAccessToken();
+        return [
+            'Authorization' => 'Bearer ' . $accessToken,
+            'Content-Type' => 'application/json'
+        ];
+    }
+
+    private function getApiUrl()
+    {
+        $apiurl = env('API_URL');
+        return $apiurl;
+    }
     public function index(Request $request)
     {
         if ($request->ajax()) {
             try {
+                $headers = $this->getHeaders();
+                $apiurl = $this->getApiUrl() . '/masterdata/warehouse/1.0.0/warehouse/lists';
+
                 $length = $request->input('length', 10);
                 $start = $request->input('start', 0);
                 $search = $request->input('search.value', '');
-
-
-                $apiurl = 'https://gateway.apicentrum.site/t/loccana.com/masterdata/warehouse/1.0.0/warehouse/lists';
-                $accessToken = $this->getAccessToken();
-
-                $headers = [
-                    'Authorization' => 'Bearer ' . $accessToken,
-                    'Content-Type' => 'application/json'
-                ];
 
                 $requestbody = [
                     'limit' => $length,
@@ -59,11 +68,6 @@ class GudangController extends Controller
 
                 if ($apiResponse->successful()) {
                     $data = $apiResponse->json();
-                    // Log::info([
-                    //     'draw' => $request->input('draw'),
-                    //     'recordsTotal' => $data['data']['jumlah'],
-                    //     'recordsFiltered' => $data['data']['jumlah_filter'],
-                    // ]);
                     return response()->json([
                         'draw' => $request->input('draw'),
                         'recordsTotal' => $data['data']['jumlah_filter'] ?? 0,
@@ -93,8 +97,8 @@ class GudangController extends Controller
     public function store(Request $request)
     {
         try {
-            $apiurl = 'https://gateway.apicentrum.site/t/loccana.com/masterdata/warehouse/1.0.0/warehouse';
-            $accessToken = $this->getAccessToken();
+            $headers = $this->getHeaders();
+            $apiurl = $this->getApiUrl() . '/masterdata/warehouse/1.0.0/warehouse';
 
             $data = [
                 'name' => $request->input('name'),
@@ -104,25 +108,13 @@ class GudangController extends Controller
                 'capacity' => $request->input('capacity', 0),
             ];
 
-            $apiResponse = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $accessToken,
-                'Content-Type' => 'application/json'
-            ])->post($apiurl, $data);
+            $apiResponse = Http::withHeaders($headers)->post($apiurl, $data);
 
             $responseData = $apiResponse->json();
-            // dd([
-            //     'sent_data' => $data,
-            //     'api_response_status' => $apiResponse->status(),
-            //     'api_response_body' => $responseData,
-            // ]);
             if (
                 $apiResponse->successful() &&
                 isset($responseData['success'])
             ) {
-                // dd([
-                //     'input_data' => $data,         // Data yang dikirim ke API
-                //     'api_response' => $responseData // Respons API
-                // ]);
                 return redirect()->route('gudang')
                     ->with('success', $responseData['message'] ?? 'Gudang Berhasil Ditambahkan');
             } else {
@@ -150,17 +142,13 @@ class GudangController extends Controller
     public function edit(string $id)
     {
         try {
-            $apiurl = 'https://gateway.apicentrum.site/t/loccana.com/masterdata/warehouse/1.0.0/warehouse/' . $id;
-            $accessToken = $this->getAccessToken();
+            $headers = $this->getHeaders();
+            $apiurl = $this->getApiUrl() . '/masterdata/warehouse/1.0.0/warehouse/' . $id;
 
-            $apiResponse = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $accessToken,
-                'Content-Type' => 'application/json'
-            ])->get($apiurl);
+            $apiResponse = Http::withHeaders($headers)->get($apiurl);
 
             if ($apiResponse->successful()) {
                 $data = $apiResponse->json()['data'];
-                // dd($data);
                 return view('masterdata.gudang.edit', compact('data', 'id'));
             } else {
                 return back()->withErrors('Gagal mengambil data COA: ' . $apiResponse->status());
@@ -176,8 +164,8 @@ class GudangController extends Controller
     public function update(Request $request, string $id)
     {
         try {
-            $apiurl = 'https://gateway.apicentrum.site/t/loccana.com/masterdata/warehouse/1.0.0/warehouse/' . $id;
-            $accessToken = $this->getAccessToken();
+            $headers = $this->getHeaders();
+            $apiurl = $this->getApiUrl() . '/masterdata/warehouse/1.0.0/warehouse/' . $id;
 
             $data = [
                 'name' => $request->name,
@@ -186,15 +174,7 @@ class GudangController extends Controller
                 'capacity' => $request->capacity,
             ];
 
-            $apiResponse = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $accessToken,
-                'Content-Type' => 'application/json'
-            ])->put($apiurl, $data);
-
-            // dd([
-            //     'data' => $data,
-            //     'apiResponse' => $apiResponse
-            // ]);
+            $apiResponse = Http::withHeaders($headers)->put($apiurl, $data);
 
             if ($apiResponse->successful()) {
                 return redirect()->route('gudang')->with('success', 'Data Gudang berhasil diperbarui!');
@@ -212,20 +192,11 @@ class GudangController extends Controller
     public function destroy(string $id)
     {
         try {
-            $apiurl = 'https://gateway.apicentrum.site/t/loccana.com/masterdata/warehouse/1.0.0/warehouse/' . $id;
-            $accessToken = $this->getAccessToken();
+            $headers = $this->getHeaders();
+            $apiurl = $this->getApiUrl() . '/masterdata/warehouse/1.0.0/warehouse/' . $id;
 
-            $apiResponse = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $accessToken,
-                'Content-Type' => 'application/json'
-            ])->delete($apiurl);
+            $apiResponse = Http::withHeaders($headers)->delete($apiurl);
 
-            // dd([
-            //     'status_code' => $apiResponse->status(),
-            //     'headers' => $apiResponse->headers(),
-            //     'body' => $apiResponse->json(),
-            //     'url' => $apiurl,
-            // ]);
             if ($apiResponse->successful()) {
                 return redirect()->route('gudang')
                     ->with('success', 'Data Gudang berhasil dihapus');

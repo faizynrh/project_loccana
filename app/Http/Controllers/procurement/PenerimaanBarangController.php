@@ -27,28 +27,33 @@ class PenerimaanBarangController extends Controller
 
         return $tokenResponse->json()['access_token'];
     }
+
+    private function getHeaders()
+    {
+        $accessToken = $this->getAccessToken();
+        return [
+            'Authorization' => 'Bearer ' . $accessToken,
+            'Content-Type' => 'application/json'
+        ];
+    }
+
+    private function getApiUrl()
+    {
+        $apiurl = env('API_URL');
+        return $apiurl;
+    }
     public function index(Request $request)
     {
         if ($request->ajax()) {
             try {
+                $headers = $this->getHeaders();
+                $apiurl = $this->getApiUrl() . '/loccana/itemreceipt/1.0.0/item_receipt/1.0.0/lists';
+
                 $month = $request->input('month', 0);
                 $year = $request->input('year', 0);
                 $length = $request->input('length', 10);
                 $start = $request->input('start', 0);
                 $search = $request->input('search.value', '');
-                Log::info([
-                    'month' => $month,
-                    'year' => $year,
-                ]);
-
-
-                $apiurl = 'https://gateway.apicentrum.site/t/loccana.com/loccana/itemreceipt/1.0.0/item_receipt/1.0.0/lists';
-                $accessToken = $this->getAccessToken();
-
-                $headers = [
-                    'Authorization' => 'Bearer ' . $accessToken,
-                    'Content-Type' => 'application/json'
-                ];
 
                 $requestbody = [
                     'month' => $month,
@@ -63,21 +68,9 @@ class PenerimaanBarangController extends Controller
                 }
 
                 $apiResponse = Http::withHeaders($headers)->post($apiurl, $requestbody);
-                // dd($apiResponse);
-                // if ($apiResponse->failed()) {
-                //     return response()->json([
-                //         'error' => 'Failed to fetch data from API',
-                //         'message' => $apiResponse->body(),
-                //     ], 500);
-                // }
 
                 if ($apiResponse->successful()) {
                     $data = $apiResponse->json();
-                    // Log::info([
-                    //     'draw' => $request->input('draw'),
-                    //     'recordsTotal' => $data['data']['jumlah'],
-                    //     'recordsFiltered' => $data['data']['jumlah_filter'],
-                    // ]);
                     return response()->json([
                         'draw' => $request->input('draw'),
                         'recordsTotal' => $data['data']['jumlah_filter'] ?? 0,
@@ -96,8 +89,6 @@ class PenerimaanBarangController extends Controller
                 }
             }
         }
-
-
         return view('procurement.penerimaanbarang.penerimaan');
     }
 
