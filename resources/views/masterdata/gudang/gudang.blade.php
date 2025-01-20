@@ -20,18 +20,19 @@
             </div>
         @endif
         <a href="/gudang/add" class="btn btn-primary btn-lg fw-bold mt-1 mb-2">+</a>
-        <table class="table table-striped table-bordered mt-3" id="tablegudang">
-            <thead>
-                <tr>
-                    <th scope="col">No</th>
-                    <th scope="col">Kode Gudang</th>
-                    <th scope="col">Nama Gudang</th>
-                    <th scope="col">PIC</th>
-                    <th scope="col">Alamat Gudang</th>
-                    <th scope="col">Option</th>
-                </tr>
-            </thead>
-            <tbody>
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered mt-3" id="tablegudang">
+                <thead>
+                    <tr>
+                        <th scope="col">No</th>
+                        <th scope="col">Nama Gudang</th>
+                        <th scope="col">Deskripsi</th>
+                        <th scope="col">Lokasi</th>
+                        <th scope="col">Kapasitas</th>
+                        <th scope="col">Action</th>
+                    </tr>
+                </thead>
+                {{-- <tbody>
                 <tr>
                     @if (!empty($data))
                         @foreach ($data['data']['table'] as $item)
@@ -58,9 +59,59 @@
                 </tr>
                 @endforeach
                 @endif
-            </tbody>
-        </table>
+            </tbody> --}}
+            </table>
+        </div>
         <script>
+            $(document).ready(function() {
+                $('#tablegudang').DataTable({
+                    serverSide: true,
+                    processing: true,
+                    ajax: {
+                        url: '{{ route('gudang') }}',
+                        type: 'GET',
+                    },
+                    columns: [{
+                            data: null,
+                            render: function(data, type, row, meta) {
+                                return meta.row + meta.settings._iDisplayStart + 1;
+                            }
+                        },
+                        {
+                            data: 'name'
+                        },
+                        {
+                            data: 'description',
+                        },
+                        {
+                            data: 'location'
+                        },
+                        {
+                            data: 'capacity'
+                        },
+                        {
+                            data: null,
+                            render: function(data, type, row) {
+                                return `
+                        <a href="/gudang/edit/${row.id}" class="btn btn-sm btn-warning"
+                                    title="Edit">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <form action="/gudang/delete/${row.id}" method="POST" id="delete${row.id}" style="display:inline;">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="button" class="btn btn-sm btn-danger" title="Hapus"
+                                        onclick="confirmDelete(${row.id})">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </form>
+                    `;
+                            }
+                        }
+                    ]
+                });
+            });
+
             function confirmDelete(id) {
                 Swal.fire({
                     title: 'Apakah kamu yakin?',

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\masterdata;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class PriceController extends Controller
 {
@@ -26,41 +27,68 @@ class PriceController extends Controller
 
         return $tokenResponse->json()['access_token'];
     }
-    public function index()
+    public function index(Request $request)
     {
-        try {
-            $apiurl = 'https://gateway-internal.apicentrum.site/t/loccana.com/masterdata/price/1.0.0/price-manajement/list';
-            $accessToken = $this->getAccessToken();
+        if ($request->ajax()) {
+            try {
+                $length = $request->input('length', 10);
+                $start = $request->input('start', 0);
+                $search = $request->input('search.value', '');
 
-            $apiResponse = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $accessToken,
-                'Content-Type' => 'application/json'
-            ])->post($apiurl, [
-                'search' => '',
-                'limit' => 10,
-                'offset' => 0,
-                'company_id' => 0,
-            ]);
-            if ($apiResponse->successful()) {
-                $data = $apiResponse->json();
-                // dd($data);
-                return view('masterdata.price.price', ['data' => $data]);
-            } else {
+
+                $apiurl = 'https://gateway.apicentrum.site/t/loccana.com/masterdata/price/1.0.0/price-manajement/list';
+                $accessToken = $this->getAccessToken();
+
+                $headers = [
+                    'Authorization' => 'Bearer ' . $accessToken,
+                    'Content-Type' => 'application/json'
+                ];
+
+                $requestbody = [
+                    'limit' => $length,
+                    'offset' => $start,
+                    'company_id' => 2
+                ];
+
+                if (!empty($search)) {
+                    $requestbody['search'] = $search;
+                }
+
+                $apiResponse = Http::withHeaders($headers)->post($apiurl, $requestbody);
+
+                if ($apiResponse->successful()) {
+                    $data = $apiResponse->json();
+                    // Log::info([
+                    //     'draw' => $request->input('draw'),
+                    //     'recordsTotal' => $data['data']['jumlah'],
+                    //     'recordsFiltered' => $data['data']['jumlah_filter'],
+                    // ]);
+                    return response()->json([
+                        'draw' => $request->input('draw'),
+                        'recordsTotal' => $data['data']['jumlah_filter'] ?? 0,
+                        'recordsFiltered' => $data['data']['jumlah'] ?? 0,
+                        'data' => $data['data']['table'] ?? [],
+                    ]);
+                }
                 return response()->json([
-                    'message' => 'Failed to fetch data from API',
-                    'status' => $apiResponse->status(),
-                    'error' => $apiResponse->json(),
-                ]);
+                    'error' => 'Failed to fetch data',
+                ], 500);
+            } catch (\Exception $e) {
+                if ($request->ajax()) {
+                    return response()->json([
+                        'error' => $e->getMessage(),
+                    ], 500);
+                }
             }
-        } catch (\Exception $e) {
-            return back()->withErrors($e->getMessage());
         }
+
+        return view('masterdata.price.price');
     }
 
     public function edit($id)
     {
         try {
-            $apiurl = 'https://gateway-internal.apicentrum.site/t/loccana.com/masterdata/price/1.0.0/price-manajement/' . $id;
+            $apiurl = 'https://gateway.apicentrum.site/t/loccana.com/masterdata/price/1.0.0/price-manajement/' . $id;
             $accessToken = $this->getAccessToken();
 
             $apiResponse = Http::withHeaders([
@@ -75,6 +103,7 @@ class PriceController extends Controller
             // ]);
             if ($apiResponse->successful()) {
                 $data = $apiResponse->json()['data'];
+                // dd($data);
                 return view('masterdata.price.edit', compact('data', 'id'));
             } else {
                 return back()->withErrors('Gagal mengambil data Price: ' . $apiResponse->status());
@@ -88,7 +117,7 @@ class PriceController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            $apiurl = 'https://gateway-internal.apicentrum.site/t/loccana.com/masterdata/price/1.0.0/price-manajement/' . $id;
+            $apiurl = 'https://gateway.apicentrum.site/t/loccana.com/masterdata/price/1.0.0/price-manajement/' . $id;
             $accessToken = $this->getAccessToken();
 
             $data = [
@@ -102,6 +131,13 @@ class PriceController extends Controller
                 'Authorization' => 'Bearer ' . $accessToken,
                 'Content-Type' => 'application/json'
             ])->put($apiurl, $data);
+            // dd([
+            //     'status_code' => $apiResponse->status(),
+            //     'headers' => $apiResponse->headers(),
+            //     'body' => $apiResponse->json(),
+            //     'url' => $apiurl,
+            //     'data' => $data
+            // ]);
             if ($apiResponse->successful()) {
                 return redirect()->route('price')->with('success', 'Data Price berhasil diperbarui!');
             } else {
@@ -115,11 +151,11 @@ class PriceController extends Controller
     public function approve(Request $request, $id)
     {
         try {
-            $apiurl = 'https://gateway-internal.apicentrum.site/t/loccana.com/masterdata/price/1.0.0/price-manajement/approve/' . $id;
+            $apiurl = 'https://gateway.apicentrum.site/t/loccana.com/masterdata/price/1.0.0/price-manajement/approve/' . $id;
             $accessToken = $this->getAccessToken();
             // dd($accessToken);
             $data = [
-                'status' => 'Setuju',
+                'status' => 'approve',
             ];
 
             $apiResponse = Http::withHeaders([

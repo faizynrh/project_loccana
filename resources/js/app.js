@@ -9,8 +9,6 @@ import 'bootstrap-icons/font/bootstrap-icons.css';
 $(document).ready(function () {
     const tableIds = [
         'tablecoa',
-        'tableprice',
-        'tablegudang',
         'tableinformasi',
         'tableprincipal',
         'tableCustomer',
