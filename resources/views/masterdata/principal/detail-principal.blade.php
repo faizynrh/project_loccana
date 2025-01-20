@@ -42,7 +42,7 @@
                 <div class="col-md-4 mb-3">
                     <label for="kode" class="form-label fw-bold">Nama</label>
                     <input type="text" name="nama" placeholder="Nama" class="form-control" id="kode" required
-                        value="{{ $principal['company_id'] }}" readonly>
+                        value="{{ $principal['name'] }}" readonly>
                 </div>
 
                 <div class="col-md-3 mb-4">
@@ -62,7 +62,7 @@
                 <div class="col-md-4 mb-3">
                     <label for="Alamat" class="form-label fw-bold">Alamat</label>
                     <input type="text" name="alamat" placeholder="Alamat" class="form-control" id="Alamat" required
-                        value="{{ $principal['partner_type'] }}" readonly>
+                        value="{{ $principal['partner_type_id'] }}" readonly>
                 </div>
                 <div class="col-md-3 mb-4">
                     <label for="rekening" class="form-label fw-bold">Rekening Bank 3</label>
@@ -91,7 +91,8 @@
             <div class="row">
                 <div class="col-md-4 mb-3">
                     <label for="fax" class="form-label fw-bold">Fax</label>
-                    <input type="number" name="fax" placeholder="Fax" class="form-control" id="fax" required
+                    <input type="number" name="chart_of_account_id" placeholder="chart_of_account_id"
+                        value="{{ $principal['chart_of_account_id'] }}" class="form-control" id="fax" required
                         readonly>
                 </div>
             </div>
@@ -99,7 +100,7 @@
                 <div class="col-md-4 mb-3">
                     <label for="Email" class="form-label fw-bold">Email</label>
                     <input type="text" name="email" placeholder="Email" class="form-control" id="email"
-                        required value="{{ $principal['name'] }}" readonly>
+                        required readonly>
                 </div>
             </div>
 

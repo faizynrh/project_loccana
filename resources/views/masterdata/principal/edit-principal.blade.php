@@ -40,8 +40,8 @@
             <div class="row">
                 <div class="col-md-4 mb-3">
                     <label for="kode" class="form-label fw-bold">Nama</label>
-                    <input type="text" name="nama" placeholder="Nama" class="form-control" id="kode" required
-                        value="{{ $principal['company_id'] }}">
+                    <input type="text" name="nama" placeholder="name" class="form-control" id="kode" required
+                        value="{{ $principal['name'] }}">
                 </div>
                 <div class="col-md-3 mb-4">
                     <label for="rekening" class="form-label fw-bold">Rekening Bank 2</label>
@@ -58,8 +58,8 @@
             <div class="row">
                 <div class="col-md-4 mb-3">
                     <label for="Alamat" class="form-label fw-bold">Alamat</label>
-                    <input type="text" name="alamat" placeholder="Alamat" class="form-control" id="Alamat" required
-                        value="{{ $principal['partner_type'] }}">
+                    <input type="text" name="partner_type_id" placeholder="partner_type_id" class="form-control"
+                        id="Alamat" required value="{{ $principal['partner_type_id'] }}">
                 </div>
                 <div class="col-md-3 mb-4">
                     <label for="rekening" class="form-label fw-bold">Rekening Bank 3</label>
@@ -76,8 +76,8 @@
             <div class="row">
                 <div class="col-md-4 mb-3">
                     <label for="notelp" class="form-label fw-bold">No. Telp</label>
-                    <input type="number" name="notelp" placeholder="No. Telp" class="form-control" id="notelp"
-                        required value="{{ $principal['contact_info'] }}">
+                    <input type="number" name="contact_info" placeholder="contact_info" class="form-control"
+                        id="notelp" required value="{{ $principal['contact_info'] }}">
                 </div>
                 <div class="col-md-3 mb-4">
                     <label for="notelp" class="form-label fw-bold">Status Show/Hide</label>
@@ -90,15 +90,15 @@
             <div class="row">
                 <div class="col-md-4 mb-3">
                     <label for="fax" class="form-label fw-bold">Fax</label>
-                    <input type="number" name="fax" placeholder="Fax" class="form-control" id="fax"
-                        required>
+                    <input type="number" name="chart_of_account_id" placeholder="chart_of_account_id"
+                        class="form-control" id="fax" value="{{ $principal['chart_of_account_id'] }}" required>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-4 mb-3">
                     <label for="Email" class="form-label fw-bold">Email</label>
                     <input type="text" name="email" placeholder="Email" class="form-control" id="email"
-                        required value="{{ $principal['name'] }}">
+                        required>
                 </div>
             </div>
             <div class="row mb-3 align-items-center">

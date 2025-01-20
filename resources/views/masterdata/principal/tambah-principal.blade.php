@@ -86,8 +86,8 @@
             <div class="row">
                 <div class="col-md-4 mb-3">
                     <label for="fax" class="form-label fw-bold">Fax</label>
-                    <input type="number" name="fax" placeholder="Fax" class="form-control" id="fax"
-                        required>
+                    <input type="text" name="contact_info" placeholder="contact_info" class="form-control"
+                        id="fax" required>
                 </div>
             </div>
             <div class="row">
