@@ -49,18 +49,18 @@
 
                 },
                 columns: [{
-                        data: 'name'
+                        data: 'partner_type',
                     },
                     {
                         // data: null,
                         // defaultContent: ''
-                        data: 'contact_info',
+                        data: 'name',
                     },
                     {
                         data: 'is_customer',
                     },
                     {
-                        data: 'partner_type',
+                        data: 'chart_of_account_id',
                     },
                     {
                         data: 'created_at',
@@ -69,13 +69,13 @@
                         data: null,
                         render: function(data, type, row) {
                             return `
-                    <a href="/customer/show/${row.id}" class="btn btn-sm btn-info mb-2" title="Detail">
+                    <a href="/principal/show/${row.id}" class="btn btn-sm btn-info mb-2" title="Detail">
                         <i class="bi bi-eye"></i>
                     </a>
-                    <a href="/customer/edit/${row.id}" class="btn btn-sm btn-warning mb-2" title="Edit">
+                    <a href="/principal/edit/${row.id}" class="btn btn-sm btn-warning mb-2" title="Edit">
                         <i class="bi bi-pencil"></i>
                     </a>
-                    <form action="/customer-delete/${row.id}" method="POST" id="delete${row.id}" style="display:inline;">
+                    <form action="/principal-delete/${row.id}" method="POST" id="delete${row.id}" style="display:inline;">
                         @csrf
                         @method('DELETE')
                         <button type="button" class="btn btn-sm btn-danger mb-2" title="Hapus" onclick="confirmDelete(${row.id})">
