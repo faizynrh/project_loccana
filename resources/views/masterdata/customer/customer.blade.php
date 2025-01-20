@@ -39,44 +39,7 @@
                 </tr>
             </thead>
             <tbody>
-                {{-- {{ dd($data) }} --}}
-                @if (!empty($data['table']))
-                    @foreach ($data['table'] as $index => $item)
-                        <tr>
-                            <td>{{ $item['id'] }}</td>
-                            <td>{{ $item['company_id'] ?? '-' }}</td>
-                            <td>{{ $item['partner_type'] ?? '-' }}</td>
-                            <td>{{ $item['name'] ?? '-' }}</td>
-                            <td>{{ $item['contact_info'] ?? '-' }}</td>
-                            <td>{{ $item['is_customer'] ?? '-' }}</td>
-                            <td>{{ $item['chart_of_account_id'] ?? '-' }}</td>
-                            <td>{{ $item['ceated_adt'] ?? '-' }}</td>
-                            <td>{{ $item['contact_info'] ?? '-' }}</td>
-                            <td>
-                                <a href="/customer/edit/{id}" class="btn btn-sm btn-warning mb-2">
-                                    <i class="bi bi-pencil"></i>
-                                </a>
-                                <form action="{{ route('customer.destroy', $item['id']) }}" method="POST"
-                                    id="delete{{ $item['id'] }}" style="display:inline;">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="button" class="btn btn-sm btn-danger mb-2" title="Hapus"
-                                        onclick="event.stopPropagation(); confirmDelete({{ $item['id'] }})">
-                                        <i class="bi bi-trash"></i>
-                                    </button>
-                                </form>
-                                <button onclick="window.location='{{ route('customer.show', $item['id']) }}';"
-                                    class="btn btn-sm btn-info mb-2">
-                                    <i class="bi bi-eye"></i>
-                                </button>
-                            </td>
-                        </tr>
-                    @endforeach
-                @else
-                    <tr>
-                        <td colspan="10" class="text-center">No data available in table</td>
-                    </tr>
-                @endif
+
             </tbody>
         </table>
 
@@ -87,6 +50,78 @@
     </div>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
+        $(document).ready(function() {
+            $('#tablecustomer').DataTable({
+                serverSide: true,
+                processing: true,
+                // pageLength: 1,
+                ajax: {
+                    url: '{{ route('customer.index') }}',
+                    type: 'GET',
+
+                },
+                columns: [{
+                        data: 'chart_of_account_id',
+                        defaultContent: ''
+                    },
+                    {
+                        data: 'name'
+                    },
+                    {
+                        // data: null,
+                        // defaultContent: ''
+                        data: 'contact_info',
+                        defaultContent: ''
+                    },
+                    {
+                        data: 'is_customer',
+                        defaultContent: ''
+                    },
+                    {
+                        data: 'partner_type',
+                        defaultContent: ''
+                    },
+                    {
+                        data: 'created_at',
+                        defaultContent: ''
+                    },
+                    {
+                        data: 'id',
+                        defaultContent: ''
+                    },
+                    {
+                        data: 'is_supplier',
+                        defaultContent: ''
+                    },
+                    {
+                        data: 'company_id',
+                        defaultContent: ''
+                    },
+                    {
+                        data: null,
+                        render: function(data, type, row) {
+                            return `
+                    <a href="/customer/show/${row.id}" class="btn btn-sm btn-info mb-2" title="Detail">
+                        <i class="bi bi-eye"></i>
+                    </a>
+                    <a href="/customer/edit/${row.id}" class="btn btn-sm btn-warning mb-2" title="Edit">
+                        <i class="bi bi-pencil"></i>
+                    </a>
+                    <form action="/customer-delete/${row.id}" method="POST" id="delete${row.id}" style="display:inline;">
+                        @csrf
+                        @method('DELETE')
+                        <button type="button" class="btn btn-sm btn-danger mb-2" title="Hapus" onclick="confirmDelete(${row.id})">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </form>
+                `;
+                        }
+                    }
+                ],
+
+            });
+        });
+
         function confirmDelete(id) {
             Swal.fire({
                 title: 'Apakah kamu yakin?',

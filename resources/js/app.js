@@ -10,11 +10,8 @@ $(document).ready(function () {
     const tableIds = [
         'tablecoa',
         'tableinformasi',
-        'tableprincipal',
-        'tableCustomer',
         'tabledasarpembelian',
         'tablerekappo',
-        'tablecustomer',
         'tablepenerimaan',
     ];
 

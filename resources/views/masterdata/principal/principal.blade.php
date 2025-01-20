@@ -32,45 +32,64 @@
                 </tr>
             </thead>
             <tbody>
-                {{-- {{ dd($data) }} --}}
-                @if (!empty($data['table']))
-                    @foreach ($data['table'] as $index => $item)
-                        <tr>
-                            <td>{{ $item['id'] }}</td>
-                            <td>{{ $item['company_id'] ?? '-' }}</td>
-                            <td>{{ $item['partner_type'] ?? '-' }}</td>
-                            <td>{{ $item['name'] ?? '-' }}</td>
-                            <td>{{ $item['contact_info'] ?? '-' }}</td>
-                            <td>
-                                <a href="/principal/edit/{id}" class="btn btn-sm btn-warning mb-2">
-                                    <i class="bi bi-pencil"></i>
-                                </a>
-                                <form action="{{ route('principal.destroy', $item['id']) }}" method="POST"
-                                    id="delete{{ $item['id'] }}" style="display:inline;">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="button" class="btn btn-sm btn-danger mb-2" title="Hapus"
-                                        onclick="event.stopPropagation(); confirmDelete({{ $item['id'] }})">
-                                        <i class="bi bi-trash"></i>
-                                    </button>
-                                </form>
-                                <button onclick="window.location='{{ route('principal.show', $item['id']) }}';"
-                                    class="btn btn-sm btn-info mb-2">
-                                    <i class="bi bi-eye"></i>
-                                </button>
-                            </td>
-                        </tr>
-                    @endforeach
-                @else
-                    <tr>
-                        <td colspan="6" class="text-center">No data available</td>
-                    </tr>
-                @endif
+
             </tbody>
         </table>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
+        $(document).ready(function() {
+            $('#tableprincipal').DataTable({
+                serverSide: true,
+                processing: true,
+                // pageLength: 1,
+                ajax: {
+                    url: '{{ route('principal.index') }}',
+                    type: 'GET',
+
+                },
+                columns: [{
+                        data: 'name'
+                    },
+                    {
+                        // data: null,
+                        // defaultContent: ''
+                        data: 'contact_info',
+                    },
+                    {
+                        data: 'is_customer',
+                    },
+                    {
+                        data: 'partner_type',
+                    },
+                    {
+                        data: 'created_at',
+                    },
+                    {
+                        data: null,
+                        render: function(data, type, row) {
+                            return `
+                    <a href="/customer/show/${row.id}" class="btn btn-sm btn-info mb-2" title="Detail">
+                        <i class="bi bi-eye"></i>
+                    </a>
+                    <a href="/customer/edit/${row.id}" class="btn btn-sm btn-warning mb-2" title="Edit">
+                        <i class="bi bi-pencil"></i>
+                    </a>
+                    <form action="/customer-delete/${row.id}" method="POST" id="delete${row.id}" style="display:inline;">
+                        @csrf
+                        @method('DELETE')
+                        <button type="button" class="btn btn-sm btn-danger mb-2" title="Hapus" onclick="confirmDelete(${row.id})">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </form>
+                `;
+                        }
+                    }
+                ],
+
+            });
+        });
+
         function confirmDelete(id) {
             Swal.fire({
                 title: 'Apakah kamu yakin?',
