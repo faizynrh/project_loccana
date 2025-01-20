@@ -109,7 +109,7 @@ class PrincipalController extends Controller
                 'kode' => $request->input('kode'),
                 'bank1' => $request->input('bank1'),
                 'norek1' => $request->input('norek1'),
-                'nama' => $request->input('nama'),
+                'nama' => (string)$request->input('nama'),
                 'bank2' => $request->input('bank2'),
                 'norek2' => $request->input('norek2'),
                 'alamat' => $request->input('alamat'),
@@ -185,8 +185,10 @@ class PrincipalController extends Controller
     {
         //
         try {
-            $apiurl = "https://gateway-internal.apicentrum.site/t/loccana.com/loccana/masterdata/partner/1.0.0/partner/. $id";
+            $apiurl = "https://gateway.apicentrum.site/t/loccana.com/loccana/masterdata/partner/1.0.0/partner/{$id}";
+
             $accessToken = $this->getAccessToken();
+
             // Get UoM data
             $apiResponse = Http::withHeaders([
                 'Authorization' => 'Bearer ' . $accessToken,
@@ -214,6 +216,7 @@ class PrincipalController extends Controller
     /**
      * Update the specified resource in storage.
      */
+
     public function update(Request $request, string $id)
     {
         //
@@ -222,22 +225,12 @@ class PrincipalController extends Controller
             $accessToken = $this->getAccessToken();
 
             $data = [
-                'kode' => $request->input('kode'),
-                'bank1' => $request->input('bank1'),
-                'norek1' => $request->input('norek1'),
-                'nama' => $request->input('nama'),
-                'bank2' => $request->input('bank2'),
-                'norek2' => $request->input('norek2'),
-                'alamat' => $request->input('alamat'),
-                'bank3' => $request->input('bank3'),
-                'norek3' => $request->input('norek3'),
-                'notelp' => $request->input('notelp'),
-                'fax' => $request->input('fax'),
-                'email' => $request->input('email'),
-                'status' => $request->input('status'),
+                'name' => (string) ($request->input('nama') ?? ''), // pastikan nama adalah string
+                'partner_type_id' => (string) ($request->input('partner_type', 2)), // pastikan partner_type_id adalah string
+                'contact_info' => (string) ($request->input('contact_info', '')), // pastikan contact_info adalah string
+                'company_id' => (string) ($request->input('company_id', 2)), // pastikan company_id adalah string
+                'is_supplier' => true
             ];
-
-
             $apiResponse = Http::withHeaders([
                 'Authorization' => 'Bearer ' . $accessToken,
                 'Content-Type' => 'application/json'
