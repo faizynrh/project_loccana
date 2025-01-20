@@ -54,7 +54,8 @@
             <div class="row">
                 <div class="col-md-4 mb-3">
                     <label for="Alamat" class="form-label fw-bold">Alamat</label>
-                    <input type="text" name="alamat" placeholder="Alamat" class="form-control" id="Alamat" required>
+                    <input type="text" name="partner_type_id" placeholder="partner_type_id" class="form-control"
+                        id="Alamat" required>
                 </div>
                 <div class="col-md-3 mb-4">
                     <label for="rekening" class="form-label fw-bold">Rekening Bank 3</label>
@@ -71,8 +72,8 @@
             <div class="row">
                 <div class="col-md-4 mb-3">
                     <label for="notelp" class="form-label fw-bold">No. Telp</label>
-                    <input type="number" name="notelp" placeholder="No. Telp" class="form-control" id="notelp"
-                        required>
+                    <input type="number" name="chart_of_account_id" placeholder="chart_of_account_id" class="form-control"
+                        id="notelp" required>
                 </div>
                 <div class="col-md-3 mb-4">
                     <label for="notelp" class="form-label fw-bold">Status Show/Hide</label>
