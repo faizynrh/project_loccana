@@ -55,7 +55,7 @@ Route::middleware('auth.login')->group(
         Route::get('/coa/detail/{id}', [CoaController::class, 'show'])->name('coa.detail');
         Route::get('/coa/add', [CoaController::class, 'create'])->name('coa.create');
         Route::post('/coa/add', [CoaController::class, 'store'])->name('coa.store');
-        Route::delete('/coa/delete{id}', [CoaController::class, 'destroy'])->name('coa.destroy');
+        Route::delete('/coa/delete/{id}', [CoaController::class, 'destroy'])->name('coa.destroy');
         Route::get('/coa/edit/{id}', [CoaController::class, 'edit'])->name('coa.edit');
         Route::put('/coa/edit/{id}', [CoaController::class, 'update'])->name('coa.update');
 

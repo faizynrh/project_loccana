@@ -18,15 +18,7 @@
                 </div>
                 <div class="col-md-9">
                     <select class="form-select" id="parent_account_id" name="parent_account_id" required>
-                        @if ($coa['parent_account_id'] === null)
-                            <option value="0">Tanpa Parent
-                            </option>
-                            <option value="111">masuk</option>
-                        @else
-                            <option value="{{ $coa['parent_account_id'] }}">{{ $coa['parent_name'] }}
-                            </option>
-                            <option value="masuk">masuk</option>
-                        @endif
+                        <option value="" selected disabled>Pilih Parent</option>
                     </select>
                 </div>
             </div>
@@ -36,7 +28,7 @@
                 </div>
                 <div class="col-md-9">
                     <input type="text" class="form-control" id="account_code" name="account_code" placeholder="COA"
-                        value="{{ $coa['account_code'] ?? '' }}">
+                        value="{{ $data['account_code'] ?? '' }}">
                 </div>
             </div>
             <div class="row mb-3 align-items-center">
@@ -45,7 +37,7 @@
                             class="text-danger">*</span></label>
                 </div>
                 <div class="col-md-9">
-                    <textarea class="form-control" id="description" name="description" rows="5" required>{{ $coa['description'] ?? '' }}</textarea>
+                    <textarea class="form-control" id="description" name="description" rows="5" required>{{ $data['description'] ?? '' }}</textarea>
                 </div>
             </div>
             <div class="row mb-3 align-items-center">

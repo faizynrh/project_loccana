@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use RealRashid\SweetAlert\Facades\Alert;
+use Illuminate\Support\Facades\Log;
 
 
 class CoaController extends Controller
@@ -30,35 +31,62 @@ class CoaController extends Controller
         return $tokenResponse->json()['access_token'];
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        try {
-            $apiurl = 'https://gateway-internal.apicentrum.site/t/loccana.com/loccana/masterdata/coa/1.0.0/masterdata/coa/list';
-            $accessToken = $this->getAccessToken();
+        if ($request->ajax()) {
+            try {
+                $length = $request->input('length', 10);
+                $start = $request->input('start', 0);
+                $search = $request->input('search.value', '');
 
-            $apiResponse = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $accessToken,
-                'Content-Type' => 'application/json'
-            ])->post($apiurl, [
-                'search' => '',
-                'limit' => 10,
-                'offset' => 0,
-                'company_id' => 0,
-            ]);
 
-            if ($apiResponse->successful()) {
-                $data = $apiResponse->json();
-                return view('masterdata.coa.coa', ['data' => $data]);
-            } else {
+                $apiurl = 'https://gateway.apicentrum.site/t/loccana.com/loccana/masterdata/coa/1.0.0/masterdata/coa/lists';
+                $accessToken = $this->getAccessToken();
+
+                $headers = [
+                    'Authorization' => 'Bearer ' . $accessToken,
+                    'Content-Type' => 'application/json'
+                ];
+
+                $requestbody = [
+                    'limit' => $length,
+                    'offset' => $start,
+                    'company_id' => 2
+                ];
+
+                if (!empty($search)) {
+                    $requestbody['search'] = $search;
+                }
+
+                $apiResponse = Http::withHeaders($headers)->post($apiurl, $requestbody);
+
+                if ($apiResponse->successful()) {
+                    $data = $apiResponse->json();
+                    // Log::info([
+                    //     'draw' => $request->input('draw'),
+                    //     'recordsTotal' => $data['data']['jumlah'],
+                    //     'recordsFiltered' => $data['data']['jumlah_filter'],
+                    // ]);
+                    return response()->json([
+                        'draw' => $request->input('draw'),
+                        'recordsTotal' => $data['data']['jumlah_filter'] ?? 0,
+                        'recordsFiltered' => $data['data']['jumlah'] ?? 0,
+                        'data' => $data['data']['table'] ?? [],
+                    ]);
+                }
                 return response()->json([
-                    'message' => 'Failed to fetch data from API',
-                    'status' => $apiResponse->status(),
-                    'error' => $apiResponse->json(),
-                ]);
+                    'error' => 'Failed to fetch data',
+                ], 500);
+            } catch (\Exception $e) {
+                if ($request->ajax()) {
+                    return response()->json([
+                        'error' => $e->getMessage(),
+                    ], 500);
+                }
             }
-        } catch (\Exception $e) {
-            return back()->withErrors($e->getMessage());
         }
+
+        return view('masterdata.coa.coa');
     }
 
     public function create()
@@ -69,16 +97,16 @@ class CoaController extends Controller
     public function store(Request $request)
     {
         try {
-            $apiurl = 'https://gateway-internal.apicentrum.site/t/loccana.com/loccana/masterdata/coa/1.0.0/masterdata/coa';
+            $apiurl = 'https://gateway.apicentrum.site/t/loccana.com/loccana/masterdata/coa/1.0.0/masterdata/coa';
             $accessToken = $this->getAccessToken();
 
             $data = [
                 'account_name' => $request->input('account_name'),
                 'account_code' => $request->input('account_code'),
-                'parent_account_id' => $request->input('parent_account_id', 0),
-                'account_type_id' => $request->input('account_type_id', 0),
+                'parent_account_id' => $request->input('parent_account_id', 2),
+                'account_type_id' => $request->input('account_type_id', 2),
                 'description' => $request->input('description'),
-                'company_id' => $request->input('company_id', 0),
+                'company_id' => $request->input('company_id', 2),
             ];
 
             $apiResponse = Http::withHeaders([
@@ -90,7 +118,8 @@ class CoaController extends Controller
 
             // dd([
             //     'data' => $data,
-            //     'apiResponse' => $apiResponse,
+            //     'status' => $apiResponse->status(),
+            //     'response' => $responseData
             // ]);
             if (
                 $apiResponse->successful() &&
@@ -112,7 +141,7 @@ class CoaController extends Controller
     public function show($id)
     {
         try {
-            $apiurl = 'https://gateway-internal.apicentrum.site/t/loccana.com/loccana/masterdata/coa/1.0.0/masterdata/coa/' . $id;
+            $apiurl = 'https://gateway.apicentrum.site/t/loccana.com/loccana/masterdata/coa/1.0.0/masterdata/coa/' . $id;
             $accessToken = $this->getAccessToken();
 
             $apiResponse = Http::withHeaders([
@@ -121,8 +150,8 @@ class CoaController extends Controller
             ])->get($apiurl);
 
             if ($apiResponse->successful()) {
-                $coa = $apiResponse->json()['data'];
-                return view('masterdata.coa.detail', compact('coa', 'id'));
+                $data = $apiResponse->json()['data'];
+                return view('masterdata.coa.detail', compact('data', 'id'));
             } else {
                 return back()->withErrors('Gagal mengambil data COA: ' . $apiResponse->status());
             }
@@ -134,7 +163,7 @@ class CoaController extends Controller
     public function edit($id)
     {
         try {
-            $apiurl = 'https://gateway-internal.apicentrum.site/t/loccana.com/loccana/masterdata/coa/1.0.0/masterdata/coa/' . $id;
+            $apiurl = 'https://gateway.apicentrum.site/t/loccana.com/loccana/masterdata/coa/1.0.0/masterdata/coa/' . $id;
             $accessToken = $this->getAccessToken();
 
             $apiResponse = Http::withHeaders([
@@ -143,8 +172,8 @@ class CoaController extends Controller
             ])->get($apiurl);
 
             if ($apiResponse->successful()) {
-                $coa = $apiResponse->json()['data'];
-                return view('masterdata.coa.edit', compact('coa', 'id'));
+                $data = $apiResponse->json()['data'];
+                return view('masterdata.coa.edit', compact('data', 'id'));
             } else {
                 return back()->withErrors('Gagal mengambil data COA: ' . $apiResponse->status());
             }
@@ -156,14 +185,14 @@ class CoaController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            $apiurl = 'https://gateway-internal.apicentrum.site/t/loccana.com/loccana/masterdata/coa/1.0.0/masterdata/coa/' . $id;
+            $apiurl = 'https://gateway.apicentrum.site/t/loccana.com/loccana/masterdata/coa/1.0.0/masterdata/coa/' . $id;
             $accessToken = $this->getAccessToken();
 
             $data = [
                 'account_name' => $request->account_name,
                 'account_code' => $request->account_code,
-                'parent_account_id' => $request->parent_account_id,
-                'account_type_id' => $request->account_type_id,
+                'parent_account_id' => $request->input('parent_account_id', 2),
+                'account_type_id' => $request->input('account_type_id', 2),
                 'description' => $request->description,
             ];
 
@@ -174,7 +203,7 @@ class CoaController extends Controller
 
             // dd([
             //     'data' => $data,
-            //     'apiResponse' => $apiResponse
+            //     'apiResponse' => $apiResponse->json(),
             // ]);
 
             if ($apiResponse->successful()) {
@@ -189,7 +218,7 @@ class CoaController extends Controller
     public function destroy($id)
     {
         try {
-            $apiurl = 'https://gateway-internal.apicentrum.site/t/loccana.com/loccana/masterdata/coa/1.0.0/masterdata/coa/' . $id;
+            $apiurl = 'https://gateway.apicentrum.site/t/loccana.com/loccana/masterdata/coa/1.0.0/masterdata/coa/' . $id;
             $accessToken = $this->getAccessToken();
 
             $apiResponse = Http::withHeaders([
