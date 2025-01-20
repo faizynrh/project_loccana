@@ -24,20 +24,21 @@
         <div class="d-flex justify-content-between align-items-center">
             <a href="/items/add" class="btn btn-primary fw-bold mt-1 mb-2">+ Tambah Item</a>
         </div>
-        <table class="table table-striped table-bordered mt-3" id="tableitem">
-            <thead>
-                <tr>
-                    <th scope="col">No</th>
-                    <th scope="col">Kode Item</th>
-                    <th scope="col">Nama Item</th>
-                    <th scope="col">Deskripsi</th>
-                    <th scope="col">UoM</th>
-                    <th scope="col">Unit Box</th>
-                    <th scope="col">Principal</th>
-                    <th scope="col">Option</th>
-                </tr>
-            </thead>
-            {{-- <tbody>
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered mt-3" id="tableitem">
+                <thead>
+                    <tr>
+                        <th scope="col">No</th>
+                        <th scope="col">Kode Item</th>
+                        <th scope="col">Nama Item</th>
+                        <th scope="col">Deskripsi</th>
+                        <th scope="col">UoM</th>
+                        <th scope="col">Unit Box</th>
+                        <th scope="col">Principal</th>
+                        <th scope="col">Option</th>
+                    </tr>
+                </thead>
+                {{-- <tbody>
                 @foreach ($data as $item)
                     <tr>
                         <td>{{ $loop->iteration }}</td>
@@ -69,7 +70,8 @@
                     </tr>
                 @endforeach
             </tbody> --}}
-        </table>
+            </table>
+        </div>
     </div>
     {{-- search di server --}}
     <script>

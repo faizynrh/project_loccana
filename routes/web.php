@@ -65,7 +65,7 @@ Route::middleware('auth.login')->group(
         Route::get('/gudang/edit/{id}', [GudangController::class, 'edit'])->name('gudang.edit');
         Route::put('/gudang/edit/{id}', [GudangController::class, 'update'])->name('gudang.update');
         Route::post('/gudang/add', [GudangController::class, 'store'])->name('gudang.store');
-        Route::delete('/gudang/delete{id}', [GudangController::class, 'destroy'])->name('gudang.destroy');
+        Route::delete('/gudang/delete/{id}', [GudangController::class, 'destroy'])->name('gudang.destroy');
 
         // uom
         Route::get('/uom', [UomDataController::class, 'index'])->name('uom.index'); //jika api mati maka gunakan yang bawah

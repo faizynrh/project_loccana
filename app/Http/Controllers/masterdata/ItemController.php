@@ -273,10 +273,9 @@ class ItemController extends Controller
     {
         try {
             $apiurl = 'https://gateway.apicentrum.site/t/loccana.com/master/items/1.0.0/items/' . $id;
-            $accessToken = $this->getAccessToken();
 
             $apiResponse = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $accessToken,
+                'Authorization' => 'Bearer ' . $this->getAccessToken(),
                 'Content-Type' => 'application/json'
             ])->get($apiurl);
 

@@ -10,16 +10,16 @@
         <form action="{{ route('gudang.update', $data['id']) }}" method="POST" id="updateForm">
             @csrf
             @method('PUT')
-            <div class="row mb-3 align-items-center">
+            {{-- <div class="row mb-3 align-items-center">
                 <div class="col-md-3">
                     <label for="code" class="form-label fw-bold mb-0">Kode Gudang<span
                             class="text-danger">*</span></label>
                 </div>
                 <div class="col-md-9">
                     <input type="text" class="form-control" id="code" name="code" placeholder="Kode Gudang"
-                        value="{{ $data['kode_gudang'] }}">
+                        value="">
                 </div>
-            </div>
+            </div> --}}
 
             <div class="row mb-3 align-items-center">
                 <div class="col-md-3">
@@ -28,11 +28,11 @@
                 </div>
                 <div class="col-md-9">
                     <input type="text" class="form-control" id="name" name="name" placeholder="Nama Gudang"
-                        value="{{ $data['nama_gudang'] }}">
+                        value="{{ $data['name'] }}">
                 </div>
             </div>
 
-            <div class="row mb-3 align-items-center">
+            {{-- <div class="row mb-3 align-items-center">
                 <div class="col-md-3">
                     <label for="pic" class="form-label fw-bold mb-0">PIC <span class="text-danger">*</span></label>
                 </div>
@@ -43,19 +43,36 @@
                         <option value="hendra">Hendra</option>
                     </select>
                 </div>
+            </div> --}}
+            <div class="row mb-3 align-items-center">
+                <div class="col-md-3">
+                    <label for="description" class="form-label fw-bold mb-0">Deskripsi Gudang<span
+                            class="text-danger">*</span></label>
+                </div>
+                <div class="col-md-9">
+                    <textarea class="form-control" name="description" rows="5">{{ $data['description'] }}</textarea>
+                </div>
             </div>
-
             <div class="row mb-3 align-items-center">
                 <div class="col-md-3">
                     <label for="location" class="form-label fw-bold mb-0">Alamat Gudang <span
                             class="text-danger">*</span></label>
                 </div>
                 <div class="col-md-9">
-                    <input type="text" class="form-control" name="location" placeholder="Alamat Gudang"
-                        value="{{ $data['alamat_gudang'] }}">
+                    <input type="text" class="form-control" name="location" placeholder="Lokasi Gudang"
+                        value="{{ $data['location'] }}">
                 </div>
             </div>
-
+            <div class="row mb-3 align-items-center">
+                <div class="col-md-3">
+                    <label for="location" class="form-label fw-bold mb-0">Kapasitas Gudang<span
+                            class="text-danger">*</span></label>
+                </div>
+                <div class="col-md-9">
+                    <input type="number" class="form-control" name="capacity" placeholder="Kapasitas"
+                        value="{{ $data['capacity'] }}">
+                </div>
+            </div>
             <div class="row">
                 <div class="col-md-12 text-end">
                     <button type="button" id="submitButton" class="btn btn-primary">Submit</button>

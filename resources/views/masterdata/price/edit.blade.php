@@ -16,8 +16,9 @@
                             class="text-danger">*</span></label>
                 </div>
                 <div class="col-md-9">
-                    <input type="text" class="form-control" id="kode_item" name="kode_item"
-                        value="{{ $data['kode_item'] }}" placeholder="Kode Item" style="font-weight: bold" disabled>
+                    <label for="namaitem" class="form-label fw-bold mb-0">{{ $data['kode_item'] }}</label>
+                    {{-- <input type="text" class="form-control" id="kode_item" name="kode_item"
+                        value="{{ $data['kode_item'] }}" placeholder="Kode Item" style="font-weight: bold" disabled> --}}
                 </div>
             </div>
 
@@ -27,8 +28,9 @@
                             class="text-danger">*</span></label>
                 </div>
                 <div class="col-md-9">
-                    <input type="text" class="form-control" id="nama_item" name="nama_item" placeholder="Nama Item"
-                        value="{{ $data['nama_item'] }}" style="font-weight: bold" disabled>
+                    <label for="namaitem" class="form-label fw-bold mb-0">{{ $data['nama_item'] }}</label>
+                    {{-- <input type="text" class="form-control" id="nama_item" name="nama_item" placeholder="Nama Item"
+                            value="{{ $data['nama_item'] }}" style="font-weight: bold" disabled> --}}
                 </div>
             </div>
 

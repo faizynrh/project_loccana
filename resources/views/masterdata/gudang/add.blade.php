@@ -24,16 +24,16 @@
         @endif
         <form action="{{ route('gudang.store') }}" method="POST" id="createForm">
             @csrf
-            <div class="row mb-3 align-items-center">
+            {{-- <div class="row mb-3 align-items-center">
                 <div class="col-md-3">
-                    <label for="kode_gudang" class="form-label fw-bold mb-0">Kode Gudang<span
+                    <label for="code" class="form-label fw-bold mb-0">Kode Gudang<span
                             class="text-danger">*</span></label>
                 </div>
                 <div class="col-md-9">
-                    <input type="text" class="form-control" id="kode_gudang" name="kode_gudang"
-                        placeholder="Kode Gudang">
+                    <input type="text" class="form-control" id="code" name="code" placeholder="Kode Gudang"
+                        value="">
                 </div>
-            </div>
+            </div> --}}
 
             <div class="row mb-3 align-items-center">
                 <div class="col-md-3">
@@ -41,30 +41,47 @@
                             class="text-danger">*</span></label>
                 </div>
                 <div class="col-md-9">
-                    <input type="text" class="form-control" id="name" name="name" placeholder="Nama Gudang">
+                    <input type="text" class="form-control" name="name" placeholder="Nama Gudang">
                 </div>
             </div>
 
-            <div class="row mb-3 align-items-center">
+            {{-- <div class="row mb-3 align-items-center">
                 <div class="col-md-3">
                     <label for="pic" class="form-label fw-bold mb-0">PIC <span class="text-danger">*</span></label>
                 </div>
                 <div class="col-md-9">
                     <select class="form-select" id="pic" name="pic">
-                        <option value="" selected disabled>Supervisor</option>
+                        <option value="{{ $data['pic'] }}" selected>{{ $data['pic'] }}</option>
                         <option value="agus">Agus</option>
                         <option value="hendra">Hendra</option>
                     </select>
                 </div>
+            </div> --}}
+            <div class="row mb-3 align-items-center">
+                <div class="col-md-3">
+                    <label for="description" class="form-label fw-bold mb-0">Deskripsi Gudang<span
+                            class="text-danger">*</span></label>
+                </div>
+                <div class="col-md-9">
+                    <textarea class="form-control" name="description" rows="5"></textarea>
+                </div>
             </div>
-
             <div class="row mb-3 align-items-center">
                 <div class="col-md-3">
                     <label for="location" class="form-label fw-bold mb-0">Alamat Gudang <span
                             class="text-danger">*</span></label>
                 </div>
                 <div class="col-md-9">
-                    <input type="text" class="form-control" id="location" name="location" placeholder="Alamat Gudang">
+                    <input type="text" class="form-control" name="location" placeholder="Lokasi Gudang">
+                </div>
+            </div>
+            <div class="row mb-3 align-items-center">
+                <div class="col-md-3">
+                    <label for="location" class="form-label fw-bold mb-0">Kapasitas Gudang<span
+                            class="text-danger">*</span></label>
+                </div>
+                <div class="col-md-9">
+                    <input type="number" class="form-control" name="capacity" placeholder="Kapasitas">
                 </div>
             </div>
 
