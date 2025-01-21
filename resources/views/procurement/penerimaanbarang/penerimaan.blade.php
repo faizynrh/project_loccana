@@ -22,7 +22,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         @endif
-        <div class="d-flex align-items-center">
+        <div class="d-flex align-items-center mb-2">
             <a href="/penerimaanbarang/add" class="btn btn-primary me-2 fw-bold">+</a>
             <select id="yearSelect" class="form-select me-2" name="year" style="width: auto;">
                 @php
@@ -59,23 +59,23 @@
                 </option>
             </select>
         </div>
-        {{-- <div class="table-responsive"> --}}
-        <table class="table table-striped table-bordered mt-3" id="tabelpenerimaan">
-            <thead>
-                <tr>
-                    <th scope="col">No</th>
-                    <th scope="col">No DO</th>
-                    <th scope="col">Tanggal DO</th>
-                    <th scope="col">Nomor PO</th>
-                    <th scope="col">Nama Principal</th>
-                    <th scope="col">Tanggal PO</th>
-                    <th scope="col">Harga</th>
-                    <th scope="col">Diskon</th>
-                    <th scope="col">Value</th>
-                    <th scope="col">Action</th>
-                </tr>
-            </thead>
-            {{-- <tbody>
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered mt-3" id="tabelpenerimaan">
+                <thead>
+                    <tr>
+                        <th scope="col">No</th>
+                        <th scope="col">No DO</th>
+                        <th scope="col">Tanggal DO</th>
+                        <th scope="col">Nomor PO</th>
+                        <th scope="col">Nama Principal</th>
+                        <th scope="col">Tanggal PO</th>
+                        <th scope="col">Harga</th>
+                        <th scope="col">Diskon</th>
+                        <th scope="col">Value</th>
+                        <th scope="col">Action</th>
+                    </tr>
+                </thead>
+                {{-- <tbody>
                 @if (!empty($data['data']['table']))
                     @foreach ($data['data']['table'] as $item)
                         <tr>
@@ -105,8 +105,8 @@
                     @endforeach
                 @endif
             </tbody> --}}
-        </table>
-        {{-- </div> --}}
+            </table>
+        </div>
     </div>
     <script>
         $(document).ready(function() {
