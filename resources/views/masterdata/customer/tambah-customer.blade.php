@@ -19,8 +19,44 @@
 
         <form action="{{ route('customer.store') }}" method="POST" id="addForm">
             @csrf
-
             <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="kode" class="form-label fw-bold">Type Partner</label>
+                    <select type="number" name="partner_type_id" placeholder="Type Partner" class="form-select"
+                        id="partner_type_id" required>
+                        <option value="" disabled selected>Pilih Type</option>
+                        @if (isset($partnerTypes['data']))
+                            @foreach ($partnerTypes['data'] as $type)
+                                <option value="{{ $type['id'] }}">{{ $type['name'] }}</option>
+                            @endforeach
+                        @else
+                            <option value="">Data tidak tersedia</option>
+                        @endif
+                    </select>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="nama" class="form-label fw-bold">Nama</label>
+                    <input type="text" name="nama" placeholder="nama" class="form-control" id="nama" required>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="chart_of_account_id" class="form-label fw-bold">COA ID</label>
+                    <select type="number" name="chart_of_account_id" placeholder="chart_of_account_id" class="form-select"
+                        id="partner_type_id" required>
+                        <option value="" disabled selected>Pilih COA</option>
+                        <option value="2">2</option>
+                    </select>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="contact_info" class="form-label fw-bold">Contact Info</label>
+                    <input type="text" name="contact_info" placeholder="Contact Info" class="form-control"
+                        id="contact_info" required>
+                </div>
+            </div>
+
+
+            {{-- <div class="row">
                 <div class="col-md-6 mb-3">
                     <label for="kode" class="form-label fw-bold">Kode</label>
                     <input type="text" name="partner_type_id" placeholder="partner_type_id" class="form-control"
@@ -108,7 +144,7 @@
                     <input type="number" name="limitkredit" placeholder="Limit Kredit" class="form-control"
                         id="limitkredit" required>
                 </div>
-            </div>
+            </div> --}}
 
             <div class="row mb-3 align-items-center">
                 <div class="col-md-3"></div>

@@ -90,9 +90,31 @@ class PrincipalController extends Controller
      */
     public function create()
     {
-        //
-        return view('masterdata.principal.tambah-principal');
+        $companyid = 2;
+        $partnerurl = 'https://gateway.apicentrum.site/t/loccana.com/loccana/masterdata/partner-type/1.0.0/partner-types/list-select';
+        $coaurl = 'https://gateway.apicentrum.site/t/loccana.com/loccana/masterdata/coa/1.0.0/masterdata/coa/list-select/' . $companyid;
+        $accessToken = $this->getAccessToken();
+
+        $headers = [
+            'Authorization' => 'Bearer ' . $accessToken,
+            'Content-Type' => 'application/json',
+        ];
+
+        // Mengirim request ke API untuk mendapatkan partner types
+        $partnerResponse = Http::withHeaders($headers)->get($partnerurl);
+        $coaResponse = Http::withHeaders($headers)->get($coaurl);
+        if ($partnerResponse->successful() && $coaResponse->successful()) {
+            // Mengambil data JSON dari API
+            $partnerTypes = $partnerResponse->json(); // Pastikan struktur data sesuai dengan API
+            $coaTypes = $coaResponse->json();
+            return view('masterdata.principal.tambah-principal', compact('partnerTypes', 'coaTypes'));
+        } else {
+            // Jika API gagal diakses, tampilkan pesan error
+            return back()->withErrors('Gagal mengambil data dari API: Partner Types tidak tersedia.');
+        }
     }
+
+
     public function store(Request $request)
     {
         //
@@ -139,14 +161,26 @@ class PrincipalController extends Controller
     {
         //
         try {
-            $apiurl = "https://gateway.apicentrum.site/t/loccana.com/loccana/masterdata/partner/1.0.0/partner/" . $id;
+            $companyid = 2;
+            $apiurl = "https://gateway.apicentrum.site/t/loccana.com/loccana/masterdata/partner/1.0.0/partner/{$id}";
+            $partnerurl = 'https://gateway.apicentrum.site/t/loccana.com/loccana/masterdata/partner-type/1.0.0/partner-types/list-select';
+            $coaurl = 'https://gateway.apicentrum.site/t/loccana.com/loccana/masterdata/coa/1.0.0/masterdata/coa/list-select/' . $companyid;
             $accessToken = $this->getAccessToken();
+
+            $headers = [
+                'Authorization' => 'Bearer ' . $accessToken,
+                'Content-Type' => 'application/json',
+            ];
+
+            // Mengirim request ke API untuk mendapatkan partner types
+            $partnerResponse = Http::withHeaders($headers)->get($partnerurl);
+            $coaResponse = Http::withHeaders($headers)->get($coaurl);
+
             // Get UoM data
             $apiResponse = Http::withHeaders([
                 'Authorization' => 'Bearer ' . $accessToken,
                 'Content-Type' => 'application/json'
             ])->get($apiurl);
-            // dd($apiResponse->status(), $apiResponse->json());
 
             // dd($apiResponse->json());
 
@@ -154,7 +188,15 @@ class PrincipalController extends Controller
                 $principal = $apiResponse->json();
 
                 if (isset($principal['data'])) {
-                    return view('masterdata.principal.detail-principal', ['principal' => $principal['data']]);
+                    if ($partnerResponse->successful() && $coaResponse->successful()) {
+                        $partnerTypes = $partnerResponse->json();
+                        $data = $apiResponse->json()['data'];
+                        $coaTypes = $coaResponse->json();
+                        return view('masterdata.principal.detail-principal', ['principal' => $principal['data']], compact('partnerTypes', 'data', 'coaTypes'));
+                    } else {
+                        // Jika API gagal diakses, tampilkan pesan error
+                        return back()->withErrors('Gagal mengambil data dari API: Partner Types tidak tersedia.');
+                    }
                 } else {
                     return back()->withErrors('Data Principal tidak ditemukan.');
                 }
@@ -173,8 +215,20 @@ class PrincipalController extends Controller
     {
         //
         try {
+            $companyid = 2;
             $apiurl = "https://gateway.apicentrum.site/t/loccana.com/loccana/masterdata/partner/1.0.0/partner/{$id}";
+            $partnerurl = 'https://gateway.apicentrum.site/t/loccana.com/loccana/masterdata/partner-type/1.0.0/partner-types/list-select';
+            $coaurl = 'https://gateway.apicentrum.site/t/loccana.com/loccana/masterdata/coa/1.0.0/masterdata/coa/list-select/' . $companyid;
             $accessToken = $this->getAccessToken();
+
+            $headers = [
+                'Authorization' => 'Bearer ' . $accessToken,
+                'Content-Type' => 'application/json',
+            ];
+
+            // Mengirim request ke API untuk mendapatkan partner types
+            $partnerResponse = Http::withHeaders($headers)->get($partnerurl);
+            $coaResponse = Http::withHeaders($headers)->get($coaurl);
 
             // Get UoM data
             $apiResponse = Http::withHeaders([
@@ -188,7 +242,15 @@ class PrincipalController extends Controller
                 $principal = $apiResponse->json();
 
                 if (isset($principal['data'])) {
-                    return view('masterdata.principal.edit-principal', ['principal' => $principal['data']]);
+                    if ($partnerResponse->successful() && $coaResponse->successful()) {
+                        $partnerTypes = $partnerResponse->json();
+                        $data = $apiResponse->json()['data'];
+                        $coaTypes = $coaResponse->json();
+                        return view('masterdata.principal.edit-principal', ['principal' => $principal['data']], compact('partnerTypes', 'data', 'coaTypes'));
+                    } else {
+                        // Jika API gagal diakses, tampilkan pesan error
+                        return back()->withErrors('Gagal mengambil data dari API: Partner Types tidak tersedia.');
+                    }
                 } else {
                     return back()->withErrors('Data Principal tidak ditemukan.');
                 }

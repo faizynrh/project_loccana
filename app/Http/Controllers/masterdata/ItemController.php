@@ -87,7 +87,6 @@ class ItemController extends Controller
                 }
             }
         }
-
         return view('masterdata.items.items');
     }
 
