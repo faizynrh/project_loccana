@@ -10,40 +10,41 @@
                 <div class="col-md-6">
                     <label for="nomorInvoice" class="form-label fw-bold mt-2 mb-1 small">No.
                         PO</label>
-                    <input type="text" class="form-control bg-body-secondary" id="nomorInvoice" placeholder="No. PO"
-                        readonly>
-                    <label for="nomorInvoice" class="form-label fw-bold mt-2 mb-1 small">Kode</label>
-                    <input type="text" class="form-control bg-body-secondary" id="nomorInvoice"
-                        placeholder="Kode Purchase Order" readonly>
+                    <input type="text" class="form-control bg-body-secondary" value="{{ $data[0]['number_po'] }}"
+                        id="nomorInvoice" placeholder="Kode Purchase Order" readonly>
                     <label for="nomorInvoice" class="form-label fw-bold mt-2 mb-1 small">Tanggal</label>
-                    <input type="date" class="form-control bg-body-secondary" id="nomorInvoice" readonly>
+                    <input type="date" class="form-control bg-body-secondary" id="nomorInvoice"
+                        value="{{ $data[0]['order_date'] }}" readonly>
                     <label for="nomorInvoice" class="form-label fw-bold mt-2 mb-1 small">Principal</label>
-                    <input type="text" class="form-control bg-body-secondary" id="nomorInvoice" placeholder="Principal"
-                        readonly>
+                    <input type="text" class="form-control bg-body-secondary" id="nomorInvoice"
+                        value="{{ $data[0]['partner_name'] }}" placeholder="Principal" readonly>
                     <label for="shipFrom" class="form-label fw-bold mt-2 mb-1 small">Alamat</label>
-                    <textarea class="form-control bg-body-secondary" id="shipFrom" placeholder="Alamat Principal" rows="4" readonly></textarea>
+                    <textarea class="form-control bg-body-secondary" id="shipFrom" placeholder="Alamat Principal" rows="4" readonly>{{ $data[0]['address'] }}</textarea>
                     <label for="nomorInvoice" class="form-label fw-bold mt-2 mb-1 small">Att</label>
-                    <input type="text" class="form-control bg-body-secondary" id="nomorInvoice" placeholder="Att"
-                        readonly>
+                    <input type="text" class="form-control bg-body-secondary" id="nomorInvoice"
+                        value="{{ $data[0]['description'] }}" placeholder="Att" readonly>
                     <label for="nomorInvoice" class="form-label fw-bold mt-2 mb-1 small">No. Telp</label>
-                    <input type="text" class="form-control bg-body-secondary" id="nomorInvoice" placeholder="Telephone"
-                        readonly>
+                    <input type="text" class="form-control bg-body-secondary" id="nomorInvoice"
+                        value="{{ $data[0]['phone'] }}" placeholder="Telephone" readonly>
                     <label for="nomorInvoice" class="form-label fw-bold mt-2 mb-1 small">Fax</label>
-                    <input type="text" class="form-control bg-body-secondary" id="nomorInvoice" placeholder="Fax"
-                        readonly>
+                    <input type="text" class="form-control bg-body-secondary" id="nomorInvoice"
+                        value="{{ $data[0]['fax'] }}" placeholder="Fax" readonly>
                 </div>
                 <div class="col-md-6">
                     <label for="nomorInvoice" class="form-label fw-bold mt-2 mb-1 small">No DO</label>
-                    <input type="text" class="form-control" id="nomorInvoice" placeholder="No DO">
+                    <input type="text" class="form-control" id="nomorInvoice" value="{{ $data[0]['do_number'] }}"
+                        placeholder="No DO">
                     <label for="nomorInvoice" class="form-label fw-bold mt-2 mb-1 small">Tanggal DO</label>
-                    <input type="date" class="form-control" id="nomorInvoice">
+                    <input type="text" class="form-control" id="nomorInvoice" value="{{ $data[0]['receive_date'] }}">
                     <label for="nomorInvoice" class="form-label fw-bold mt-2 mb-1 small">Angkutan</label>
-                    <input type="text" class="form-control" id="nomorInvoice" placeholder="Angkutan">
+                    <input type="text" class="form-control" id="nomorInvoice" value="{{ $data[0]['shipment'] }}"
+                        placeholder="Angkutan">
                     <label for="nomorInvoice" class="form-label fw-bold mt-2 mb-1 small">No Polisi</label>
-                    <input type="text" class="form-control" id="nomorInvoice" placeholder="No Polisi">
+                    <input type="text" class="form-control" id="nomorInvoice" value="{{ $data[0]['plate_number'] }}"
+                        placeholder="No Polisi">
                     <label for="nomorInvoice" class="form-label fw-bold mt-2 mb-1 small">Gudang</label>
-                    <input type="text" class="form-control bg-body-secondary" id="nomorInvoice"
-                        placeholder="Gudang Utama" readonly>
+                    <input type="text" class="form-control bg-body-secondary" value="{{ $data[0]['gudang'] }}"
+                        id="nomorInvoice" placeholder="Gudang Utama" readonly>
                 </div>
             </div>
             <div class="p-2">
@@ -65,23 +66,32 @@
                     </tr>
                 </thead>
                 <tbody id="tableBody">
-                    <tr style="border-bottom: 2px solid #000;">
-                        <td>
-                            <textarea type="text" class="form-control w-100" readonly rows="3">SYI0301 Alika 247 SC 50.00 ml</textarea>
-                        </td>
-                        <td>
-                            <textarea class="form-control" value="0" rows="3">Box @ 100</textarea>
-                        </td>
-                        <td><input type="text" class="form-control bg-body-secondary" value="150,000" readonly></td>
-                        <td><input type="text" class="form-control bg-body-secondary" value="0,000" readonly></td>
-                        <td><input type="text" class="form-control bg-body-secondary" value="150,000" readonly></td>
-                        <td><input type="text" class="form-control" value="0.00"></td>
-                        <td><input type="text" class="form-control" value="0.00"></td>
-                        <td><input type="text" class="form-control" value="0.00"></td>
-                        <td><input type="text" class="form-control" value="0.00"></td>
-                        <td><input type="text" class="form-control" placeholder="Note">
-                        </td>
-                    </tr>
+                    @foreach ($data as $item)
+                        <tr style="border-bottom: 2px solid #000;">
+                            <td>
+                                <textarea type="text" class="form-control w-100" readonly rows="3">{{ $item['item_code'] }}</textarea>
+                            </td>
+                            <td>
+                                <textarea class="form-control" value="0" rows="3">Box @ 100</textarea>
+                            </td>
+                            <td><input type="text" class="form-control bg-body-secondary"
+                                    value="{{ $item['item_order_qty'] }}" readonly>
+                            </td>
+                            <td><input type="text" class="form-control bg-body-secondary"
+                                    value="{{ $item['qty_balance'] }}" readonly>
+                            </td>
+                            <td><input type="text" class="form-control bg-body-secondary"
+                                    value="{{ $item['qty_receipt'] }}" readonly>
+                            </td>
+                            <td><input type="text" class="form-control" value="{{ $item['qty'] }}"></td>
+                            <td><input type="text" class="form-control" value="{{ $item['qty_bonus'] }}"></td>
+                            <td><input type="text" class="form-control" value="{{ $item['qty_titip'] }}"></td>
+                            <td><input type="text" class="form-control" value="{{ $item['discount'] }}"></td>
+                            <td><input type="text" class="form-control" placeholder="Note"
+                                    value="{{ $item['description'] }}">
+                            </td>
+                        </tr>
+                    @endforeach
                 </tbody>
             </table>
             <div class="row">

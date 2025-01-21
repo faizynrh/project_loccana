@@ -15,29 +15,25 @@
                     <label for="nomorInvoice" class="form-label fw-bold mt-2 mb-1 small">No.
                         PO</label>
                     <select class="form-control" id="satuan" name="item_category_id">
-                        <option value="" selected disabled>Nomor PO</option>
-                        <option value="1">PT ABC</option>
-                        <option value="2">PT DEF</option>
+                        <option value="" selected disabled>Pilih PO</option>
+                        @foreach ($po as $item)
+                            <option value="{{ $item['id_po'] }}">[{{ $item['code'] }}] {{ $item['name'] }}</option>
+                        @endforeach
                     </select>
                     <label for="nomorInvoice" class="form-label fw-bold mt-2 mb-1 small">Kode</label>
-                    <input type="text" class="form-control bg-body-secondary" id="nomorInvoice"
-                        placeholder="Kode Purchase Order" readonly>
+                    <input type="text" class="form-control" id="nomorInvoice" placeholder="Kode Purchase Order" readonly>
                     <label for="nomorInvoice" class="form-label fw-bold mt-2 mb-1 small">Tanggal</label>
-                    <input type="date" class="form-control bg-body-secondary" id="nomorInvoice" readonly>
+                    <input type="date" class="form-control" id="nomorInvoice" readonly>
                     <label for="nomorInvoice" class="form-label fw-bold mt-2 mb-1 small">Principal</label>
-                    <input type="text" class="form-control bg-body-secondary" id="nomorInvoice" placeholder="Principal"
-                        readonly>
+                    <input type="text" class="form-control" id="nomorInvoice" placeholder="Principal" readonly>
                     <label for="shipFrom" class="form-label fw-bold mt-2 mb-1 small">Alamat</label>
-                    <textarea class="form-control bg-body-secondary" id="shipFrom" placeholder="Alamat Principal" rows="4" readonly></textarea>
+                    <textarea class="form-control" id="shipFrom" placeholder="Alamat Principal" rows="4" readonly></textarea>
                     <label for="nomorInvoice" class="form-label fw-bold mt-2 mb-1 small">Att</label>
-                    <input type="text" class="form-control bg-body-secondary" id="nomorInvoice" placeholder="Att"
-                        readonly>
+                    <input type="text" class="form-control" id="nomorInvoice" placeholder="Att" readonly>
                     <label for="nomorInvoice" class="form-label fw-bold mt-2 mb-1 small">No. Telp</label>
-                    <input type="text" class="form-control bg-body-secondary" id="nomorInvoice" placeholder="Telephone"
-                        readonly>
+                    <input type="text" class="form-control" id="nomorInvoice" placeholder="Telephone" readonly>
                     <label for="nomorInvoice" class="form-label fw-bold mt-2 mb-1 small">Fax</label>
-                    <input type="text" class="form-control bg-body-secondary" id="nomorInvoice" placeholder="Fax"
-                        readonly>
+                    <input type="text" class="form-control" id="nomorInvoice" placeholder="Fax" readonly>
                 </div>
                 <div class="col-md-6">
                     <label for="nomorInvoice" class="form-label fw-bold mt-2 mb-1 small">No DO</label>
@@ -82,9 +78,9 @@
                         <td>
                             <textarea class="form-control" value="0" rows="3">Box @ 100</textarea>
                         </td>
-                        <td><input type="text" class="form-control bg-body-secondary" value="150,000" readonly></td>
-                        <td><input type="text" class="form-control bg-body-secondary" value="0,000" readonly></td>
-                        <td><input type="text" class="form-control bg-body-secondary" value="150,000" readonly></td>
+                        <td><input type="text" class="form-control" value="150,000" readonly></td>
+                        <td><input type="text" class="form-control" value="0,000" readonly></td>
+                        <td><input type="text" class="form-control" value="150,000" readonly></td>
                         <td><input type="text" class="form-control" value="0.00"></td>
                         <td><input type="text" class="form-control" value="0.00"></td>
                         <td><input type="text" class="form-control" value="0.00"></td>

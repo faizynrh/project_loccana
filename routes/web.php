@@ -114,16 +114,13 @@ Route::middleware('auth.login')->group(
         });
 
         //penerimaan barang
-        Route::get('/penerimaanbarang', [PenerimaanBarangController::class, 'index'])->name('penerimaan_barang');
-        route::get('/penerimaanbarang/add', function () {
-            return view('procurement.penerimaanbarang.add');
-        });
-        route::get('/penerimaanbarang/edit', function () {
-            return view('procurement.penerimaanbarang.edit');
-        });
-        route::get('/penerimaanbarang/detail', function () {
-            return view('procurement.penerimaanbarang.detail');
-        });
+        Route::get('/penerimaan_barang', [PenerimaanBarangController::class, 'index'])->name('penerimaan_barang');
+        Route::get('/penerimaan_barang/add', [PenerimaanBarangController::class, 'create'])->name('penerimaan_barang.create');
+        Route::get('/penerimaan_barang/detail/{id}', [PenerimaanBarangController::class, 'show'])->name('penerimaan_barang.detail');
+        Route::delete('/penerimaan_barang/delete/{id}', [PenerimaanBarangController::class, 'destroy'])->name('penerimaan_barang.destroy');
+        Route::get('/penerimaan_barang/edit/{id}', [PenerimaanBarangController::class, 'edit'])->name('penerimaan_barang.edit');
+        Route::put('/penerimaan_barang/edit/{id}', [PenerimaanBarangController::class, 'update'])->name('penerimaan_barang.update');
+
 
         //dasarpembelian
         Route::get('/dasarpembelian', [DasarPembelianController::class, 'index'])->name('dasarpembelian');

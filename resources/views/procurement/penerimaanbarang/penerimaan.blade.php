@@ -5,7 +5,7 @@
             <h5 class="fw-bold">List Penerimaan Barang</h5>
             <div>
                 <h6 class="fw-bold">Total Per Bulan</h6>
-                <h4 class="fw-bold" id="totalPerBulan">Rp 0,00</h4>
+                <h4 class="fw-bold" id="totalPerBulan">Rp {{ number_format($data['mtd_item_receive'], 2, ',', '.') }}</h4>
             </div>
         </div>
         @if (session('success'))
@@ -23,7 +23,7 @@
             </div>
         @endif
         <div class="d-flex align-items-center mb-2">
-            <a href="/penerimaanbarang/add" class="btn btn-primary me-2 fw-bold">+</a>
+            <a href="/penerimaan_barang/add" class="btn btn-primary me-2 fw-bold">+</a>
             <select id="yearSelect" class="form-select me-2" name="year" style="width: auto;">
                 @php
                     $currentYear = now()->year;
@@ -168,28 +168,21 @@
                         data: null,
                         render: function(data, type, row) {
                             return `
-                        <div class="d-flex mb-2">
-                                    <a href="/coa/detail/${row.id}" class="btn btn-sm btn-info me-2"
-                                        title="Detail">
-                                        <i class="bi bi-eye"></i>
-                                    </a>
-                                    <a href="/coa/edit/${row.id}" class="btn btn-sm btn-warning me-2"
-                                        title="Edit">
-                                        <i class="bi bi-pencil"></i>
-                                    </a>
-                                    <form action="/coa/delete/${row.id}" method="POST"
-                                        id="delete${row.id}" style="display:inline;">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="button" class="btn btn-sm btn-danger" title="Hapus"
-                                            onclick="confirmDelete(${row.id})">
-                                            <i class="bi bi-trash"></i>
-                                        </button>
-                                    </form>
-                                </div>
-                                <a href="" class="btn btn-sm btn-danger" style="width:110px" title="Hide">
-                                    <i class="bi bi-search me-1"></i> Hide
-                                </a>
+                            <div class="d-flex">
+                        <a href="/penerimaan_barang/detail/${row.id_receipt}" class="btn btn-sm btn-info mb-2" style="margin-right:4px;" title="Detail">
+                            <i class="bi bi-eye"></i>
+                        </a>
+                        <a href="/penerimaan_barang/edit/${row.id_receipt}" class="btn btn-sm btn-warning mb-2" style="margin-right:4px;" title="Edit">
+                            <i class="bi bi-pencil"></i>
+                        </a>
+                        <form action="/penerimaan_barang/delete/${row.id_receipt}" method="POST" id="delete${row.id_receipt}" style="display:inline;">
+                            @csrf
+                            @method('DELETE')
+                            <button type="button" class="btn btn-sm btn-danger mb-2" style="margin-right:4px;" title="Hapus" onclick="confirmDelete(${row.id_re})">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </form>
+                        </div>
                     `;
                         }
                     }
