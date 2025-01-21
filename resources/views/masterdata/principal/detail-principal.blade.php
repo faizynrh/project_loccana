@@ -18,6 +18,47 @@
         <form action="{{ route('principal.update', $principal['id']) }}" method="POST" id="addForm">
             @csrf
             <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="kode" class="form-label fw-bold">Type Partner</label>
+                    @if (isset($partnerTypes['data']))
+                        <input type="text" name="partner_type_name" placeholder="Type Partner" class="form-control"
+                            id="partner_type_name" required
+                            value="{{ collect($partnerTypes['data'])->firstWhere('id', $data['partner_type_id'])['name'] ?? 'Data tidak tersedia' }}"
+                            disabled>
+                    @else
+                        <p>Data tidak tersedia</p>
+                    @endif
+
+
+                </div>
+                <div class="col-md-6
+                            mb-3">
+                    <label for="nama" class="form-label fw-bold">Nama</label>
+                    <input type="text" name="nama" placeholder="name" class="form-control" id="nama" required
+                        value="{{ $principal['name'] }}" disabled>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="chart_of_account_id" class="form-label fw-bold">COA ID</label>
+                    @if (isset($coaTypes['data']))
+                        <input type="text" name="chart_of_account_name" placeholder="Chart of Account"
+                            class="form-control" id="chart_of_account_name" required readonly
+                            value="{{ collect($coaTypes['data'])->firstWhere('id', $data['chart_of_account_id'])['description'] ?? 'Data COA tidak tersedia' }}"
+                            disabled>
+                    @else
+                        <p>Data COA tidak tersedia</p>
+                    @endif
+
+
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="contact_info" class="form-label fw-bold">Contact Info</label>
+                    <input type="text" name="contact_info" placeholder="Contact Info" class="form-control"
+                        id="contact_info" required value="{{ $principal['contact_info'] }}" disabled>
+                </div>
+            </div>
+            {{-- <div class="row">
                 <div class="col-md-4 mb-3">
                     <label for="kode" class="form-label fw-bold">Kode</label>
                     <input type="text" name="kode" placeholder="Kode Principal" class="form-control" id="kode"
@@ -102,12 +143,11 @@
                     <input type="text" name="email" placeholder="Email" class="form-control" id="email"
                         required readonly>
                 </div>
-            </div>
+            </div> --}}
 
 
             <div class="row mb-3 align-items-center">
-                <div class="col-md-3"></div>
-                <div class="col-md-9 d-flex gap-3">
+                <div class="col-md-3">
                     <button type="button" class="btn btn-secondary" onclick="history.back()">Batal</button>
                 </div>
             </div>

@@ -23,11 +23,16 @@
         <table class="table table-striped table-bordered mt-3" id="tableprincipal">
             <thead>
                 <tr>
-                    <th scope="col">Kode Principal</th>
+                    {{-- <th scope="col">Kode Principal</th>
                     <th scope="col">Nama Principal</th>
                     <th scope="col">Alamat</th>
                     <th scope="col">No. Telp</th>
-                    <th scope="col">No. Fax</th>
+                    <th scope="col">No. Fax</th> --}}
+                    <th>No</th>
+                    <th>Partner Type</th>
+                    <th>Nama</th>
+                    <th>Contact Info</th>
+                    <th>COA ID</th>
                     <th scope="col">Action</th>
                 </tr>
             </thead>
@@ -49,6 +54,11 @@
 
                 },
                 columns: [{
+                        data: null,
+                        render: function(data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    }, {
                         data: 'partner_type',
                     },
                     {
@@ -57,13 +67,10 @@
                         data: 'name',
                     },
                     {
-                        data: 'is_customer',
+                        data: 'contact_info',
                     },
                     {
                         data: 'chart_of_account_id',
-                    },
-                    {
-                        data: 'created_at',
                     },
                     {
                         data: null,

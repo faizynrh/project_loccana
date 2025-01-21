@@ -17,7 +17,6 @@
             </div>
         @endif
 
-
         <h3 style="font-size: 18px; padding-top:25px; font-weight: 700">List Customer</h3>
         <div class="d-flex justify-content-between align-items-center">
             <a href="/customer-tambah" class="btn btn-primary"><strong>+</strong></a>
@@ -26,7 +25,12 @@
         <table class="table table-striped table-bordered mt-3" id="tablecustomer">
             <thead>
                 <tr>
-                    <th scope="col">Kode Customer</th>
+                    <th>No</th>
+                    <th>Contact Info</th>
+                    <th>Nama</th>
+                    <th>Partner Tipe</th>
+                    <th>COA ID</th>
+                    {{-- <th scope="col">Kode Customer</th>
                     <th scope="col">Nama Customer</th>
                     <th scope="col">Wilayah</th>
                     <th scope="col">NPWP</th>
@@ -35,6 +39,7 @@
                     <th scope="col">Alamat Toko</th>
                     <th scope="col">Credit Limit</th>
                     <th scope="col">Status Limit</th>
+                    --}}
                     <th scope="col">Action</th>
                 </tr>
             </thead>
@@ -61,11 +66,10 @@
 
                 },
                 columns: [{
-                        data: 'chart_of_account_id',
-                        defaultContent: ''
-                    },
-                    {
-                        data: 'name'
+                        data: null,
+                        render: function(data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
                     },
                     {
                         // data: null,
@@ -74,27 +78,14 @@
                         defaultContent: ''
                     },
                     {
-                        data: 'is_customer',
-                        defaultContent: ''
-                    },
-                    {
+                        data: 'name'
+                    }, {
+
                         data: 'partner_type',
                         defaultContent: ''
                     },
                     {
-                        data: 'created_at',
-                        defaultContent: ''
-                    },
-                    {
-                        data: 'id',
-                        defaultContent: ''
-                    },
-                    {
-                        data: 'is_supplier',
-                        defaultContent: ''
-                    },
-                    {
-                        data: 'company_id',
+                        data: 'chart_of_account_id',
                         defaultContent: ''
                     },
                     {

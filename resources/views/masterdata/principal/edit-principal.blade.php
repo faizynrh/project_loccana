@@ -13,11 +13,57 @@
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         @endif
-
         <form action="{{ route('principal.update', $principal['id']) }}" method="POST" id="addForm">
             @csrf
             @method('PUT')
             <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="kode" class="form-label fw-bold">Type Partner</label>
+                    <select type="number" name="partner_type_id" placeholder="Type Partner" class="form-select"
+                        id="partner_type_id" required>
+                        <option value="" disabled selected>Pilih Type</option>
+                        @if (isset($partnerTypes['data']))
+                            @foreach ($partnerTypes['data'] as $type)
+                                <option value="{{ $type['id'] }}"
+                                    {{ $data['partner_type_id'] == $type['id'] ? 'selected' : '' }}>
+                                    {{ $type['name'] }}</option>
+                            @endforeach
+                        @else
+                            <option value="">Data tidak tersedia</option>
+                        @endif
+                    </select>
+                </div>
+                <div class="col-md-6
+                            mb-3">
+                    <label for="nama" class="form-label fw-bold">Nama</label>
+                    <input type="text" name="nama" placeholder="name" class="form-control" id="nama" required
+                        value="{{ $principal['name'] }}">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="chart_of_account_id" class="form-label fw-bold">COA ID</label>
+                    <select name="chart_of_account_id" id="chart_of_account_id" class="form-control">
+                        @if (isset($coaTypes['data']))
+                            @foreach ($coaTypes['data'] as $type)
+                                <option value="{{ $type['id'] }}"
+                                    {{ $data['chart_of_account_id'] == $type['id'] ? 'selected' : '' }}>
+                                    {{ $type['description'] }}
+                                </option>
+                            @endforeach
+                        @else
+                            <option value="">Data COA tidak tersedia</option>
+                        @endif
+                    </select>
+
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="contact_info" class="form-label fw-bold">Contact Info</label>
+                    <input type="text" name="contact_info" placeholder="Contact Info" class="form-control"
+                        id="contact_info" required value="{{ $principal['contact_info'] }}">
+                </div>
+            </div>
+            {{-- <div class="row">
                 <div class="col-md-4 mb-3">
                     <label for="kode" class="form-label fw-bold">Kode</label>
                     <input type="text" name="kode" placeholder="Kode Principal" class="form-control" id="kode"
@@ -100,8 +146,8 @@
                     <input type="text" name="email" placeholder="Email" class="form-control" id="email"
                         required>
                 </div>
-            </div>
-            <div class="row mb-3 align-items-center">
+            </div> --}}
+            <div class="align-items-center">
                 <div class="col-md-3"></div>
                 <div class="col-md-9 d-flex gap-3">
                     <button type="button" class="btn btn-primary" id="submitButton">Submit</button>
@@ -110,6 +156,7 @@
             </div>
         </form>
     </div>
+
     <script>
         document.getElementById('submitButton').addEventListener('click', function(event) {
             Swal.fire({

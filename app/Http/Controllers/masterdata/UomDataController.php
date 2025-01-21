@@ -208,17 +208,13 @@ class UomDataController extends Controller
         try {
             $apiurl = "https://gateway.apicentrum.site/t/loccana.com/loccana/masterdata/1.0.0/uoms/{$id}";
             $accessToken = $this->getAccessToken();
-
             // Get UoM data
             $apiResponse = Http::withHeaders([
                 'Authorization' => 'Bearer ' . $accessToken
             ])->get($apiurl);
-
             // dd($apiResponse->json());
-
             if ($apiResponse->successful()) {
                 $uomData = $apiResponse->json();
-
                 if (isset($uomData['data'])) {
                     return view('masterdata.uom.detail-uom', ['uom' => $uomData['data']]);
                 } else {
