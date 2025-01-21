@@ -46,6 +46,8 @@
                             class="form-control" id="chart_of_account_name" required readonly
                             value="{{ collect($coaTypes['data'])->firstWhere('id', $data['chart_of_account_id'])['description'] ?? 'Data COA tidak tersedia' }}"
                             disabled>
+                    @else
+                        <p>Data COA tidak tersedia</p>
                     @endif
 
 
