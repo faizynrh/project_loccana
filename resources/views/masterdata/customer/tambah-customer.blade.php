@@ -36,7 +36,7 @@
                 </div>
                 <div class="col-md-6 mb-3">
                     <label for="nama" class="form-label fw-bold">Nama</label>
-                    <input type="text" name="nama" placeholder="nama" class="form-control" id="nama" required>
+                    <input type="text" name="nama" placeholder="name" class="form-control" id="nama" required>
                 </div>
             </div>
             <div class="row">
@@ -45,7 +45,13 @@
                     <select type="number" name="chart_of_account_id" placeholder="chart_of_account_id" class="form-select"
                         id="partner_type_id" required>
                         <option value="" disabled selected>Pilih COA</option>
-                        <option value="2">2</option>
+                        @if (isset($coaTypes['data']))
+                            @foreach ($coaTypes['data'] as $type)
+                                <option value="{{ $type['id'] }}">{{ $type['description'] }}</option>
+                            @endforeach
+                        @else
+                            <option value="">Data tidak tersedia</option>
+                        @endif
                     </select>
                 </div>
                 <div class="col-md-6 mb-3">
