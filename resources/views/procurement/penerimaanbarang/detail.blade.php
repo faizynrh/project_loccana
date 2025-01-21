@@ -10,43 +10,31 @@
                 <div class="col-md-6">
                     <label for="nomorInvoice" class="form-label fw-bold mt-2 mb-1 small">No.
                         PO</label>
-                    <input type="text" class="form-control bg-body-secondary" id="nomorInvoice" placeholder="No. PO"
-                        readonly>
-                    <label for="nomorInvoice" class="form-label fw-bold mt-2 mb-1 small">Kode</label>
-                    <input type="text" class="form-control bg-body-secondary" id="nomorInvoice"
-                        placeholder="Kode Purchase Order" readonly>
-                    <label for="nomorInvoice" class="form-label fw-bold mt-2 mb-1 small">Tanggal</label>
-                    <input type="date" class="form-control bg-body-secondary" id="nomorInvoice" readonly>
-                    <label for="nomorInvoice" class="form-label fw-bold mt-2 mb-1 small">Principal</label>
-                    <input type="text" class="form-control bg-body-secondary" id="nomorInvoice" placeholder="Principal"
-                        readonly>
+                    <input type="text" class="form-control" value="{{ $data[0]['number_po'] }}" readonly>
+                    {{-- <label  class="form-label fw-bold mt-2 mb-1 small">Kode</label>
+                    <input type="text" class="form-control"  placeholder="Kode Purchase Order" readonly> --}}
+                    <label class="form-label fw-bold mt-2 mb-1 small">Tanggal</label>
+                    <input type="text" class="form-control" value="{{ $data[0]['order_date'] }}" readonly>
+                    <label class="form-label fw-bold mt-2 mb-1 small">Principal</label>
+                    <input type="text" class="form-control" value="{{ $data[0]['partner_name'] }}" readonly>
                     <label for="shipFrom" class="form-label fw-bold mt-2 mb-1 small">Alamat</label>
-                    <textarea class="form-control bg-body-secondary" id="shipFrom" placeholder="Alamat Principal" rows="4" readonly></textarea>
-                    <label for="nomorInvoice" class="form-label fw-bold mt-2 mb-1 small">Att</label>
-                    <input type="text" class="form-control bg-body-secondary" id="nomorInvoice" placeholder="Att"
-                        readonly>
-                    <label for="nomorInvoice" class="form-label fw-bold mt-2 mb-1 small">No. Telp</label>
-                    <input type="text" class="form-control bg-body-secondary" id="nomorInvoice" placeholder="Telephone"
-                        readonly>
-                    <label for="nomorInvoice" class="form-label fw-bold mt-2 mb-1 small">Fax</label>
-                    <input type="text" class="form-control bg-body-secondary" id="nomorInvoice" placeholder="Fax"
-                        readonly>
+                    <textarea class="form-control" id="shipFrom" rows="4" readonly>{{ $data[0]['address'] }}</textarea>
+                    <label class="form-label fw-bold mt-2 mb-1 small">Att</label>
+                    <input type="text" class="form-control" value="{{ $data[0]['description'] }}" readonly>
+                    <label class="form-label fw-bold mt-2 mb-1 small">No. Telp</label>
+                    <input type="text" class="form-control" value="{{ $data[0]['phone'] }}" readonly>
+                    <label class="form-label fw-bold mt-2 mb-1 small">Fax</label>
+                    <input type="text" class="form-control" value="{{ $data[0]['fax'] }}" readonly>
                 </div>
                 <div class="col-md-6">
-                    <label for="nomorInvoice" class="form-label fw-bold mt-2 mb-1 small">No DO</label>
-                    <input type="text" class="form-control bg-body-secondary" id="nomorInvoice" placeholder="No DO"
-                        readonly>
-                    <label for="nomorInvoice" class="form-label fw-bold mt-2 mb-1 small">Tanggal DO</label>
-                    <input type="date" class="form-control bg-body-secondary" id="nomorInvoice" readonly>
-                    <label for="nomorInvoice" class="form-label fw-bold mt-2 mb-1 small">Angkutan</label>
-                    <input type="text" class="form-control bg-body-secondary" id="nomorInvoice" placeholder="Angkutan"
-                        readonly>
-                    <label for="nomorInvoice" class="form-label fw-bold mt-2 mb-1 small">No Polisi</label>
-                    <input type="text" class="form-control bg-body-secondary" id="nomorInvoice" placeholder="No Polisi"
-                        readonly>
-                    <label for="nomorInvoice" class="form-label fw-bold mt-2 mb-1 small">Gudang</label>
-                    <input type="text" class="form-control bg-body-secondary bg-body-secondary" id="nomorInvoice"
-                        placeholder="Gudang Utama" readonly>
+                    <label class="form-label fw-bold mt-2 mb-1 small">No DO</label>
+                    <input type="text" class="form-control" value="{{ $data[0]['do_number'] }}" readonly>
+                    <label class="form-label fw-bold mt-2 mb-1 small">Tanggal DO</label>
+                    <input type="text" class="form-control" value="{{ $data[0]['receive_date'] }}" readonly>
+                    <label class="form-label fw-bold mt-2 mb-1 small">Angkutan</label>
+                    <input type="text" class="form-control" value="{{ $data[0]['shipment'] }}" readonly>
+                    <label class="form-label fw-bold mt-2 mb-1 small">No Polisi</label>
+                    <input type="text" class="form-control" value="{{ $data[0]['plate_number'] }}" readonly>
                 </div>
             </div>
             <div class="p-2">
@@ -60,7 +48,7 @@
                         <th style="width: 45px">Order (Kg/Lt)</th>
                         <th style="width: 45px">Sisa (Kg/Lt)</th>
                         <th style="width: 45px">Diterima</th>
-                        <th style="width: 70px">Qty</th>
+                        <th style="width: 70px">Gudang</th>
                         <th style="width: 45px">Bonus</th>
                         <th style="width: 45px">Titipan</th>
                         <th style="width: 45px">Diskon</th>
@@ -68,43 +56,45 @@
                     </tr>
                 </thead>
                 <tbody id="tableBody">
-                    <tr style="border-bottom: 2px solid #000;">
-                        <td>
-                            <p class="fw-bold">SYI0301 Alika 247 SC 50.00 ml</p>
-                        </td>
-                        <td>
-                            <p class="fw-bold">Box @ 50</p>
-                        </td>
-                        <td>
-                            <p class="fw-bold">250,000</p>
-                        </td>
-                        <td>
-                            <p class="fw-bold">250,000</p>
-                        </td>
-                        <td>
-                            <p class="fw-bold">250,000</p>
-                        </td>
-                        <td>
-                            <p class="fw-bold">Gudang Utama</p>
-                        </td>
-                        <td>
-                            <p class="fw-bold">0,000</p>
-                        </td>
-                        <td>
-                            <p class="fw-bold">0,000</p>
-                        </td>
-                        <td>
-                            <p class="fw-bold">0,000</p>
-                        </td>
-                        <td>
-                            <p class="fw-bold"></p>
-                        </td>
-                    </tr>
+                    @foreach ($data as $item)
+                        <tr style="border-bottom: 2px solid #000;">
+                            <td>
+                                <p class="fw-bold">{{ $item['item_code'] }}</p>
+                            </td>
+                            <td>
+                                <p class="fw-bold">{{ $item['qty'] }}</p>
+                            </td>
+                            <td>
+                                <p class="fw-bold">{{ $item['base_qty'] }}</p>
+                            </td>
+                            <td>
+                                <p class="fw-bold">{{ $item['qty_balance'] }}</p>
+                            </td>
+                            <td>
+                                <p class="fw-bold">{{ $item['qty_receipt'] }}</p>
+                            </td>
+                            <td>
+                                <p class="fw-bold">{{ $item['gudang'] }}</p>
+                            </td>
+                            <td>
+                                <p class="fw-bold">{{ $item['qty_bonus'] }}</p>
+                            </td>
+                            <td>
+                                <p class="fw-bold">{{ $item['qty_titip'] }}</p>
+                            </td>
+                            <td>
+                                <p class="fw-bold">{{ $item['discount'] }}</p>
+                            </td>
+                            <td>
+                                <p class="fw-bold">{{ $item['deskripsi_items'] }}</p>
+                            </td>
+                        </tr>
+                    @endforeach
                 </tbody>
             </table>
             <div class="row">
                 <div class="col-md-12 text-end">
-                    <a href="/penerimaanbarang" class="btn btn-primary ms-2">Batal</a>
+                    <a href="/penerimaan_barang" class="btn btn-primary ms-2">Batal</a>
                 </div>
             </div>
         </div>

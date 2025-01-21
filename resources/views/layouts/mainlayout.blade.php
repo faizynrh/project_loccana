@@ -175,7 +175,7 @@
                     <ul class="nav flex-column ps-3">
                         <li><a href="#" class="nav-link text-decoration-none d-block py-2"
                                 style="color: #919FAC;">Purchase Order</a></li>
-                        <li><a href="/penerimaanbarang" class="nav-link text-decoration-none d-block py-2"
+                        <li><a href="/penerimaan_barang" class="nav-link text-decoration-none d-block py-2"
                                 style="color: #919FAC;">Penerimaan Barang</a></li>
                         <li><a href="/dasarpembelian" class="nav-link text-decoration-none d-block py-2"
                                 style="color: #919FAC;">Dasar Pembelian</a></li>
