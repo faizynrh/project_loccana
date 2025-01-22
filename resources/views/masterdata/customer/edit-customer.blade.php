@@ -157,10 +157,10 @@
                 </div>
             </div> --}}
 
-            <div class="align-items-center">
-                <div class="col">
+            <div class="row">
+                <div class="col-md-12 text-end">
                     <button type="button" class="btn btn-primary" id="submitButton">Submit</button>
-                    <button type="button" class="btn btn-secondary" onclick="history.back()">Batal</button>
+                    <a href="{{ route('customer.index') }}" class="btn btn-secondary ms-2">Batal</a>
                 </div>
             </div>
         </form>

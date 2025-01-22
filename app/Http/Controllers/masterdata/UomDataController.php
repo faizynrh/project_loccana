@@ -31,28 +31,37 @@ class UomDataController extends Controller
 
         return $tokenResponse->json()['access_token'];
     }
+
+    private function getHeaders()
+    {
+        $accessToken = $this->getAccessToken();
+        return [
+            'Authorization' => 'Bearer ' . $accessToken,
+            'Content-Type' => 'application/json'
+        ];
+    }
+
+    private function getApiUrl()
+    {
+        $apiurl = env('API_URL');
+        return $apiurl;
+    }
+
     public function index(Request $request)
     {
         if ($request->ajax()) {
             try {
+                $headers = $this->getHeaders();
+                $apiurl = $this->getApiUrl() . '/loccana/masterdata/1.0.0/uoms/lists';
+
                 $length = $request->input('length', 10);
                 $start = $request->input('start', 0);
                 $search = $request->input('search.value', '');
 
-
-
-                $apiurl = 'https://gateway.apicentrum.site/t/loccana.com/loccana/masterdata/1.0.0/uoms/lists';
-                $accessToken = $this->getAccessToken();
-
-                $headers = [
-                    'Authorization' => 'Bearer ' . $accessToken,
-                    'Content-Type' => 'application/json'
-                ];
-
                 $requestbody = [
                     'limit' => $length,
                     'offset' => $start,
-                    'company_id' => 0
+                    'company_id' => 2
                 ];
 
                 if (!empty($search)) {
@@ -81,7 +90,6 @@ class UomDataController extends Controller
                 }
             }
         }
-
         return view('masterdata.uom.uom');
     }
 
@@ -89,13 +97,10 @@ class UomDataController extends Controller
     public function destroy($id)
     {
         try {
-            $apiurl = 'https://gateway.apicentrum.site/t/loccana.com/loccana/masterdata/1.0.0/uoms/' . $id;
-            $accessToken = $this->getAccessToken();
+            $headers = $this->getHeaders();
+            $apiurl = $this->getApiUrl() . '/loccana/masterdata/1.0.0/uoms/' . $id;
 
-            $apiResponse = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $accessToken,
-                'Content-Type' => 'application/json'
-            ])->delete($apiurl);
+            $apiResponse = Http::withHeaders($headers)->delete($apiurl);
             // dd($apiResponse->json());
             if ($apiResponse->successful()) {
                 return redirect()->route('uom.index')
@@ -113,17 +118,16 @@ class UomDataController extends Controller
     public function store(Request $request)
     {
         try {
-            $apiurl = 'https://gateway.apicentrum.site/t/loccana.com/loccana/masterdata/1.0.0/uoms';
-            $accessToken = $this->getAccessToken();
+            $headers = $this->getHeaders();
+            $apiurl = $this->getApiUrl() . '/loccana/masterdata/1.0.0/uoms';
+
             $data = [
                 'name' => (string)$request->input('uom_name'),
                 'symbol' => (string)$request->input('uom_symbol'),
                 'description' => (string)$request->input('description',)
             ];
 
-            $apiResponse = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $accessToken
-            ])->post($apiurl, $data);
+            $apiResponse = Http::withHeaders($headers)->post($apiurl, $data);
 
             $responseData = $apiResponse->json();
 
@@ -150,13 +154,10 @@ class UomDataController extends Controller
     public function edit($id)
     {
         try {
-            $apiurl = "https://gateway.apicentrum.site/t/loccana.com/loccana/masterdata/1.0.0/uoms/{$id}";
-            $accessToken = $this->getAccessToken();
+            $headers = $this->getHeaders();
+            $apiurl = $this->getApiUrl() . '/loccana/masterdata/1.0.0/uoms/' . $id;
             // Get UoM data
-            $apiResponse = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $accessToken,
-                'Content-Type' => 'application/json'
-            ])->get($apiurl);
+            $apiResponse = Http::withHeaders($headers)->get($apiurl);
             // dd($apiResponse->json());
             if ($apiResponse->successful()) {
                 $uomData = $apiResponse->json();
@@ -177,8 +178,8 @@ class UomDataController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            $apiurl = "https://gateway.apicentrum.site/t/loccana.com/loccana/masterdata/1.0.0/uoms/{$id}";
-            $accessToken = $this->getAccessToken();
+            $headers = $this->getHeaders();
+            $apiurl = $this->getApiUrl() . '/loccana/masterdata/1.0.0/uoms/' . $id;
 
             $data = [
                 'name' => $request->input('uom_name'),
@@ -186,10 +187,7 @@ class UomDataController extends Controller
                 'description' => $request->input('description')
             ];
 
-            $apiResponse = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $accessToken,
-                'Content-Type' => 'application/json'
-            ])->put($apiurl, $data);
+            $apiResponse = Http::withHeaders($headers)->put($apiurl, $data);
 
             if ($apiResponse->successful()) {
                 return redirect()->route('uom.index')
@@ -206,12 +204,10 @@ class UomDataController extends Controller
     public function show($id)
     {
         try {
-            $apiurl = "https://gateway.apicentrum.site/t/loccana.com/loccana/masterdata/1.0.0/uoms/{$id}";
-            $accessToken = $this->getAccessToken();
+            $headers = $this->getHeaders();
+            $apiurl = $this->getApiUrl() . '/loccana/masterdata/1.0.0/uoms/' . $id;
             // Get UoM data
-            $apiResponse = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $accessToken
-            ])->get($apiurl);
+            $apiResponse = Http::withHeaders($headers)->get($apiurl);
             // dd($apiResponse->json());
             if ($apiResponse->successful()) {
                 $uomData = $apiResponse->json();
