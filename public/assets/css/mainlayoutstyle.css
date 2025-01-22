@@ -1,0 +1,100 @@
+    .small-text {
+        font-size: 12px;
+    }
+
+    @font-face {
+        font-family: 'Roboto';
+        src: url('../font/static/Roboto-Regular.ttf') format('truetype');
+        font-weight: normal;
+        font-style: normal;
+    }
+
+    @font-face {
+        font-family: 'Roboto';
+        src: url('../font/static/Roboto-Bold.ttf') format('truetype');
+        font-weight: bold;
+        font-style: normal;
+    }
+
+    * {
+        font-family: 'roboto', sans-serif;
+    }
+
+    /* Add these styles to your existing CSS */
+    .submenu-popup {
+        position: fixed;
+        left: 90px;
+        /* Aligns with collapsed sidebar */
+        background: white;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+        display: none;
+        z-index: 1000;
+        min-width: 200px;
+        opacity: 0;
+        transform: translateX(-20px);
+        transition: all 0.3s ease-in-out;
+    }
+
+    .submenu-popup.show {
+        display: block;
+        opacity: 1;
+        transform: translateX(0);
+    }
+
+    .nav-link .bi-chevron-down {
+        transition: transform 0.3s ease;
+    }
+
+    .nav-link.collapsed .bi-chevron-down {
+        transform: rotate(-90deg);
+    }
+
+    /* When sidebar is collapsed */
+    #sidebar[style*="width: 90px"] .collapse {
+        position: relative;
+        transition: none !important;
+    }
+
+    #sidebar[style*="width: 90px"] .nav-link[data-bs-toggle="collapse"] {
+        padding-right: 25px;
+    }
+
+    #sidebar[style*="width: 90px"] .collapse:not(.show) {
+        display: none !important;
+    }
+
+    #sidebar[style*="width: 90px"] .collapsing {
+        transition: none !important;
+        display: none !important;
+    }
+
+    #sidebar[style*="width: 90px"] .collapse.show {
+        display: none !important;
+    }
+
+    /* Prevent Bootstrap's collapse animation when sidebar is collapsed */
+    #sidebar[style*="width: 90px"] .collapse,
+    #sidebar[style*="width: 90px"] .collapsing {
+        height: 0 !important;
+        transition: none;
+    }
+
+    /* Ensure submenus maintain smooth animation when sidebar is expanded */
+    #sidebar:not([style*="width: 90px"]) .collapse {
+        transition: height 0.35s ease;
+    }
+
+    /* Additional popup styling */
+    .submenu-popup .nav-link {
+        padding: 8px 16px;
+        display: block;
+        color: #919FAC;
+        text-decoration: none;
+        transition: background-color 0.2s ease;
+    }
+
+    .submenu-popup .nav-link:hover {
+        background-color: #f8f9fa;
+    }

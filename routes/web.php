@@ -17,6 +17,7 @@ use App\Http\Controllers\procurement\RekappoController;
 use App\Http\Controllers\masterdata\PrincipalController;
 use App\Http\Controllers\procurement\DasarPembelianController;
 use App\Http\Controllers\procurement\PenerimaanBarangController;
+use App\Http\Controllers\PurchaseOrderController;
 
 Route::get('/redirect', [AuthController::class, 'redirectToIdentityServer'])->name('oauth.redirect');
 Route::get('/callback', [AuthController::class, 'handleCallback'])->name('oauth.callback');
@@ -35,6 +36,7 @@ Route::middleware('auth.login')->group(
             return view('profile');
         });
 
+        // ===================================== MASTERDATA ==========================================
         //items
         Route::get('/items', [ItemController::class, 'index'])->name('items');
         Route::get('/items/add', [ItemController::class, 'create'])->name('items.create');
@@ -112,6 +114,14 @@ Route::middleware('auth.login')->group(
         route::get('/user/add', function () {
             return view('masterdata.user.add');
         });
+
+        // ===================================== END MASTERDATA ======================================
+
+
+        // ===================================== PROCUREMENT =========================================
+        // Purchase Order
+        Route::get('/purchase_order', [PurchaseOrderController::class, 'index'])->name('puerchase_order.index');
+
 
         //penerimaan barang
         Route::get('/penerimaan_barang', [PenerimaanBarangController::class, 'index'])->name('penerimaan_barang');
