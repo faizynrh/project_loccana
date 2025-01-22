@@ -11,13 +11,12 @@
             <div class="container">
                 <div class="row mb-3">
                     <div class="col-md-6">
-                        <label for="nomorInvoice" class="form-label fw-bold mt-2 mb-1 small">No.
-                            PO</label>
+                        <label for="nomorInvoice" class="form-label fw-bold mt-2 mb-1 small">No. PO</label>
                         <input type="text" class="form-control bg-body-secondary" value="{{ $data[0]['number_po'] }}"
                             id="nomorInvoice" placeholder="Kode Purchase Order" readonly>
                         <label for="nomorInvoice" class="form-label fw-bold mt-2 mb-1 small">Tanggal</label>
                         <input type="date" class="form-control bg-body-secondary" id="nomorInvoice"
-                            value="{{ $data[0]['order_date'] }}" readonly>
+                            value="{{ \Carbon\Carbon::parse($data[0]['order_date'])->format('Y-m-d') }}" readonly>
                         <label for="nomorInvoice" class="form-label fw-bold mt-2 mb-1 small">Principal</label>
                         <input type="text" class="form-control bg-body-secondary" id="nomorInvoice"
                             value="{{ $data[0]['partner_name'] }}" placeholder="Principal" readonly>
@@ -83,22 +82,29 @@
                                     <textarea class="form-control" value="0" rows="3" readonly>Box @ 100</textarea>
                                 </td>
                                 <td><input type="text" class="form-control bg-body-secondary"
-                                        value="{{ $item['item_order_qty'] }}" readonly>
+                                        name="item_order_qty[{{ $index }}]" value="{{ $item['item_order_qty'] }}"
+                                        readonly>
                                 </td>
                                 <td><input type="text" class="form-control bg-body-secondary"
-                                        value="{{ $item['qty_balance'] }}" readonly>
+                                        name="qty_balance[{{ $index }}]" value="{{ $item['qty_balance'] }}"
+                                        readonly>
                                 </td>
                                 <td><input type="text" class="form-control bg-body-secondary"
                                         name="quantity_received[{{ $index }}]" value="{{ $item['qty_receipt'] }}"
                                         readonly>
                                 </td>
-                                <td><input type="text" class="form-control" value="{{ $item['qty'] }}"></td>
+                                <td><input type="text" class="form-control" name="qty[{{ $index }}]"
+                                        value="{{ $item['qty'] }}">
+                                </td>
                                 <td><input type="text" class="form-control" name="qty_bonus[{{ $index }}]"
-                                        value="{{ $item['qty_bonus'] }}"></td>
+                                        value="{{ $item['qty_bonus'] }}">
+                                </td>
                                 <td><input type="text" class="form-control" name="qty_titip[{{ $index }}]"
-                                        value="{{ $item['qty_titip'] }}"></td>
+                                        value="{{ $item['qty_titip'] }}">
+                                </td>
                                 <td><input type="text" class="form-control" name="qty_diskon[{{ $index }}]"
-                                        value="{{ $item['discount'] }}"></td>
+                                        value="{{ $item['discount'] }}">
+                                </td>
                                 <td><input type="text" class="form-control" placeholder="Note"
                                         name="notes[{{ $index }}]" value="{{ $item['description'] }}">
                                 </td>

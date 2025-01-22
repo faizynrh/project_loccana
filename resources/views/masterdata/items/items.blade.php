@@ -113,18 +113,19 @@
                         render: function(data, type, row) {
                             return `
                         <a href="/items/detail/${row.id}" class="btn btn-sm btn-info mb-2" title="Detail">
-                            <i class="bi bi-eye"></i>
-                        </a>
-                        <a href="/items/edit/${row.id}" class="btn btn-sm btn-warning mb-2" title="Edit">
-                            <i class="bi bi-pencil"></i>
-                        </a>
-                        <form action="/items/delete/${row.id}" method="POST" id="delete${row.id}" style="display:inline;">
-                            @csrf
-                            @method('DELETE')
-                            <button type="button" class="btn btn-sm btn-danger mb-2" title="Hapus" onclick="confirmDelete(${row.id})">
-                                <i class="bi bi-trash"></i>
-                            </button>
-                        </form>
+    <i class="fa fa-eye"></i>
+</a>
+<a href="/items/edit/${row.id}" class="btn btn-sm btn-warning mb-2" title="Edit">
+    <i class="fa fa-edit"></i>
+</a>
+<form action="/items/delete/${row.id}" method="POST" id="delete${row.id}" style="display:inline;">
+    @csrf
+    @method('DELETE')
+    <button type="button" class="btn btn-sm btn-danger mb-2" title="Hapus" onclick="confirmDelete(${row.id})">
+        <i class="fa fa-trash"></i>
+    </button>
+</form>
+
                     `;
                         }
                     }

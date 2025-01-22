@@ -205,3 +205,6 @@
         }
     </script>
 @endsection
+{{-- @push('scripts') --}}
+
+{{-- @endpush --}}

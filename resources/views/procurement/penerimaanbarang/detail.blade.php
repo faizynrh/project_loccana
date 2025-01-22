@@ -14,7 +14,8 @@
                     {{-- <label  class="form-label fw-bold mt-2 mb-1 small">Kode</label>
                     <input type="text" class="form-control"  placeholder="Kode Purchase Order" readonly> --}}
                     <label class="form-label fw-bold mt-2 mb-1 small">Tanggal</label>
-                    <input type="text" class="form-control" value="{{ $data[0]['order_date'] }}" readonly>
+                    <input type="text" class="form-control"
+                        value="{{ \Carbon\Carbon::parse($data[0]['order_date'])->format('Y-m-d') }}" readonly>
                     <label class="form-label fw-bold mt-2 mb-1 small">Principal</label>
                     <input type="text" class="form-control" value="{{ $data[0]['partner_name'] }}" readonly>
                     <label for="shipFrom" class="form-label fw-bold mt-2 mb-1 small">Alamat</label>
@@ -30,7 +31,8 @@
                     <label class="form-label fw-bold mt-2 mb-1 small">No DO</label>
                     <input type="text" class="form-control" value="{{ $data[0]['do_number'] }}" readonly>
                     <label class="form-label fw-bold mt-2 mb-1 small">Tanggal DO</label>
-                    <input type="text" class="form-control" value="{{ $data[0]['receive_date'] }}" readonly>
+                    <input type="text" class="form-control"
+                        value="{{ \Carbon\Carbon::parse($data[0]['receive_date'])->format('Y-m-d') }}" readonly>
                     <label class="form-label fw-bold mt-2 mb-1 small">Angkutan</label>
                     <input type="text" class="form-control" value="{{ $data[0]['shipment'] }}" readonly>
                     <label class="form-label fw-bold mt-2 mb-1 small">No Polisi</label>
