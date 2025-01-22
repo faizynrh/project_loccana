@@ -43,7 +43,7 @@
                     <label for="chart_of_account_id" class="form-label fw-bold">COA ID</label>
                     @if (isset($coaTypes['data']))
                         <input type="text" name="chart_of_account_name" placeholder="Chart of Account"
-                            class="form-control" id="chart_of_account_name" required readonly
+                            class="form-control" id="chart_of_account_name" readonly
                             value="{{ collect($coaTypes['data'])->firstWhere('id', $data['chart_of_account_id'])['description'] ?? 'Data COA tidak tersedia' }}"
                             disabled>
                     @else
@@ -144,9 +144,9 @@
             </div> --}}
 
 
-            <div class="row mb-3 align-items-center">
-                <div class="col-md-3">
-                    <button type="button" class="btn btn-secondary" onclick="history.back()">Batal</button>
+            <div class="row">
+                <div class="col-md-12 text-end">
+                    <a href="{{ route('customer.index') }}" class="btn btn-secondary ms-2">Batal</a>
                 </div>
             </div>
         </form>

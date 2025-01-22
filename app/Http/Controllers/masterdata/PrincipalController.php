@@ -30,22 +30,32 @@ class PrincipalController extends Controller
 
         return $tokenResponse->json()['access_token'];
     }
+
+    private function getHeaders()
+    {
+        $accessToken = $this->getAccessToken();
+        return [
+            'Authorization' => 'Bearer ' . $accessToken,
+            'Content-Type' => 'application/json'
+        ];
+    }
+
+    private function getApiUrl()
+    {
+        $apiurl = env('API_URL');
+        return $apiurl;
+    }
     public function index(Request $request)
     {
         //
         if ($request->ajax()) {
             try {
+                $headers = $this->getHeaders();
+                $apiurl = $this->getApiUrl() . '/loccana/masterdata/partner/1.0.0/partner/lists';
+
                 $length = $request->input('length', 10);
                 $start = $request->input('start', 0);
                 $search = $request->input('search.value', '');
-
-                $apiurl = 'https://gateway.apicentrum.site/t/loccana.com/loccana/masterdata/partner/1.0.0/partner/lists';
-                $accessToken = $this->getAccessToken();
-
-                $headers = [
-                    'Authorization' => 'Bearer ' . $accessToken,
-                    'Content-Type' => 'application/json'
-                ];
 
                 $requestbody = [
                     'search' => '',
@@ -91,25 +101,17 @@ class PrincipalController extends Controller
     public function create()
     {
         $companyid = 2;
-        $partnerurl = 'https://gateway.apicentrum.site/t/loccana.com/loccana/masterdata/partner-type/1.0.0/partner-types/list-select';
-        $coaurl = 'https://gateway.apicentrum.site/t/loccana.com/loccana/masterdata/coa/1.0.0/masterdata/coa/list-select/' . $companyid;
-        $accessToken = $this->getAccessToken();
+        $headers = $this->getHeaders();
+        $partnerurl = $this->getApiUrl() . '/loccana/masterdata/partner-type/1.0.0/partner-types/list-select';
+        $coaurl = $this->getApiUrl() . '/loccana/masterdata/coa/1.0.0/masterdata/coa/list-select/' . $companyid;
 
-        $headers = [
-            'Authorization' => 'Bearer ' . $accessToken,
-            'Content-Type' => 'application/json',
-        ];
-
-        // Mengirim request ke API untuk mendapatkan partner types
         $partnerResponse = Http::withHeaders($headers)->get($partnerurl);
         $coaResponse = Http::withHeaders($headers)->get($coaurl);
         if ($partnerResponse->successful() && $coaResponse->successful()) {
-            // Mengambil data JSON dari API
-            $partnerTypes = $partnerResponse->json(); // Pastikan struktur data sesuai dengan API
+            $partnerTypes = $partnerResponse->json();
             $coaTypes = $coaResponse->json();
             return view('masterdata.principal.tambah-principal', compact('partnerTypes', 'coaTypes'));
         } else {
-            // Jika API gagal diakses, tampilkan pesan error
             return back()->withErrors('Gagal mengambil data dari API: Partner Types tidak tersedia.');
         }
     }
@@ -119,8 +121,8 @@ class PrincipalController extends Controller
     {
         //
         try {
-            $apiurl = 'https://gateway.apicentrum.site/t/loccana.com/loccana/masterdata/partner/1.0.0/partner';
-            $accessToken = $this->getAccessToken();
+            $headers = $this->getHeaders();
+            $apiurl = $this->getApiUrl() . '/loccana/masterdata/partner/1.0.0/partner';
             $data = [
                 'name' => (string)$request->input('nama'),
                 'partner_type_id' => $request->input('partner_type_id'),
@@ -131,13 +133,8 @@ class PrincipalController extends Controller
                 'is_supplier' => true
             ];
 
-            $apiResponse = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $accessToken
-            ])->post($apiurl, $data);
-
+            $apiResponse = Http::withHeaders($headers)->post($apiurl, $data);
             $responseData = $apiResponse->json();
-
-            // dd($data);
             if ($apiResponse->successful() && isset($responseData['success']) && $responseData['success'] === true) {
                 return redirect()->route('principal.index')
                     ->with('success', $responseData['message'] ?? 'Data Principal berhasil ditambahkan.');
@@ -162,27 +159,14 @@ class PrincipalController extends Controller
         //
         try {
             $companyid = 2;
-            $apiurl = "https://gateway.apicentrum.site/t/loccana.com/loccana/masterdata/partner/1.0.0/partner/{$id}";
-            $partnerurl = 'https://gateway.apicentrum.site/t/loccana.com/loccana/masterdata/partner-type/1.0.0/partner-types/list-select';
-            $coaurl = 'https://gateway.apicentrum.site/t/loccana.com/loccana/masterdata/coa/1.0.0/masterdata/coa/list-select/' . $companyid;
-            $accessToken = $this->getAccessToken();
+            $headers = $this->getHeaders();
+            $apiurl = $this->getApiUrl() . '/loccana/masterdata/partner/1.0.0/partner/' . $id;
+            $partnerurl = $this->getApiUrl() . '/loccana/masterdata/partner-type/1.0.0/partner-types/list-select';
+            $coaurl = $this->getApiUrl() . '/loccana/masterdata/coa/1.0.0/masterdata/coa/list-select/' . $companyid;
 
-            $headers = [
-                'Authorization' => 'Bearer ' . $accessToken,
-                'Content-Type' => 'application/json',
-            ];
-
-            // Mengirim request ke API untuk mendapatkan partner types
             $partnerResponse = Http::withHeaders($headers)->get($partnerurl);
             $coaResponse = Http::withHeaders($headers)->get($coaurl);
-
-            // Get UoM data
-            $apiResponse = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $accessToken,
-                'Content-Type' => 'application/json'
-            ])->get($apiurl);
-
-            // dd($apiResponse->json());
+            $apiResponse = Http::withHeaders($headers)->get($apiurl);
 
             if ($apiResponse->successful()) {
                 $principal = $apiResponse->json();
@@ -208,6 +192,7 @@ class PrincipalController extends Controller
         }
     }
 
+
     /**
      * Show the form for editing the specified resource.
      */
@@ -216,27 +201,13 @@ class PrincipalController extends Controller
         //
         try {
             $companyid = 2;
-            $apiurl = "https://gateway.apicentrum.site/t/loccana.com/loccana/masterdata/partner/1.0.0/partner/{$id}";
-            $partnerurl = 'https://gateway.apicentrum.site/t/loccana.com/loccana/masterdata/partner-type/1.0.0/partner-types/list-select';
-            $coaurl = 'https://gateway.apicentrum.site/t/loccana.com/loccana/masterdata/coa/1.0.0/masterdata/coa/list-select/' . $companyid;
-            $accessToken = $this->getAccessToken();
-
-            $headers = [
-                'Authorization' => 'Bearer ' . $accessToken,
-                'Content-Type' => 'application/json',
-            ];
-
-            // Mengirim request ke API untuk mendapatkan partner types
+            $headers = $this->getHeaders();
+            $apiurl = $this->getApiUrl() . '/loccana/masterdata/partner/1.0.0/partner/' . $id;
+            $partnerurl = $this->getApiUrl() . '/loccana/masterdata/partner-type/1.0.0/partner-types/list-select';
+            $coaurl = $this->getApiUrl() . '/loccana/masterdata/coa/1.0.0/masterdata/coa/list-select/' . $companyid;
             $partnerResponse = Http::withHeaders($headers)->get($partnerurl);
             $coaResponse = Http::withHeaders($headers)->get($coaurl);
-
-            // Get UoM data
-            $apiResponse = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $accessToken,
-                'Content-Type' => 'application/json'
-            ])->get($apiurl);
-
-            // dd($apiResponse->json());
+            $apiResponse = Http::withHeaders($headers)->get($apiurl);
 
             if ($apiResponse->successful()) {
                 $principal = $apiResponse->json();
@@ -248,7 +219,6 @@ class PrincipalController extends Controller
                         $coaTypes = $coaResponse->json();
                         return view('masterdata.principal.edit-principal', ['principal' => $principal['data']], compact('partnerTypes', 'data', 'coaTypes'));
                     } else {
-                        // Jika API gagal diakses, tampilkan pesan error
                         return back()->withErrors('Gagal mengambil data dari API: Partner Types tidak tersedia.');
                     }
                 } else {
@@ -270,8 +240,8 @@ class PrincipalController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            $apiurl = 'https://gateway.apicentrum.site/t/loccana.com/loccana/masterdata/partner/1.0.0/partner/' . $id;
-            $accessToken = $this->getAccessToken();
+            $headers = $this->getHeaders();
+            $apiurl = $this->getApiUrl() . '/loccana/masterdata/partner/1.0.0/partner/' . $id;
 
             $data = [
                 'name' => (string)$request->input('nama'),
@@ -283,16 +253,7 @@ class PrincipalController extends Controller
                 'is_supplier' => false
             ];
 
-            $apiResponse = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $accessToken,
-                'Content-Type' => 'application/json'
-            ])->put($apiurl, $data);
-
-            // dd([
-            //     'data' => $data,
-            //     'apiResponse' => $apiResponse->json(),
-            // ]);
-
+            $apiResponse = Http::withHeaders($headers)->put($apiurl, $data);
             if ($apiResponse->successful()) {
                 return redirect()->route('principal.index')->with('success', 'Data Principal berhasil diperbarui!');
             } else {
@@ -303,40 +264,6 @@ class PrincipalController extends Controller
         }
     }
 
-    // public function update(Request $request, string $id)
-    // {
-    //     //
-    //     try {
-    //         $apiurl = "https://gateway.apicentrum.site/t/loccana.com/loccana/masterdata/partner/1.0.0/partner/. $id";
-    //         $accessToken = $this->getAccessToken();
-
-    //         $data = [
-    //             'name' => (string)$request->input('nama'),
-    //             'partner_type_id' => $request->input('partner_type_id'),
-    //             'contact_info' => $request->input('contact_info',),
-    //             'chart_of_account_id' => $request->input('chart_of_account_id',),
-    //             'company_id' => 2,
-    //             'is_customer' => true,
-    //             'is_supplier' => false
-    //         ];
-    //         $apiResponse = Http::withHeaders([
-    //             'Authorization' => 'Bearer ' . $accessToken,
-    //             'Content-Type' => 'application/json'
-    //         ])->put($apiurl, $data);
-
-    //         if ($apiResponse->successful()) {
-    //             return redirect()->route('principal.index')
-    //                 ->with('success', 'Data Principal berhasil diperbarui.');
-    //         } else {
-    //             return back()->withErrors(
-    //                 'Gagal memperbarui data: ' . $apiResponse->body()
-    //             );
-    //         }
-    //     } catch (\Exception $e) {
-    //         return back()->withErrors($e->getMessage());
-    //     }
-    // }
-
     /**
      * Remove the specified resource from storage.
      */
@@ -344,13 +271,9 @@ class PrincipalController extends Controller
     {
         //
         try {
-            $apiurl = 'https://gateway.apicentrum.site/t/loccana.com/loccana/masterdata/partner/1.0.0/partner/' . $id;
-            $accessToken = $this->getAccessToken();
-
-            $apiResponse = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $accessToken,
-                'Content-Type' => 'application/json'
-            ])->delete($apiurl);
+            $headers = $this->getHeaders();
+            $apiurl = $this->getApiUrl() . '/loccana/masterdata/partner/1.0.0/partner/' . $id;
+            $apiResponse = Http::withHeaders($headers)->delete($apiurl);
             // dd($apiResponse->json());
             if ($apiResponse->successful()) {
                 return redirect()->route('principal.index')
