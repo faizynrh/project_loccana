@@ -95,10 +95,55 @@ class PenerimaanBarangController extends Controller
         return view('procurement.penerimaanbarang.penerimaan');
     }
 
+    public function getPoDetails(Request $request, $id_po)
+    {
+        $headers = $this->getHeaders();
+        $apiurl = $this->getApiUrl() . "/loccana/itemreceipt/1.0.0/item_receipt/1.0.0/" . $id_po;
 
-    /**
-     * Show the form for creating a new resource.
-     */
+        try {
+            $response = Http::withHeaders($headers)->get($apiurl);
+            $items = [];
+            if ($response->successful()) {
+                $data = $response->json()['data'];
+                $items = [];
+                foreach ($data as $item) {
+                    $items[] = [
+                        'item_code' => $item['item_code'],
+                        'quantity_received' => $item['qty_receipt'],
+                        // 'quantity_received_old' => $request->input('quantity_received')[$index],
+                        //tidak ada data
+                        // 'quantity_rejected' => $request->input('quantity_rejected')[$index],
+                        'notes' => $item['deskripsi_items'],
+                        'qty_titip' => $item['qty_titip'],
+                        // 'qty_titip_old' => $request->input('qty_titip')[$index],
+                        'qty_diskon' => $item['qty_discount'],
+                        'qty_bonus' => $item['qty_bonus'],
+                        // 'qty_bonus_old' => $request->input('qty_bonus')[$index],
+                        // 'warehouse_id' => $item['warehouse_id'],
+                    ];
+                }
+                // dd($items);
+                return response()->json([
+                    'id_po' => $data[0]['id_po'],
+                    'code' => $data[0]['id_po'],
+                    'order_date' => $data[0]['order_date'],
+                    'principal' => $data[0]['partner_name'],
+                    'address' => $data[0]['address'],
+                    'description' => $data[0]['description'],
+                    'phone' => $data[0]['phone'],
+                    'fax' => $data[0]['fax'],
+                    'gudang' => $data[0]['gudang'],
+                    'items' => $items
+                ]);
+            }
+            return response()->json(['error' => 'Failed to fetch PO details'], 500);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+
+
     public function create()
     {
         $headers = $this->getHeaders();
@@ -113,17 +158,10 @@ class PenerimaanBarangController extends Controller
         }
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         //
     }
-
-    /**
-     * Display the specified resource.
-     */
     public function show($id)
     {
         try {
@@ -133,7 +171,7 @@ class PenerimaanBarangController extends Controller
 
             if ($apiResponse->successful()) {
                 $data = $apiResponse->json()['data'];
-                // dd($data);
+                dd($data);
                 return view('procurement.penerimaanbarang.detail', compact('data'));
             } else {
                 return back()->withErrors('Gagal mengambil data item: ' . $apiResponse->status());
@@ -165,9 +203,6 @@ class PenerimaanBarangController extends Controller
         }
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, string $id)
     {
         try {
@@ -181,6 +216,8 @@ class PenerimaanBarangController extends Controller
                         'item_id' => $itemId,
                         'quantity_received' => $request->input('quantity_received')[$index],
                         // 'quantity_received_old' => $request->input('quantity_received')[$index],
+                        //tidak ada data
+                        // 'quantity_rejected' => $request->input('quantity_rejected')[$index],
                         'notes' => $request->input('notes')[$index],
                         'qty_titip' => $request->input('qty_titip')[$index],
                         // 'qty_titip_old' => $request->input('qty_titip')[$index],
@@ -203,10 +240,10 @@ class PenerimaanBarangController extends Controller
             ];
             // dd($data);
             $apiResponse = Http::withHeaders($headers)->put($apiurl, $data);
-            dd([
-                'apiResponse' => $apiResponse->json(),
-                'data' => $data
-            ]);
+            // dd([
+            //     'apiResponse' => $apiResponse->json(),
+            //     'data' => $data
+            // ]);
             if ($apiResponse->successful()) {
                 return redirect()->route('penerimaan_barang')->with('success', 'Data berhasil diperbarui!');
             } else {
@@ -216,11 +253,6 @@ class PenerimaanBarangController extends Controller
             return back()->withErrors($e->getMessage());
         }
     }
-
-
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy($id)
     {
         try {
