@@ -75,36 +75,6 @@
                         <th scope="col">Action</th>
                     </tr>
                 </thead>
-                {{-- <tbody>
-                @if (!empty($data['data']['table']))
-                    @foreach ($data['data']['table'] as $item)
-                        <tr>
-                            <td>{{ $item['invoice'] }}</td>
-                            <td>{{ $item['principle'] }}</td>
-                            <td>{{ $item['tgl_return'] }}</td>
-                            <td>{{ $item['pengaju'] }}</td>
-                            <td>{{ $item['status'] }}</td>
-                            <td>
-                                <div class="d-flex mb-2">
-                                    <a href="{{ route('return.detail', $item['id_return']) }}"
-                                        class="btn btn-sm btn-info me-2" title="Detail">
-                                        <i class="bi bi-eye"></i>
-                                    </a>
-                                    <form action="{{ route('return.destroy', $item['id_return']) }}" method="POST"
-                                        id="delete{{ $item['id_return'] }}" style="display:inline;">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="button" class="btn btn-sm btn-danger" title="Hapus"
-                                            onclick="confirmDelete({{ $item['id_return'] }})">
-                                            <i class="bi bi-trash"></i>
-                                        </button>
-                                    </form>
-                                </div>
-                            </td>
-                        </tr>
-                    @endforeach
-                @endif
-            </tbody> --}}
             </table>
         </div>
     </div>
@@ -144,7 +114,16 @@
                         data: 'do_number'
                     },
                     {
-                        data: 'receipt_date'
+                        data: 'receipt_date',
+                        render: function(data) {
+                            if (data) {
+                                var date = new Date(data);
+                                return date.getFullYear() + '-' + (date.getMonth() + 1).toString()
+                                    .padStart(2, '0') + '-' + date.getDate().toString().padStart(2,
+                                        '0');
+                            }
+                            return data;
+                        }
                     },
                     {
                         data: 'number_po'
@@ -153,7 +132,16 @@
                         data: 'name'
                     },
                     {
-                        data: 'order_date'
+                        data: 'order_date',
+                        render: function(data) {
+                            if (data) {
+                                var date = new Date(data);
+                                return date.getFullYear() + '-' + (date.getMonth() + 1).toString()
+                                    .padStart(2, '0') + '-' + date.getDate().toString().padStart(2,
+                                        '0');
+                            }
+                            return data;
+                        }
                     },
                     {
                         data: 'total_po'

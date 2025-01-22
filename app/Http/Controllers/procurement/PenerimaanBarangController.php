@@ -108,18 +108,15 @@ class PenerimaanBarangController extends Controller
                 $items = [];
                 foreach ($data as $item) {
                     $items[] = [
-                        'item_code' => $item['item_code'],
-                        'quantity_received' => $item['qty_receipt'],
-                        // 'quantity_received_old' => $request->input('quantity_received')[$index],
-                        //tidak ada data
-                        // 'quantity_rejected' => $request->input('quantity_rejected')[$index],
-                        'notes' => $item['deskripsi_items'],
-                        'qty_titip' => $item['qty_titip'],
-                        // 'qty_titip_old' => $request->input('qty_titip')[$index],
-                        'qty_diskon' => $item['qty_discount'],
-                        'qty_bonus' => $item['qty_bonus'],
-                        // 'qty_bonus_old' => $request->input('qty_bonus')[$index],
-                        // 'warehouse_id' => $item['warehouse_id'],
+                        'kode' => $item['item_code'],
+                        'order_qty' => $item['item_order_qty'],
+                        'balance_qty' => $item['qty_balance'],
+                        'received_qty' => $item['qty_receipt'],
+                        'qty' => $item['qty'],
+                        'bonus_qty' => $item['qty_bonus'],
+                        'deposit_qty' => $item['qty_titip'],
+                        'discount' => $item['discount'],
+                        'deskripsi_items' => $item['deskripsi_items'],
                     ];
                 }
                 // dd($items);
@@ -132,6 +129,7 @@ class PenerimaanBarangController extends Controller
                     'description' => $data[0]['description'],
                     'phone' => $data[0]['phone'],
                     'fax' => $data[0]['fax'],
+                    'warehouse_id' => $data[0]['warehouse_id'],
                     'gudang' => $data[0]['gudang'],
                     'items' => $items
                 ]);
@@ -146,12 +144,13 @@ class PenerimaanBarangController extends Controller
 
     public function create()
     {
+        $company_id = 2;
         $headers = $this->getHeaders();
-        $pourl = $this->getApiUrl() . '/loccana/po/1.0.0/purchase-order/list-select';
+        $pourl = $this->getApiUrl() . '/loccana/po/1.0.0/purchase-order/list-select/' . $company_id;
         $poResponse = Http::withHeaders($headers)->get($pourl);
-
         if ($poResponse->successful()) {
-            $po = $poResponse->json()['data'];
+            $po = $poResponse->json();
+            // dd($po);
             return view('procurement.penerimaanbarang.add', compact('po'));
         } else {
             return back()->withErrors('Gagal mengambil data dari API.');

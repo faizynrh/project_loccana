@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>404 - Page Not Found</title>
-    @vite('resources/js/app.js')
+    {{-- @vite('resources/js/app.js') --}}
     <style>
         body {
             background-color: #f4f6f9;

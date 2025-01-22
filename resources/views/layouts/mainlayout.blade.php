@@ -32,7 +32,7 @@
     <script src="{{ asset('assets/sweetalert/sweetalert2.all.min.js') }}"></script>
     <script src="{{ asset('assets/js/mainlayoutscript.js') }}"></script>
 
-    {{-- @stack('script') --}}
+    @stack('script')
 </body>
 
 </html>
