@@ -20,7 +20,7 @@ document
 toggleSidebar.addEventListener("click", () => {
     if (sidebar.style.width === "220px" || sidebar.style.width === "") {
         sidebar.style.width = "90px";
-        // logo.src = '{{ asset('assets/images/logo.png') }}';
+        logo.src = '/assets/images/logo.png';
         logo.style.width = "55px";
 
         const headersToHide = sidebar.querySelectorAll(
@@ -44,7 +44,8 @@ toggleSidebar.addEventListener("click", () => {
         dashboardLink.innerHTML = "Dashboard";
     } else {
         sidebar.style.width = "220px";
-        // logo.src = '{{ asset('assets/images/name.png') }}';
+        logo.src = '/assets/images/name.png';
+
         logo.style.width = "165px";
 
         const headersToRestore = sidebar.querySelectorAll(
