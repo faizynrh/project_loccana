@@ -178,7 +178,7 @@
                         <form action="/penerimaan_barang/delete/${row.id_receipt}" method="POST" id="delete${row.id_receipt}" style="display:inline;">
                             @csrf
                             @method('DELETE')
-                            <button type="button" class="btn btn-sm btn-danger mb-2" style="margin-right:4px;" title="Hapus" onclick="confirmDelete(${row.id_re})">
+                            <button type="button" class="btn btn-sm btn-danger mb-2" style="margin-right:4px;" title="Hapus" onclick="confirmDelete(${row.id_receipt})">
                                 <i class="bi bi-trash"></i>
                             </button>
                         </form>

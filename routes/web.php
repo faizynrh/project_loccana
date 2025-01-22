@@ -119,7 +119,7 @@ Route::middleware('auth.login')->group(
         Route::get('/penerimaan_barang/detail/{id}', [PenerimaanBarangController::class, 'show'])->name('penerimaan_barang.detail');
         Route::delete('/penerimaan_barang/delete/{id}', [PenerimaanBarangController::class, 'destroy'])->name('penerimaan_barang.destroy');
         Route::get('/penerimaan_barang/edit/{id}', [PenerimaanBarangController::class, 'edit'])->name('penerimaan_barang.edit');
-        Route::put('/penerimaan_barang/edit/{id}', [PenerimaanBarangController::class, 'update'])->name('penerimaan_barang.update');
+        Route::put('/penerimaan_barang/update/{id}', [PenerimaanBarangController::class, 'update'])->name('penerimaan_barang.update');
 
 
         //dasarpembelian
