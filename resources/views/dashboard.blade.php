@@ -1,10 +1,6 @@
 @extends('layouts.mainlayout')
 @section('content')
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
-    <link rel="stylesheet" href="assets/css/dashboard.css">
-
-    <!-- Top Cards -->
+    <link rel="stylesheet" href="{{ asset('assets/css/dashboard.css') }}" <!-- Top Cards -->
     <div class="top-cards">
         <div class="card small-card">
             <div class="card-title">
@@ -108,5 +104,6 @@
             </ul>
         </div>
     </div>
+    <script src="{{ asset('assets/chartjs/package/dist/chart.umd.js') }}"></script>
     <script src="{{ asset('assets/js/dashboard.js') }}"></script>
 @endsection
