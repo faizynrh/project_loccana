@@ -1,6 +1,8 @@
 @extends('layouts.mainlayout')
 @section('content')
-    <link rel="stylesheet" href="{{ asset('assets/css/dashboard.css') }}" <!-- Top Cards -->
+    <link rel="stylesheet" href="{{ asset('assets/css/dashboard.css') }}">
+
+    <!-- Top Cards -->
     <div class="top-cards">
         <div class="card small-card">
             <div class="card-title">

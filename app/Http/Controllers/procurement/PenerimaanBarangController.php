@@ -170,7 +170,7 @@ class PenerimaanBarangController extends Controller
 
             if ($apiResponse->successful()) {
                 $data = $apiResponse->json()['data'];
-                dd($data);
+                // dd($data);
                 return view('procurement.penerimaanbarang.detail', compact('data'));
             } else {
                 return back()->withErrors('Gagal mengambil data item: ' . $apiResponse->status());
