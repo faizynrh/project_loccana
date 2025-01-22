@@ -155,7 +155,7 @@ class PenerimaanBarangController extends Controller
 
             if ($apiResponse->successful()) {
                 $data = $apiResponse->json()['data'];
-                dd($data);
+                // dd($data);
                 return view('procurement.penerimaanbarang.edit', compact('data'));
             } else {
                 return back()->withErrors('Gagal mengambil data item: ' . $apiResponse->status());
@@ -170,8 +170,53 @@ class PenerimaanBarangController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        try {
+            // dd($request->all());
+            $headers = $this->getHeaders();
+            $apiurl = $this->getApiUrl() . '/loccana/itemreceipt/1.0.0/item_receipt/1.0.0/' . $id;
+            $items = [];
+            if ($request->has('item_id')) {
+                foreach ($request->input('item_id') as $index => $itemId) {
+                    $items[] = [
+                        'item_id' => $itemId,
+                        'quantity_received' => $request->input('quantity_received')[$index],
+                        // 'quantity_received_old' => $request->input('quantity_received')[$index],
+                        'notes' => $request->input('notes')[$index],
+                        'qty_titip' => $request->input('qty_titip')[$index],
+                        // 'qty_titip_old' => $request->input('qty_titip')[$index],
+                        'qty_diskon' => $request->input('qty_diskon')[$index],
+                        'qty_bonus' => $request->input('qty_bonus')[$index],
+                        // 'qty_bonus_old' => $request->input('qty_bonus')[$index],
+                        'warehouse_id' => $request->input('warehouse_id')[$index],
+                    ];
+                }
+            }
+            // dd($items);
+            $data = [
+                'do_number' => $request->do_number,
+                'receipt_date' => $request->receipt_date,
+                'shipment_info' => $request->shipment_info,
+                'plate_number' => $request->plate_number,
+                'received_by' => $request->input('received_by', 0),
+                'status' => "received",
+                'items' => $items,
+            ];
+            // dd($data);
+            $apiResponse = Http::withHeaders($headers)->put($apiurl, $data);
+            dd([
+                'apiResponse' => $apiResponse->json(),
+                'data' => $data
+            ]);
+            if ($apiResponse->successful()) {
+                return redirect()->route('penerimaan_barang')->with('success', 'Data berhasil diperbarui!');
+            } else {
+                return back()->withErrors('Gagal memperbarui data: ' . $apiResponse->status());
+            }
+        } catch (\Exception $e) {
+            return back()->withErrors($e->getMessage());
+        }
     }
+
 
     /**
      * Remove the specified resource from storage.
