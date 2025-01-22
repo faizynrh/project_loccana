@@ -166,24 +166,47 @@ class CustomerController extends Controller
     {
         //
         try {
+            $companyid = 2;
             $apiurl = "https://gateway.apicentrum.site/t/loccana.com/loccana/masterdata/partner/1.0.0/partner/{$id}";
+            $partnerurl = 'https://gateway.apicentrum.site/t/loccana.com/loccana/masterdata/partner-type/1.0.0/partner-types/list-select';
+            $coaurl = 'https://gateway.apicentrum.site/t/loccana.com/loccana/masterdata/coa/1.0.0/masterdata/coa/list-select/' . $companyid;
             $accessToken = $this->getAccessToken();
+
+            $headers = [
+                'Authorization' => 'Bearer ' . $accessToken,
+                'Content-Type' => 'application/json',
+            ];
+
+            // Mengirim request ke API untuk mendapatkan partner types
+            $partnerResponse = Http::withHeaders($headers)->get($partnerurl);
+            $coaResponse = Http::withHeaders($headers)->get($coaurl);
+
+            // Get UoM data
             $apiResponse = Http::withHeaders([
                 'Authorization' => 'Bearer ' . $accessToken,
+                'Content-Type' => 'application/json'
             ])->get($apiurl);
 
             // dd($apiResponse->json());
 
             if ($apiResponse->successful()) {
                 $customer = $apiResponse->json();
-
+                // dd($customer);
                 if (isset($customer['data'])) {
-                    return view('masterdata.customer.detail-customer', ['customer' => $customer['data']]);
+                    if ($partnerResponse->successful() && $coaResponse->successful()) {
+                        $partnerTypes = $partnerResponse->json();
+                        $data = $apiResponse->json()['data'];
+                        $coaTypes = $coaResponse->json();
+                        return view('masterdata.customer.detail-customer', ['customer' => $customer['data']], compact('partnerTypes', 'data', 'coaTypes'));
+                    } else {
+                        // Jika API gagal diakses, tampilkan pesan error
+                        return back()->withErrors('Gagal mengambil data dari API: Partner Types tidak tersedia.');
+                    }
                 } else {
-                    return back()->withErrors('Data Customer tidak ditemukan.');
+                    return back()->withErrors('Data customer tidak ditemukan.');
                 }
             } else {
-                return back()->withErrors('Gagal mengambil data Customer dari API.');
+                return back()->withErrors('Gagal mengambil data customer dari API.');
             }
         } catch (\Exception $e) {
             return back()->withErrors($e->getMessage());
@@ -196,8 +219,10 @@ class CustomerController extends Controller
     public function edit(string $id)
     {
         try {
+            $companyid = 2;
             $apiurl = "https://gateway.apicentrum.site/t/loccana.com/loccana/masterdata/partner/1.0.0/partner/{$id}";
             $partnerurl = 'https://gateway.apicentrum.site/t/loccana.com/loccana/masterdata/partner-type/1.0.0/partner-types/list-select';
+            $coaurl = 'https://gateway.apicentrum.site/t/loccana.com/loccana/masterdata/coa/1.0.0/masterdata/coa/list-select/' . $companyid;
             $accessToken = $this->getAccessToken();
 
             $headers = [
@@ -207,16 +232,7 @@ class CustomerController extends Controller
 
             // Mengirim request ke API untuk mendapatkan partner types
             $partnerResponse = Http::withHeaders($headers)->get($partnerurl);
-
-            // if ($partnerResponse->successful()) {
-            //     // Mengambil data JSON dari API
-            //     $partnerTypes = $partnerResponse->json(); // Pastikan struktur data sesuai dengan API
-            //     return view('masterdata.principal.tambah-principal', compact('partnerTypes'));
-            // } else {
-            //     // Jika API gagal diakses, tampilkan pesan error
-            //     return back()->withErrors('Gagal mengambil data dari API: Partner Types tidak tersedia.');
-            // }
-
+            $coaResponse = Http::withHeaders($headers)->get($coaurl);
 
             // Get UoM data
             $apiResponse = Http::withHeaders([
@@ -230,19 +246,20 @@ class CustomerController extends Controller
                 $customer = $apiResponse->json();
 
                 if (isset($customer['data'])) {
-                    if ($partnerResponse->successful()) {
+                    if ($partnerResponse->successful() && $coaResponse->successful()) {
                         $partnerTypes = $partnerResponse->json();
                         $data = $apiResponse->json()['data'];
-                        return view('masterdata.customer.edit-customer', ['customer' => $customer['data']], compact('partnerTypes', 'data'));
+                        $coaTypes = $coaResponse->json();
+                        return view('masterdata.customer.edit-customer', ['customer' => $customer['data']], compact('partnerTypes', 'data', 'coaTypes'));
                     } else {
                         // Jika API gagal diakses, tampilkan pesan error
                         return back()->withErrors('Gagal mengambil data dari API: Partner Types tidak tersedia.');
                     }
                 } else {
-                    return back()->withErrors('Data Principal tidak ditemukan.');
+                    return back()->withErrors('Data customer tidak ditemukan.');
                 }
             } else {
-                return back()->withErrors('Gagal mengambil data Principal dari API.');
+                return back()->withErrors('Gagal mengambil data customer dari API.');
             }
         } catch (\Exception $e) {
             return back()->withErrors($e->getMessage());

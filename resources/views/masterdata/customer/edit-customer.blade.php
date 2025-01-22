@@ -43,14 +43,23 @@
                 </div>
             </div>
             <div class="row">
+
                 <div class="col-md-6 mb-3">
                     <label for="chart_of_account_id" class="form-label fw-bold">COA ID</label>
-                    <select type="number" name="chart_of_account_id" placeholder="chart_of_account_id" class="form-select"
-                        id="partner_type_id" required>
-                        <option value="" disabled selected>Pilih COA</option>
-                        <option value="2" value="{{ $customer['chart_of_account_id'] }}">2</option>
+                    <select name="chart_of_account_id" id="chart_of_account_id" class="form-control">
+                        @if (isset($coaTypes['data']))
+                            @foreach ($coaTypes['data'] as $type)
+                                <option value="{{ $type['id'] }}"
+                                    {{ $data['chart_of_account_id'] == $type['id'] ? 'selected' : '' }}>
+                                    {{ $type['description'] }}
+                                </option>
+                            @endforeach
+                        @else
+                            <option value="">Data COA tidak tersedia</option>
+                        @endif
                     </select>
                 </div>
+
                 <div class="col-md-6 mb-3">
                     <label for="contact_info" class="form-label fw-bold">Contact Info</label>
                     <input type="text" name="contact_info" placeholder="Contact Info" class="form-control"
@@ -148,9 +157,8 @@
                 </div>
             </div> --}}
 
-            <div class="row mb-3 align-items-center">
-                <div class="col-md-3"></div>
-                <div class="col-md-9 d-flex gap-3">
+            <div class="align-items-center">
+                <div class="col">
                     <button type="button" class="btn btn-primary" id="submitButton">Submit</button>
                     <button type="button" class="btn btn-secondary" onclick="history.back()">Batal</button>
                 </div>
