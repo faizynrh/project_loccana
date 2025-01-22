@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="{{ asset('assets/bootstrap/bi/font/bootstrap-icons.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/all.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/datatables/datatables.min.css') }}">
+    <script src="{{ asset('assets/jquery/jquery.js') }}"></script>
 
     <title>Distributor & Sales System</title>
 </head>
@@ -26,7 +27,6 @@
         </div>
         <x-footer></x-footer>
     </div>
-    <script src="{{ asset('assets/jquery/jquery.js') }}"></script>
     <script src="{{ asset('assets/datatables/datatables.min.js') }}"></script>
     <script src="{{ asset('assets/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('assets/sweetalert/sweetalert2.all.min.js') }}"></script>
