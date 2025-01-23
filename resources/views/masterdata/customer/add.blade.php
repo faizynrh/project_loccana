@@ -185,7 +185,7 @@
 
                             <div class="row">
                                 <div class="col-md-12 text-end">
-                                    <button type="button" class="btn btn-primary" id="submitButton">Submit</button>
+                                    <button type="submit" class="btn btn-primary" id="submitButton">Submit</button>
                                     <a href="{{ route('customer.index') }}" class="btn btn-secondary ms-2">Batal</a>
                                 </div>
                             </div>

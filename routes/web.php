@@ -108,8 +108,8 @@ Route::middleware('auth.login')->group(
 
         // customer
         Route::get('/customer', [CustomerController::class, 'index'])->name('customer.index');
-        Route::get('/customer/tambah', [CustomerController::class, 'create'])->name('customer.create');
-        Route::post('/customer/tambah', [CustomerController::class, 'store'])->name('customer.store');
+        Route::get('/customer/add', [CustomerController::class, 'create'])->name('customer.create');
+        Route::post('/customer/add', [CustomerController::class, 'store'])->name('customer.store');
         Route::delete('/customer/delete/{id}', [CustomerController::class, 'destroy'])->name('customer.destroy');
         Route::get('/customer/edit/{id}', [CustomerController::class, 'edit'])->name('customer.edit');
         Route::put('/customer/update/{id}', [CustomerController::class, 'update'])->name('customer.update');
