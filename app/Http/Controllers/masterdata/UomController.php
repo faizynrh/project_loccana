@@ -87,7 +87,7 @@ class UomController extends Controller
                 }
             }
         }
-        return view('masterdata.uom.uom');
+        return view('masterdata.uom.index');
     }
 
 
@@ -160,7 +160,7 @@ class UomController extends Controller
                 $uomData = $apiResponse->json();
 
                 if (isset($uomData['data'])) {
-                    return view('masterdata.uom.edit-uom', ['uom' => $uomData['data']]);
+                    return view('masterdata.uom.edit', ['uom' => $uomData['data']]);
                 } else {
                     return back()->withErrors('Data UoM tidak ditemukan.');
                 }
@@ -209,7 +209,7 @@ class UomController extends Controller
             if ($apiResponse->successful()) {
                 $uomData = $apiResponse->json();
                 if (isset($uomData['data'])) {
-                    return view('masterdata.uom.detail-uom', ['uom' => $uomData['data']]);
+                    return view('masterdata.uom.detail', ['uom' => $uomData['data']]);
                 } else {
                     return back()->withErrors('Data UoM tidak ditemukan.');
                 }
