@@ -47,10 +47,10 @@
                             <a href="/price" class="submenu-link">Informasi</a>
                         </li>
                         <li class="submenu-item">
-                            <a href="/price" class="submenu-link">COA</a>
+                            <a href="/coa" class="submenu-link">COA</a>
                         </li>
                         <li class="submenu-item active">
-                            <a href="/price" class="submenu-link">Gudang</a>
+                            <a href="/gudang" class="submenu-link">Gudang</a>
                         </li>
                     </ul>
                 </li>

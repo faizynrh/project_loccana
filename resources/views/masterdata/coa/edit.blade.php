@@ -10,7 +10,7 @@
             <div class="page-title">
                 <div class="row">
                     <div class="col-12 col-md-6 order-md-1 order-last">
-                        <h3>Edit Price</h3>
+                        <h3>Edit Item</h3>
                     </div>
                     <div class="col-12 col-md-6 order-md-2 order-first">
                         <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
@@ -19,7 +19,7 @@
                                     <a href="index.html">Dashboard</a>
                                 </li>
                                 <li class="breadcrumb-item active" aria-current="page">
-                                    Edit Price Management
+                                    Edit Item Management
                                 </li>
                             </ol>
                         </nav>
@@ -52,78 +52,57 @@
                                     aria-label="Close"></button>
                             </div>
                         @endif
-                        <p></p>
-                        <form action="{{ route('price.update', $data['id']) }}" method="POST" id="updateForm">
+                        <form action="{{ route('coa.update', $id) }}" method="post" id="updateForm">
                             @csrf
-                            @method('PUT')
+                            @method('put')
                             <div class="row mb-3 align-items-center">
                                 <div class="col-md-3">
-                                    <label for="kodeitem" class="form-label fw-bold mb-0">Kode Item <span
+                                    <label for="parent_account_id" class="form-label fw-bold mb-0">Parent <span
                                             class="text-danger">*</span></label>
                                 </div>
                                 <div class="col-md-9">
-                                    <label for="namaitem" class="form-label fw-bold mb-0">{{ $data['kode_item'] }}</label>
-                                    {{-- <input type="text" class="form-control" id="kode_item" name="kode_item"
-                        value="{{ $data['kode_item'] }}" placeholder="Kode Item" style="font-weight: bold" disabled> --}}
+                                    <select class="form-select" id="parent_account_id" name="parent_account_id">
+                                        <option value="" selected disabled>Pilih Parent</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row mb-3 align-items-center">
+                                <div class="col-md-3">
+                                    <label for="account_code" class="form-label fw-bold mb-0">COA <span
+                                            class="text-danger">*</span></label>
+                                </div>
+                                <div class="col-md-9">
+                                    <input type="text" class="form-control" id="account_code" name="account_code"
+                                        placeholder="COA" value="{{ $data['account_code'] ?? '' }}">
+                                </div>
+                            </div>
+                            <div class="row mb-3 align-items-center">
+                                <div class="col-md-3">
+                                    <label for="description" class="form-label fw-bold mb-0">Keterangan COA <span
+                                            class="text-danger">*</span></label>
+                                </div>
+                                <div class="col-md-9">
+                                    <textarea class="form-control" id="description" name="description" rows="5" required>{{ $data['description'] ?? '' }}</textarea>
+                                </div>
+                            </div>
+                            <div class="row mb-3 align-items-center">
+                                <div class="col-md-3">
+                                    <label for="showhide" class="form-label fw-bold mb-0">Show/Hide <span
+                                            class="text-danger">*</span></label>
+                                </div>
+                                <div class="col-md-9">
+                                    <select class="form-select" id="showhide" name="showhide" required>
+                                        <option value="" selected disabled>Pilih Status</option>
+                                        <option value="show">Show</option>
+                                        <option value="hide">Hide</option>
+                                    </select>
                                 </div>
                             </div>
 
-                            <div class="row mb-3 align-items-center">
-                                <div class="col-md-3">
-                                    <label for="namaitem" class="form-label fw-bold mb-0">Nama Item <span
-                                            class="text-danger">*</span></label>
-                                </div>
-                                <div class="col-md-9">
-                                    <label for="namaitem" class="form-label fw-bold mb-0">{{ $data['nama_item'] }}</label>
-                                    {{-- <input type="text" class="form-control" id="nama_item" name="nama_item" placeholder="Nama Item"
-                            value="{{ $data['nama_item'] }}" style="font-weight: bold" disabled> --}}
-                                </div>
-                            </div>
-
-                            <div class="row mb-3 align-items-center">
-                                <div class="col-md-3">
-                                    <label for="hargaatas" class="form-label fw-bold mb-0">Harga Atas<span
-                                            class="text-danger">*</span></label>
-                                </div>
-                                <div class="col-md-9">
-                                    <input type="text" class="form-control" id="harga_atas" name="harga_atas"
-                                        value="{{ $data['harga_atas'] }}" placeholder="Harga Atas">
-                                </div>
-                            </div>
-
-                            <div class="row mb-3 align-items-center">
-                                <div class="col-md-3">
-                                    <label for="hargabawah" class="form-label fw-bold mb-0">Harga Bawah<span
-                                            class="text-danger">*</span></label>
-                                </div>
-                                <div class="col-md-9">
-                                    <input type="text" class="form-control" id="harga_bawah" name="harga_bawah"
-                                        value="{{ $data['harga_bawah'] }}" placeholder="Harga Bawah">
-                                </div>
-                            </div>
-                            <div class="row mb-3 align-items-center">
-                                <div class="col-md-3">
-                                    <label for="hargapokok" class="form-label fw-bold mb-0">Harga Pokok
-                                </div>
-                                <div class="col-md-9">
-                                    <input type="text" class="form-control" id="harga_pokok" name="harga_pokok"
-                                        value="{{ $data['harga_pokok'] }}" placeholder="Harga Pokok" readonly>
-                                </div>
-                            </div>
-                            <div class="row mb-3 align-items-center">
-                                <div class="col-md-3">
-                                    <label for="hargabeli" class="form-label fw-bold mb-0">Harga Beli<span
-                                            class="text-danger">*</span></label>
-                                </div>
-                                <div class="col-md-9">
-                                    <input type="text" class="form-control" id="harga_beli" name="harga_beli"
-                                        value="{{ $data['harga_beli'] }}"placeholder="Harga Beli">
-                                </div>
-                            </div>
                             <div class="row">
                                 <div class="col-md-12 text-end">
                                     <button type="submit" class="btn btn-primary" id="submitButton">Submit</button>
-                                    <a href="{{ route('price.index') }}" class="btn btn-secondary ms-2">Batal</a>
+                                    <a href="{{ route('coa.index') }}" class="btn btn-secondary ms-2">Batal</a>
                                 </div>
                             </div>
                         </form>

@@ -7,14 +7,15 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Http;
 use App\Helpers\Helpers;
 
-class ItemController extends Controller
+
+class GudangController extends Controller
 {
     public function index(Request $request)
     {
         if ($request->ajax()) {
             try {
                 $headers = Helpers::getHeaders();
-                $apiurl = Helpers::getApiUrl() . '/master/items/1.0.0/items/lists';
+                $apiurl = Helpers::getApiUrl() . '/masterdata/warehouse/1.0.0/warehouse/lists';
 
                 $length = $request->input('length', 10);
                 $start = $request->input('start', 0);
@@ -52,41 +53,26 @@ class ItemController extends Controller
                 }
             }
         }
-        return view('masterdata.item.index');
+
+        return view('masterdata.gudang.index');
     }
 
     public function create()
     {
-        $headers = Helpers::getHeaders();
-        $uomurl = Helpers::getApiUrl() . '/loccana/masterdata/1.0.0/uoms/list-select';
-        $itemurl = Helpers::getApiUrl() . '/loccana/masterdata/item-types/1.0.0/item-types/list-select';
-
-        $uomResponse = Http::withHeaders($headers)->get($uomurl);
-        $itemResponse = Http::withHeaders($headers)->get($itemurl);
-
-        if ($uomResponse->successful() && $itemResponse->successful()) {
-            $uoms = $uomResponse->json();
-            $items = $itemResponse->json();
-            return view('masterdata.item.add', compact('uoms', 'items'));
-        } else {
-            return back()->withErrors('Gagal mengambil data dari API: UOM atau Item Types tidak tersedia.');
-        }
+        return view('masterdata.gudang.add');
     }
-
     public function store(Request $request)
     {
         try {
             $headers = Helpers::getHeaders();
-            $apiurl = Helpers::getApiUrl() . '/master/items/1.0.0/items';
+            $apiurl = Helpers::getApiUrl() . '/masterdata/warehouse/1.0.0/warehouse';
 
             $data = [
                 'name' => $request->input('name'),
-                'description' => $request->input('description'),
-                'unit_of_measure_id' => $request->input('unit_of_measure_id'),
-                'item_type_id' => $request->input('item_type_id'),
-                'item_category_id' => $request->input('item_category_id', 1),
-                'sku' => $request->input('sku'), //
+                'location' => $request->input('location'),
                 'company_id' => $request->input('company_id', 2),
+                'description' => $request->input('description'),
+                'capacity' => $request->input('capacity', 0),
             ];
 
             $apiResponse = Http::withHeaders($headers)->post($apiurl, $data);
@@ -96,8 +82,8 @@ class ItemController extends Controller
                 $apiResponse->successful() &&
                 isset($responseData['success'])
             ) {
-                return redirect()->route('item.index')
-                    ->with('success', $responseData['message'] ?? 'Item Berhasil Ditambahkan');
+                return redirect()->route('gudang.index')
+                    ->with('success', $responseData['message'] ?? 'Gudang Berhasil Ditambahkan');
             } else {
                 return back()->withErrors(
                     'Gagal menambahkan data: ' .
@@ -109,87 +95,78 @@ class ItemController extends Controller
         }
     }
 
-    public function show($id)
+    /**
+     * Display the specified resource.
+     */
+    public function show(string $id)
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(string $id)
     {
         try {
             $headers = Helpers::getHeaders();
-            $apiurl = Helpers::getApiUrl() . '/master/items/1.0.0/items/' . $id;
+            $apiurl = Helpers::getApiUrl() . '/masterdata/warehouse/1.0.0/warehouse/' . $id;
 
             $apiResponse = Http::withHeaders($headers)->get($apiurl);
 
             if ($apiResponse->successful()) {
                 $data = $apiResponse->json()['data'];
-                return view('masterdata.item.detail', compact('data'));
+                return view('masterdata.gudang.edit', compact('data', 'id'));
             } else {
-                return back()->withErrors('Gagal mengambil data item: ' . $apiResponse->status());
+                return back()->withErrors('Gagal mengambil data COA: ' . $apiResponse->status());
             }
         } catch (\Exception $e) {
             return back()->withErrors($e->getMessage());
         }
     }
 
-    public function edit($id)
-    {
-        try {
-            $headers = Helpers::getHeaders();
-            $apiurl = Helpers::getApiUrl() . '/master/items/1.0.0/items/' . $id;
-            $uomurl = Helpers::getApiUrl() . '/loccana/masterdata/1.0.0/uoms/list-select';
-            $itemurl = Helpers::getApiUrl() . '/loccana/masterdata/item-types/1.0.0/item-types/list-select';
-
-            $apiResponse = Http::withHeaders($headers)->get($apiurl);
-            $uomResponse = Http::withHeaders($headers)->get($uomurl);
-            $itemResponse = Http::withHeaders($headers)->get($itemurl);
-
-            if ($uomResponse->successful() && $itemResponse->successful() && $apiResponse->successful()) {
-                $uoms = $uomResponse->json()['data'];
-                $items = $itemResponse->json()['data'];
-                $data = $apiResponse->json()['data'];
-                return view('masterdata.item.edit', compact('data', 'uoms', 'items', 'id'));
-            } else {
-                return back()->withErrors('Gagal mengambil data item: ' . $apiResponse->status());
-            }
-        } catch (\Exception $e) {
-            return back()->withErrors($e->getMessage());
-        }
-    }
-
+    /**
+     * Update the specified resource in storage.
+     */
     public function update(Request $request, string $id)
     {
         try {
             $headers = Helpers::getHeaders();
-            $apiurl = Helpers::getApiUrl() . '/master/items/1.0.0/items/' . $id;
+            $apiurl = Helpers::getApiUrl() . '/masterdata/warehouse/1.0.0/warehouse/' . $id;
 
             $data = [
                 'name' => $request->name,
+                'location' => $request->location,
                 'description' => $request->description,
-                'unit_of_measure_id' => $request->unit_of_measure_id,
-                'item_type_id' => $request->item_type_id,
-                'item_category_id' => $request->input('item_category_id', 1),
-                'sku' => $request->sku,
+                'capacity' => $request->capacity,
             ];
 
             $apiResponse = Http::withHeaders($headers)->put($apiurl, $data);
 
             if ($apiResponse->successful()) {
-                return redirect()->route('item.index')->with('success', 'Data Item Berhasil Diubah');
+                return redirect()->route('gudang.index')->with('success', 'Data Gudang berhasil diperbarui!');
             } else {
-                return back()->withErrors('Gagal memperbarui data item: ' . $apiResponse->status());
+                return back()->withErrors('Gagal memperbarui data Gudang: ' . $apiResponse->status());
             }
         } catch (\Exception $e) {
             return back()->withErrors($e->getMessage());
         }
     }
 
+    /**
+     * Remove the specified resource from storage.
+     */
     public function destroy(string $id)
     {
         try {
             $headers = Helpers::getHeaders();
-            $apiurl = Helpers::getApiUrl() . '/master/items/1.0.0/items/' . $id;
+            $apiurl = Helpers::getApiUrl() . '/masterdata/warehouse/1.0.0/warehouse/' . $id;
 
             $apiResponse = Http::withHeaders($headers)->delete($apiurl);
 
             if ($apiResponse->successful()) {
-                return redirect()->route('item.index')->with('success', 'Data Item Berhasil Dihapus!');
+                return redirect()->route('gudang.index')
+                    ->with('success', 'Data Gudang berhasil dihapus');
             } else {
                 return back()->withErrors(
                     'Gagal menghapus data: ' . $apiResponse->body()

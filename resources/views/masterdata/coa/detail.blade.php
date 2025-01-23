@@ -10,7 +10,7 @@
             <div class="page-title">
                 <div class="row">
                     <div class="col-12 col-md-6 order-md-1 order-last">
-                        <h3>Detail Item</h3>
+                        <h3>Detail COA</h3>
                     </div>
                     <div class="col-12 col-md-6 order-md-2 order-first">
                         <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
@@ -19,7 +19,7 @@
                                     <a href="index.html">Dashboard</a>
                                 </li>
                                 <li class="breadcrumb-item active" aria-current="page">
-                                    Detail Item Management
+                                    Detail COA Management
                                 </li>
                             </ol>
                         </nav>
@@ -42,7 +42,6 @@
                                     aria-label="Close"></button>
                             </div>
                         @endif
-
                         @if ($errors->any())
                             <div class="alert alert-danger alert-dismissible fade show" role="alert">
                                 @foreach ($errors->all() as $error)
@@ -54,68 +53,42 @@
                         @endif
                         <div class="row mb-3 align-items-center">
                             <div class="col-md-3">
-                                <label for="name" class="form-label fw-bold mb-0">Nama Item <span
-                                        class="text-danger">*</span></label>
+                                <label for="parent_name" class="form-label fw-bold mb-0">Parent</label>
                             </div>
                             <div class="col-md-9">
-                                <input type="text" class="form-control" name="name" value="{{ $data['item_name'] }}"
-                                    readonly>
-                            </div>
-                        </div>
-
-                        <div class="row mb-3 align-items-center">
-                            <div class="col-md-3">
-                                <label for="description" class="form-label fw-bold mb-0">Deskripsi Item <span
-                                        class="text-danger">*</span></label>
-                            </div>
-                            <div class="col-md-9">
-                                <textarea class="form-control" name="description" rows="5" readonly>{{ $data['item_description'] }}</textarea>
+                                <input type="text" class="form-control" id="parent_account_id" name="parent_account_id"
+                                    value="{{ $data['parent_account_id'] ?? '' }}" readonly>
                             </div>
                         </div>
                         <div class="row mb-3 align-items-center">
                             <div class="col-md-3">
-                                <label for="unit_of_measure_id" class="form-label fw-bold mb-0">UOM <span
-                                        class="text-danger">*</span></label>
+                                <label for="account_code" class="form-label fw-bold mb-0">COA </label>
                             </div>
                             <div class="col-md-9">
-                                <input type="text" class="form-control" name="name" value="{{ $data['uom_name'] }}"
-                                    readonly>
-                            </div>
-                        </div>
-
-
-                        <div class="row mb-3 align-items-center">
-                            <div class="col-md-3">
-                                <label for="tipebarang" class="form-label fw-bold mb-0">Tipe Barang <span
-                                        class="text-danger">*</span></label>
-                            </div>
-                            <div class="col-md-9">
-                                <input type="text" class="form-control" name="name"
-                                    value="{{ $data['item_type_name'] }}" readonly>
+                                <input type="text" class="form-control" id="account_code" name="account_code"
+                                    value="{{ $data['account_code'] ?? '' }}" readonly>
                             </div>
                         </div>
                         <div class="row mb-3 align-items-center">
                             <div class="col-md-3">
-                                <label for="satuan" class="form-label fw-bold mb-0">Kategori Barang<span
-                                        class="text-danger">*</span></label>
+                                <label for="keterangancoa" class="form-label fw-bold mb-0">Keterangan COA </label>
                             </div>
                             <div class="col-md-9">
-                                <input type="text" class="form-control" name="name" value="" readonly>
+                                <textarea class="form-control" id="keterangancoa" name="keterangancoa" rows="5" readonly>{{ $data['description'] ?? '' }}</textarea>
                             </div>
                         </div>
                         <div class="row mb-3 align-items-center">
                             <div class="col-md-3">
-                                <label for="sku" class="form-label fw-bold mb-0">SKU<span
-                                        class="text-danger">*</span></label>
+                                <label for="showhide" class="form-label fw-bold mb-0">Show/Hide </label>
                             </div>
                             <div class="col-md-9">
-                                <input type="text" class="form-control" name="sku" value="{{ $data['item_code'] }}"
+                                <input type="text" class="form-control" id="showhide" name="showhide" value="Show"
                                     readonly>
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-12 text-end">
-                                <a href="{{ route('item.index') }}" class="btn btn-primary ">Back</a>
+                                <a href="{{ route('coa.index') }}" class="btn btn-primary ">Back</a>
                             </div>
                         </div>
                     </div>
