@@ -1,10 +1,10 @@
 <div id="sidebar">
     <div class="sidebar-wrapper active">
         <div class="sidebar-header position-relative">
-            <div class="d-flex justify-content-between align-items-center">
-                <div class="logo">
+            <div class="d-flex justify-content-center align-items-center">
+                <div class="logo d-flex">
                     <a href="index.html"><img src="{{ asset('assets/img/sidebar/name.png') }}" alt="Logo" srcset=""
-                            style="width: 225px; height: auto;" /></a>
+                            style="width: 150px; height: auto;" /></a>
                 </div>
             </div>
         </div>
