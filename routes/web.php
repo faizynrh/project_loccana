@@ -40,14 +40,14 @@ Route::middleware('auth.login')->group(
             return view('profile');
         });
         // ==========================================MASTERDATA========================================
-        //items
-        Route::get('/items', [ItemController::class, 'index'])->name('items');
-        Route::get('/items/add', [ItemController::class, 'create'])->name('items.create');
-        Route::post('/items/add', [ItemController::class, 'store'])->name('items.store');
-        Route::delete('/items/delete/{id}', [ItemController::class, 'destroy'])->name('items.destroy');
-        Route::get('/items/edit/{id}', [ItemController::class, 'edit'])->name('items.edit');
-        Route::put('/items/edit/{id}', [ItemController::class, 'update'])->name('items.update');
-        Route::get('/items/detail/{id}', [ItemController::class, 'show'])->name('items.detail');
+        //item
+        Route::get('/item', [ItemController::class, 'index'])->name('item.index');
+        Route::get('/item/add', [ItemController::class, 'create'])->name('item.create');
+        Route::post('/item/add', [ItemController::class, 'store'])->name('item.store');
+        Route::delete('/item/delete/{id}', [ItemController::class, 'destroy'])->name('item.destroy');
+        Route::get('/item/edit/{id}', [ItemController::class, 'edit'])->name('item.edit');
+        Route::put('/item/edit/{id}', [ItemController::class, 'update'])->name('item.update');
+        Route::get('/item/detail/{id}', [ItemController::class, 'show'])->name('item.detail');
 
 
         //PRICE

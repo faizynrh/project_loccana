@@ -26,7 +26,7 @@
                     </a>
                     <ul class="submenu active">
                         <li class="submenu-item">
-                            <a href="/price" class="submenu-link">Items</a>
+                            <a href="/item" class="submenu-link">Items</a>
                         </li>
                         <li class="submenu-item">
                             <a href="/price" class="submenu-link">User</a>

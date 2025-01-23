@@ -5,49 +5,16 @@ namespace App\Http\Controllers\masterdata;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Http;
+use App\Helpers\Helpers;
 
 class ItemController extends Controller
 {
-    private function getAccessToken()
-    {
-        $tokenurl = env('API_TOKEN_URL');
-        $clientid = env('API_CLIENT_ID');
-        $clientsecret = env('API_CLIENT_SECRET');
-
-        $tokenResponse = Http::asForm()->post($tokenurl, [
-            'grant_type' => 'client_credentials',
-            'client_id' => $clientid,
-            'client_secret' => $clientsecret,
-        ]);
-
-        if (!$tokenResponse->successful()) {
-            throw new \Exception('Failed to fetch access token');
-        }
-
-        return $tokenResponse->json()['access_token'];
-    }
-
-    private function getHeaders()
-    {
-        $accessToken = $this->getAccessToken();
-        return [
-            'Authorization' => 'Bearer ' . $accessToken,
-            'Content-Type' => 'application/json'
-        ];
-    }
-
-    private function getApiUrl()
-    {
-        $apiurl = env('API_URL');
-        return $apiurl;
-    }
-
     public function index(Request $request)
     {
         if ($request->ajax()) {
             try {
-                $headers = $this->getHeaders();
-                $apiurl = $this->getApiUrl() . '/master/items/1.0.0/items/lists';
+                $headers = Helpers::getHeaders();
+                $apiurl = Helpers::getApiUrl() . '/master/items/1.0.0/items/lists';
 
                 $length = $request->input('length', 10);
                 $start = $request->input('start', 0);
@@ -85,14 +52,14 @@ class ItemController extends Controller
                 }
             }
         }
-        return view('masterdata.items.items');
+        return view('masterdata.item.index');
     }
 
     public function create()
     {
-        $headers = $this->getHeaders();
-        $uomurl = $this->getApiUrl() . '/loccana/masterdata/1.0.0/uoms/list-select';
-        $itemurl = $this->getApiUrl() . '/loccana/masterdata/item-types/1.0.0/item-types/list-select';
+        $headers = Helpers::getHeaders();
+        $uomurl = Helpers::getApiUrl() . '/loccana/masterdata/1.0.0/uoms/list-select';
+        $itemurl = Helpers::getApiUrl() . '/loccana/masterdata/item-types/1.0.0/item-types/list-select';
 
         $uomResponse = Http::withHeaders($headers)->get($uomurl);
         $itemResponse = Http::withHeaders($headers)->get($itemurl);
@@ -100,7 +67,7 @@ class ItemController extends Controller
         if ($uomResponse->successful() && $itemResponse->successful()) {
             $uoms = $uomResponse->json();
             $items = $itemResponse->json();
-            return view('masterdata.items.add', compact('uoms', 'items'));
+            return view('masterdata.item.add', compact('uoms', 'items'));
         } else {
             return back()->withErrors('Gagal mengambil data dari API: UOM atau Item Types tidak tersedia.');
         }
@@ -109,8 +76,8 @@ class ItemController extends Controller
     public function store(Request $request)
     {
         try {
-            $headers = $this->getHeaders();
-            $apiurl = $this->getApiUrl() . '/master/items/1.0.0/items';
+            $headers = Helpers::getHeaders();
+            $apiurl = Helpers::getApiUrl() . '/master/items/1.0.0/items';
 
             $data = [
                 'name' => $request->input('name'),
@@ -145,14 +112,14 @@ class ItemController extends Controller
     public function show($id)
     {
         try {
-            $headers = $this->getHeaders();
-            $apiurl = $this->getApiUrl() . '/master/items/1.0.0/items/' . $id;
+            $headers = Helpers::getHeaders();
+            $apiurl = Helpers::getApiUrl() . '/master/items/1.0.0/items/' . $id;
 
             $apiResponse = Http::withHeaders($headers)->get($apiurl);
 
             if ($apiResponse->successful()) {
                 $data = $apiResponse->json()['data'];
-                return view('masterdata.items.detail', compact('data'));
+                return view('masterdata.item.detail', compact('data'));
             } else {
                 return back()->withErrors('Gagal mengambil data item: ' . $apiResponse->status());
             }
@@ -164,10 +131,10 @@ class ItemController extends Controller
     public function edit($id)
     {
         try {
-            $headers = $this->getHeaders();
-            $apiurl = $this->getApiUrl() . '/master/items/1.0.0/items/' . $id;
-            $uomurl = $this->getApiUrl() . '/loccana/masterdata/1.0.0/uoms/list-select';
-            $itemurl = $this->getApiUrl() . '/loccana/masterdata/item-types/1.0.0/item-types/list-select';
+            $headers = Helpers::getHeaders();
+            $apiurl = Helpers::getApiUrl() . '/master/items/1.0.0/items/' . $id;
+            $uomurl = Helpers::getApiUrl() . '/loccana/masterdata/1.0.0/uoms/list-select';
+            $itemurl = Helpers::getApiUrl() . '/loccana/masterdata/item-types/1.0.0/item-types/list-select';
 
             $apiResponse = Http::withHeaders($headers)->get($apiurl);
             $uomResponse = Http::withHeaders($headers)->get($uomurl);
@@ -177,7 +144,7 @@ class ItemController extends Controller
                 $uoms = $uomResponse->json()['data'];
                 $items = $itemResponse->json()['data'];
                 $data = $apiResponse->json()['data'];
-                return view('masterdata.items.edit', compact('data', 'uoms', 'items', 'id'));
+                return view('masterdata.item.edit', compact('data', 'uoms', 'items', 'id'));
             } else {
                 return back()->withErrors('Gagal mengambil data item: ' . $apiResponse->status());
             }
@@ -189,8 +156,8 @@ class ItemController extends Controller
     public function update(Request $request, string $id)
     {
         try {
-            $headers = $this->getHeaders();
-            $apiurl = $this->getApiUrl() . '/master/items/1.0.0/items/' . $id;
+            $headers = Helpers::getHeaders();
+            $apiurl = Helpers::getApiUrl() . '/master/items/1.0.0/items/' . $id;
 
             $data = [
                 'name' => $request->name,
@@ -204,7 +171,7 @@ class ItemController extends Controller
             $apiResponse = Http::withHeaders($headers)->put($apiurl, $data);
 
             if ($apiResponse->successful()) {
-                return redirect()->route('items')->with('success', 'Data Item Berhasil Diubah');
+                return redirect()->route('item.index')->with('success', 'Data Item Berhasil Diubah');
             } else {
                 return back()->withErrors('Gagal memperbarui data item: ' . $apiResponse->status());
             }
@@ -216,13 +183,13 @@ class ItemController extends Controller
     public function destroy(string $id)
     {
         try {
-            $headers = $this->getHeaders();
-            $apiurl = $this->getApiUrl() . '/master/items/1.0.0/items/' . $id;
+            $headers = Helpers::getHeaders();
+            $apiurl = Helpers::getApiUrl() . '/master/items/1.0.0/items/' . $id;
 
             $apiResponse = Http::withHeaders($headers)->delete($apiurl);
 
             if ($apiResponse->successful()) {
-                return redirect()->route('items')
+                return redirect()->route('item.index')
                     ->with('success', 'Data Item Berhasil Dihapus!');
             } else {
                 return back()->withErrors(
