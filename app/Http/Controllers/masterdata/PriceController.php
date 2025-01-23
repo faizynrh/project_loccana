@@ -42,7 +42,6 @@ class PriceController extends Controller
     }
     public function index(Request $request)
     {
-
         if ($request->ajax()) {
             try {
                 $headers = $this->getHeaders();
@@ -61,7 +60,6 @@ class PriceController extends Controller
                 if (!empty($search)) {
                     $requestbody['search'] = $search;
                 }
-
                 $apiResponse = Http::withHeaders($headers)->post($apiurl, $requestbody);
                 if ($apiResponse->successful()) {
                     $data = $apiResponse->json();

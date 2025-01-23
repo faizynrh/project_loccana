@@ -9,14 +9,20 @@
         <div class="page-heading">
             <div class="page-title">
                 <div class="row">
-                    <div class="col-12">
+                    <div class="col-12 col-md-6 order-md-1 order-last">
+                        <h3>Price Management</h3>
+                        <p class="text-subtitle text-muted">
+                            Easily manage and adjust product prices.
+                        </p>
+                    </div>
+                    <div class="col-12 col-md-6 order-md-2 order-first">
                         <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
-                            <ol class="breadcrumb d-flex justify-content-end">
+                            <ol class="breadcrumb">
                                 <li class="breadcrumb-item">
                                     <a href="index.html">Dashboard</a>
                                 </li>
                                 <li class="breadcrumb-item active" aria-current="page">
-                                    Price
+                                    Price Management
                                 </li>
                             </ol>
                         </nav>
@@ -26,7 +32,7 @@
             <section class="section">
                 <div class="card">
                     <div class="card-header">
-                        <h4 class="card-title">Price Management</h4>
+                        <h6 class="card-title">Data Price</h6>
                     </div>
                     <div class="card-body">
                         @if (session('success'))
@@ -103,60 +109,60 @@
 @endsection
 @push('scripts')
     <script>
-        // $(document).ready(function() {
-        //     $('#tableprice').DataTable({
-        //         serverSide: true,
-        //         processing: true,
-        //         ajax: {
-        //             url: '{{ route('price') }}',
-        //             type: 'GET',
-        //         },
-        //         columns: [{
-        //                 data: null,
-        //                 render: function(data, type, row, meta) {
-        //                     return meta.row + meta.settings._iDisplayStart + 1;
-        //                 }
-        //             },
-        //             {
-        //                 data: 'kode_item'
-        //             },
-        //             {
-        //                 data: 'nama_item'
-        //             },
-        //             {
-        //                 data: 'nama_principal'
-        //             },
-        //             {
-        //                 data: 'harga_pokok'
-        //             },
-        //             {
-        //                 data: 'harga_beli'
-        //             },
-        //             {
-        //                 data: null,
-        //                 render: function(data, type, row) {
-        //                     return `
-    //                         <div class="d-flex align-items-center">
-    //                 <a href="/price/edit/${row.id}" class="btn btn-sm btn-warning me-2"
-    //                                 title="Edit">
-    //                                 <i class="bi bi-pencil"></i>
-    //                             </a>
-    //                             <form id="approve${row.id}"
-    //                                 action="/price/approve/${row.id}" method="POST">
-    //                                 @csrf
-    //                                 @method('PUT')
-    //                                 <button type="button" class="btn btn-sm btn-success me-2" title="Approve"
-    //                                     onclick="confirmApprove(${row.id})">
-    //                                     <i class="bi bi-check"></i>
-    //                                 </button>
-    //                             </form>
-    //                             </div>
-    //             `;
-        //                 }
-        //             }
-        //         ]
-        //     });
-        // });
+        $(document).ready(function() {
+            $('#tableprice').DataTable({
+                serverSide: true,
+                processing: true,
+                ajax: {
+                    url: '{{ route('price') }}',
+                    type: 'GET',
+                },
+                columns: [{
+                        data: null,
+                        render: function(data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+                    {
+                        data: 'kode_item'
+                    },
+                    {
+                        data: 'nama_item'
+                    },
+                    {
+                        data: 'nama_principal'
+                    },
+                    {
+                        data: 'harga_pokok'
+                    },
+                    {
+                        data: 'harga_beli'
+                    },
+                    {
+                        data: null,
+                        render: function(data, type, row) {
+                            return `
+                        <div class="d-flex align-items-center">
+                <a href="/price/edit/${row.id}" class="btn btn-sm btn-warning me-2"
+                                title="Edit">
+                                <i class="bi bi-pencil"></i>
+                            </a>
+                            <form id="approve${row.id}"
+                                action="/price/approve/${row.id}" method="POST">
+                                @csrf
+                                @method('PUT')
+                                <button type="button" class="btn btn-sm btn-success me-2" title="Approve"
+                                    onclick="confirmApprove(${row.id})">
+                                    <i class="bi bi-check"></i>
+                                </button>
+                            </form>
+                            </div>
+            `;
+                        }
+                    }
+                ]
+            });
+        });
 
         function confirmApprove(id) {
             Swal.fire({
