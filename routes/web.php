@@ -16,6 +16,10 @@ use App\Http\Controllers\masterdata\UomController;
 */
 
 Route::get('/', function () {
+    return view('home');
+});
+
+Route::get('/dashboard', function () {
     return view('masterdata.index');
 });
 
