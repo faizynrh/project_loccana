@@ -6,48 +6,18 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Http;
 use RealRashid\SweetAlert\Facades\Alert;
+use App\Helpers\Helpers;
+
 
 
 class PriceController extends Controller
 {
-    private function getAccessToken()
-    {
-        $tokenurl = env('API_TOKEN_URL');
-        $clientid = env('API_CLIENT_ID');
-        $clientsecret = env('API_CLIENT_SECRET');
-
-        $tokenResponse = Http::asForm()->post($tokenurl, [
-            'grant_type' => 'client_credentials',
-            'client_id' => $clientid,
-            'client_secret' => $clientsecret,
-        ]);
-
-        if (!$tokenResponse->successful()) {
-            throw new \Exception('Failed to fetch access token');
-        }
-
-        return $tokenResponse->json()['access_token'];
-    }
-    private function getHeaders()
-    {
-        $accessToken = $this->getAccessToken();
-        return [
-            'Authorization' => 'Bearer ' . $accessToken,
-            'Content-Type' => 'application/json'
-        ];
-    }
-
-    private function getApiUrl()
-    {
-        $apiurl = env('API_URL');
-        return $apiurl;
-    }
     public function index(Request $request)
     {
         if ($request->ajax()) {
             try {
-                $headers = $this->getHeaders();
-                $apiurl = $this->getApiUrl() . '/masterdata/price/1.0.0/price-manajement/list';
+                $headers = Helpers::getHeaders();
+                $apiurl = Helpers::getApiUrl() . '/masterdata/price/1.0.0/price-manajement/list';
 
                 $length = $request->input('length', 10);
                 $start = $request->input('start', 0);
@@ -90,8 +60,8 @@ class PriceController extends Controller
     public function edit($id)
     {
         try {
-            $headers = $this->getHeaders();
-            $apiurl = $this->getApiUrl() . '/masterdata/price/1.0.0/price-manajement/' . $id;
+            $headers = Helpers::getHeaders();
+            $apiurl = Helpers::getApiUrl() . '/masterdata/price/1.0.0/price-manajement/' . $id;
             $apiResponse = Http::withHeaders($headers)->get($apiurl);
             if ($apiResponse->successful()) {
                 $data = $apiResponse->json()['data'];
@@ -108,8 +78,8 @@ class PriceController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            $headers = $this->getHeaders();
-            $apiurl = $this->getApiUrl() . '/masterdata/price/1.0.0/price-manajement/' . $id;
+            $headers = Helpers::getHeaders();
+            $apiurl = Helpers::getApiUrl() . '/masterdata/price/1.0.0/price-manajement/' . $id;
 
             $data = [
                 'harga_atas' => $request->harga_atas ?? 0,
@@ -132,8 +102,8 @@ class PriceController extends Controller
     public function approve(Request $request, $id)
     {
         try {
-            $headers = $this->getHeaders();
-            $apiurl = $this->getApiUrl() . '/masterdata/price/1.0.0/price-manajement/approve/' . $id;
+            $headers = Helpers::getHeaders();
+            $apiurl = Helpers::getApiUrl() . '/masterdata/price/1.0.0/price-manajement/approve/' . $id;
 
             $data = [
                 'status' => 'approve',
