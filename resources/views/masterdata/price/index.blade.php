@@ -52,7 +52,6 @@
                                     aria-label="Close"></button>
                             </div>
                         @endif
-                        {{-- <div class="table-responsive"> --}}
                         <table class="table table-striped table-bordered mt-3" id="tableprice">
                             <thead>
                                 <tr>
@@ -66,41 +65,7 @@
                                     <th scope="col">Option</th>
                                 </tr>
                             </thead>
-                            {{-- <tbody>
-                <tr>
-                    @if (!empty($data))
-                        @foreach ($data['data']['table'] as $item)
-                            <td>{{ $loop->iteration }}</td>
-                            <td>{{ $item['kode_item'] }}</td>
-                            <td>{{ $item['nama_item'] }}</td>
-                            <td>{{ $item['nama_principal'] }}</td>
-                            <td>{{ $item['harga_pokok'] }}</td>
-                            <td>{{ $item['harga_beli'] }}</td>
-                            <td></td>
-                            <td>
-                                <div class="d-flex align-items-center">
-                                    <a href="{{ route('price.edit', $item['id']) }}" class="btn btn-sm btn-warning me-2"
-                                        title="Edit">
-                                        <i class="bi bi-pencil"></i>
-                                    </a>
-                                    <form id="approve{{ $item['id'] }}"
-                                        action="{{ route('price.approve', $item['id']) }}" method="POST">
-                                        @csrf
-                                        @method('PUT')
-                                        <button type="button" class="btn btn-sm btn-success me-2" title="Approve"
-                                            onclick="confirmApprove({{ $item['id'] }})">
-                                            <i class="bi bi-check"></i>
-                                        </button>
-                                    </form>
-                                </div>
-                            </td>
-                </tr>
-                @endforeach
-                @endif
-            </tbody> --}}
                         </table>
-                        {{-- </div> --}}
-
                     </div>
                 </div>
             </section>
@@ -114,7 +79,7 @@
                 serverSide: true,
                 processing: true,
                 ajax: {
-                    url: '{{ route('price') }}',
+                    url: '{{ route('price.index') }}',
                     type: 'GET',
                 },
                 columns: [{
@@ -151,7 +116,7 @@
                                 action="/price/approve/${row.id}" method="POST">
                                 @csrf
                                 @method('PUT')
-                                <button type="button" class="btn btn-sm btn-success me-2" title="Approve"
+                                <button type="submit" class="btn btn-sm btn-success me-2" title="Approve"
                                     onclick="confirmApprove(${row.id})">
                                     <i class="bi bi-check"></i>
                                 </button>
@@ -165,14 +130,14 @@
         });
 
         function confirmApprove(id) {
-            Swal.fire({
-                title: 'Apakah kamu yakin?',
-                text: 'Pastikan ini data yang akan disetujui',
-                icon: 'warning',
-                showCancelButton: true,
-                reverseButtons: true
-            }).then((result) => {
-                if (result.isConfirmed) {
+            swal({
+                title: "Apakah kamu yakin?",
+                text: "Pastikan ini data yang akan disetujui",
+                icon: "warning",
+                buttons: ["Batal", "Setujui"],
+                dangerMode: true,
+            }).then((willApprove) => {
+                if (willApprove) {
                     document.getElementById('approve' + id).submit();
                 }
             });

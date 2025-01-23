@@ -5,6 +5,8 @@ namespace App\Http\Controllers\masterdata;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Http;
+use RealRashid\SweetAlert\Facades\Alert;
+
 
 class PriceController extends Controller
 {
@@ -118,7 +120,7 @@ class PriceController extends Controller
 
             $apiResponse = Http::withHeaders($headers)->put($apiurl, $data);
             if ($apiResponse->successful()) {
-                return redirect()->route('price')->with('success', 'Data Price berhasil diperbarui!');
+                return redirect()->route('price.index')->with('success', 'Data Price berhasil diperbarui!');
             } else {
                 return back()->withErrors('Gagal memperbarui data Price: ' . $apiResponse->status());
             }
@@ -140,7 +142,10 @@ class PriceController extends Controller
             $apiResponse = Http::withHeaders($headers)->put($apiurl, $data);
 
             if ($apiResponse->successful()) {
-                return redirect()->route('price')->with('success', 'Data Berhasil Disetujui!');
+                $title = 'Delete User!';
+                $text = "Are you sure you want to delete?";
+                confirmDelete($title, $text);
+                return redirect()->route('price.index')->with('success', 'Data Berhasil Disetujui!');
             } else {
                 return back()->withErrors('Gagal Approve Price: ' . $apiResponse->status());
             }
