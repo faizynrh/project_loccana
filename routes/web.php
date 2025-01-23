@@ -26,7 +26,9 @@ Route::get('/redirect', [AuthController::class, 'redirectToIdentityServer'])->na
 Route::get('/callback', [AuthController::class, 'handleCallback'])->name('oauth.callback');
 Route::get('/logout', [AuthController::class, 'logout'])->name('oauth.logout');
 
-Route::get('/', function () {
+Route::get('/', function () {});
+
+Route::get('/dashboard', function () {
     return view('masterdata.index');
 });
 
