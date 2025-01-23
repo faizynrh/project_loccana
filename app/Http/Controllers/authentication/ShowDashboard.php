@@ -16,6 +16,6 @@ class ShowDashboard extends Controller
 
         // dd($roles); // Jika Anda ingin men-debug roles, pastikan variabel $roles sudah didefinisikan
 
-        return view('dashboard', compact('message'));
+        return view('masterdata.index', compact('message'));
     }
 }

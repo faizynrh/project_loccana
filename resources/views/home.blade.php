@@ -19,13 +19,13 @@
                         Selamat Datang di <span class="text-warning">PT. Endira Alda</span>
                     </h1>
                     <div class="mt-4">
-                        {{-- <a href="{{ route('oauth.redirect') }}"
+                        <a href="{{ route('oauth.redirect') }}"
                             class="btn btn-login text-white py-3 px-5 rounded-pill fw-semibold">
                             Login
-                        </a> --}}
-                        <a href="/dashboard" class="btn btn-login text-white py-3 px-5 rounded-pill fw-semibold">
-                            Login
                         </a>
+                        {{-- <a href="/dashboard" class="btn btn-login text-white py-3 px-5 rounded-pill fw-semibold">
+                            Login
+                        </a> --}}
                     </div>
                 </div>
 

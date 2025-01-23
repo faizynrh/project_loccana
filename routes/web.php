@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\masterdata\UomController;
 use App\Http\Controllers\masterdata\PriceController;
+use App\Http\Controllers\authentication\ShowDashboard;
 use App\Http\Controllers\authentication\AuthController;
 
 /*
@@ -22,15 +23,22 @@ Route::get('/', function () {
 Route::get('/login', function () {
     return redirect('/');
 });
+
 Route::get('/redirect', [AuthController::class, 'redirectToIdentityServer'])->name('oauth.redirect');
 Route::get('/callback', [AuthController::class, 'handleCallback'])->name('oauth.callback');
 Route::get('/logout', [AuthController::class, 'logout'])->name('oauth.logout');
 
-Route::get('/', function () {});
+//MIDDLEWARE
+Route::middleware('auth.login')->group(
+    function () {
+        Route::get('/dashboard', [ShowDashboard::class, 'showDashboard'])->name('dashboard-dev');
 
-Route::get('/dashboard', function () {
-    return view('masterdata.index');
-});
+        // ==========================================MASTERDATA========================================
 
-Route::get('/price', [PriceController::class, 'index'])->name('price');
-// Route::get('/uom/add', [UomController::class, 'create'])->name('uom.create');
+        //PRICE
+        Route::get('/price', [PriceController::class, 'index'])->name('price');
+        Route::get('/price/edit/{id}', [PriceController::class, 'edit'])->name('price.edit');
+        Route::put('/price/edit/{id}', [PriceController::class, 'update'])->name('price.update');
+        Route::put('/price/approve/{id}', [PriceController::class, 'approve'])->name('price.approve');
+    }
+);

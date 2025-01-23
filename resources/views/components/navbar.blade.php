@@ -27,7 +27,8 @@
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton"
                         style="min-width: 11rem">
                         <li>
-                            <h6 class="dropdown-header">Hello, John!</h6>
+                            <h6 class="dropdown-header">Hello, {{ Session::get('user_info')['username'] ?? 'Guest' }}
+                            </h6>
                         </li>
                         <li>
                             <a class="dropdown-item" href="#"><i class="icon-mid bi bi-person me-2"></i> My
@@ -41,7 +42,8 @@
                             <hr class="dropdown-divider" />
                         </li>
                         <li>
-                            <a class="dropdown-item" href="#"><i class="icon-mid bi bi-box-arrow-left me-2"></i>
+                            <a class="dropdown-item" href="{{ route('oauth.logout') }}"><i
+                                    class="icon-mid bi bi-box-arrow-left me-2"></i>
                                 Logout</a>
                         </li>
                     </ul>
