@@ -21,19 +21,24 @@ use App\Http\Controllers\authentication\AuthController;
 Route::get('/', function () {
     return view('home');
 })->name('home');
+
 Route::get('/login', function () {
     return redirect('/');
 });
+
 
 Route::get('/redirect', [AuthController::class, 'redirectToIdentityServer'])->name('oauth.redirect');
 Route::get('/callback', [AuthController::class, 'handleCallback'])->name('oauth.callback');
 Route::get('/logout', [AuthController::class, 'logout'])->name('oauth.logout');
 
+
 //MIDDLEWARE
 Route::middleware('auth.login')->group(
     function () {
         Route::get('/dashboard', [ShowDashboard::class, 'showDashboard'])->name('dashboard-dev');
-
+        Route::get('/profile', function () {
+            return view('profile');
+        });
         // ==========================================MASTERDATA========================================
         //item
         Route::get('/item', [ItemController::class, 'index'])->name('item.index');
