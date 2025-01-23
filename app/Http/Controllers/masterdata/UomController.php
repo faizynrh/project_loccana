@@ -6,50 +6,19 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Http;
+use App\Helpers\Helpers;
+use Faker\Extension\Helper;
 
 class UomController extends Controller
 {
     //
-    private function getAccessToken()
-    {
-        $tokenurl = env("API_TOKEN_URL");;
-        $clientid = env('API_CLIENT_ID');
-        $clientsecret = env('API_CLIENT_SECRET');
-
-        $tokenResponse = Http::asForm()->post($tokenurl, [
-            'grant_type' => 'client_credentials',
-            'client_id' => $clientid,
-            'client_secret' => $clientsecret,
-        ]);
-
-        if (!$tokenResponse->successful()) {
-            throw new \Exception('Failed to fetch access token');
-        }
-
-        return $tokenResponse->json()['access_token'];
-    }
-
-    private function getHeaders()
-    {
-        $accessToken = $this->getAccessToken();
-        return [
-            'Authorization' => 'Bearer ' . $accessToken,
-            'Content-Type' => 'application/json'
-        ];
-    }
-
-    private function getApiUrl()
-    {
-        $apiurl = env('API_URL');
-        return $apiurl;
-    }
 
     public function index(Request $request)
     {
         if ($request->ajax()) {
             try {
-                $headers = $this->getHeaders();
-                $apiurl = $this->getApiUrl() . '/loccana/masterdata/1.0.0/uoms/lists';
+                $headers = Helpers::getHeaders();
+                $apiurl = Helpers::getApiUrl() . '/loccana/masterdata/1.0.0/uoms/lists';
 
                 $length = $request->input('length', 10);
                 $start = $request->input('start', 0);
@@ -94,8 +63,8 @@ class UomController extends Controller
     public function destroy($id)
     {
         try {
-            $headers = $this->getHeaders();
-            $apiurl = $this->getApiUrl() . '/loccana/masterdata/1.0.0/uoms/' . $id;
+            $headers = Helpers::getHeaders();
+            $apiurl = Helpers::getApiUrl() . '/loccana/masterdata/1.0.0/uoms/' . $id;
 
             $apiResponse = Http::withHeaders($headers)->delete($apiurl);
             // dd($apiResponse->json());
@@ -115,8 +84,8 @@ class UomController extends Controller
     public function store(Request $request)
     {
         try {
-            $headers = $this->getHeaders();
-            $apiurl = $this->getApiUrl() . '/loccana/masterdata/1.0.0/uoms';
+            $headers = Helpers::getHeaders();
+            $apiurl = Helpers::getApiUrl() . '/loccana/masterdata/1.0.0/uoms';
 
             $data = [
                 'name' => (string)$request->input('uom_name'),
@@ -151,8 +120,8 @@ class UomController extends Controller
     public function edit($id)
     {
         try {
-            $headers = $this->getHeaders();
-            $apiurl = $this->getApiUrl() . '/loccana/masterdata/1.0.0/uoms/' . $id;
+            $headers = Helpers::getHeaders();
+            $apiurl = Helpers::getApiUrl() . '/loccana/masterdata/1.0.0/uoms/' . $id;
             // Get UoM data
             $apiResponse = Http::withHeaders($headers)->get($apiurl);
             // dd($apiResponse->json());
@@ -175,8 +144,8 @@ class UomController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            $headers = $this->getHeaders();
-            $apiurl = $this->getApiUrl() . '/loccana/masterdata/1.0.0/uoms/' . $id;
+            $headers = Helpers::getHeaders();
+            $apiurl = Helpers::getApiUrl() . '/loccana/masterdata/1.0.0/uoms/' . $id;
 
             $data = [
                 'name' => $request->input('uom_name'),
@@ -201,8 +170,8 @@ class UomController extends Controller
     public function show($id)
     {
         try {
-            $headers = $this->getHeaders();
-            $apiurl = $this->getApiUrl() . '/loccana/masterdata/1.0.0/uoms/' . $id;
+            $headers = Helpers::getHeaders();
+            $apiurl = Helpers::getApiUrl() . '/loccana/masterdata/1.0.0/uoms/' . $id;
             // Get UoM data
             $apiResponse = Http::withHeaders($headers)->get($apiurl);
             // dd($apiResponse->json());

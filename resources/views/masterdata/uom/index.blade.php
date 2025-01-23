@@ -7,7 +7,7 @@
                     <div class="col-12 col-md-6 order-md-1 order-last">
                         <h3>UOM Management</h3>
                         <p class="text-subtitle text-muted">
-                            Optimize and Simplify with Effective UOM Management.
+                            Effortless Control for Units and Measurements.
                         </p>
                     </div>
                     <div class="col-12 col-md-6 order-md-2 order-first">
@@ -47,7 +47,10 @@
                                     aria-label="Close"></button>
                             </div>
                         @endif
-                        <table class="table table-striped table-bordered mt-3" id="tableuom">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <a href="/uom/add" class="btn btn-primary fw-bold ">+ Tambah UOM</a>
+                        </div>
+                        <table class="table table-striped table-bordered mt-3 table-responsive" id="tableuom">
                             <thead>
                                 <tr>
                                     <th scope="col">No</th>
@@ -63,41 +66,42 @@
                             </tbody>
                         </table>
                     </div>
-
                 </div>
             </section>
         </div>
     </div>
-    <script>
-        $(document).ready(function() {
-            $('#tableuom').DataTable({
-                serverSide: true,
-                processing: true,
-                // pageLength: 1,
-                ajax: {
-                    url: '{{ route('uom.index') }}',
-                    type: 'GET',
-                },
-                columns: [{
-                        data: null,
-                        render: function(data, type, row, meta) {
-                            return meta.row + meta.settings._iDisplayStart + 1;
-                        }
+    @push('scripts')
+        <script>
+            $(document).ready(function() {
+                $('#tableuom').DataTable({
+                    serverSide: true,
+                    processing: true,
+                    // pageLength: 1,
+                    ajax: {
+                        url: '{{ route('uom.index') }}',
+                        type: 'GET',
+
                     },
-                    {
-                        data: 'name'
-                    },
-                    {
-                        data: 'symbol'
-                    },
-                    {
-                        data: null,
-                        defaultContent: ''
-                    },
-                    {
-                        data: null,
-                        render: function(data, type, row) {
-                            return `
+                    columns: [{
+                            data: null,
+                            render: function(data, type, row, meta) {
+                                return meta.row + meta.settings._iDisplayStart + 1;
+                            }
+                        },
+                        {
+                            data: 'name'
+                        },
+                        {
+                            data: 'symbol'
+                        },
+                        {
+                            data: null,
+                            defaultContent: ''
+                        },
+                        {
+                            data: null,
+                            render: function(data, type, row) {
+                                return `
                     <a href="/uom/show/${row.id}" class="btn btn-sm btn-info mb-2" title="Detail">
                         <i class="bi bi-eye"></i>
                     </a>
@@ -112,25 +116,26 @@
                         </button>
                     </form>
                 `;
+                            }
                         }
+                    ],
+
+                });
+            });
+
+            function confirmDelete(id) {
+                Swal.fire({
+                    title: 'Apakah kamu yakin?',
+                    text: 'Data ini akan dihapus secara permanen!',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    reverseButtons: true
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        document.getElementById('delete' + id).submit();
                     }
-                ],
-
-            });
-        });
-
-        function confirmDelete(id) {
-            Swal.fire({
-                title: 'Apakah kamu yakin?',
-                text: 'Data ini akan dihapus secara permanen!',
-                icon: 'warning',
-                showCancelButton: true,
-                reverseButtons: true
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    document.getElementById('delete' + id).submit();
-                }
-            });
-        }
-    </script>
+                });
+            }
+        </script>
+    @endpush
 @endsection
