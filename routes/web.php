@@ -53,6 +53,16 @@ Route::middleware('auth.login')->group(
         Route::put('/item/update/{id}', [ItemController::class, 'update'])->name('item.update');
         Route::get('/item/detail/{id}', [ItemController::class, 'show'])->name('item.detail');
 
+        //USER
+        Route::get('/user', function () {
+            return view('masterdata.user.index');
+        });
+        Route::get('/user/add', function () {
+            return view('masterdata.user.add');
+        });
+        Route::get('/user/edit', function () {
+            return view('masterdata.user.edit');
+        });
         //PRICE
         Route::get('/price', [PriceController::class, 'index'])->name('price.index');
         Route::get('/price/edit/{id}', [PriceController::class, 'edit'])->name('price.edit');
