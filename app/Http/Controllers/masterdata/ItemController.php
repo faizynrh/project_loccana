@@ -96,7 +96,7 @@ class ItemController extends Controller
                 $apiResponse->successful() &&
                 isset($responseData['success'])
             ) {
-                return redirect()->route('items')
+                return redirect()->route('item.index')
                     ->with('success', $responseData['message'] ?? 'Item Berhasil Ditambahkan');
             } else {
                 return back()->withErrors(
@@ -189,8 +189,7 @@ class ItemController extends Controller
             $apiResponse = Http::withHeaders($headers)->delete($apiurl);
 
             if ($apiResponse->successful()) {
-                return redirect()->route('item.index')
-                    ->with('success', 'Data Item Berhasil Dihapus!');
+                return redirect()->route('item.index')->with('success', 'Data Item Berhasil Dihapus!');
             } else {
                 return back()->withErrors(
                     'Gagal menghapus data: ' . $apiResponse->body()

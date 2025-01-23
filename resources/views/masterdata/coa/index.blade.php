@@ -10,7 +10,7 @@
             <div class="page-title">
                 <div class="row">
                     <div class="col-12 col-md-6 order-md-1 order-last">
-                        <h3>Price Management</h3>
+                        <h3>COA Management</h3>
                         {{-- <p class="text-subtitle text-muted">
                             Easily manage and adjust product prices.
                         </p> --}}
@@ -19,10 +19,10 @@
                         <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item">
-                                    <a href="index.html">Dashboard</a>
+                                    <a href="/dashboard">Dashboard</a>
                                 </li>
                                 <li class="breadcrumb-item active" aria-current="page">
-                                    Price Management
+                                    COA Management
                                 </li>
                             </ol>
                         </nav>
@@ -31,9 +31,6 @@
             </div>
             <section class="section">
                 <div class="card">
-                    <div class="card-header">
-                        <h6 class="card-title">Data Price</h6>
-                    </div>
                     <div class="card-body">
                         @if (session('success'))
                             <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -42,7 +39,6 @@
                                     aria-label="Close"></button>
                             </div>
                         @endif
-
                         @if ($errors->any())
                             <div class="alert alert-danger alert-dismissible fade show" role="alert">
                                 @foreach ($errors->all() as $error)
@@ -52,17 +48,15 @@
                                     aria-label="Close"></button>
                             </div>
                         @endif
-                        <table class="table table-striped table-bordered mt-3" id="tableprice">
+                        <a href="/coa/add" class="btn btn-primary btn-lg fw-bold mt-1 mb-2">+</a>
+                        <table class="table table-striped table-bordered mt-3" id="tablecoa">
                             <thead>
                                 <tr>
-                                    <th scope="col">No</th>
-                                    <th scope="col">Kode Item</th>
-                                    <th scope="col">Nama Item</th>
-                                    <th scope="col">Nama Principal</th>
-                                    <th scope="col">Harga Pokok </th>
-                                    <th scope="col">Harga Beli</th>
-                                    {{-- <th scope="col">Status</th> --}}
-                                    <th scope="col">Option</th>
+                                    <th scope="col" class="col-1">No</th>
+                                    <th scope="col" class="col-5">Parent</th>
+                                    <th scope="col" class="col-2">COA</th>
+                                    <th scope="col" class="col-3">Keterangan</th>
+                                    <th scope="col" class="col-2">Option</th>
                                 </tr>
                             </thead>
                         </table>
@@ -75,11 +69,11 @@
 @push('scripts')
     <script>
         $(document).ready(function() {
-            $('#tableprice').DataTable({
+            $('#tablecoa').DataTable({
                 serverSide: true,
                 processing: true,
                 ajax: {
-                    url: '{{ route('price.index') }}',
+                    url: '{{ route('coa.index') }}',
                     type: 'GET',
                 },
                 columns: [{
@@ -89,56 +83,57 @@
                         }
                     },
                     {
-                        data: 'kode_item'
+                        data: 'parent'
                     },
                     {
-                        data: 'nama_item'
+                        data: 'coa'
                     },
                     {
-                        data: 'nama_principal'
-                    },
-                    {
-                        data: 'harga_pokok'
-                    },
-                    {
-                        data: 'harga_beli'
+                        data: 'description'
                     },
                     {
                         data: null,
                         render: function(data, type, row) {
                             return `
-                        <div class="d-flex align-items-center">
-                <a href="/price/edit/${row.id}" class="btn btn-sm btn-warning me-2"
-                                title="Edit">
-                                <i class="bi bi-pencil"></i>
-                            </a>
-                            <form id="approve${row.id}"
-                                action="/price/approve/${row.id}" method="POST">
-                                @csrf
-                                @method('PUT')
-                                <button type="submit" class="btn btn-sm btn-success me-2" title="Approve"
-                                    onclick="confirmApprove(${row.id})">
-                                    <i class="bi bi-check"></i>
-                                </button>
-                            </form>
-                            </div>
-            `;
+                        <div class="d-flex mb-2">
+                                    <a href="/coa/detail/${row.id}" class="btn btn-sm btn-info me-2"
+                                        title="Detail">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                    <a href="/coa/edit/${row.id}" class="btn btn-sm btn-warning me-2"
+                                        title="Edit">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <form action="/coa/delete/${row.id}" method="POST"
+                                        id="delete${row.id}" style="display:inline;">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-sm btn-danger" title="Hapus"
+                                            onclick="confirmDelete(${row.id})">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                                <a href="" class="btn btn-sm btn-danger" style="width:110px" title="Hide">
+                                    <i class="bi bi-search me-1"></i> Hide
+                                </a>
+                    `;
                         }
                     }
                 ]
             });
         });
 
-        function confirmApprove(id) {
-            swal({
-                title: "Apakah kamu yakin?",
-                text: "Pastikan ini data yang akan disetujui",
-                icon: "warning",
-                buttons: ["Batal", "Setujui"],
-                dangerMode: true,
-            }).then((willApprove) => {
-                if (willApprove) {
-                    document.getElementById('approve' + id).submit();
+        function confirmDelete(id) {
+            Swal.fire({
+                title: 'Apakah kamu yakin?',
+                text: 'Data ini akan dihapus secara permanen!',
+                icon: 'warning',
+                showCancelButton: true,
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('delete' + id).submit();
                 }
             });
         }
