@@ -26,9 +26,6 @@
             </div>
             <section class="section">
                 <div class="card">
-                    <div class="card-header">
-                        <h6 class="card-title">Data UOM</h6>
-                    </div>
                     <div class="card-body">
                         @if (session('success'))
                             <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -102,16 +99,16 @@
                             data: null,
                             render: function(data, type, row) {
                                 return `
-                    <a href="/uom/show/${row.id}" class="btn btn-sm btn-info mb-2" title="Detail">
+                    <a href="/uom/detail/${row.id}" class="btn btn-sm btn-info mb-2" title="Detail">
                         <i class="bi bi-eye"></i>
                     </a>
                     <a href="/uom/edit/${row.id}" class="btn btn-sm btn-warning mb-2" title="Edit">
                         <i class="bi bi-pencil"></i>
                     </a>
-                    <form action="/uom-delete/${row.id}" method="POST" id="delete${row.id}" style="display:inline;">
+                    <form action="/uom/delete/${row.id}" method="POST" id="delete${row.id}" style="display:inline;">
                         @csrf
                         @method('DELETE')
-                        <button type="button" class="btn btn-sm btn-danger mb-2" title="Hapus" onclick="confirmDelete(${row.id})">
+                        <button type="submit" class="btn btn-sm btn-danger mb-2" title="Hapus" onclick="confirmDelete(${row.id})">
                             <i class="bi bi-trash"></i>
                         </button>
                     </form>
