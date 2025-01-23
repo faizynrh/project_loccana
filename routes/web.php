@@ -20,7 +20,10 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () {
-    return view('masterdata.index');
+    return view('dashboard');
+});
+Route::get('/profile', function () {
+    return view('profile');
 });
 
 Route::get('/price', [PriceController::class, 'index'])->name('price');

@@ -30,7 +30,7 @@
                             <h6 class="dropdown-header">Hello, John!</h6>
                         </li>
                         <li>
-                            <a class="dropdown-item" href="#"><i class="icon-mid bi bi-person me-2"></i> My
+                            <a class="dropdown-item" href="/profile"><i class="icon-mid bi bi-person me-2"></i> My
                                 Profile</a>
                         </li>
                         <li>
