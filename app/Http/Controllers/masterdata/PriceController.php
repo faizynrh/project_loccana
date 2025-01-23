@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers\masterdata;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Log;
 
 class PriceController extends Controller
 {
@@ -43,6 +42,7 @@ class PriceController extends Controller
     }
     public function index(Request $request)
     {
+
         if ($request->ajax()) {
             try {
                 $headers = $this->getHeaders();
@@ -63,7 +63,6 @@ class PriceController extends Controller
                 }
 
                 $apiResponse = Http::withHeaders($headers)->post($apiurl, $requestbody);
-
                 if ($apiResponse->successful()) {
                     $data = $apiResponse->json();
                     return response()->json([
@@ -85,7 +84,7 @@ class PriceController extends Controller
             }
         }
 
-        return view('masterdata.price.price');
+        return view('masterdata.price.index');
     }
 
     public function edit($id)

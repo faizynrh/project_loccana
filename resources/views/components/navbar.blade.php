@@ -1,21 +1,52 @@
-<nav class="navbar navbar-expand-lg" style="background-color: #006DF0; position: sticky; top: 0; z-index: 1050;">
-    <div class="container-fluid">
-        <span class="navbar-brand" id="toggleSidebar">
-            <i class="bi bi-list text-white" style="font-size: 24px; cursor: pointer;"></i>
-        </span>
-        <div class="d-flex align-items-center">
-            <img src="https://via.placeholder.com/40" alt="User" class="rounded-circle me-2"
-                style="width: 40px; height: 40px;">
-            <div class="dropdown me-3">
-                <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown"
-                    aria-expanded="false">
-                    {{ Session::get('user_info')['username'] ?? 'Guest' }}
-                </a>
-                <ul class="dropdown-menu dropdown-menu-end">
-                    <li><a class="dropdown-item" href="/profile">My Profile</a></li>
-                    <li><a class="dropdown-item" href="{{ route('oauth.logout') }}">Logout</a></li>
-                </ul>
+<header>
+    <nav class="navbar navbar-expand navbar-light navbar-top">
+        <div class="container-fluid">
+            <a href="#" class="burger-btn d-block">
+                <i class="bi bi-justify fs-3"></i>
+            </a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <div class="navbar-nav ms-auto mb-lg-0 dropdown">
+                    <a href="#" data-bs-toggle="dropdown" aria-expanded="false">
+                        <div class="user-menu d-flex">
+                            <div class="user-name text-end me-3">
+                                <h6 class="mb-0 text-gray-600">John Ducky</h6>
+                                <p class="mb-0 text-sm text-gray-600">Administrator</p>
+                            </div>
+                            <div class="user-img d-flex align-items-center">
+                                <div class="avatar avatar-md">
+                                    <img src="./assets/compiled/jpg/1.jpg" />
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton"
+                        style="min-width: 11rem">
+                        <li>
+                            <h6 class="dropdown-header">Hello, John!</h6>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="#"><i class="icon-mid bi bi-person me-2"></i> My
+                                Profile</a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="#"><i class="icon-mid bi bi-gear me-2"></i>
+                                Settings</a>
+                        </li>
+                        <li>
+                            <hr class="dropdown-divider" />
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="#"><i class="icon-mid bi bi-box-arrow-left me-2"></i>
+                                Logout</a>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
-    </div>
-</nav>
+    </nav>
+</header>

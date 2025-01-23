@@ -1,0 +1,82 @@
+@extends('layouts.app')
+@section('content')
+    @push('styles')
+        <style>
+            /* CSS code here */
+        </style>
+    @endpush
+    <div class="container mt-2 bg-white rounded-top">
+        <h3
+            style="text-decoration: underline; padding-top:25px; font-size: 18px; color: #0044ff; text-underline-offset: 13px; font-weight: bold; padding-bottom: 10px">
+            Tambah UoM</h3>
+        <p>Harap isi data yang telah ditandai dengan <code>*</code>, dan masukan data dengan benar</p>
+        @if ($errors->any())
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                @foreach ($errors->all() as $error)
+                    <p>{{ $error }}</p>
+                @endforeach
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
+        <form action="{{ route('uom.store') }}" method="POST" id="addForm">
+            @csrf
+            <div class="form-container">
+                <div class="row mb-3 align-items-center">
+                    <div class="col-md-3">
+                        <label for="account_code" class="form-label fw-bold mb-0">Uom <span
+                                class="text-danger">*</span></label>
+                    </div>
+                    <div class="col-md-9">
+                        <input type="text" placeholder="UoM" name="uom_name" class="form-control" required>
+                    </div>
+                </div>
+                <div class="row mb-3 align-items-center">
+                    <div class="col-md-3">
+                        <label for="account_code" class="form-label fw-bold mb-0">Simbol UoM <span
+                                class="text-danger">*</span></label>
+                    </div>
+                    <div class="col-md-9">
+                        <input type="text" placeholder="Simbol" class="form-control" name="uom_symbol" required>
+                    </div>
+                </div>
+                <div class="row mb-3 align-items-center">
+                    <div class="col-md-3">
+                        <label for="account_code" class="form-label fw-bold mb-0">Keterangan UoM <span
+                                class="text-danger">*</span></label>
+                    </div>
+                    <div class="col-md-9">
+                        <textarea cols="30" rows="4" name="description" class="form-control"></textarea>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 text-end">
+                        <button type="button" class="btn btn-primary" id="submitButton">Submit</button>
+                        <a href="{{ route('uom.index') }}" class="btn btn-secondary ms-2">Batal</a>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <script>
+        document.getElementById('submitButton').addEventListener('click', function(event) {
+            Swal.fire({
+                title: 'Apakah kamu yakin?',
+                text: 'Data yang dimasukkan akan disimpan!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Ya, Simpan!',
+                cancelButtonText: 'Batal',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('addForm').submit();
+                }
+            });
+        });
+    </script>
+@endsection
+@push('scripts')
+    <script>
+        // Javascript code here
+    </script>
+@endpush
