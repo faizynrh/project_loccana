@@ -56,6 +56,17 @@ Route::middleware('auth.login')->group(
         Route::put('/price/update/{id}', [PriceController::class, 'update'])->name('price.update');
         Route::put('/price/approve/{id}', [PriceController::class, 'approve'])->name('price.approve');
 
+
+
+        //UOM
+        Route::get('/uom', [UomController::class, 'index'])->name('uom.index'); //jika api mati maka gunakan yang bawah
+        Route::get('/uom/add', [UomController::class, 'create'])->name('uom.create');
+        Route::post('/uom/add', [UomController::class, 'store'])->name('uom.store'); //jika api mati maka gunakan yang bawah'] () {
+        Route::delete('/uom/delete/{id}', [UomController::class, 'destroy'])->name('uom.destroy');
+        Route::get('/uom/edit/{id}', [UomController::class, 'edit'])->name('uom.edit');
+        Route::put('/uom/update/{id}', [UomController::class, 'update'])->name('uom.update');
+        Route::get('/uom/detail/{id}', [UomController::class, 'show'])->name('uom.show');
+
         //COA
         Route::get('/coa', [CoaController::class, 'index'])->name('coa.index');
         Route::get('/coa/detail/{id}', [CoaController::class, 'show'])->name('coa.detail');

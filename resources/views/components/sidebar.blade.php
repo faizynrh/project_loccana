@@ -32,7 +32,7 @@
                             <a href="/price" class="submenu-link">User</a>
                         </li>
                         <li class="submenu-item">
-                            <a href="/price" class="submenu-link">UOM</a>
+                            <a href="/uom" class="submenu-link">UOM</a>
                         </li>
                         <li class="submenu-item">
                             <a href="/price" class="submenu-link">Price</a>
