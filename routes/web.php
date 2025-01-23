@@ -1,12 +1,13 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\masterdata\CoaController;
 use App\Http\Controllers\masterdata\UomController;
 use App\Http\Controllers\masterdata\ItemController;
 use App\Http\Controllers\masterdata\PriceController;
+use App\Http\Controllers\masterdata\GudangController;
 use App\Http\Controllers\authentication\ShowDashboard;
 use App\Http\Controllers\authentication\AuthController;
-use App\Http\Controllers\masterdata\CoaController;
 
 /*
 |--------------------------------------------------------------------------
@@ -40,6 +41,8 @@ Route::middleware('auth.login')->group(
         Route::get('/profile', function () {
             return view('profile');
         });
+
+
         // ==========================================MASTERDATA========================================
         //ITEM
         Route::get('/item', [ItemController::class, 'index'])->name('item.index');
@@ -55,8 +58,6 @@ Route::middleware('auth.login')->group(
         Route::get('/price/edit/{id}', [PriceController::class, 'edit'])->name('price.edit');
         Route::put('/price/update/{id}', [PriceController::class, 'update'])->name('price.update');
         Route::put('/price/approve/{id}', [PriceController::class, 'approve'])->name('price.approve');
-
-
 
         //UOM
         Route::get('/uom', [UomController::class, 'index'])->name('uom.index'); //jika api mati maka gunakan yang bawah
@@ -75,5 +76,13 @@ Route::middleware('auth.login')->group(
         Route::delete('/coa/delete/{id}', [CoaController::class, 'destroy'])->name('coa.destroy');
         Route::get('/coa/edit/{id}', [CoaController::class, 'edit'])->name('coa.edit');
         Route::put('/coa/update/{id}', [CoaController::class, 'update'])->name('coa.update');
+
+        //GUDANG
+        Route::get('/gudang', [GudangController::class, 'index'])->name('gudang.index');
+        Route::get('/gudang/add', [GudangController::class, 'create'])->name('gudang.create');
+        Route::get('/gudang/edit/{id}', [GudangController::class, 'edit'])->name('gudang.edit');
+        Route::put('/gudang/edit/{id}', [GudangController::class, 'update'])->name('gudang.update');
+        Route::post('/gudang/add', [GudangController::class, 'store'])->name('gudang.store');
+        Route::delete('/gudang/delete/{id}', [GudangController::class, 'destroy'])->name('gudang.destroy');
     }
 );
