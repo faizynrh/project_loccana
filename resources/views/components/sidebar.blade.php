@@ -29,7 +29,7 @@
                             <a href="/item" class="submenu-link">Items</a>
                         </li>
                         <li class="submenu-item">
-                            <a href="/price" class="submenu-link">User</a>
+                            <a href="/user" class="submenu-link">User</a>
                         </li>
                         <li class="submenu-item">
                             <a href="/uom" class="submenu-link">UOM</a>
