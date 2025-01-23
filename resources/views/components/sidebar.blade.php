@@ -38,10 +38,10 @@
                             <a href="/price" class="submenu-link">Price</a>
                         </li>
                         <li class="submenu-item">
-                            <a href="/price" class="submenu-link">Principal</a>
+                            <a href="/principal" class="submenu-link">Principal</a>
                         </li>
                         <li class="submenu-item">
-                            <a href="/price" class="submenu-link">Customer</a>
+                            <a href="/customer" class="submenu-link">Customer</a>
                         </li>
                         <li class="submenu-item">
                             <a href="#" class="submenu-link">Informasi</a>

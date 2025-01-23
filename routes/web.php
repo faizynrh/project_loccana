@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\masterdata\CustomerController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\masterdata\CoaController;
 use App\Http\Controllers\masterdata\UomController;
@@ -9,6 +10,7 @@ use App\Http\Controllers\masterdata\GudangController;
 use App\Http\Controllers\authentication\ShowDashboard;
 use App\Http\Controllers\authentication\AuthController;
 use App\Http\Controllers\procurement\PenerimaanBarangController;
+use App\Http\Controllers\masterdata\PrincipalController;
 
 /*
 |--------------------------------------------------------------------------
@@ -109,5 +111,22 @@ Route::middleware('auth.login')->group(
         Route::delete('/penerimaan_barang/delete/{id}', [PenerimaanBarangController::class, 'destroy'])->name('penerimaan_barang.destroy');
         Route::get('/penerimaan_barang/edit/{id}', [PenerimaanBarangController::class, 'edit'])->name('penerimaan_barang.edit');
         Route::put('/penerimaan_barang/update/{id}', [PenerimaanBarangController::class, 'update'])->name('penerimaan_barang.update');
+        //principal
+        Route::get('/principal', [PrincipalController::class, 'index'])->name('principal.index');
+        Route::get('/principal/add', [PrincipalController::class, 'create'])->name('principal.create');
+        Route::post('/principal/add', [PrincipalController::class, 'store'])->name('principal.store');
+        Route::delete('/principal/delete/{id}', [PrincipalController::class, 'destroy'])->name('principal.destroy');
+        Route::get('/principal/edit/{id}', [PrincipalController::class, 'edit'])->name('principal.edit');
+        Route::put('/principal/update/{id}', [PrincipalController::class, 'update'])->name('principal.update');
+        Route::get('/principal/show/{id}', [PrincipalController::class, 'show'])->name('principal.show');
+
+        // customer
+        Route::get('/customer', [CustomerController::class, 'index'])->name('customer.index');
+        Route::get('/customer/tambah', [CustomerController::class, 'create'])->name('customer.create');
+        Route::post('/customer/tambah', [CustomerController::class, 'store'])->name('customer.store');
+        Route::delete('/customer/delete/{id}', [CustomerController::class, 'destroy'])->name('customer.destroy');
+        Route::get('/customer/edit/{id}', [CustomerController::class, 'edit'])->name('customer.edit');
+        Route::put('/customer/update/{id}', [CustomerController::class, 'update'])->name('customer.update');
+        Route::get('/customer/show/{id}', [CustomerController::class, 'show'])->name('customer.show');
     }
 );
