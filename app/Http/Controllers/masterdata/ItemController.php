@@ -85,7 +85,7 @@ class ItemController extends Controller
                 }
             }
         }
-        return view('masterdata.items.items');
+        return view('masterdata.item.index');
     }
 
     public function create()
@@ -100,7 +100,7 @@ class ItemController extends Controller
         if ($uomResponse->successful() && $itemResponse->successful()) {
             $uoms = $uomResponse->json();
             $items = $itemResponse->json();
-            return view('masterdata.items.add', compact('uoms', 'items'));
+            return view('masterdata.item.add', compact('uoms', 'items'));
         } else {
             return back()->withErrors('Gagal mengambil data dari API: UOM atau Item Types tidak tersedia.');
         }
@@ -152,7 +152,7 @@ class ItemController extends Controller
 
             if ($apiResponse->successful()) {
                 $data = $apiResponse->json()['data'];
-                return view('masterdata.items.detail', compact('data'));
+                return view('masterdata.item.detail', compact('data'));
             } else {
                 return back()->withErrors('Gagal mengambil data item: ' . $apiResponse->status());
             }
@@ -177,7 +177,7 @@ class ItemController extends Controller
                 $uoms = $uomResponse->json()['data'];
                 $items = $itemResponse->json()['data'];
                 $data = $apiResponse->json()['data'];
-                return view('masterdata.items.edit', compact('data', 'uoms', 'items', 'id'));
+                return view('masterdata.item.edit', compact('data', 'uoms', 'items', 'id'));
             } else {
                 return back()->withErrors('Gagal mengambil data item: ' . $apiResponse->status());
             }
@@ -204,7 +204,7 @@ class ItemController extends Controller
             $apiResponse = Http::withHeaders($headers)->put($apiurl, $data);
 
             if ($apiResponse->successful()) {
-                return redirect()->route('items')->with('success', 'Data Item Berhasil Diubah');
+                return redirect()->route('item.index')->with('success', 'Data Item Berhasil Diubah');
             } else {
                 return back()->withErrors('Gagal memperbarui data item: ' . $apiResponse->status());
             }
@@ -222,7 +222,7 @@ class ItemController extends Controller
             $apiResponse = Http::withHeaders($headers)->delete($apiurl);
 
             if ($apiResponse->successful()) {
-                return redirect()->route('items')
+                return redirect()->route('item.index')
                     ->with('success', 'Data Item Berhasil Dihapus!');
             } else {
                 return back()->withErrors(
