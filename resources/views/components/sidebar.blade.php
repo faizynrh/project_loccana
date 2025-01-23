@@ -44,7 +44,7 @@
                             <a href="/customer" class="submenu-link">Customer</a>
                         </li>
                         <li class="submenu-item">
-                            <a href="/price" class="submenu-link">Informasi</a>
+                            <a href="#" class="submenu-link">Informasi</a>
                         </li>
                         <li class="submenu-item">
                             <a href="/coa" class="submenu-link">COA</a>
@@ -64,7 +64,7 @@
                             <a href="#" class="submenu-link">Purchase Order</a>
                         </li>
                         <li class="submenu-item">
-                            <a href="#" class="submenu-link">Penerimaan Barang</a>
+                            <a href="/penerimaan_barang" class="submenu-link">Penerimaan Barang</a>
                         </li>
                         <li class="submenu-item">
                             <a href="#" class="submenu-link">Dasar Barang</a>
