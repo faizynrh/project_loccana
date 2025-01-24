@@ -31,6 +31,41 @@
             </div>
             <section class="section">
                 <div class="card">
+                    <div class="card-header">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="d-flex align-items-center">
+                                <a href="/penerimaan_barang/add" class="btn btn-primary me-2 fw-bold">+</a>
+                                <select id="yearSelect" class="form-select me-2" name="year" style="width: auto;">
+                                    @php
+                                        $currentYear = Carbon\Carbon::now()->year;
+                                    @endphp
+                                    @for ($year = $currentYear; $year >= 2019; $year--)
+                                        <option value="{{ $year }}"
+                                            {{ $year == request('year') ? 'selected' : '' }}>
+                                            {{ $year }}
+                                        </option>
+                                    @endfor
+                                </select>
+                                <select id="monthSelect" class="form-select me-2" name="month" style="width: auto;">
+                                    <option value="0" {{ request('month') == 'all' ? 'selected' : '' }}>ALL</option>
+                                    @php
+                                        $currentMonth = Carbon\Carbon::now()->month;
+                                    @endphp
+                                    @foreach (['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'] as $index => $monthName)
+                                        <option value="{{ $index + 1 }}"
+                                            {{ request('month') == strval($index + 1) || $currentMonth == $index + 1 ? 'selected' : '' }}>
+                                            {{ $monthName }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="text-end">
+                                <h6 class="fw-bold">Total Per Bulan</h6>
+                                <h4 class="fw-bold" id="totalPerBulan">Rp
+                                    {{ number_format($data['mtd_item_receive'], 2, ',', '.') }}</h4>
+                            </div>
+                        </div>
+                    </div>
                     <div class="card-body">
                         @if (session('success'))
                             <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -48,31 +83,6 @@
                                     aria-label="Close"></button>
                             </div>
                         @endif
-                        <div class="d-flex align-items-center mb-2">
-                            <a href="/penerimaan_barang/add" class="btn btn-primary me-2 fw-bold">+</a>
-                            <select id="yearSelect" class="form-select me-2" name="year" style="width: auto;">
-                                @php
-                                    $currentYear = Carbon\Carbon::now()->year;
-                                @endphp
-                                @for ($year = $currentYear; $year >= 2019; $year--)
-                                    <option value="{{ $year }}" {{ $year == request('year') ? 'selected' : '' }}>
-                                        {{ $year }}
-                                    </option>
-                                @endfor
-                            </select>
-                            <select id="monthSelect" class="form-select me-2" name="month" style="width: auto;">
-                                <option value="0" {{ request('month') == 'all' ? 'selected' : '' }}>ALL</option>
-                                @php
-                                    $currentMonth = Carbon\Carbon::now()->month;
-                                @endphp
-                                @foreach (['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'] as $index => $monthName)
-                                    <option value="{{ $index + 1 }}"
-                                        {{ request('month') == strval($index + 1) || $currentMonth == $index + 1 ? 'selected' : '' }}>
-                                        {{ $monthName }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
                         <div class="table-responsive">
                             <table class="table table-striped table-bordered mt-3" id="tabelpenerimaan">
                                 <thead>
