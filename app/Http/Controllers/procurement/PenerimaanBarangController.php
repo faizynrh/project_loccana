@@ -33,7 +33,6 @@ class PenerimaanBarangController extends Controller
         Log::info([
             'requestbody' => $requestbody,
         ]);
-
         $apiurl = Helpers::getApiUrl() . '/loccana/itemreceipt/1.0.0/item_receipt/1.0.0/lists';
         $mtdurl = Helpers::getApiUrl() . '/loccana/itemreceipt/1.0.0/item_receipt/1.0.0/mtd';
 
