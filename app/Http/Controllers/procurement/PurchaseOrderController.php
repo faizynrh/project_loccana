@@ -108,28 +108,29 @@ class PurchaseOrderController extends Controller
                 $items = [];
                 foreach ($data as $item) {
                     $items[] = [
-                        'item_code' => $item['item_code'],
+                        'item_name' => $item['item_code'], //
                         'order_qty' => $item['item_order_qty'],
                         'balance_qty' => $item['qty_balance'],
                         'received_qty' => $item['qty_receipt'],
-                        'qty' => $item['qty'],
+                        'qty' => $item['qty'], //
                         'bonus_qty' => $item['qty_bonus'],
                         'deposit_qty' => $item['qty_titip'],
-                        'discount' => $item['discount'],
-                        'deskripsi_items' => $item['deskripsi_items'],
+                        'discount' => $item['discount'], //
+                        'total_price' => $item['deskripsi_items'], //
                     ];
                 }
                 return response()->json([
                     'id_po' => $data[0]['id_po'],
-                    'code' => $data[0]['id_po'],
+                    'code' => $data[0]['code'],
                     'order_date' => $data[0]['order_date'],
                     'principal' => $data[0]['partner_name'],
-                    'address' => $data[0]['address'],
-                    'description' => $data[0]['description'],
-                    'phone' => $data[0]['phone'],
-                    'fax' => $data[0]['fax'],
-                    'warehouse_id' => $data[0]['warehouse_id'],
-                    'gudang' => $data[0]['gudang'],
+                    'address' => $data[0]['address'], //
+                    'description' => $data[0]['description'], //
+                    // 'phone' => $data[0]['phone'], //
+                    'fax' => $data[0]['fax'], //
+                    'email' => $data[0]['email'], //
+                    'ppn' => $data[0]['ppn'], //term_of_payment
+                    'term_of_payment' => $data[0]['term_of_payment'], //
                     'items' => $items
                 ]);
             }
