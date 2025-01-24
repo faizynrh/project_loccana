@@ -134,7 +134,7 @@ Route::middleware('auth.login')->group(
 
         Route::get('/purchase_order', [PurchaseOrderController::class, 'index'])->name('purchaseorder.index');
         // Route::get('/get-po-details/{id_po}', [PenerimaanBarangController::class, 'getPoDetails'])->name('getdetails');
-        // Route::get('/penerimaan_barang/add', [PenerimaanBarangController::class, 'create'])->name('penerimaan_barang.create');
+        Route::get('/purchase_order/add', [PurchaseOrderController::class, 'create'])->name('purchaseorder.create');
         // Route::get('/penerimaan_barang/detail/{id}', [PenerimaanBarangController::class, 'show'])->name('penerimaan_barang.detail');
         // Route::delete('/penerimaan_barang/delete/{id}', [PenerimaanBarangController::class, 'destroy'])->name('penerimaan_barang.destroy');
         // Route::get('/penerimaan_barang/edit/{id}', [PenerimaanBarangController::class, 'edit'])->name('penerimaan_barang.edit');

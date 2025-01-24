@@ -49,7 +49,7 @@
                             </div>
                         @endif
                         <div class="d-flex align-items-center mb-2">
-                            <a href="/penerimaan_barang/add" class="btn btn-primary me-2 fw-bold">+</a>
+                            <a href="/purchase_order/add" class="btn btn-primary me-2 fw-bold">+</a>
                             <select id="yearSelect" class="form-select me-2" name="year" style="width: auto;">
                                 @php
                                     $currentYear = now()->year;
