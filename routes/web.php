@@ -107,10 +107,12 @@ Route::middleware('auth.login')->group(
         Route::get('/penerimaan_barang', [PenerimaanBarangController::class, 'index'])->name('penerimaan_barang.index');
         Route::get('/get-po-details/{id_po}', [PenerimaanBarangController::class, 'getPoDetails'])->name('getdetails');
         Route::get('/penerimaan_barang/add', [PenerimaanBarangController::class, 'create'])->name('penerimaan_barang.create');
+        Route::post('/penerimaan_barang/add', [PenerimaanBarangController::class, 'store'])->name('penerimaan_barang.store');
         Route::get('/penerimaan_barang/detail/{id}', [PenerimaanBarangController::class, 'show'])->name('penerimaan_barang.detail');
         Route::delete('/penerimaan_barang/delete/{id}', [PenerimaanBarangController::class, 'destroy'])->name('penerimaan_barang.destroy');
         Route::get('/penerimaan_barang/edit/{id}', [PenerimaanBarangController::class, 'edit'])->name('penerimaan_barang.edit');
         Route::put('/penerimaan_barang/update/{id}', [PenerimaanBarangController::class, 'update'])->name('penerimaan_barang.update');
+
         //principal
         Route::get('/principal', [PrincipalController::class, 'index'])->name('principal.index');
         Route::get('/principal/add', [PrincipalController::class, 'create'])->name('principal.create');

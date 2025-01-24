@@ -10,7 +10,7 @@
             <div class="page-title">
                 <div class="row">
                     <div class="col-12 col-md-6 order-md-1 order-last">
-                        <h3>Add Warehouse</h3>
+                        <h3>Add Penerimaan Barang</h3>
                     </div>
                     <div class="col-12 col-md-6 order-md-2 order-first">
                         <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
@@ -19,7 +19,7 @@
                                     <a href="index.html">Dashboard</a>
                                 </li>
                                 <li class="breadcrumb-item active" aria-current="page">
-                                    Add Warehouse Management
+                                    Add Penerimaan Barang Management
                                 </li>
                             </ol>
                         </nav>
@@ -51,44 +51,49 @@
                         @endif
                         <div class="row mb-3">
                             <div class="col-md-6">
-                                <label for="nomorInvoice" class="form-label fw-bold mt-2 mb-1 small">No.
-                                    PO</label>
-                                <select class="form-control" id="satuan" name="item_category_id">
-                                    <option value="" selected disabled>Pilih PO</option>
-                                    @foreach ($po as $item)
-                                        <option value="{{ $item['po_id'] }}">[{{ $item['code'] }}] {{ $item['name'] }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                                <label for="nomorInvoice" class="form-label fw-bold mt-2 mb-1 small">Kode</label>
-                                <input type="text" class="form-control bg-body-secondary" id="po_id"
-                                    placeholder="Kode Purchase Order" readonly>
-                                <label for="nomorInvoice" class="form-label fw-bold mt-2 mb-1 small">Tanggal</label>
-                                <input type="text" class="form-control bg-body-secondary" id="order_date" readonly>
-                                <label for="nomorInvoice" class="form-label fw-bold mt-2 mb-1 small">Principal</label>
-                                <input type="text" class="form-control bg-body-secondary" id="partner_name"
-                                    placeholder="Principal" readonly>
-                                <label for="shipFrom" class="form-label fw-bold mt-2 mb-1 small">Alamat</label>
-                                <textarea class="form-control bg-body-secondary" id="address" placeholder="Alamat Principal" rows="4" readonly></textarea>
-                                <label for="nomorInvoice" class="form-label fw-bold mt-2 mb-1 small">Att</label>
-                                <input type="text" class="form-control bg-body-secondary" id="description"
-                                    placeholder="Att" readonly>
-                                <label for="nomorInvoice" class="form-label fw-bold mt-2 mb-1 small">No. Telp</label>
-                                <input type="text" class="form-control bg-body-secondary" id="phone"
-                                    placeholder="Telephone" readonly>
-                                <label for="nomorInvoice" class="form-label fw-bold mt-2 mb-1 small">Fax</label>
-                                <input type="text" class="form-control bg-body-secondary" id="fax"
-                                    placeholder="Fax" readonly>
+                                <form action="{{ route('penerimaan_barang.store') }}" method="POST">
+                                    @csrf
+                                    <label for="nomorInvoice" class="form-label fw-bold mt-2 mb-1 small">No.
+                                        PO</label>
+                                    <select class="form-control" id="satuan" name="item_category_id">
+                                        <option value="" selected disabled>Pilih PO</option>
+                                        @foreach ($po as $item)
+                                            <option value="{{ $item['po_id'] }}">[{{ $item['code'] }}] {{ $item['name'] }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    <label for="nomorInvoice" class="form-label fw-bold mt-2 mb-1 small">Kode</label>
+                                    <input type="text" class="form-control bg-body-secondary" id="po_id"
+                                        name="purchase_order_id" placeholder="Kode Purchase Order" readonly>
+                                    <label for="nomorInvoice" class="form-label fw-bold mt-2 mb-1 small">Tanggal</label>
+                                    <input type="text" class="form-control bg-body-secondary" id="order_date" readonly>
+                                    <label for="nomorInvoice" class="form-label fw-bold mt-2 mb-1 small">Principal</label>
+                                    <input type="text" class="form-control bg-body-secondary" id="partner_name"
+                                        placeholder="Principal" readonly>
+                                    <label for="shipFrom" class="form-label fw-bold mt-2 mb-1 small">Alamat</label>
+                                    <textarea class="form-control bg-body-secondary" id="address" placeholder="Alamat Principal" rows="4" readonly></textarea>
+                                    <label for="nomorInvoice" class="form-label fw-bold mt-2 mb-1 small">Att</label>
+                                    <input type="text" class="form-control bg-body-secondary" id="description"
+                                        placeholder="Att" readonly>
+                                    <label for="nomorInvoice" class="form-label fw-bold mt-2 mb-1 small">No. Telp</label>
+                                    <input type="text" class="form-control bg-body-secondary" id="phone"
+                                        placeholder="Telephone" readonly>
+                                    <label for="nomorInvoice" class="form-label fw-bold mt-2 mb-1 small">Fax</label>
+                                    <input type="text" class="form-control bg-body-secondary" id="fax"
+                                        placeholder="Fax" readonly>
                             </div>
                             <div class="col-md-6">
                                 <label for="nomorInvoice" class="form-label fw-bold mt-2 mb-1 small">No DO</label>
-                                <input type="text" class="form-control" id="do_number" placeholder="No DO">
+                                <input type="text" class="form-control" id="do_number" name="do_number"
+                                    placeholder="No DO">
                                 <label for="nomorInvoice" class="form-label fw-bold mt-2 mb-1 small">Tanggal DO</label>
-                                <input type="date" class="form-control" id="receive_date">
+                                <input type="date" class="form-control" id="receive_date" name="receipt_date">
                                 <label for="nomorInvoice" class="form-label fw-bold mt-2 mb-1 small">Angkutan</label>
-                                <input type="text" class="form-control" id="shipment" placeholder="Angkutan">
+                                <input type="text" class="form-control" id="shipment" name="shipment_info"
+                                    placeholder="Angkutan">
                                 <label for="nomorInvoice" class="form-label fw-bold mt-2 mb-1 small">No Polisi</label>
-                                <input type="text" class="form-control" id="plate_number" placeholder="No Polisi">
+                                <input type="text" class="form-control" id="plate_number" name="plate_number"
+                                    placeholder="No Polisi">
                                 <label for="nomorInvoice" class="form-label fw-bold mt-2 mb-1 small">Gudang</label>
                                 <select id="gudang" class="form-control" disabled>
                                     <option value="" selected disabled>Pilih Gudang</option>
@@ -109,7 +114,8 @@
                                     <th style="width: 45px">Order (Kg/Lt)</th>
                                     <th style="width: 45px">Sisa (Kg/Lt)</th>
                                     <th style="width: 45px">Diterima</th>
-                                    <th style="width: 70px">Qty</th>
+                                    <th style="width: 70px">Qty Reject</th>
+                                    <th style="width: 70px">Qty Receive</th>
                                     <th style="width: 45px">Bonus</th>
                                     <th style="width: 45px">Titipan</th>
                                     <th style="width: 45px">Diskon</th>
@@ -117,32 +123,15 @@
                                 </tr>
                             </thead>
                             <tbody id="tableBody">
-                                <tr style="border-bottom: 2px solid #000;">
-                                    <td>
-                                        <textarea type="text" class="form-control w-100" id="item_code" readonly rows="3"></textarea>
-                                    </td>
-                                    <td>
-                                        <textarea class="form-control" value="0" rows="3"></textarea>
-                                    </td>
-                                    <td><input type="text" class="form-control" id="item_order_qty" readonly>
-                                    </td>
-                                    <td><input type="text" class="form-control" id="qty_balance" readonly></td>
-                                    <td><input type="text" class="form-control" id="qty_receipt" readonly></td>
-                                    <td><input type="text" class="form-control" id="qty"></td>
-                                    <td><input type="text" class="form-control" id="qty_bonus"></td>
-                                    <td><input type="text" class="form-control" id="qty_titip"></td>
-                                    <td><input type="text" class="form-control" id="discount"></td>
-                                    <td><input type="text" class="form-control" id="description" placeholder="Note">
-                                    </td>
-                                </tr>
                             </tbody>
                         </table>
                         <div class="row">
                             <div class="col-md-12 text-end">
-                                <button type="button" class="btn btn-primary" id="submitButton">Submit</button>
+                                <button type="submit" class="btn btn-primary" id="submitButton">Submit</button>
                                 <a href="" class="btn btn-danger ms-2" id="rejectButton">Reject</a>
                                 <a href="/penerimaanbarang" class="btn btn-secondary ms-2">Batal</a>
                             </div>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -154,7 +143,8 @@
     <script>
         $(document).ready(function() {
             $('#gudang').prop('disabled', true);
-            $('#tableBody').parent('table').hide(); // Sembunyikan tabel secara default
+            $('#tableBody').hide();
+            // Sembunyikan tabel secara default
             $('#rejectButton').hide(); // Sembunyikan tombol Reject secara default
 
             $('#satuan').on('change', function() {
@@ -187,22 +177,25 @@
                             tableBody.empty();
 
                             if (response.items && response.items.length > 0) {
-                                tableBody.parent('table').show();
+                                tableBody.show();
                                 $('#rejectButton').show();
 
                                 response.items.forEach(function(item) {
                                     var row = `
                             <tr style="border-bottom: 2px solid #000;">
                                 <td>
+                                    <input type="hidden" id="item_id" value="${item.item_id}">
+                                    <input type="hidden" id="warehouse_id" value="${item.warehouse_id}">
                                     <textarea type="text" class="form-control w-100" readonly rows="3">${item.kode}</textarea>
                                 </td>
                                 <td>
                                     <textarea class="form-control" readonly rows="3"></textarea>
                                 </td>
-                                <td><input type="text" class="form-control" value="${item.order_qty}" readonly></td>
-                                <td><input type="text" class="form-control" value="${item.balance_qty}" readonly></td>
-                                <td><input type="text" class="form-control" value="${item.received_qty}" readonly></td>
-                                <td><input type="text" class="form-control" id="qty"></td>
+                                <td><input type="text" class="form-control bg-body-secondary" value="${item.order_qty}" readonly></td>
+                                <td><input type="text" class="form-control bg-body-secondary" value="${item.balance_qty}" readonly></td>
+                                <td><input type="text" class="form-control bg-body-secondary" value="${item.received_qty}" readonly></td>
+                                <td><input type="text" class="form-control" id="qty_reject"></td>
+                                <td><input type="text" class="form-control" id="qty_received"></td>
                                 <td><input type="text" class="form-control" id="qty_bonus"></td>
                                 <td><input type="text" class="form-control" id="qty_titip"></td>
                                 <td><input type="text" class="form-control" id="discount"></td>
@@ -210,6 +203,8 @@
                             </tr>
                             `;
                                     tableBody.append(row);
+                                    console.log(item.warehouse_id);
+                                    console.log(item.item_id);
                                 });
                             } else {
                                 tableBody.parent('table').hide();
@@ -221,17 +216,51 @@
                         error: function(xhr, status, error) {
                             Swal.fire('Error', 'Gagal mengambil detail PO', 'error');
 
-                            $('#tableBody').parent('table').hide();
+                            $('#tableBody').hide();
                             $('#rejectButton').hide();
                             $('#gudang').prop('disabled', true);
                         }
                     });
                 } else {
                     $('#gudang').prop('disabled', true);
-                    $('#tableBody').parent('table').hide();
+                    $('#tableBody').hide();
                     $('#rejectButton').hide();
                 }
             });
+        });
+
+        $('#submitButton').on('click', function(event) {
+            event.preventDefault();
+
+            var items = [];
+            $('#tableBody tr').each(function() {
+                items.push({
+                    item_id: $(this).find('#item_id').val(),
+                    warehouse_id: $(this).find('#warehouse_id').val(),
+                    qty_reject: $(this).find('#qty_reject').val(),
+                    qty_received: $(this).find('#qty_received').val(),
+                    qty_bonus: $(this).find('#qty_bonus').val(),
+                    qty_titip: $(this).find('#qty_titip').val(),
+                    discount: $(this).find('#discount').val(),
+                    note: $(this).find('input[placeholder="Note"]').val()
+                });
+            });
+
+            var form = $('form');
+            items.forEach(function(item, index) {
+                form.append(`
+            <input type="hidden" name="items[${index}][item_id]" value="${item.item_id}">
+            <input type="hidden" name="items[${index}][warehouse_id]" value="${item.warehouse_id}">
+            <input type="hidden" name="items[${index}][qty_reject]" value="${item.qty_reject}">
+            <input type="hidden" name="items[${index}][qty_received]" value="${item.qty_received}">
+            <input type="hidden" name="items[${index}][qty_bonus]" value="${item.qty_bonus}">
+            <input type="hidden" name="items[${index}][qty_titip]" value="${item.qty_titip}">
+            <input type="hidden" name="items[${index}][discount]" value="${item.discount}">
+            <input type="hidden" name="items[${index}][note]" value="${item.note}">
+        `);
+            });
+
+            form.submit();
         });
 
         document.addEventListener("DOMContentLoaded", function() {

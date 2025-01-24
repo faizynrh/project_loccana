@@ -52,7 +52,7 @@
                             <a href="/penerimaan_barang/add" class="btn btn-primary me-2 fw-bold">+</a>
                             <select id="yearSelect" class="form-select me-2" name="year" style="width: auto;">
                                 @php
-                                    $currentYear = now()->year;
+                                    $currentYear = Carbon\Carbon::now()->year;
                                 @endphp
                                 @for ($year = $currentYear; $year >= 2019; $year--)
                                     <option value="{{ $year }}" {{ $year == request('year') ? 'selected' : '' }}>
@@ -63,39 +63,14 @@
                             <select id="monthSelect" class="form-select me-2" name="month" style="width: auto;">
                                 <option value="0" {{ request('month') == 'all' ? 'selected' : '' }}>ALL</option>
                                 @php
-                                    $currentMonth = now()->month;
+                                    $currentMonth = Carbon\Carbon::now()->month;
                                 @endphp
-                                <option value="1"
-                                    {{ request('month') == '1' || $currentMonth == 1 ? 'selected' : '' }}>Januari
-                                </option>
-                                <option value="2"
-                                    {{ request('month') == '2' || $currentMonth == 2 ? 'selected' : '' }}>Februari
-                                </option>
-                                <option value="3"
-                                    {{ request('month') == '3' || $currentMonth == 3 ? 'selected' : '' }}>Maret</option>
-                                <option value="4"
-                                    {{ request('month') == '4' || $currentMonth == 4 ? 'selected' : '' }}>April</option>
-                                <option value="5"
-                                    {{ request('month') == '5' || $currentMonth == 5 ? 'selected' : '' }}>Mei</option>
-                                <option value="6"
-                                    {{ request('month') == '6' || $currentMonth == 6 ? 'selected' : '' }}>Juni</option>
-                                <option value="7"
-                                    {{ request('month') == '7' || $currentMonth == 7 ? 'selected' : '' }}>Juli</option>
-                                <option value="8"
-                                    {{ request('month') == '8' || $currentMonth == 8 ? 'selected' : '' }}>Agustus
-                                </option>
-                                <option value="9"
-                                    {{ request('month') == '9' || $currentMonth == 9 ? 'selected' : '' }}>September
-                                </option>
-                                <option value="10"
-                                    {{ request('month') == '10' || $currentMonth == 10 ? 'selected' : '' }}>Oktober
-                                </option>
-                                <option value="11"
-                                    {{ request('month') == '11' || $currentMonth == 11 ? 'selected' : '' }}>November
-                                </option>
-                                <option value="12"
-                                    {{ request('month') == '12' || $currentMonth == 12 ? 'selected' : '' }}>Desember
-                                </option>
+                                @foreach (['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'] as $index => $monthName)
+                                    <option value="{{ $index + 1 }}"
+                                        {{ request('month') == strval($index + 1) || $currentMonth == $index + 1 ? 'selected' : '' }}>
+                                        {{ $monthName }}
+                                    </option>
+                                @endforeach
                             </select>
                         </div>
                         <div class="table-responsive">
@@ -125,19 +100,7 @@
 @push('scripts')
     <script>
         $(document).ready(function() {
-            function reloadTable() {
-                var month = $('#monthSelect').val();
-                var year = $('#yearSelect').val();
-                $('#tabelpenerimaan').DataTable().ajax.reload();
-            }
-            $('#monthSelect').change(function() {
-                reloadTable();
-            });
-
-            $('#yearSelect').change(function() {
-                reloadTable();
-            });
-            $('#tabelpenerimaan').DataTable({
+            var table = $('#tabelpenerimaan').DataTable({
                 serverSide: true,
                 processing: true,
                 ajax: {
@@ -219,6 +182,9 @@
                         }
                     }
                 ]
+            });
+            $('#monthSelect, #yearSelect').change(function() {
+                table.ajax.reload(null, false);
             });
         });
 
