@@ -45,7 +45,7 @@
                             </div>
                         @endif
                         <div class="d-flex justify-content-between align-items-center">
-                            <a href="/principal/add" class="btn btn-primary fw-bold ">+ Tambah Principal</a>
+                            <a href="/customer/add" class="btn btn-primary fw-bold ">+ Tambah Customer</a>
                         </div>
                         <table class="table table-striped table-bordered mt-3" id="tablecustomer">
                             <thead>
@@ -122,10 +122,10 @@
                     <a href="/customer/edit/${row.id}" class="btn btn-sm btn-warning mb-2" title="Edit">
                         <i class="bi bi-pencil"></i>
                     </a>
-                    <form action="/customer-delete/${row.id}" method="POST" id="delete${row.id}" style="display:inline;">
+                    <form action="/customer/delete/${row.id}" method="POST" id="delete${row.id}" style="display:inline;">
                         @csrf
                         @method('DELETE')
-                        <button type="button" class="btn btn-sm btn-danger mb-2" title="Hapus" onclick="confirmDelete(${row.id})">
+                        <button type="submit" class="btn btn-sm btn-danger mb-2" title="Hapus" onclick="confirmDelete(${row.id})">
                             <i class="bi bi-trash"></i>
                         </button>
                     </form>

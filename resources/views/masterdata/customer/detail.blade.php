@@ -5,7 +5,7 @@
             <div class="page-title">
                 <div class="row">
                     <div class="col-12 col-md-6 order-md-1 order-last">
-                        <h3>Detail Principal</h3>
+                        <h3>Detail Customer</h3>
                     </div>
                     <div class="col-12 col-md-6 order-md-2 order-first">
                         <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
@@ -14,7 +14,7 @@
                                     <a href="index.html">Dashboard</a>
                                 </li>
                                 <li class="breadcrumb-item active" aria-current="page">
-                                    Detial Principal Management
+                                    Detail Customer Management
                                 </li>
                             </ol>
                         </nav>
@@ -179,7 +179,7 @@
 
                             <div class="row">
                                 <div class="col-md-12 text-end">
-                                    <a href="{{ route('customer.index') }}" class="btn btn-secondary ms-2">Batal</a>
+                                    <a href="{{ route('customer.index') }}" class="btn btn-primary">Batal</a>
                                 </div>
                             </div>
                         </form>
