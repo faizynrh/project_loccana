@@ -61,7 +61,7 @@
                     </a>
                     <ul class="submenu active">
                         <li class="submenu-item">
-                            <a href="#" class="submenu-link">Purchase Order</a>
+                            <a href="/purchase_order" class="submenu-link">Purchase Order</a>
                         </li>
                         <li class="submenu-item">
                             <a href="/penerimaan_barang" class="submenu-link">Penerimaan Barang</a>
