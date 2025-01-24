@@ -12,49 +12,50 @@
             <ul class="menu">
                 {{-- <li class="sidebar-title">Menu</li> --}}
 
-                <li class="sidebar-item">
+                <li class="sidebar-item {{ Request::is('dashboard*') ? 'active' : '' }}">
                     <a href="/dashboard" class="sidebar-link">
                         <i class="bi bi-grid-fill"></i>
                         <span>Dashboard</span>
                     </a>
                 </li>
                 {{-- <li class="sidebar-item active has-sub"> --}}
-                <li class="sidebar-item has-sub">
+                <li
+                    class="sidebar-item has-sub {{ Request::is('item*') || Request::is('user*') || Request::is('uom*') || Request::is('price*') || Request::is('principal*') || Request::is('customer*') || Request::is('coa*') || Request::is('gudang*') ? 'active' : '' }}">
                     <a href="#" class="sidebar-link">
                         <i class="bi bi-pc-display"></i>
                         <span>Master Data</span>
                     </a>
                     <ul class="submenu active">
-                        <li class="submenu-item">
+                        <li class="submenu-item {{ Request::is('item*') ? 'active' : '' }}">
                             <a href="/item" class="submenu-link">Items</a>
                         </li>
-                        <li class="submenu-item">
+                        <li class="submenu-item {{ Request::is('user*') ? 'active' : '' }}">
                             <a href="/user" class="submenu-link">User</a>
                         </li>
-                        <li class="submenu-item">
+                        <li class="submenu-item {{ Request::is('uom*') ? 'active' : '' }}">
                             <a href="/uom" class="submenu-link">UOM</a>
                         </li>
-                        <li class="submenu-item">
+                        <li class="submenu-item {{ Request::is('price*') ? 'active' : '' }}">
                             <a href="/price" class="submenu-link">Price</a>
                         </li>
-                        <li class="submenu-item">
+                        <li class="submenu-item {{ Request::is('principal*') ? 'active' : '' }}">
                             <a href="/principal" class="submenu-link">Principal</a>
                         </li>
-                        <li class="submenu-item">
+                        <li class="submenu-item {{ Request::is('customer*') ? 'active' : '' }}">
                             <a href="/customer" class="submenu-link">Customer</a>
                         </li>
-                        <li class="submenu-item">
+                        <li class="submenu-item {{ Request::is('informasi*') ? 'active' : '' }}">
                             <a href="#" class="submenu-link">Informasi</a>
                         </li>
-                        <li class="submenu-item">
+                        <li class="submenu-item {{ Request::is('coa*') ? 'active' : '' }}">
                             <a href="/coa" class="submenu-link">COA</a>
                         </li>
-                        <li class="submenu-item active">
+                        <li class="submenu-item {{ Request::is('gudang*') ? 'active' : '' }}">
                             <a href="/gudang" class="submenu-link">Gudang</a>
                         </li>
                     </ul>
                 </li>
-                <li class="sidebar-item has-sub">
+                <li class="sidebar-item has-sub {{ Request::is('penerimaan_barang*') ? 'active' : '' }}">
                     <a href="#" class="sidebar-link">
                         <i class="bi bi-pc-display"></i>
                         <span>Procurement</span>
@@ -63,7 +64,7 @@
                         <li class="submenu-item">
                             <a href="/purchase_order" class="submenu-link">Purchase Order</a>
                         </li>
-                        <li class="submenu-item">
+                        <li class="submenu-item {{ Request::is('penerimaan_barang*') ? 'active' : '' }}">
                             <a href="/penerimaan_barang" class="submenu-link">Penerimaan Barang</a>
                         </li>
                         <li class="submenu-item">

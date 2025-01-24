@@ -31,6 +31,41 @@
             </div>
             <section class="section">
                 <div class="card">
+                    <div class="card-header">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="d-flex align-items-center">
+                                <a href="/penerimaan_barang/add" class="btn btn-primary me-2 fw-bold">+</a>
+                                <select id="yearSelect" class="form-select me-2" name="year" style="width: auto;">
+                                    @php
+                                        $currentYear = Carbon\Carbon::now()->year;
+                                    @endphp
+                                    @for ($year = $currentYear; $year >= 2019; $year--)
+                                        <option value="{{ $year }}"
+                                            {{ $year == request('year') ? 'selected' : '' }}>
+                                            {{ $year }}
+                                        </option>
+                                    @endfor
+                                </select>
+                                <select id="monthSelect" class="form-select me-2" name="month" style="width: auto;">
+                                    <option value="0" {{ request('month') == 'all' ? 'selected' : '' }}>ALL</option>
+                                    @php
+                                        $currentMonth = Carbon\Carbon::now()->month;
+                                    @endphp
+                                    @foreach (['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'] as $index => $monthName)
+                                        <option value="{{ $index + 1 }}"
+                                            {{ request('month') == strval($index + 1) || $currentMonth == $index + 1 ? 'selected' : '' }}>
+                                            {{ $monthName }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="text-end">
+                                <h6 class="fw-bold">Total Per Bulan</h6>
+                                <h4 class="fw-bold" id="totalPerBulan">Rp
+                                    {{ number_format($data['mtd_item_receive'], 2, ',', '.') }}</h4>
+                            </div>
+                        </div>
+                    </div>
                     <div class="card-body">
                         @if (session('success'))
                             <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -48,56 +83,6 @@
                                     aria-label="Close"></button>
                             </div>
                         @endif
-                        <div class="d-flex align-items-center mb-2">
-                            <a href="/penerimaan_barang/add" class="btn btn-primary me-2 fw-bold">+</a>
-                            <select id="yearSelect" class="form-select me-2" name="year" style="width: auto;">
-                                @php
-                                    $currentYear = now()->year;
-                                @endphp
-                                @for ($year = $currentYear; $year >= 2019; $year--)
-                                    <option value="{{ $year }}" {{ $year == request('year') ? 'selected' : '' }}>
-                                        {{ $year }}
-                                    </option>
-                                @endfor
-                            </select>
-                            <select id="monthSelect" class="form-select me-2" name="month" style="width: auto;">
-                                <option value="0" {{ request('month') == 'all' ? 'selected' : '' }}>ALL</option>
-                                @php
-                                    $currentMonth = now()->month;
-                                @endphp
-                                <option value="1"
-                                    {{ request('month') == '1' || $currentMonth == 1 ? 'selected' : '' }}>Januari
-                                </option>
-                                <option value="2"
-                                    {{ request('month') == '2' || $currentMonth == 2 ? 'selected' : '' }}>Februari
-                                </option>
-                                <option value="3"
-                                    {{ request('month') == '3' || $currentMonth == 3 ? 'selected' : '' }}>Maret</option>
-                                <option value="4"
-                                    {{ request('month') == '4' || $currentMonth == 4 ? 'selected' : '' }}>April</option>
-                                <option value="5"
-                                    {{ request('month') == '5' || $currentMonth == 5 ? 'selected' : '' }}>Mei</option>
-                                <option value="6"
-                                    {{ request('month') == '6' || $currentMonth == 6 ? 'selected' : '' }}>Juni</option>
-                                <option value="7"
-                                    {{ request('month') == '7' || $currentMonth == 7 ? 'selected' : '' }}>Juli</option>
-                                <option value="8"
-                                    {{ request('month') == '8' || $currentMonth == 8 ? 'selected' : '' }}>Agustus
-                                </option>
-                                <option value="9"
-                                    {{ request('month') == '9' || $currentMonth == 9 ? 'selected' : '' }}>September
-                                </option>
-                                <option value="10"
-                                    {{ request('month') == '10' || $currentMonth == 10 ? 'selected' : '' }}>Oktober
-                                </option>
-                                <option value="11"
-                                    {{ request('month') == '11' || $currentMonth == 11 ? 'selected' : '' }}>November
-                                </option>
-                                <option value="12"
-                                    {{ request('month') == '12' || $currentMonth == 12 ? 'selected' : '' }}>Desember
-                                </option>
-                            </select>
-                        </div>
                         <div class="table-responsive">
                             <table class="table table-striped table-bordered mt-3" id="tabelpenerimaan">
                                 <thead>
@@ -125,102 +110,131 @@
 @push('scripts')
     <script>
         $(document).ready(function() {
-            function reloadTable() {
-                var month = $('#monthSelect').val();
-                var year = $('#yearSelect').val();
-                $('#tabelpenerimaan').DataTable().ajax.reload();
+            var lastMonth = $('#monthSelect').val();
+            var lastYear = $('#yearSelect').val();
+
+            function initializeTable() {
+                $('#tabelpenerimaan').DataTable({
+                    serverSide: true,
+                    processing: true,
+                    ajax: {
+                        url: '{{ route('penerimaan_barang.index') }}',
+                        type: 'GET',
+                        data: function(d) {
+                            d.month = lastMonth;
+                            d.year = lastYear;
+                        }
+                    },
+                    columns: [{
+                            data: null,
+                            render: function(data, type, row, meta) {
+                                return meta.row + meta.settings._iDisplayStart + 1;
+                            }
+                        },
+                        {
+                            data: 'do_number'
+                        },
+                        {
+                            data: 'receipt_date',
+                            render: function(data) {
+                                if (data) {
+                                    var date = new Date(data);
+                                    return (
+                                        date.getFullYear() +
+                                        '-' +
+                                        (date.getMonth() + 1).toString().padStart(2, '0') +
+                                        '-' +
+                                        date.getDate().toString().padStart(2, '0')
+                                    );
+                                }
+                                return data;
+                            }
+                        },
+                        {
+                            data: 'number_po'
+                        },
+                        {
+                            data: 'name'
+                        },
+                        {
+                            data: 'order_date',
+                            render: function(data) {
+                                if (data) {
+                                    var date = new Date(data);
+                                    return (
+                                        date.getFullYear() +
+                                        '-' +
+                                        (date.getMonth() + 1).toString().padStart(2, '0') +
+                                        '-' +
+                                        date.getDate().toString().padStart(2, '0')
+                                    );
+                                }
+                                return data;
+                            }
+                        },
+                        {
+                            data: 'total_po'
+                        },
+                        {
+                            data: null,
+                            defaultContent: ''
+                        },
+                        {
+                            data: 'total_receive_price'
+                        },
+                        {
+                            data: null,
+                            render: function(data, type, row) {
+                                return `
+                            <div class="d-flex">
+                                <a href="/penerimaan_barang/detail/${row.id_receipt}" class="btn btn-sm btn-info mb-2" style="margin-right:4px;" title="Detail">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+                                <a href="/penerimaan_barang/edit/${row.id_receipt}" class="btn btn-sm btn-warning mb-2" style="margin-right:4px;" title="Edit">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <form action="/penerimaan_barang/delete/${row.id_receipt}" method="POST" id="delete${row.id_receipt}" style="display:inline;">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="button" class="btn btn-sm btn-danger mb-2" style="margin-right:4px;" title="Hapus" onclick="confirmDelete(${row.id_receipt})">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        `;
+                            }
+                        }
+                    ]
+                });
             }
+
+            initializeTable();
+
             $('#monthSelect').change(function() {
-                reloadTable();
+                var month = $('#monthSelect').val();
+                if (month !== lastMonth) {
+                    lastMonth = month;
+                    $('#tabelpenerimaan').DataTable().ajax.reload();
+                }
+                console.log(month);
+
             });
 
             $('#yearSelect').change(function() {
-                reloadTable();
+                var year = $('#yearSelect').val();
+                if (year !== lastYear) {
+                    lastYear = year;
+                    $('#tabelpenerimaan').DataTable().ajax.reload();
+                }
+                console.log(year);
+
             });
-            $('#tabelpenerimaan').DataTable({
-                serverSide: true,
-                processing: true,
-                ajax: {
-                    url: '{{ route('penerimaan_barang.index') }}',
-                    type: 'GET',
-                    data: function(d) {
-                        d.month = $('#monthSelect').val();
-                        d.year = $('#yearSelect').val();
-                    }
-                },
-                columns: [{
-                        data: null,
-                        render: function(data, type, row, meta) {
-                            return meta.row + meta.settings._iDisplayStart + 1;
-                        }
-                    },
-                    {
-                        data: 'do_number'
-                    },
-                    {
-                        data: 'receipt_date',
-                        render: function(data) {
-                            if (data) {
-                                var date = new Date(data);
-                                return date.getFullYear() + '-' + (date.getMonth() + 1).toString()
-                                    .padStart(2, '0') + '-' + date.getDate().toString().padStart(2,
-                                        '0');
-                            }
-                            return data;
-                        }
-                    },
-                    {
-                        data: 'number_po'
-                    },
-                    {
-                        data: 'name'
-                    },
-                    {
-                        data: 'order_date',
-                        render: function(data) {
-                            if (data) {
-                                var date = new Date(data);
-                                return date.getFullYear() + '-' + (date.getMonth() + 1).toString()
-                                    .padStart(2, '0') + '-' + date.getDate().toString().padStart(2,
-                                        '0');
-                            }
-                            return data;
-                        }
-                    },
-                    {
-                        data: 'total_po'
-                    },
-                    {
-                        data: null,
-                        defaultContent: ''
-                    },
-                    {
-                        data: 'total_receive_price'
-                    }, {
-                        data: null,
-                        render: function(data, type, row) {
-                            return `
-                            <div class="d-flex">
-                        <a href="/penerimaan_barang/detail/${row.id_receipt}" class="btn btn-sm btn-info mb-2" style="margin-right:4px;" title="Detail">
-                            <i class="bi bi-eye"></i>
-                        </a>
-                        <a href="/penerimaan_barang/edit/${row.id_receipt}" class="btn btn-sm btn-warning mb-2" style="margin-right:4px;" title="Edit">
-                            <i class="bi bi-pencil"></i>
-                        </a>
-                        <form action="/penerimaan_barang/delete/${row.id_receipt}" method="POST" id="delete${row.id_receipt}" style="display:inline;">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-sm btn-danger mb-2" style="margin-right:4px;" title="Hapus" onclick="confirmDelete(${row.id_receipt})">
-                                <i class="bi bi-trash"></i>
-                            </button>
-                        </form>
-                        </div>
-                    `;
-                        }
-                    }
-                ]
-            });
+            console.log(lastMonth);
+            console.log(lastYear);
+
         });
+
+
 
         function confirmDelete(id) {
             Swal.fire({

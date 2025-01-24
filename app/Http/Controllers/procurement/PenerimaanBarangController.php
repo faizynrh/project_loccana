@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers\procurement;
 
+use App\Helpers\Helpers;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Http;
-use App\Helpers\Helpers;
 
 
 class PenerimaanBarangController extends Controller
@@ -26,11 +27,12 @@ class PenerimaanBarangController extends Controller
             'offset' => $start,
             'company_id' => 0,
         ];
-
         if (!empty($search)) {
             $requestbody['search'] = $search;
         }
-
+        Log::info([
+            'requestbody' => $requestbody,
+        ]);
         $apiurl = Helpers::getApiUrl() . '/loccana/itemreceipt/1.0.0/item_receipt/1.0.0/lists';
         $mtdurl = Helpers::getApiUrl() . '/loccana/itemreceipt/1.0.0/item_receipt/1.0.0/mtd';
 
@@ -86,6 +88,8 @@ class PenerimaanBarangController extends Controller
                         'deposit_qty' => $item['qty_titip'],
                         'discount' => $item['discount'],
                         'deskripsi_items' => $item['deskripsi_items'],
+                        'item_id' => $item['item_id'],
+                        'warehouse_id' => $item['warehouse_id'],
                     ];
                 }
                 return response()->json([
@@ -97,7 +101,6 @@ class PenerimaanBarangController extends Controller
                     'description' => $data[0]['description'],
                     'phone' => $data[0]['phone'],
                     'fax' => $data[0]['fax'],
-                    'warehouse_id' => $data[0]['warehouse_id'],
                     'gudang' => $data[0]['gudang'],
                     'items' => $items
                 ]);
@@ -133,8 +136,66 @@ class PenerimaanBarangController extends Controller
 
     public function store(Request $request)
     {
-        //
+        // dd($request->all());
+        try {
+            $headers = Helpers::getHeaders();
+            $apiurl = Helpers::getApiUrl() . '/loccana/itemreceipt/1.0.0/item_receipt/1.0.0';
+
+            $dataitems = [];
+
+            if ($request->has('items')) {
+                foreach ($request->input('items') as $item) {
+                    $dataitems[] = [
+                        'item_id' => $item['item_id'],
+                        'quantity_rejected' => $item['qty_reject'],
+                        'quantity_received' => $item['qty_received'],
+                        'notes' => $item['note'],
+                        'qty_titip' => $item['qty_titip'],
+                        'qty_diskon' => $item['discount'],
+                        'qty_bonus' => $item['qty_bonus'],
+                        'warehouse_id' => $item['warehouse_id'],
+                    ];
+                }
+            }
+
+            $data = [
+                'purchase_order_id' => $request->purchase_order_id,
+                'do_number' => $request->do_number,
+                'receipt_date' => $request->receipt_date,
+                'shipment_info' => $request->shipment_info,
+                'plate_number' => $request->plate_number,
+                'received_by' => $request->input('received_by', 0),
+                'status' => "received",
+                'company_id' => $request->input('company_id', default: 2),
+                'is_deleted' => 'true',
+                'items' => $dataitems
+            ];
+
+            // dd($data);
+
+            $apiResponse = Http::withHeaders($headers)->post($apiurl, $data);
+            // dd([
+            //     'apiResponse' => $apiResponse->json(),
+            //     'data' => $data,
+            // ]);
+            $responseData = $apiResponse->json();
+            if (
+                $apiResponse->successful() &&
+                isset($responseData['success'])
+            ) {
+                return redirect()->route('penerimaan_barang.index')
+                    ->with('success', $responseData['message'] ?? 'Item Berhasil Ditambahkan');
+            } else {
+                return back()->withErrors(
+                    'Gagal menambahkan data: ' .
+                        ($responseData['message'] ?? $apiResponse->body())
+                );
+            }
+        } catch (\Exception $e) {
+            return back()->withErrors($e->getMessage());
+        }
     }
+
     public function show($id)
     {
         try {
