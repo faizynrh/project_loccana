@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Http;
-use RealRashid\SweetAlert\Facades\Alert;
 
 
 
@@ -64,7 +63,6 @@ class PriceController extends Controller
             $apiResponse = Http::withHeaders($headers)->get($apiurl);
             if ($apiResponse->successful()) {
                 $data = $apiResponse->json()['data'];
-                alert()->success('Title', 'Lorem Lorem Lorem');
                 return view('masterdata.price.edit', compact('data', 'id'));
             } else {
                 return back()->withErrors('Gagal mengambil data Price: ' . $apiResponse->status());
@@ -114,7 +112,6 @@ class PriceController extends Controller
             if ($apiResponse->successful()) {
                 $title = 'Delete User!';
                 $text = "Are you sure you want to delete?";
-                confirmDelete($title, $text);
                 return redirect()->route('price.index')->with('success', 'Data Berhasil Disetujui!');
             } else {
                 return back()->withErrors('Gagal Approve Price: ' . $apiResponse->status());
