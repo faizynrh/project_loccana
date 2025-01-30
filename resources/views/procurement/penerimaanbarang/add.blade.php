@@ -110,7 +110,7 @@
                             <thead>
                                 <tr style="border-bottom: 3px solid #000;">
                                     <th style="width: 140px">Kode</th>
-                                    <th style="width: 90px"></th>
+                                    <th style="width: 120px"></th>
                                     <th style="width: 45px">Order (Kg/Lt)</th>
                                     <th style="width: 45px">Sisa (Kg/Lt)</th>
                                     <th style="width: 45px">Diterima</th>
@@ -129,7 +129,7 @@
                             <div class="col-md-12 text-end">
                                 <button type="button" class="btn btn-primary" id="submitButton">Submit</button>
                                 <a href="" class="btn btn-danger ms-2" id="rejectButton">Reject</a>
-                                <a href="/penerimaanbarang" class="btn btn-secondary ms-2">Batal</a>
+                                <a href="/penerimaan_barang" class="btn btn-secondary ms-2">Batal</a>
                             </div>
                             </form>
                         </div>
@@ -188,7 +188,7 @@
                                     <textarea type="text" class="form-control w-100" readonly rows="3">${item.kode}</textarea>
                                 </td>
                                 <td>
-                                    <textarea class="form-control" readonly rows="3"></textarea>
+                                    <textarea class="form-control" readonly rows="3">${item.unit_price}</textarea>
                                 </td>
                                 <td><input type="text" class="form-control bg-body-secondary" value="${item.order_qty}" readonly></td>
                                 <td><input type="text" class="form-control bg-body-secondary" value="${item.balance_qty}" readonly></td>

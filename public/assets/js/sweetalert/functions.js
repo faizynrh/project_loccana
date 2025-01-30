@@ -41,7 +41,7 @@ function confirmSubmit(buttonId, formId) {
 function confirmEdit(buttonId, formId) {
     Swal.fire({
         title: "Apakah anda yakin?",
-        text: "Perubahan yang anda buat akan disimpan!",
+        text: "Perubahan yang Anda buat akan disimpan!",
         icon: "warning",
         showCancelButton: true,
         confirmButtonText: "Ya, Simpan!",

@@ -95,6 +95,7 @@
                                         <th scope="col">Harga</th>
                                         <th scope="col">Diskon</th>
                                         <th scope="col">Value</th>
+                                        <th scope="col">Deskripsi</th>
                                         <th scope="col">Action</th>
                                     </tr>
                                 </thead>
@@ -190,6 +191,9 @@
                         },
                         {
                             data: 'total_receive_price'
+                        },
+                        {
+                            data: 'description'
                         },
                         {
                             data: null,

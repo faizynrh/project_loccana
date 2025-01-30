@@ -70,6 +70,7 @@ class PenerimaanBarangController extends Controller
                 foreach ($data as $item) {
                     $items[] = [
                         'item_id' => $item['item_id'],
+                        'unit_price' => $item['unit_price'],
                         'warehouse_id' => $item['warehouse_id'],
                         'kode' => $item['item_code'],
                         'order_qty' => $item['item_order_qty'],
