@@ -94,43 +94,42 @@ class PurchaseOrderController extends Controller
         }
     }
 
-    public function getPoDetails(Request $request, $po_id)
+    public function getPurchaseOrderDetails(Request $request, $po_id)
     {
         $headers = Helpers::getHeaders();
-        $apiurl = Helpers::getApiUrl() . "/loccana/po/1.0.0/purchase-order/list-select/" . $po_id;
+        $apiurl = Helpers::getApiUrl() . "/loccana/po/1.0.0/purchase-order/" . $po_id;
 
         try {
             $response = Http::withHeaders($headers)->get($apiurl);
-            $items = [];
             if ($response->successful()) {
                 $data = $response->json()['data'];
-                // dd($data);
+
                 $items = [];
                 foreach ($data as $item) {
                     $items[] = [
-                        'item_name' => $item['item_code'], //
-                        'order_qty' => $item['item_order_qty'],
-                        'balance_qty' => $item['qty_balance'],
-                        'received_qty' => $item['qty_receipt'],
-                        'qty' => $item['qty'], //
-                        'bonus_qty' => $item['qty_bonus'],
-                        'deposit_qty' => $item['qty_titip'],
-                        'discount' => $item['discount'], //
-                        'total_price' => $item['deskripsi_items'], //
+                        'item_code' => $item['item_code'],
+                        'price' => $item['unit_price'],
+                        'order_qty' => $item['qty'],
+                        'discount' => $item['discount'],
+                        'received_qty' => 0,
+                        'bonus_qty' => $item['total_discount'] ?? 0,
+                        'total_price' => $item['total_price'],
+                        'description' => $item['item_description'],
                     ];
                 }
+
                 return response()->json([
                     'id_po' => $data[0]['id_po'],
-                    'code' => $data[0]['code'],
+                    'code' => $data[0]['number_po'],
                     'order_date' => $data[0]['order_date'],
                     'principal' => $data[0]['partner_name'],
-                    'address' => $data[0]['address'], //
-                    'description' => $data[0]['description'], //
-                    // 'phone' => $data[0]['phone'], //
-                    'fax' => $data[0]['fax'], //
-                    'email' => $data[0]['email'], //
-                    'ppn' => $data[0]['ppn'], //term_of_payment
-                    'term_of_payment' => $data[0]['term_of_payment'], //
+                    'address' => $data[0]['address'],
+                    'description' => $data[0]['description'],
+                    'fax' => $data[0]['fax'],
+                    'email' => $data[0]['email'],
+                    'ppn' => $data[0]['ppn'],
+                    'term_of_payment' => $data[0]['term_of_payment'],
+                    'phone' => $data[0]['phone'],
                     'items' => $items
                 ]);
             }
@@ -140,12 +139,14 @@ class PurchaseOrderController extends Controller
         }
     }
 
+
     /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
     {
         //
+
     }
 
     /**
@@ -154,6 +155,21 @@ class PurchaseOrderController extends Controller
     public function show(string $id)
     {
         //
+        try {
+            $headers = Helpers::getHeaders();
+            $apiurl = Helpers::getApiUrl() . '/loccana/po/1.0.0/purchase-order/' . $id;
+            $apiResponse = Http::withHeaders($headers)->get($apiurl);
+
+            if ($apiResponse->successful()) {
+                $data = $apiResponse->json()['data'];
+                // dd($data);
+                return view('procurement.purchaseorder.detail', compact('data'));
+            } else {
+                return back()->withErrors('Gagal mengambil data item: ' . $apiResponse->status());
+            }
+        } catch (\Exception $e) {
+            return back()->withErrors($e->getMessage());
+        }
     }
 
     /**
