@@ -3,10 +3,11 @@
 namespace App\Http\Controllers\procurement;
 
 use Carbon\Carbon;
+use App\Helpers\Helpers;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Http;
-use App\Helpers\Helpers;
 
 
 class PenerimaanBarangController extends Controller
@@ -20,7 +21,7 @@ class PenerimaanBarangController extends Controller
                 $year = $request->input('year');
                 $length = $request->input('length');
                 $start = $request->input('start');
-                $search = $request->input('search.value', '');
+                $search = $request->input('search.value') ?? '';
 
                 $requestbody = [
                     'search' => $search,
@@ -30,8 +31,6 @@ class PenerimaanBarangController extends Controller
                     'offset' => $start,
                     'company_id' => 0,
                 ];
-
-                // Log::info(['requestbody' => $requestbody]);
 
                 $apiurl = Helpers::getApiUrl() . '/loccana/itemreceipt/1.0.0/item_receipt/1.0.0/lists';
                 $mtdurl = Helpers::getApiUrl() . '/loccana/itemreceipt/1.0.0/item_receipt/1.0.0/mtd';

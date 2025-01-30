@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\masterdata;
 
+use App\Helpers\Helpers;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Http;
 use RealRashid\SweetAlert\Facades\Alert;
-use App\Helpers\Helpers;
 
 
 
@@ -21,17 +22,15 @@ class PriceController extends Controller
 
                 $length = $request->input('length', 10);
                 $start = $request->input('start', 0);
-                $search = $request->input('search.value', '');
+                $search = $request->input('search.value') ?? '';
 
                 $requestbody = [
+                    'search' => $search,
                     'limit' => $length,
                     'offset' => $start,
                     'company_id' => 2
                 ];
 
-                if (!empty($search)) {
-                    $requestbody['search'] = $search;
-                }
                 $apiResponse = Http::withHeaders($headers)->post($apiurl, $requestbody);
                 if ($apiResponse->successful()) {
                     $data = $apiResponse->json();
