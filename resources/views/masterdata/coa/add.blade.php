@@ -10,7 +10,7 @@
             <div class="page-title">
                 <div class="row">
                     <div class="col-12 col-md-6 order-md-1 order-last">
-                        <h3>Edit COA</h3>
+                        <h3>Add COA</h3>
                     </div>
                     <div class="col-12 col-md-6 order-md-2 order-first">
                         <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
@@ -19,7 +19,7 @@
                                     <a href="index.html">Dashboard</a>
                                 </li>
                                 <li class="breadcrumb-item active" aria-current="page">
-                                    Edit COA Management
+                                    Add COA Management
                                 </li>
                             </ol>
                         </nav>
@@ -88,7 +88,8 @@
 
                             <div class="row mb-3">
                                 <div class="col-md-12 text-end">
-                                    <button type="submit" class="btn btn-primary" id="submitButton">Submit</button>
+                                    <button type="button" class="btn btn-primary" id="submitButton"
+                                        onclick="confirmSubmit('submitButton', 'createForm')">Submit</button>
                                     <a href="{{ route('coa.index') }}" class="btn btn-secondary ms-2">Batal</a>
                                 </div>
                             </div>
@@ -100,21 +101,5 @@
     </div>
 @endsection
 @push('scripts')
-    <script>
-        document.getElementById('submitButton').addEventListener('click', function(event) {
-            Swal.fire({
-                title: 'Apakah Anda yakin?',
-                text: 'Data yang dimasukkan akan disimpan!',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'Ya, Simpan!',
-                cancelButtonText: 'Batal',
-                reverseButtons: true
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    document.getElementById('createForm').submit();
-                }
-            });
-        });
-    </script>
+    <script></script>
 @endpush

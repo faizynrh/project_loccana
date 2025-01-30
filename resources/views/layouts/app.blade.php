@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Project Loccana</title>
+    <title>Distributor & Sales System</title>
     <link rel="shortcut icon" href="#" type="image/x-icon">
     <link rel="shortcut icon" href="#" type="image/png">
     <link rel="stylesheet" href="{{ asset('assets/css/app.css') }}">
@@ -28,7 +28,8 @@
     <script src="{{ asset('assets/js/dataTables.min.js') }}"></script>
     <script src="{{ asset('assets/js/app.js') }}"></script>
     <script src="{{ asset('assets/js/perfect-scrollbar/perfect-scrollbar.min.js') }}"></script>
-    @include('sweetalert::alert')
+    <script src="{{ asset('assets/js/sweetalert/sweetalert.js') }}"></script>
+    <script src="{{ asset('assets/js/sweetalert/functions.js') }}"></script>
     @stack('scripts')
     <script></script>
 </body>

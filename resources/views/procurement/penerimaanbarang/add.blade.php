@@ -51,7 +51,7 @@
                         @endif
                         <div class="row mb-3">
                             <div class="col-md-6">
-                                <form action="{{ route('penerimaan_barang.store') }}" method="POST">
+                                <form action="{{ route('penerimaan_barang.store') }}" id="createForm" method="POST">
                                     @csrf
                                     <label for="nomorInvoice" class="form-label fw-bold mt-2 mb-1 small">No.
                                         PO</label>
@@ -127,7 +127,8 @@
                         </table>
                         <div class="row">
                             <div class="col-md-12 text-end">
-                                <button type="submit" class="btn btn-primary" id="submitButton">Submit</button>
+                                <button type="button" class="btn btn-primary" id="submitButton"
+                                    onclick="confirmSubmit('submitButton', 'createForm')">Submit</button>
                                 <a href="" class="btn btn-danger ms-2" id="rejectButton">Reject</a>
                                 <a href="/penerimaanbarang" class="btn btn-secondary ms-2">Batal</a>
                             </div>
@@ -144,8 +145,7 @@
         $(document).ready(function() {
             $('#gudang').prop('disabled', true);
             $('#tableBody').hide();
-            // Sembunyikan tabel secara default
-            $('#rejectButton').hide(); // Sembunyikan tombol Reject secara default
+            $('#rejectButton').hide();
 
             $('#satuan').on('change', function() {
                 var po_id = $(this).val();
@@ -268,27 +268,6 @@
             const rejectButton = document.getElementById('rejectButton');
 
             rejectButton.style.display = 'none';
-        });
-
-        document.getElementById('submitButton').addEventListener('click', function(event) {
-            Swal.fire({
-                title: 'Apakah Anda yakin?',
-                text: 'Data yang dimasukkan akan disimpan!',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'Ya, Simpan!',
-                cancelButtonText: 'Batal',
-                reverseButtons: true
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    const form = document.getElementById('createForm');
-                    if (form) {
-                        form.submit();
-                    } else {
-                        Swal.fire('Error', 'Form tidak ditemukan', 'error');
-                    }
-                }
-            });
         });
     </script>
 @endpush

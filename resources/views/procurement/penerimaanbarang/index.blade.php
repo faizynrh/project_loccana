@@ -205,7 +205,7 @@
                                 <form action="/penerimaan_barang/delete/${row.id_receipt}" method="POST" id="delete${row.id_receipt}" style="display:inline;">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn btn-sm btn-danger mb-2" style="margin-right:4px;" title="Hapus" onclick="confirmDelete(${row.id_receipt})">
+                                    <button type="button" class="btn btn-sm btn-danger mb-2" style="margin-right:4px;" title="Hapus" onclick="confirmDelete(${row.id_receipt})">
                                         <i class="bi bi-trash"></i>
                                     </button>
                                 </form>
@@ -243,6 +243,8 @@
                 text: 'Data ini akan dihapus secara permanen!',
                 icon: 'warning',
                 showCancelButton: true,
+                confirmButtonText: 'Setujui',
+                cancelButtonText: 'Batal',
                 reverseButtons: true
             }).then((result) => {
                 if (result.isConfirmed) {

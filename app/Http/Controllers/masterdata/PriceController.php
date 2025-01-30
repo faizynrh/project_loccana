@@ -64,6 +64,7 @@ class PriceController extends Controller
             $apiResponse = Http::withHeaders($headers)->get($apiurl);
             if ($apiResponse->successful()) {
                 $data = $apiResponse->json()['data'];
+                alert()->success('Title', 'Lorem Lorem Lorem');
                 return view('masterdata.price.edit', compact('data', 'id'));
             } else {
                 return back()->withErrors('Gagal mengambil data Price: ' . $apiResponse->status());
