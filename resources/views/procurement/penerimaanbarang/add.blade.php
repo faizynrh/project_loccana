@@ -129,7 +129,7 @@
                             <div class="col-md-12 text-end">
                                 <button type="button" class="btn btn-primary" id="submitButton">Submit</button>
                                 <a href="" class="btn btn-danger ms-2" id="rejectButton">Reject</a>
-                                <a href="/penerimaanbarang" class="btn btn-secondary ms-2">Batal</a>
+                                <a href="/penerimaan_barang" class="btn btn-secondary ms-2">Batal</a>
                             </div>
                             </form>
                         </div>

@@ -85,7 +85,6 @@ class PenerimaanBarangController extends Controller
                 }
                 return response()->json([
                     'id_po' => $data[0]['id_po'],
-                    'id_po' => $data[0]['id_po'],
                     'code' => $data[0]['id_po'],
                     'order_date' => $data[0]['order_date'],
                     'principal' => $data[0]['partner_name'],
