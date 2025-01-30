@@ -6,6 +6,7 @@ use App\Helpers\Helpers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class PurchaseOrderController extends Controller
 {
@@ -20,6 +21,12 @@ class PurchaseOrderController extends Controller
         $year = $request->input('year', 0);
         $length = $request->input('length', 10);
         $start = $request->input('start', 0);
+
+        // Log::info($month);
+        // Log::info($year);
+        // Log::info($length);
+        // Log::info($start);
+
 
         $requestbody = [
             'search' => '',
@@ -71,6 +78,66 @@ class PurchaseOrderController extends Controller
     public function create()
     {
         //
+        $company_id = 2;
+        $headers = Helpers::getHeaders();
+
+        $pourl = Helpers::getApiUrl() . '/loccana/po/1.0.0/purchase-order/list-select/' . $company_id;
+
+        $poResponse = Http::withHeaders($headers)->get($pourl);
+        if ($poResponse->successful()) {
+            $po = $poResponse->json()['data'];
+            // dd($po);
+            // dd($gudang);
+            return view('procurement.purchaseorder.add', compact('po'));
+        } else {
+            return back()->withErrors('Gagal mengambil data dari API.');
+        }
+    }
+
+    public function getPoDetails(Request $request, $po_id)
+    {
+        $headers = Helpers::getHeaders();
+        $apiurl = Helpers::getApiUrl() . "/loccana/po/1.0.0/purchase-order/list-select/" . $po_id;
+
+        try {
+            $response = Http::withHeaders($headers)->get($apiurl);
+            $items = [];
+            if ($response->successful()) {
+                $data = $response->json()['data'];
+                // dd($data);
+                $items = [];
+                foreach ($data as $item) {
+                    $items[] = [
+                        'item_name' => $item['item_code'], //
+                        'order_qty' => $item['item_order_qty'],
+                        'balance_qty' => $item['qty_balance'],
+                        'received_qty' => $item['qty_receipt'],
+                        'qty' => $item['qty'], //
+                        'bonus_qty' => $item['qty_bonus'],
+                        'deposit_qty' => $item['qty_titip'],
+                        'discount' => $item['discount'], //
+                        'total_price' => $item['deskripsi_items'], //
+                    ];
+                }
+                return response()->json([
+                    'id_po' => $data[0]['id_po'],
+                    'code' => $data[0]['code'],
+                    'order_date' => $data[0]['order_date'],
+                    'principal' => $data[0]['partner_name'],
+                    'address' => $data[0]['address'], //
+                    'description' => $data[0]['description'], //
+                    // 'phone' => $data[0]['phone'], //
+                    'fax' => $data[0]['fax'], //
+                    'email' => $data[0]['email'], //
+                    'ppn' => $data[0]['ppn'], //term_of_payment
+                    'term_of_payment' => $data[0]['term_of_payment'], //
+                    'items' => $items
+                ]);
+            }
+            return response()->json(['error' => 'Failed to fetch PO details'], 500);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
 
     /**
