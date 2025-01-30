@@ -178,6 +178,21 @@ class PurchaseOrderController extends Controller
     public function edit(string $id)
     {
         //
+        try {
+            $headers = Helpers::getHeaders();
+            $apiurl = Helpers::getApiUrl() . '/loccana/po/1.0.0/purchase-order/' . $id;
+            $apiResponse = Http::withHeaders($headers)->get($apiurl);
+
+            if ($apiResponse->successful()) {
+                $data = $apiResponse->json()['data'];
+                // dd($data);
+                return view('procurement.purchaseorder.edit', compact('data'));
+            } else {
+                return back()->withErrors('Gagal mengambil data item: ' . $apiResponse->status());
+            }
+        } catch (\Exception $e) {
+            return back()->withErrors($e->getMessage());
+        }
     }
 
     /**
@@ -194,5 +209,21 @@ class PurchaseOrderController extends Controller
     public function destroy(string $id)
     {
         //
+        try {
+            $headers = Helpers::getHeaders();
+            $apiurl = Helpers::getApiUrl() . '/loccana/po/1.0.0/purchase-order/' . $id;
+            // dd($id);
+            $apiResponse = Http::withHeaders($headers)->delete($apiurl);
+            if ($apiResponse->successful()) {
+                return redirect()->route('purchaseorder.index')
+                    ->with('success', 'Data Penerimaan Barang Berhasil Dihapus!');
+            } else {
+                return back()->withErrors(
+                    'Gagal menghapus data: ' . $apiResponse->body()
+                );
+            }
+        } catch (\Exception $e) {
+            return back()->withErrors($e->getMessage());
+        }
     }
 }

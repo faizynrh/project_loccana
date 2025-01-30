@@ -47,7 +47,7 @@
                                     aria-label="Close"></button>
                             </div>
                         @endif
-                        <form action="{{ route('principal.store') }}" method="POST" id="addForm">
+                        <form action="{{ route('principal.store') }}" method="POST" id="createForm">
                             @csrf
                             <div class="row">
                                 <div class="col-md-6 mb-3">
@@ -173,7 +173,8 @@
             </div> --}}
                             <div class="row">
                                 <div class="col-md-12 text-end">
-                                    <button type="submit" class="btn btn-primary" id="submitButton">Submit</button>
+                                    <button type="submit" class="btn btn-primary" id="submitButton"
+                                        onclick="confirmSubmit('submitButton', 'createForm')">Submit</button>
                                     <a href="{{ route('principal.index') }}" class="btn btn-secondary ms-2">Batal</a>
                                 </div>
                             </div>
@@ -184,22 +185,6 @@
         </div>
     </div>
     @push('scripts')
-        <script>
-            document.getElementById('submitButton').addEventListener('click', function(event) {
-                Swal.fire({
-                    title: 'Apakah kamu yakin?',
-                    text: 'Data yang dimasukkan akan disimpan!',
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonText: 'Ya, Simpan!',
-                    cancelButtonText: 'Batal',
-                    reverseButtons: true
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        document.getElementById('addForm').submit();
-                    }
-                });
-            });
-        </script>
+        <script></script>
     @endpush
 @endsection

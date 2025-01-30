@@ -1,4 +1,3 @@
-
 ////////// APPROVE //////////
 function confirmApprove(id) {
     Swal.fire({
@@ -6,12 +5,12 @@ function confirmApprove(id) {
         text: "Pastikan ini data yang akan disetujui",
         icon: "warning",
         showCancelButton: true,
-        confirmButtonText: 'Setujui',
-        cancelButtonText: 'Batal',
-        reverseButtons: true
+        confirmButtonText: "Setujui",
+        cancelButtonText: "Batal",
+        reverseButtons: true,
     }).then((willApprove) => {
         if (willApprove) {
-            document.getElementById('approve' + id).submit();
+            document.getElementById("approve" + id).submit();
         }
     });
 }
@@ -19,20 +18,20 @@ function confirmApprove(id) {
 //////////// ADD //////////
 function confirmSubmit(buttonId, formId) {
     Swal.fire({
-        title: 'Apakah anda yakin?',
-        text: 'Data yang dimasukkan akan disimpan!',
-        icon: 'warning',
+        title: "Apakah anda yakin?",
+        text: "Data yang dimasukkan akan disimpan!",
+        icon: "warning",
         showCancelButton: true,
-        confirmButtonText: 'Ya, Simpan!',
-        cancelButtonText: 'Batal',
-        reverseButtons: true
+        confirmButtonText: "Ya, Simpan!",
+        cancelButtonText: "Batal",
+        reverseButtons: true,
     }).then((result) => {
         if (result.isConfirmed) {
             const form = document.getElementById(formId);
             if (form) {
                 form.submit();
             } else {
-                Swal.fire('Error', 'Form tidak ditemukan', 'error');
+                Swal.fire("Error", "Form tidak ditemukan", "error");
             }
         }
     });
@@ -41,20 +40,20 @@ function confirmSubmit(buttonId, formId) {
 //////////// EDIT //////////
 function confirmEdit(buttonId, formId) {
     Swal.fire({
-        title: 'Apakah anda yakin?',
-        text: 'Perubahan yang anda buat akan disimpan!',
-        icon: 'warning',
+        title: "Apakah anda yakin?",
+        text: "Perubahan yang anda buat akan disimpan!",
+        icon: "warning",
         showCancelButton: true,
-        confirmButtonText: 'Ya, Simpan!',
-        cancelButtonText: 'Batal',
-        reverseButtons: true
+        confirmButtonText: "Ya, Simpan!",
+        cancelButtonText: "Batal",
+        reverseButtons: true,
     }).then((result) => {
         if (result.isConfirmed) {
             const form = document.getElementById(formId);
             if (form) {
                 form.submit();
             } else {
-                Swal.fire('Error', 'Form tidak ditemukan', 'error');
+                Swal.fire("Error", "Form tidak ditemukan", "error");
             }
         }
     });
@@ -63,19 +62,16 @@ function confirmEdit(buttonId, formId) {
 //////////// DELETE //////////
 function confirmDelete(id) {
     Swal.fire({
-        title: 'Apakah anda yakin?',
-        text: 'Data ini akan dihapus secara permanen!',
-        icon: 'warning',
+        title: "Apakah anda yakin?",
+        text: "Data ini akan dihapus secara permanen!",
+        icon: "warning",
         showCancelButton: true,
-        confirmButtonText: 'Ya, Simpan!',
-        cancelButtonText: 'Batal',
-        reverseButtons: true
+        confirmButtonText: "Ya, Simpan!",
+        cancelButtonText: "Batal",
+        reverseButtons: true,
     }).then((result) => {
         if (result.isConfirmed) {
-            document.getElementById('delete' + id).submit();
+            document.getElementById("delete" + id).submit();
         }
     });
 }
-
-
-

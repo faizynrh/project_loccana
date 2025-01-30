@@ -146,8 +146,8 @@ Route::middleware('auth.login')->group(
         Route::get('/purchase_order/add', [PurchaseOrderController::class, 'create'])->name('purchaseorder.create');
         Route::post('/purchase_order/add', [PurchaseOrderController::class, 'store'])->name('purchaseorder.store');
         Route::get('/purchase_order/detail/{id}', [PurchaseOrderController::class, 'show'])->name('purchaseorder.detail');
-        // Route::delete('/penerimaan_barang/delete/{id}', [PenerimaanBarangController::class, 'destroy'])->name('penerimaan_barang.destroy');
-        // Route::get('/penerimaan_barang/edit/{id}', [PenerimaanBarangController::class, 'edit'])->name('penerimaan_barang.edit');
-        // Route::put('/penerimaan_barang/update/{id}', [PenerimaanBarangController::class, 'update'])->name('penerimaan_barang.update');
+        Route::delete('/purchase_order/delete/{id}', [PurchaseOrderController::class, 'destroy'])->name('purchaseorder.destroy');
+        Route::get('/purchase_order/edit/{id}', [PurchaseOrderController::class, 'edit'])->name('purchaseorder.edit');
+        Route::put('/purchase_order/update/{id}', [PurchaseOrderController::class, 'update'])->name('purchaseorder.update');
     }
 );

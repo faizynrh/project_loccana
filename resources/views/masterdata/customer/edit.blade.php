@@ -47,7 +47,7 @@
                                     aria-label="Close"></button>
                             </div>
                         @endif
-                        <form action="{{ route('customer.update', $customer['id'] ?? '') }}" method="POST" id="addForm">
+                        <form action="{{ route('customer.update', $customer['id'] ?? '') }}" method="POST" id="updateForm">
                             @csrf
                             @method('PUT')
                             <div class="row">
@@ -191,7 +191,8 @@
 
                             <div class="row">
                                 <div class="col-md-12 text-end">
-                                    <button type="submit" class="btn btn-primary" id="submitButton">Submit</button>
+                                    <button type="button" class="btn btn-primary" id="submitButton"
+                                        onclick="confirmEdit('submitButton', 'updateForm')">Submit</button>
                                     <a href="{{ route('customer.index') }}" class="btn btn-secondary ms-2">Batal</a>
                                 </div>
                             </div>
@@ -202,22 +203,6 @@
         </div>
     </div>
     @push('scripts')
-        <script>
-            document.getElementById('submitButton').addEventListener('click', function(event) {
-                Swal.fire({
-                    title: 'Apakah kamu yakin?',
-                    text: 'Data yang dimasukkan akan disimpan!',
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonText: 'Ya, Simpan!',
-                    cancelButtonText: 'Batal',
-                    reverseButtons: true
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        document.getElementById('addForm').submit();
-                    }
-                });
-            });
-        </script>
+        <script></script>
     @endpush
 @endsection

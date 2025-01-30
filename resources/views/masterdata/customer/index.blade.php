@@ -125,7 +125,7 @@
                     <form action="/customer/delete/${row.id}" method="POST" id="delete${row.id}" style="display:inline;">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" class="btn btn-sm btn-danger mb-2" title="Hapus" onclick="confirmDelete(${row.id})">
+                        <button type="button" class="btn btn-sm btn-danger mb-2" title="Hapus" onclick="confirmDelete(${row.id})">
                             <i class="bi bi-trash"></i>
                         </button>
                     </form>

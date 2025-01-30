@@ -140,11 +140,42 @@
                                 <tbody id="tableBody">
                                     <!-- Rows will be populated by JavaScript -->
                                 </tbody>
+                                <tr class="fw-bold">
+                                    <td colspan="4"></td>
+                                    <td>Sub Total</td>
+                                    <td style="float: right;">0</td>
+                                    <td></td>
+                                </tr>
+                                <tr class="fw-bold">
+                                    <td colspan="4"></td>
+                                    <td>Diskon</td>
+                                    <td style="float: right;">0</td>
+                                    <td></td>
+                                </tr class="fw-bold">
+                                <tr class="fw-bold">
+                                    <td colspan="4"></td>
+                                    <td>Taxable</td>
+                                    <td style="float: right">0</td>
+                                    <td></td>
+                                </tr class="fw-bold">
+                                <tr style="border-bottom: 2px solid #000;" class="fw-bold">
+                                    <td colspan="4"></td>
+                                    <td>VAT/PPN</td>
+                                    <td style="float: right">0</td>
+                                    <td></td>
+                                </tr>
+                                <tr class="fw-bold">
+                                    <td colspan="4"></td>
+                                    <td>Total</td>
+                                    <td style="float: right">0</td>
+                                    <td></td>
+                                </tr>
                             </table>
                             <div class="row">
                                 <div class="col-md-12 text-end">
-                                    <button type="button" class="btn btn-primary" id="submitButton">Submit</button>
-                                    <button type="button" class="btn btn-danger ms-2" id="rejectButton">Reject</button>
+                                    <button type="button" class="btn btn-primary" id="submitButton"
+                                        onclick="confirmSubmit('submitButton', 'createForm')">Submit</button>
+                                    {{-- <button type="button" class="btn btn-danger ms-2" id="rejectButton">Reject</button> --}}
                                     <a href="/purchase_order" class="btn btn-secondary ms-2">Batal</a>
                                 </div>
                             </div>
@@ -152,6 +183,7 @@
                     </div>
                 </div>
             </section>
+
         </div>
     </div>
 @endsection
@@ -167,6 +199,75 @@
                 termLainContainer.classList.toggle('hidden', this.value !== 'lainnya');
             });
 
+            // Function to create a new row
+            function createNewRow(item = null) {
+                const newRow = document.createElement('tr');
+                newRow.style.borderBottom = '2px solid #000';
+                newRow.innerHTML = `
+            <td>
+                <select class="form-select">
+                    <option value="" disabled selected>--Pilih Item--</option>
+                    ${item ? `<option value="${item.item_code}" selected>${item.item_code}</option>` : ''}
+                </select>
+            </td>
+            <td>
+                <button type="button" class="btn btn-primary btn-sm">Lainnya</button>
+            </td>
+            <td><input type="text" class="form-control" value="${item ? item.order_qty : ''}"></td>
+            <td><input type="text" class="form-control" value="${item ? item.price : ''}"></td>
+            <td><input type="text" class="form-control" value="${item ? item.discount : ''}"></td>
+            <td><input type="text" class="form-control bg-body-secondary" value="${item ? item.total_price : ''}" readonly></td>
+            <td class="text-center">
+                <button class="btn btn-danger fw-bold remove-row">-</button>
+            </td>
+        `;
+                return newRow;
+            }
+
+            // Add click handler for the table
+            document.getElementById('tableBody').addEventListener('click', function(e) {
+                const tableBody = this;
+
+                // Handle add button click
+                if (e.target.classList.contains('btn-primary') && e.target.innerText === '+') {
+                    e.preventDefault();
+                    const newRow = createNewRow();
+
+                    // Insert the new row before the button row
+                    const buttonRow = e.target.closest('tr');
+                    tableBody.insertBefore(newRow, buttonRow);
+
+                    // Update remove buttons visibility
+                    updateRemoveButtons();
+                }
+
+                // Handle remove button click
+                if (e.target.classList.contains('remove-row')) {
+                    e.target.closest('tr').remove();
+                    updateRemoveButtons();
+                }
+            });
+
+            // Function to update remove buttons visibility
+            function updateRemoveButtons() {
+                const tableBody = document.getElementById('tableBody');
+                const dataRows = Array.from(tableBody.getElementsByTagName('tr')).filter(row =>
+                    !row.querySelector('button.btn-primary') // Exclude the button row
+                );
+
+                // Hide remove buttons if only one data row remains
+                dataRows.forEach((row, index) => {
+                    const removeButton = row.querySelector('.remove-row');
+                    if (removeButton) {
+                        if (dataRows.length === 1) {
+                            removeButton.style.display = 'none';
+                        } else {
+                            removeButton.style.display = 'block';
+                        }
+                    }
+                });
+            }
+
             // AJAX untuk mengambil data PO
             $('#partner_id').on('change', function() {
                 const poId = $(this).val();
@@ -181,13 +282,12 @@
                                 return;
                             }
 
-                            // Isi data header dengan nilai yang benar
+                            // Isi data header
                             $('#po_code').val(response.code);
                             $('#order_date').val(response.order_date);
                             $('#address').val(response.address);
                             $('#description').val(response.description);
-                            $('#ppn').val(response
-                                .ppn); // Tidak ada 'phone' dalam JSON, gunakan ppn
+                            $('#ppn').val(response.ppn);
                             $('#fax').val(response.fax);
                             $('#phone').val(response.phone);
 
@@ -196,32 +296,71 @@
                             tableBody.empty();
 
                             if (response.items && response.items.length > 0) {
-                                response.items.forEach((item, index) => {
-                                    const row = `
-                        <tr style="border-bottom: 2px solid #000;">
-                            <td>
-                                <input type="text" class="form-control" value="${item.item_code}" readonly>
-                            </td>
-                            <td>
-                                <button type="button" class="btn btn-primary btn-sm delete-item" data-index="${index}">Lainnya</button>
-                            </td>
-                            <td><input type="text" class="form-control" value="${item.order_qty}" readonly></td>
-                            <td>
-                                <input type="text" class="form-control" value="${item.price}" readonly>
-                            </td>
-                            <td><input type="text" class="form-control" value="${item.discount}" readonly></td>
-                            <td>
-                                <input type="text" class="form-control" value="${item.total_price}" readonly>
-                            </td>
-                        </tr>
-                        `;
-                                    tableBody.append(row);
-                                });
+                                // Add the first row
+                                const firstRow = `
+                            <tr style="border-bottom: 2px solid #000;">
+                                <td>
+                                    <select class="form-select">
+                                        <option value="" disabled selected>--Pilih Item--</option>
+                                        <option value="${response.items[0].item_code}">${response.items[0].item_code}</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-primary btn-sm">Lainnya</button>
+                                </td>
+                                <td><input type="text" class="form-control" value="${response.items[0].order_qty}"></td>
+                                <td><input type="text" class="form-control" value="${response.items[0].price}"></td>
+                                <td><input type="text" class="form-control" value="${response.items[0].discount}"></td>
+                                <td><input type="text" class="form-control bg-body-secondary" value="${response.items[0].total_price}" readonly></td>
+                                <td></td>
+                            </tr>
+                            `;
+                                tableBody.append(firstRow);
+
+                                // Add remaining rows if any
+                                for (let i = 1; i < response.items.length; i++) {
+                                    const newRow = createNewRow(response.items[i]);
+                                    tableBody.append(newRow);
+                                }
+
+                                // Add the button row
+                                const buttonRow = `
+                            <tr style="border-bottom: 2px solid #000;">
+                                <td colspan="6"></td>
+                                <td class="text-center">
+                                    <button class="btn btn-primary fw-bold">+</button>
+                                </td>
+                            </tr>`;
+                                tableBody.append(buttonRow);
+
+                                updateRemoveButtons();
                                 $('#rejectButton').show();
                             } else {
-                                Swal.fire('Peringatan', 'Tidak ada item untuk PO ini',
-                                    'warning');
-                                $('#rejectButton').hide();
+                                // If no items, create empty first row and button row
+                                const emptyRow = `
+                            <tr style="border-bottom: 2px solid #000;">
+                                <td>
+                                    <select class="form-select">
+                                        <option value="" disabled selected>--Pilih Item--</option>
+
+                                    </select>
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-primary btn-sm">Lainnya</button>
+                                </td>
+                                <td><input type="text" class="form-control"></td>
+                                <td><input type="text" class="form-control"></td>
+                                <td><input type="text" class="form-control"></td>
+                                <td><input type="text" class="form-control bg-body-secondary" readonly></td>
+                                <td></td>
+                            </tr>
+                            <tr style="border-bottom: 2px solid #000;">
+                                <td colspan="6"></td>
+                                <td class="text-center">
+                                    <button class="btn btn-primary fw-bold">+</button>
+                                </td>
+                            </tr>`;
+                                tableBody.append(emptyRow);
                             }
                         },
                         error: function() {
@@ -233,40 +372,6 @@
                 }
             });
 
-
-            // Handle Submit
-            $('#submitButton').click(function(e) {
-                e.preventDefault();
-                Swal.fire({
-                    title: 'Konfirmasi',
-                    text: "Apakah data sudah benar?",
-                    icon: 'question',
-                    showCancelButton: true,
-                    confirmButtonText: 'Ya, Simpan',
-                    cancelButtonText: 'Batal'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        $('#createForm').submit();
-                    }
-                });
-            });
-
-            // Handle Reject
-            $('#rejectButton').click(function() {
-                Swal.fire({
-                    title: 'Alasan Penolakan',
-                    input: 'text',
-                    inputPlaceholder: 'Masukkan alasan penolakan...',
-                    showCancelButton: true,
-                    confirmButtonText: 'Submit',
-                    cancelButtonText: 'Batal'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        // Logic untuk reject PO
-                        console.log('Alasan penolakan:', result.value);
-                    }
-                });
-            });
         });
     </script>
 @endpush

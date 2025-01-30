@@ -204,13 +204,13 @@
                         <a href="/purchase_order/detail/${row.id}" class="btn btn-sm btn-info mb-2" style="margin-right:4px;" title="Detail">
                             <i class="bi bi-eye"></i>
                         </a>
-                        <a href="/penerimaan_barang/edit/${row.id_receipt}" class="btn btn-sm btn-warning mb-2" style="margin-right:4px;" title="Edit">
+                        <a href="/purchase_order/edit/${row.id}" class="btn btn-sm btn-warning mb-2" style="margin-right:4px;" title="Edit">
                             <i class="bi bi-pencil"></i>
                         </a>
-                        <form action="/penerimaan_barang/delete/${row.id_receipt}" method="POST" id="delete${row.id_receipt}" style="display:inline;">
+                        <form action="/purchase_order/delete/${row.id}" method="POST" id="delete${row.id}" style="display:inline;">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="btn btn-sm btn-danger mb-2" style="margin-right:4px;" title="Hapus" onclick="confirmDelete(${row.id_receipt})">
+                            <button type="button" class="btn btn-sm btn-danger mb-2" style="margin-right:4px;" title="Hapus" onclick="confirmDelete(${row.id})">
                                 <i class="bi bi-trash"></i>
                             </button>
                         </form>
@@ -230,19 +230,5 @@
                 ]
             });
         });
-
-        function confirmDelete(id) {
-            Swal.fire({
-                title: 'Apakah kamu yakin?',
-                text: 'Data ini akan dihapus secara permanen!',
-                icon: 'warning',
-                showCancelButton: true,
-                reverseButtons: true
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    document.getElementById('delete' + id).submit();
-                }
-            });
-        }
     </script>
 @endpush

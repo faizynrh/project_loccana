@@ -83,7 +83,8 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-md-12 text-end">
-                                        <button type="submit" class="btn btn-primary" id="submitButton">Submit</button>
+                                        <button type="button" class="btn btn-primary"
+                                            id="submitButton"onclick="confirmEdit('submitButton', 'updateForm')">Submit</button>
                                         <a href="{{ route('uom.index') }}" class="btn btn-secondary ms-2">Batal</a>
                                     </div>
                                 </div>
