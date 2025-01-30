@@ -201,7 +201,7 @@
                         render: function(data, type, row) {
                             return `
                             <div class="d-flex">
-                        <a href="/penerimaan_barang/detail/${row.id_receipt}" class="btn btn-sm btn-info mb-2" style="margin-right:4px;" title="Detail">
+                        <a href="/purchase_order/detail/${row.id}" class="btn btn-sm btn-info mb-2" style="margin-right:4px;" title="Detail">
                             <i class="bi bi-eye"></i>
                         </a>
                         <a href="/penerimaan_barang/edit/${row.id_receipt}" class="btn btn-sm btn-warning mb-2" style="margin-right:4px;" title="Edit">
@@ -214,6 +214,15 @@
                                 <i class="bi bi-trash"></i>
                             </button>
                         </form>
+                        <form id="approve${row.id}"
+                                action="/price/approve/${row.id}" method="POST">
+                                @csrf
+                                @method('PUT')
+                                <button type="submit" class="btn btn-sm btn-success me-2" title="Approve"
+                                    onclick="confirmApprove(${row.id})">
+                                    <i class="bi bi-check"></i>
+                                </button>
+                            </form>
                         </div>
                     `;
                         }

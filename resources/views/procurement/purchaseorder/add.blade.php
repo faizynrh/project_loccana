@@ -31,7 +31,7 @@
             <section class="section">
                 <div class="card">
                     <div class="card-header">
-                        <h4 class="card-title"> Form detail isian penerimaan barang</h4>
+                        <h4 class="card-title"> Form detail isian purchase order</h4>
                     </div>
                     <div class="card-body">
                         @if (session('success'))
@@ -62,9 +62,9 @@
                                     <label for="tanggal" class="form-label fw-bold mt-2 mb-1 small">Tanggal</label>
                                     <input type="date" class="form-control" id="order_date" name="order_date">
 
-                                    <label for="principal" class="form-label fw-bold mt-2 mb-1 small">Principal</label>
+                                    <label for="principal" class="form-label fw-bold mt-2 mb-1 small">Principle</label>
                                     <select class="form-select" id="partner_id" name="partner_id">
-                                        <option value="" selected disabled>Pilih Principal</option>
+                                        <option value="" selected disabled>Pilih Principle</option>
                                         @foreach ($po as $item)
                                             <option value="{{ $item['po_id'] }}">{{ $item['name'] }}</option>
                                         @endforeach
@@ -96,7 +96,7 @@
                                     <input type="text" class="form-control" id="contact" name="contact">
 
                                     <label for="tax" class="form-label fw-bold mt-2 mb-1 small">VAT/PPN</label>
-                                    <input type="text" class="form-control" id="tax" name="tax">
+                                    <input type="text" class="form-control" id="ppn" name="tax">
 
                                     <label for="pembayaran" class="form-label fw-bold mt-2 mb-1 small">Term
                                         Pembayaran</label>
@@ -145,7 +145,7 @@
                                 <div class="col-md-12 text-end">
                                     <button type="button" class="btn btn-primary" id="submitButton">Submit</button>
                                     <button type="button" class="btn btn-danger ms-2" id="rejectButton">Reject</button>
-                                    <a href="/penerimaanbarang" class="btn btn-secondary ms-2">Batal</a>
+                                    <a href="/purchase_order" class="btn btn-secondary ms-2">Batal</a>
                                 </div>
                             </div>
                         </form>
@@ -172,7 +172,7 @@
                 const poId = $(this).val();
                 if (poId) {
                     $.ajax({
-                        url: '/get-po-details/' + poId,
+                        url: '/get-purchase-order-details/' + poId,
                         type: 'GET',
                         dataType: 'json',
                         success: function(response) {
@@ -181,39 +181,40 @@
                                 return;
                             }
 
-                            // Isi data header
+                            // Isi data header dengan nilai yang benar
                             $('#po_code').val(response.code);
                             $('#order_date').val(response.order_date);
                             $('#address').val(response.address);
                             $('#description').val(response.description);
-                            $('#phone').val(response.ppn);
+                            $('#ppn').val(response
+                                .ppn); // Tidak ada 'phone' dalam JSON, gunakan ppn
                             $('#fax').val(response.fax);
+                            $('#phone').val(response.phone);
 
-                            // Isi data items
+                            // Isi tabel dengan data items
                             const tableBody = $('#tableBody');
                             tableBody.empty();
 
                             if (response.items && response.items.length > 0) {
                                 response.items.forEach((item, index) => {
                                     const row = `
-                                    <tr style="border-bottom: 2px solid #000;">
-                                        <td>
-                                            <input type="text" class="form-control" value="${item.item_code}" readonly>
-                                        </td>
-                                        <td>
-                                            <button type="button" class="btn btn-primary btn-sm delete-item" data-index="${index}">Lainnya</button>
-                                            </td>
-                                        <td>
-                                            <input type="text" class="form-control" value="${item.name}" readonly>
-                                        </td>
-                                        <td><input type="text" class="form-control" value="${item.order_qty}" readonly></td>
-                                        <td><input type="text" class="form-control" value="${item.balance_qty}" readonly></td>
-                                        <td><input type="text" class="form-control" value="${item.received_qty}" readonly></td>
-                                        <td>
-                                            <button type="button" class="btn btn-primary btn-sm delete-item" data-index="${index}">+</td>
-
-                                    </tr>
-                                `;
+                        <tr style="border-bottom: 2px solid #000;">
+                            <td>
+                                <input type="text" class="form-control" value="${item.item_code}" readonly>
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-primary btn-sm delete-item" data-index="${index}">Lainnya</button>
+                            </td>
+                            <td><input type="text" class="form-control" value="${item.order_qty}" readonly></td>
+                            <td>
+                                <input type="text" class="form-control" value="${item.price}" readonly>
+                            </td>
+                            <td><input type="text" class="form-control" value="${item.discount}" readonly></td>
+                            <td>
+                                <input type="text" class="form-control" value="${item.total_price}" readonly>
+                            </td>
+                        </tr>
+                        `;
                                     tableBody.append(row);
                                 });
                                 $('#rejectButton').show();
@@ -231,6 +232,7 @@
                     });
                 }
             });
+
 
             // Handle Submit
             $('#submitButton').click(function(e) {

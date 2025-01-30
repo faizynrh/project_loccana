@@ -55,13 +55,14 @@
                         </li>
                     </ul>
                 </li>
-                <li class="sidebar-item has-sub {{ Request::is('penerimaan_barang*') ? 'active' : '' }}">
+                <li
+                    class="sidebar-item has-sub {{ Request::is('penerimaan_barang*') || Request::is('purchase_order*') ? 'active' : '' }}">
                     <a href="#" class="sidebar-link">
                         <i class="bi bi-pc-display"></i>
                         <span>Procurement</span>
                     </a>
                     <ul class="submenu active">
-                        <li class="submenu-item">
+                        <li class="submenu-item {{ Request::is('purchase_order*') ? 'active' : '' }}">
                             <a href="/purchase_order" class="submenu-link">Purchase Order</a>
                         </li>
                         <li class="submenu-item {{ Request::is('penerimaan_barang*') ? 'active' : '' }}">
