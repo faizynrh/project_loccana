@@ -61,8 +61,7 @@
                             </div>
                             <div class="text-end">
                                 <h6 class="fw-bold">Total Per Bulan</h6>
-                                <h4 class="fw-bold" id="totalPerBulan">Rp
-                                    {{ number_format($data['mtd_item_receive'], 2, ',', '.') }}</h4>
+                                <h4 class="fw-bold" id="totalPerBulan">Rp 0,00</h4>
                             </div>
                         </div>
                     </div>
@@ -123,6 +122,16 @@
                         data: function(d) {
                             d.month = lastMonth;
                             d.year = lastYear;
+                        },
+                        dataSrc: function(response) {
+                            if (response.mtd && response.mtd.mtd_item_receive !== undefined) {
+                                const formattedNumber = new Intl.NumberFormat('id-ID', {
+                                    minimumFractionDigits: 2,
+                                    maximumFractionDigits: 2
+                                }).format(response.mtd.mtd_item_receive);
+                                $('#totalPerBulan').html('Rp ' + formattedNumber);
+                            }
+                            return response.data;
                         }
                     },
                     columns: [{
@@ -196,7 +205,7 @@
                                 <form action="/penerimaan_barang/delete/${row.id_receipt}" method="POST" id="delete${row.id_receipt}" style="display:inline;">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="button" class="btn btn-sm btn-danger mb-2" style="margin-right:4px;" title="Hapus" onclick="confirmDelete(${row.id_receipt})">
+                                    <button type="submit" class="btn btn-sm btn-danger mb-2" style="margin-right:4px;" title="Hapus" onclick="confirmDelete(${row.id_receipt})">
                                         <i class="bi bi-trash"></i>
                                     </button>
                                 </form>
@@ -207,9 +216,7 @@
                     ]
                 });
             }
-
             initializeTable();
-
             $('#monthSelect').change(function() {
                 var month = $('#monthSelect').val();
                 if (month !== lastMonth) {
@@ -217,9 +224,7 @@
                     $('#tabelpenerimaan').DataTable().ajax.reload();
                 }
                 console.log(month);
-
             });
-
             $('#yearSelect').change(function() {
                 var year = $('#yearSelect').val();
                 if (year !== lastYear) {
@@ -227,14 +232,10 @@
                     $('#tabelpenerimaan').DataTable().ajax.reload();
                 }
                 console.log(year);
-
             });
             console.log(lastMonth);
             console.log(lastYear);
-
         });
-
-
 
         function confirmDelete(id) {
             Swal.fire({

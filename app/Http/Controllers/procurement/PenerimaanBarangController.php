@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\procurement;
 
+use Carbon\Carbon;
 use App\Helpers\Helpers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -13,40 +14,40 @@ class PenerimaanBarangController extends Controller
 {
     public function index(Request $request)
     {
-        $headers = Helpers::getHeaders();
-        $month = $request->input('month', 0);
-        $year = $request->input('year', 0);
-        $length = $request->input('length', 10);
-        $start = $request->input('start', 0);
-        $search = $request->input('search.value', '');
-
-        $requestbody = [
-            'month' => $month,
-            'year' => $year,
-            'limit' => $length,
-            'offset' => $start,
-            'company_id' => 0,
-        ];
-        if (!empty($search)) {
-            $requestbody['search'] = $search;
-        }
-        Log::info([
-            'requestbody' => $requestbody,
-        ]);
-        $apiurl = Helpers::getApiUrl() . '/loccana/itemreceipt/1.0.0/item_receipt/1.0.0/lists';
-        $mtdurl = Helpers::getApiUrl() . '/loccana/itemreceipt/1.0.0/item_receipt/1.0.0/mtd';
-
         if ($request->ajax()) {
             try {
-                $apiResponse = Http::withHeaders($headers)->post($apiurl, $requestbody);
+                $headers = Helpers::getHeaders();
+                $month = $request->input('month');
+                $year = $request->input('year');
+                $length = $request->input('length');
+                $start = $request->input('start');
+                $search = $request->input('search.value', '');
 
-                if ($apiResponse->successful()) {
+                $requestbody = [
+                    'search' => $search,
+                    'month' => $month,
+                    'year' => $year,
+                    'limit' => $length,
+                    'offset' => $start,
+                    'company_id' => 0,
+                ];
+
+                // Log::info(['requestbody' => $requestbody]);
+
+                $apiurl = Helpers::getApiUrl() . '/loccana/itemreceipt/1.0.0/item_receipt/1.0.0/lists';
+                $mtdurl = Helpers::getApiUrl() . '/loccana/itemreceipt/1.0.0/item_receipt/1.0.0/mtd';
+
+                $apiResponse = Http::withHeaders($headers)->post($apiurl, $requestbody);
+                $mtdResponse = Http::withHeaders($headers)->post($mtdurl, $requestbody);
+                if ($apiResponse->successful() && $mtdResponse->successful()) {
                     $data = $apiResponse->json();
+                    $mtd = $mtdResponse->json();
                     return response()->json([
                         'draw' => $request->input('draw'),
                         'recordsTotal' => $data['data']['jumlah_filter'] ?? 0,
                         'recordsFiltered' => $data['data']['jumlah'] ?? 0,
                         'data' => $data['data']['table'] ?? [],
+                        'mtd' => $mtd['data'] ?? [],
                     ]);
                 }
                 return response()->json(['error' => 'Failed to fetch data'], 500);
@@ -54,17 +55,8 @@ class PenerimaanBarangController extends Controller
                 return response()->json(['error' => $e->getMessage()], 500);
             }
         }
-
-        $mtdResponse = Http::withHeaders($headers)->post($mtdurl, $requestbody);
-
-        if ($mtdResponse->successful()) {
-            $data = $mtdResponse->json()['data'];
-            return view('procurement.penerimaanbarang.index', compact('data'));
-        }
-
         return view('procurement.penerimaanbarang.index');
     }
-
     public function getPoDetails(Request $request, $po_id)
     {
         $headers = Helpers::getHeaders();
