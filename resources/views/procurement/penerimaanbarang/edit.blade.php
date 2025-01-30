@@ -132,7 +132,7 @@
                                                 <textarea type="text" class="form-control w-100" readonly rows="3">{{ $item['item_code'] }}</textarea>
                                             </td>
                                             <td>
-                                                <textarea class="form-control" value="0" rows="3" readonly>Box @ 100</textarea>
+                                                <textarea class="form-control" value="0" rows="3" readonly>{{ $item['unit_price'] }}</textarea>
                                             </td>
                                             <td><input type="text" class="form-control bg-body-secondary"
                                                     name="item_order_qty[{{ $index }}]"
