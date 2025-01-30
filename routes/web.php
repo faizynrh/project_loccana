@@ -92,12 +92,14 @@ Route::middleware('auth.login')->group(
         Route::put('/coa/update/{id}', [CoaController::class, 'update'])->name('coa.update');
 
         //GUDANG
-        Route::get('/gudang', [GudangController::class, 'index'])->name('gudang.index');
-        Route::get('/gudang/add', [GudangController::class, 'create'])->name('gudang.create');
-        Route::get('/gudang/edit/{id}', [GudangController::class, 'edit'])->name('gudang.edit');
-        Route::put('/gudang/edit/{id}', [GudangController::class, 'update'])->name('gudang.update');
-        Route::post('/gudang/add', [GudangController::class, 'store'])->name('gudang.store');
-        Route::delete('/gudang/delete/{id}', [GudangController::class, 'destroy'])->name('gudang.destroy');
+        Route::prefix('/gudang')->name('gudang.')->group(function () {
+            Route::get('/', [GudangController::class, 'index'])->name('index');
+            Route::get('/add', [GudangController::class, 'create'])->name('create');
+            Route::get('/edit/{id}', [GudangController::class, 'edit'])->name('edit');
+            Route::put('/edit/{id}', [GudangController::class, 'update'])->name('update');
+            Route::post('/add', [GudangController::class, 'store'])->name('store');
+            Route::delete('/delete/{id}', [GudangController::class, 'destroy'])->name('destroy');
+        });
 
         //principal
         Route::get('/principal', [PrincipalController::class, 'index'])->name('principal.index');
