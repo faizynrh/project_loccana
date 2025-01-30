@@ -116,7 +116,7 @@
                                 action="/price/approve/${row.id}" method="POST">
                                 @csrf
                                 @method('PUT')
-                                <button type="submit" class="btn btn-sm btn-success me-2" title="Approve"
+                                <button type="button" class="btn btn-sm btn-success me-2" title="Approve"
                                     onclick="confirmApprove(${row.id})">
                                     <i class="bi bi-check"></i>
                                 </button>
@@ -128,19 +128,5 @@
                 ]
             });
         });
-
-        function confirmApprove(id) {
-            swal({
-                title: "Apakah kamu yakin?",
-                text: "Pastikan ini data yang akan disetujui",
-                icon: "warning",
-                buttons: ["Batal", "Setujui"],
-                dangerMode: true,
-            }).then((willApprove) => {
-                if (willApprove) {
-                    document.getElementById('approve' + id).submit();
-                }
-            });
-        }
     </script>
 @endpush

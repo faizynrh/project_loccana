@@ -108,7 +108,7 @@
                                 <form action="/gudang/delete/${row.id}" method="POST" id="delete${row.id}" style="display:inline;">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn btn-sm btn-danger" title="Hapus"
+                                    <button type="button" class="btn btn-sm btn-danger" title="Hapus"
                                         onclick="confirmDelete(${row.id})">
                                         <i class="bi bi-trash"></i>
                                     </button>
@@ -119,19 +119,5 @@
                 ]
             });
         });
-
-        function confirmDelete(id) {
-            Swal.fire({
-                title: 'Apakah kamu yakin?',
-                text: 'Data ini akan dihapus secara permanen!',
-                icon: 'warning',
-                showCancelButton: true,
-                reverseButtons: true
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    document.getElementById('delete' + id).submit();
-                }
-            });
-        }
     </script>
 @endpush

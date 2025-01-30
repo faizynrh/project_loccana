@@ -172,7 +172,7 @@
 
                             <div class="row">
                                 <div class="col-md-12 text-end">
-                                    <button type="submit" class="btn btn-primary" id="submitButton">Submit</button>
+                                    <button type="button" class="btn btn-primary" id="submitButton">Submit</button>
                                     <a href="/penerimaan_barang" class="btn btn-secondary ms-2">Batal</a>
                                 </div>
                             </div>
@@ -188,7 +188,7 @@
         document.getElementById('submitButton').addEventListener('click', function(event) {
             Swal.fire({
                 title: 'Apakah Anda yakin?',
-                text: 'Data yang dimasukkan akan disimpan!',
+                text: 'Perubahan yang Anda buat akan disimpan!',
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonText: 'Ya, Simpan!',
