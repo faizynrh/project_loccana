@@ -70,6 +70,7 @@ class PenerimaanBarangController extends Controller
                 foreach ($data as $item) {
                     $items[] = [
                         'item_id' => $item['item_id'],
+                        'unit_price' => $item['unit_price'],
                         'warehouse_id' => $item['warehouse_id'],
                         'kode' => $item['item_code'],
                         'order_qty' => $item['item_order_qty'],
@@ -83,6 +84,7 @@ class PenerimaanBarangController extends Controller
                     ];
                 }
                 return response()->json([
+                    'id_po' => $data[0]['id_po'],
                     'id_po' => $data[0]['id_po'],
                     'code' => $data[0]['id_po'],
                     'order_date' => $data[0]['order_date'],

@@ -26,7 +26,7 @@ class CoaController extends Controller
                     'search' => $search,
                     'limit' => $length,
                     'offset' => $start,
-                    'company_id' => 2
+                    'company_id' => 0
                 ];
 
                 $apiResponse = Http::withHeaders($headers)->post($apiurl, $requestbody);

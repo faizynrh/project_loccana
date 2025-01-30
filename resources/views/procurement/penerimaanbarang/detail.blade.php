@@ -111,7 +111,7 @@
                                             <p class="fw-bold">{{ $item['item_code'] }}</p>
                                         </td>
                                         <td>
-                                            <p class="fw-bold">{{ $item['qty'] }}</p>
+                                            <p class="fw-bold">{{ $item['unit_price'] }}</p>
                                         </td>
                                         <td>
                                             <p class="fw-bold">{{ $item['base_qty'] }}</p>

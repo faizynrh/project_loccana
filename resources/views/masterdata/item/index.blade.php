@@ -60,7 +60,6 @@
                                         <th scope="col">Nama Item</th>
                                         <th scope="col">Deskripsi</th>
                                         <th scope="col">UoM</th>
-                                        <th scope="col">Unit Box</th>
                                         <th scope="col">Principal</th>
                                         <th scope="col">Option</th>
                                     </tr>
@@ -100,10 +99,6 @@
                     },
                     {
                         data: 'uom_name'
-                    },
-                    {
-                        data: null,
-                        defaultContent: ''
                     },
                     {
                         data: 'partner_name'
