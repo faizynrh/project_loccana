@@ -236,21 +236,5 @@
             console.log(lastMonth);
             console.log(lastYear);
         });
-
-        function confirmDelete(id) {
-            Swal.fire({
-                title: 'Apakah kamu yakin?',
-                text: 'Data ini akan dihapus secara permanen!',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'Setujui',
-                cancelButtonText: 'Batal',
-                reverseButtons: true
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    document.getElementById('delete' + id).submit();
-                }
-            });
-        }
     </script>
 @endpush

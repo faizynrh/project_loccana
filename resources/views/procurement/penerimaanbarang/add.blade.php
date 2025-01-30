@@ -51,7 +51,7 @@
                         @endif
                         <div class="row mb-3">
                             <div class="col-md-6">
-                                <form action="{{ route('penerimaan_barang.store') }}" id="createForm" method="POST">
+                                <form action="{{ route('penerimaan_barang.store') }}" method="POST" id="createForm">
                                     @csrf
                                     <label for="nomorInvoice" class="form-label fw-bold mt-2 mb-1 small">No.
                                         PO</label>
@@ -127,8 +127,7 @@
                         </table>
                         <div class="row">
                             <div class="col-md-12 text-end">
-                                <button type="button" class="btn btn-primary" id="submitButton"
-                                    onclick="confirmSubmit('submitButton', 'createForm')">Submit</button>
+                                <button type="button" class="btn btn-primary" id="submitButton">Submit</button>
                                 <a href="" class="btn btn-danger ms-2" id="rejectButton">Reject</a>
                                 <a href="/penerimaanbarang" class="btn btn-secondary ms-2">Batal</a>
                             </div>
@@ -175,12 +174,12 @@
 
                             var tableBody = $('#tableBody');
                             tableBody.empty();
-
                             if (response.items && response.items.length > 0) {
                                 tableBody.show();
                                 $('#rejectButton').show();
 
                                 response.items.forEach(function(item) {
+
                                     var row = `
                             <tr style="border-bottom: 2px solid #000;">
                                 <td>
@@ -235,8 +234,8 @@
             var items = [];
             $('#tableBody tr').each(function() {
                 items.push({
-                    item_id: $(this).find('#item_id').val(),
-                    warehouse_id: $(this).find('#warehouse_id').val(),
+                    item_id: $(this).find('.item_id').val(),
+                    warehouse_id: $(this).find('.warehouse_id').val(),
                     qty_reject: $(this).find('#qty_reject').val(),
                     qty_received: $(this).find('#qty_received').val(),
                     qty_bonus: $(this).find('#qty_bonus').val(),
@@ -246,7 +245,7 @@
                 });
             });
 
-            var form = $('form');
+            var form = $('#createForm');
             items.forEach(function(item, index) {
                 form.append(`
             <input type="hidden" name="items[${index}][item_id]" value="${item.item_id}">
@@ -260,8 +259,9 @@
         `);
             });
 
-            form.submit();
+            confirmSubmit('submitButton', 'createForm');
         });
+
 
         document.addEventListener("DOMContentLoaded", function() {
             const submitButton = document.getElementById('submitButton');
