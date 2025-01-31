@@ -48,48 +48,60 @@ Route::middleware('auth.login')->group(
 
 
         // ==========================================MASTERDATA========================================
-        //ITEM
-        Route::get('/item', [ItemController::class, 'index'])->name('item.index');
-        Route::get('/item/add', [ItemController::class, 'create'])->name('item.create');
-        Route::post('/item/add', [ItemController::class, 'store'])->name('item.store');
-        Route::delete('/item/delete/{id}', [ItemController::class, 'destroy'])->name('item.destroy');
-        Route::get('/item/edit/{id}', [ItemController::class, 'edit'])->name('item.edit');
-        Route::put('/item/update/{id}', [ItemController::class, 'update'])->name('item.update');
-        Route::get('/item/detail/{id}', [ItemController::class, 'show'])->name('item.detail');
 
-        //USER
-        Route::get('/user', function () {
-            return view('masterdata.user.index');
+        // ITEM
+        Route::prefix('/item')->name('item.')->group(function () {
+            Route::get('/', [ItemController::class, 'index'])->name('index');
+            Route::get('/add', [ItemController::class, 'create'])->name('create');
+            Route::post('/add', [ItemController::class, 'store'])->name('store');
+            Route::delete('/delete/{id}', [ItemController::class, 'destroy'])->name('destroy');
+            Route::get('/edit/{id}', [ItemController::class, 'edit'])->name('edit');
+            Route::put('/update/{id}', [ItemController::class, 'update'])->name('update');
+            Route::get('/detail/{id}', [ItemController::class, 'show'])->name('detail');
         });
-        Route::get('/user/add', function () {
-            return view('masterdata.user.add');
-        });
-        Route::get('/user/edit', function () {
-            return view('masterdata.user.edit');
-        });
-        //PRICE
-        Route::get('/price', [PriceController::class, 'index'])->name('price.index');
-        Route::get('/price/edit/{id}', [PriceController::class, 'edit'])->name('price.edit');
-        Route::put('/price/update/{id}', [PriceController::class, 'update'])->name('price.update');
-        Route::put('/price/approve/{id}', [PriceController::class, 'approve'])->name('price.approve');
 
-        //UOM
-        Route::get('/uom', [UomController::class, 'index'])->name('uom.index'); //jika api mati maka gunakan yang bawah
-        Route::get('/uom/add', [UomController::class, 'create'])->name('uom.create');
-        Route::post('/uom/add', [UomController::class, 'store'])->name('uom.store'); //jika api mati maka gunakan yang bawah'] () {
-        Route::delete('/uom/delete/{id}', [UomController::class, 'destroy'])->name('uom.destroy');
-        Route::get('/uom/edit/{id}', [UomController::class, 'edit'])->name('uom.edit');
-        Route::put('/uom/update/{id}', [UomController::class, 'update'])->name('uom.update');
-        Route::get('/uom/detail/{id}', [UomController::class, 'show'])->name('uom.show');
+        // USER
+        Route::prefix('/user')->name('user.')->group(function () {
+            Route::get('/', function () {
+                return view('masterdata.user.index');
+            });
+            Route::get('/add', function () {
+                return view('masterdata.user.add');
+            });
+            Route::get('/edit', function () {
+                return view('masterdata.user.edit');
+            });
+        });
 
-        //COA
-        Route::get('/coa', [CoaController::class, 'index'])->name('coa.index');
-        Route::get('/coa/detail/{id}', [CoaController::class, 'show'])->name('coa.detail');
-        Route::get('/coa/add', [CoaController::class, 'create'])->name('coa.create');
-        Route::post('/coa/add', [CoaController::class, 'store'])->name('coa.store');
-        Route::delete('/coa/delete/{id}', [CoaController::class, 'destroy'])->name('coa.destroy');
-        Route::get('/coa/edit/{id}', [CoaController::class, 'edit'])->name('coa.edit');
-        Route::put('/coa/update/{id}', [CoaController::class, 'update'])->name('coa.update');
+        // PRICE
+        Route::prefix('/price')->name('price.')->group(function () {
+            Route::get('/', [PriceController::class, 'index'])->name('index');
+            Route::get('/edit/{id}', [PriceController::class, 'edit'])->name('edit');
+            Route::put('/update/{id}', [PriceController::class, 'update'])->name('update');
+            Route::put('/approve/{id}', [PriceController::class, 'approve'])->name('approve');
+        });
+
+        // UOM
+        Route::prefix('/uom')->name('uom.')->group(function () {
+            Route::get('/', [UomController::class, 'index'])->name('index');
+            Route::get('/add', [UomController::class, 'create'])->name('create');
+            Route::post('/add', [UomController::class, 'store'])->name('store');
+            Route::delete('/delete/{id}', [UomController::class, 'destroy'])->name('destroy');
+            Route::get('/edit/{id}', [UomController::class, 'edit'])->name('edit');
+            Route::put('/update/{id}', [UomController::class, 'update'])->name('update');
+            Route::get('/detail/{id}', [UomController::class, 'show'])->name('show');
+        });
+
+        // COA
+        Route::prefix('/coa')->name('coa.')->group(function () {
+            Route::get('/', [CoaController::class, 'index'])->name('index');
+            Route::get('/detail/{id}', [CoaController::class, 'show'])->name('detail');
+            Route::get('/add', [CoaController::class, 'create'])->name('create');
+            Route::post('/add', [CoaController::class, 'store'])->name('store');
+            Route::delete('/delete/{id}', [CoaController::class, 'destroy'])->name('destroy');
+            Route::get('/edit/{id}', [CoaController::class, 'edit'])->name('edit');
+            Route::put('/update/{id}', [CoaController::class, 'update'])->name('update');
+        });
 
         //GUDANG
         Route::prefix('/gudang')->name('gudang.')->group(function () {
@@ -101,55 +113,52 @@ Route::middleware('auth.login')->group(
             Route::delete('/delete/{id}', [GudangController::class, 'destroy'])->name('destroy');
         });
 
-        //principal
-        Route::get('/principal', [PrincipalController::class, 'index'])->name('principal.index');
-        Route::get('/principal/add', [PrincipalController::class, 'create'])->name('principal.create');
-        Route::post('/principal/add', [PrincipalController::class, 'store'])->name('principal.store');
-        Route::delete('/principal/delete/{id}', [PrincipalController::class, 'destroy'])->name('principal.destroy');
-        Route::get('/principal/edit/{id}', [PrincipalController::class, 'edit'])->name('principal.edit');
-        Route::put('/principal/update/{id}', [PrincipalController::class, 'update'])->name('principal.update');
-        Route::get('/principal/show/{id}', [PrincipalController::class, 'show'])->name('principal.show');
+        // PRINCIPAL
+        Route::prefix('/principal')->name('principal.')->group(function () {
+            Route::get('/', [PrincipalController::class, 'index'])->name('index');
+            Route::get('/add', [PrincipalController::class, 'create'])->name('create');
+            Route::post('/add', [PrincipalController::class, 'store'])->name('store');
+            Route::delete('/delete/{id}', [PrincipalController::class, 'destroy'])->name('destroy');
+            Route::get('/edit/{id}', [PrincipalController::class, 'edit'])->name('edit');
+            Route::put('/update/{id}', [PrincipalController::class, 'update'])->name('update');
+            Route::get('/show/{id}', [PrincipalController::class, 'show'])->name('show');
+        });
 
-        // customer
-        Route::get('/customer', [CustomerController::class, 'index'])->name('customer.index');
-        Route::get('/customer/add', [CustomerController::class, 'create'])->name('customer.create');
-        Route::post('/customer/add', [CustomerController::class, 'store'])->name('customer.store');
-        Route::delete('/customer/delete/{id}', [CustomerController::class, 'destroy'])->name('customer.destroy');
-        Route::get('/customer/edit/{id}', [CustomerController::class, 'edit'])->name('customer.edit');
-        Route::put('/customer/update/{id}', [CustomerController::class, 'update'])->name('customer.update');
-        Route::get('/customer/show/{id}', [CustomerController::class, 'show'])->name('customer.show');
-
-        //principal
-        Route::get('/principal', [PrincipalController::class, 'index'])->name('principal.index');
-        Route::get('/principal/add', [PrincipalController::class, 'create'])->name('principal.create');
-        Route::post('/principal/add', [PrincipalController::class, 'store'])->name('principal.store');
-        Route::delete('/principal/delete/{id}', [PrincipalController::class, 'destroy'])->name('principal.destroy');
-        Route::get('/principal/edit/{id}', [PrincipalController::class, 'edit'])->name('principal.edit');
-        Route::put('/principal/update/{id}', [PrincipalController::class, 'update'])->name('principal.update');
-        Route::get('/principal/show/{id}', [PrincipalController::class, 'show'])->name('principal.show');
-        // ===================================== END MASTERDATA ======================================
-
+        // CUSTOMER
+        Route::prefix('/customer')->name('customer.')->group(function () {
+            Route::get('/', [CustomerController::class, 'index'])->name('index');
+            Route::get('/add', [CustomerController::class, 'create'])->name('create');
+            Route::post('/add', [CustomerController::class, 'store'])->name('store');
+            Route::delete('/delete/{id}', [CustomerController::class, 'destroy'])->name('destroy');
+            Route::get('/edit/{id}', [CustomerController::class, 'edit'])->name('edit');
+            Route::put('/update/{id}', [CustomerController::class, 'update'])->name('update');
+            Route::get('/show/{id}', [CustomerController::class, 'show'])->name('show');
+        });
 
         // ===================================== PROCUREMENT =========================================
 
-        //penerimaan barang
-        Route::get('/penerimaan_barang', [PenerimaanBarangController::class, 'index'])->name('penerimaan_barang.index');
-        Route::get('/get-po-details/{id_po}', [PenerimaanBarangController::class, 'getPoDetails'])->name('getdetails');
-        Route::get('/penerimaan_barang/add', [PenerimaanBarangController::class, 'create'])->name('penerimaan_barang.create');
-        Route::post('/penerimaan_barang/add', [PenerimaanBarangController::class, 'store'])->name('penerimaan_barang.store');
-        Route::get('/penerimaan_barang/detail/{id}', [PenerimaanBarangController::class, 'show'])->name('penerimaan_barang.detail');
-        Route::delete('/penerimaan_barang/delete/{id}', [PenerimaanBarangController::class, 'destroy'])->name('penerimaan_barang.destroy');
-        Route::get('/penerimaan_barang/edit/{id}', [PenerimaanBarangController::class, 'edit'])->name('penerimaan_barang.edit');
-        Route::put('/penerimaan_barang/update/{id}', [PenerimaanBarangController::class, 'update'])->name('penerimaan_barang.update');
+        // PENERIMAAN BARANG
+        Route::prefix('/penerimaan_barang')->name('penerimaan_barang.')->group(function () {
+            Route::get('/', [PenerimaanBarangController::class, 'index'])->name('index');
+            Route::get('/get-po-details/{id_po}', [PenerimaanBarangController::class, 'getPoDetails'])->name('getdetails');
+            Route::get('/add', [PenerimaanBarangController::class, 'create'])->name('create');
+            Route::post('/add', [PenerimaanBarangController::class, 'store'])->name('store');
+            Route::get('/detail/{id}', [PenerimaanBarangController::class, 'show'])->name('detail');
+            Route::delete('/delete/{id}', [PenerimaanBarangController::class, 'destroy'])->name('destroy');
+            Route::get('/edit/{id}', [PenerimaanBarangController::class, 'edit'])->name('edit');
+            Route::put('/update/{id}', [PenerimaanBarangController::class, 'update'])->name('update');
+        });
 
-        // purchase order
-        Route::get('/purchase_order', [PurchaseOrderController::class, 'index'])->name('purchaseorder.index');
-        Route::get('/get-purchase-order-details/{id_po}', [PurchaseOrderController::class, 'getPurchaseOrderDetails'])->name('getpurchasedetails');
-        Route::get('/purchase_order/add', [PurchaseOrderController::class, 'create'])->name('purchaseorder.create');
-        Route::post('/purchase_order/add', [PurchaseOrderController::class, 'store'])->name('purchaseorder.store');
-        Route::get('/purchase_order/detail/{id}', [PurchaseOrderController::class, 'show'])->name('purchaseorder.detail');
-        Route::delete('/purchase_order/delete/{id}', [PurchaseOrderController::class, 'destroy'])->name('purchaseorder.destroy');
-        Route::get('/purchase_order/edit/{id}', [PurchaseOrderController::class, 'edit'])->name('purchaseorder.edit');
-        Route::put('/purchase_order/update/{id}', [PurchaseOrderController::class, 'update'])->name('purchaseorder.update');
+        // PURCHASE ORDER
+        Route::prefix('/purchase_order')->name('purchaseorder.')->group(function () {
+            Route::get('/', [PurchaseOrderController::class, 'index'])->name('index');
+            Route::get('/get-purchase-order-details/{id_po}', [PurchaseOrderController::class, 'getPurchaseOrderDetails'])->name('getpurchasedetails');
+            Route::get('/add', [PurchaseOrderController::class, 'create'])->name('create');
+            Route::post('/add', [PurchaseOrderController::class, 'store'])->name('store');
+            Route::get('/detail/{id}', [PurchaseOrderController::class, 'show'])->name('detail');
+            Route::delete('/delete/{id}', [PurchaseOrderController::class, 'destroy'])->name('destroy');
+            Route::get('/edit/{id}', [PurchaseOrderController::class, 'edit'])->name('edit');
+            Route::put('/update/{id}', [PurchaseOrderController::class, 'update'])->name('update');
+        });
     }
 );
