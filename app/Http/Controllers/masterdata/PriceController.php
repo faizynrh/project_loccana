@@ -12,12 +12,16 @@ use Illuminate\Support\Facades\Http;
 
 class PriceController extends Controller
 {
+    private function buildApiUrl($endpoint)
+    {
+        return Helpers::getApiUrl() . '/masterdata/price/1.0.0/price-manajement/' . $endpoint;
+    }
     public function index(Request $request)
     {
         if ($request->ajax()) {
             try {
                 $headers = Helpers::getHeaders();
-                $apiurl = Helpers::getApiUrl() . '/masterdata/price/1.0.0/price-manajement/list';
+                $apiurl = $this->buildApiUrl('list');
 
                 $length = $request->input('length', 10);
                 $start = $request->input('start', 0);
@@ -59,7 +63,7 @@ class PriceController extends Controller
     {
         try {
             $headers = Helpers::getHeaders();
-            $apiurl = Helpers::getApiUrl() . '/masterdata/price/1.0.0/price-manajement/' . $id;
+            $apiurl = $this->buildApiUrl($id);
             $apiResponse = Http::withHeaders($headers)->get($apiurl);
             if ($apiResponse->successful()) {
                 $data = $apiResponse->json()['data'];
@@ -77,13 +81,13 @@ class PriceController extends Controller
     {
         try {
             $headers = Helpers::getHeaders();
-            $apiurl = Helpers::getApiUrl() . '/masterdata/price/1.0.0/price-manajement/' . $id;
+            $apiurl = $this->buildApiUrl($id);
 
             $data = [
-                'harga_atas' => $request->harga_atas ?? 0,
-                'harga_bawah' => $request->harga_bawah ?? 0,
-                'harga_pokok' => $request->harga_pokok ?? 0,
-                'harga_beli' => $request->harga_beli ?? 0,
+                'harga_atas' => $request->harga_atas,
+                'harga_bawah' => $request->harga_bawah,
+                'harga_pokok' => $request->harga_pokok,
+                'harga_beli' => $request->harga_beli,
             ];
 
             $apiResponse = Http::withHeaders($headers)->put($apiurl, $data);
@@ -101,7 +105,7 @@ class PriceController extends Controller
     {
         try {
             $headers = Helpers::getHeaders();
-            $apiurl = Helpers::getApiUrl() . '/masterdata/price/1.0.0/price-manajement/approve/' . $id;
+            $apiurl = $this->buildApiUrl('approve/' . $id);
 
             $data = [
                 'status' => 'approve',

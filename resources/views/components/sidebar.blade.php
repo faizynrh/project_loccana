@@ -69,7 +69,7 @@
                             <a href="/penerimaan_barang" class="submenu-link">Penerimaan Barang</a>
                         </li>
                         <li class="submenu-item">
-                            <a href="#" class="submenu-link">Dasar Barang</a>
+                            <a href="#" class="submenu-link">Dasar Pembelian</a>
                         </li>
                         <li class="submenu-item">
                             <a href="#" class="submenu-link">Invoice</a>

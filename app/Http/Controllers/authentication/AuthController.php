@@ -18,21 +18,15 @@ class AuthController extends Controller
         $redirect_uri = route('oauth.callback');
 
         $encoded_redirect_uri = urlencode($redirect_uri);
-        // $scope = 'openid email phone profile roles';
         $scope = 'openid profile roles user:read user:create user:update user:detail user:delete';
-        // dd($scope);
         $encoded_scope = urlencode($scope);
 
-        // URL otorisasi WSO2
-        // https://172.18.1.111:9443/oauth2/authorize
-        $auth_url = 'https://172.18.1.111:9443/oauth2/authorize?response_type=code&client_id='
+        $auth_url = env('AUTH_URL')
             . $client_id . '&scope=' . $encoded_scope . '&redirect_uri=' . $encoded_redirect_uri;
 
-        // dd($auth_url);
 
         $client = new Client(['verify' => false]);
 
-        // Redirect ke URL WSO2 untuk autentikasi
         return redirect()->away($auth_url);
     }
 
@@ -40,16 +34,15 @@ class AuthController extends Controller
     {
         $client_id = env('IS_CLIENT_ID');
         $client_secret = env('IS_CLIENT_SECRET');
-        $redirect_uri = route('oauth.callback'); // Callback URI yang sudah diatur di route
-        $tokenUrl = env('IS_TOKEN_URL'); // URL untuk menukar token
+        $redirect_uri = route('oauth.callback');
+        $tokenUrl = env('IS_TOKEN_URL');
 
-        $authorizationCode = $request->query('code'); // Authorization code dari query string
+        $authorizationCode = $request->query('code');
 
         if (!$authorizationCode) {
             return redirect('/')->with('error', 'No authorization code received');
         }
 
-        // Menukar authorization code dengan access token dan id token
         $client = new Client(['verify' => false]);
 
         try {
@@ -72,11 +65,9 @@ class AuthController extends Controller
             $scope = $data['scope'] ?? '';
 
             if ($idToken) {
-                // Simpan access token dan id token ke session
                 Session::put('access_token', $accessToken);
                 Session::put('id_token', $idToken);
 
-                // Proses decoding ID token untuk mendapatkan informasi user
                 $tokenParts = explode('.', $idToken);
                 if (count($tokenParts) === 3) {
                     $tokenPayload = $tokenParts[1];
@@ -97,13 +88,13 @@ class AuthController extends Controller
                         'roles' => $roles,
                         'email' => $email,
                     ];
-                    // Simpan user info dan roles ke session
-                    Session::put('user_info', $userInfo);
-                    Session::put('given_name', $given_name);
-                    Session::put('roles', $roles);
-                    Session::put('scope', $scope);
+                    $request->session()->put([
+                        'user_info' => $userInfo,
+                        'given_name' => $given_name,
+                        'roles' => $roles,
+                        'scope' => $scope,
+                    ]);
 
-                    // Redirect ke dashboard sesuai role
                     return redirect()->route('dashboard-dev');
                 } else {
                     return response('Error: Invalid ID token format.', 400);
@@ -121,15 +112,12 @@ class AuthController extends Controller
     {
         $idToken = Session::get('id_token');
 
-        // Hapus session
         Session::flush();
 
         $client_id = env('IS_CLIENT_ID');
-        $redirect_uri = route('oauth.callback'); // URI untuk redirect setelah logout
-        // https://172.18.1.111:9443/oidc/logout
-        $logoutUrl = 'https://172.18.1.111:9443/oidc/logout';
+        $redirect_uri = route('oauth.callback');
+        $logoutUrl = env('IS_LOGOUT_URL');
 
-        // Redirect ke URL logout WSO2 dengan ID token jika tersedia
         $logoutRedirect = $idToken
             ? $logoutUrl . '?id_token_hint=' . urlencode($idToken) . '&post_logout_redirect_uri=' . urlencode($redirect_uri)
             : $redirect_uri;
