@@ -17,6 +17,11 @@ function confirmApprove(id) {
 
 //////////// ADD //////////
 function confirmSubmit(buttonId, formId) {
+    const form = document.getElementById(formId);
+    if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+    }
     Swal.fire({
         title: "Apakah anda yakin?",
         text: "Data yang dimasukkan akan disimpan!",
@@ -39,6 +44,11 @@ function confirmSubmit(buttonId, formId) {
 
 //////////// EDIT //////////
 function confirmEdit(buttonId, formId) {
+    const form = document.getElementById(formId);
+    if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+    }
     Swal.fire({
         title: "Apakah anda yakin?",
         text: "Perubahan yang Anda buat akan disimpan!",

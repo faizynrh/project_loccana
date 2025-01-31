@@ -35,14 +35,6 @@
                             dengan benar.</h6>
                     </div>
                     <div class="card-body">
-                        @if (session('success'))
-                            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                {{ session('success') }}
-                                <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                    aria-label="Close"></button>
-                            </div>
-                        @endif
-
                         @if ($errors->any())
                             <div class="alert alert-danger alert-dismissible fade show" role="alert">
                                 @foreach ($errors->all() as $error)
@@ -54,39 +46,18 @@
                         @endif
                         <form action="{{ route('gudang.store') }}" method="POST" id="createForm">
                             @csrf
-                            {{-- <div class="row mb-3 align-items-center">
-                <div class="col-md-3">
-                    <label for="code" class="form-label fw-bold mb-0">Kode Gudang<span
-                            class="text-danger">*</span></label>
-                </div>
-                <div class="col-md-9">
-                    <input type="text" class="form-control" id="code" name="code" placeholder="Kode Gudang"
-                        value="">
-                </div>
-            </div> --}}
-
                             <div class="row mb-3 align-items-center">
                                 <div class="col-md-3">
                                     <label for="name" class="form-label fw-bold mb-0">Nama Gudang <span
                                             class="text-danger">*</span></label>
                                 </div>
                                 <div class="col-md-9">
-                                    <input type="text" class="form-control" name="name" placeholder="Nama Gudang">
+                                    <input type="text" class="form-control" name="name" placeholder="Nama Gudang"
+                                        required minlength="3">
+                                    <small id="alertnama" style="color: red; display: none;">Nama minimal memiliki 3
+                                        karakter!</small>
                                 </div>
                             </div>
-
-                            {{-- <div class="row mb-3 align-items-center">
-                <div class="col-md-3">
-                    <label for="pic" class="form-label fw-bold mb-0">PIC <span class="text-danger">*</span></label>
-                </div>
-                <div class="col-md-9">
-                    <select class="form-select" id="pic" name="pic">
-                        <option value="{{ $data['pic'] }}" selected>{{ $data['pic'] }}</option>
-                        <option value="agus">Agus</option>
-                        <option value="hendra">Hendra</option>
-                    </select>
-                </div>
-            </div> --}}
                             <div class="row mb-3 align-items-center">
                                 <div class="col-md-3">
                                     <label for="description" class="form-label fw-bold mb-0">Deskripsi Gudang<span
@@ -111,12 +82,10 @@
                                             class="text-danger">*</span></label>
                                 </div>
                                 <div class="col-md-9">
-                                    <input type="number" class="form-control" name="capacity" placeholder="Kapasitas">
-                                    <small id="alert" style="color: red; display: none;">Kapasitas tidak boleh kurang
-                                        dari 1!</small>
+                                    <input type="number" class="form-control" name="capacity" placeholder="Kapasitas"
+                                        required min="1">
                                 </div>
                             </div>
-
                             <div class="row">
                                 <div class="col-md-12 text-end">
                                     <button type="button" class="btn btn-primary" id="submitButton"

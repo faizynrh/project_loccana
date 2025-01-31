@@ -46,12 +46,12 @@ class GudangController extends Controller
             }
             return response()->json([
                 'error' => $apiResponse->json()['message'],
-            ], 500);
+            ]);
         } catch (\Exception $e) {
             if ($request->ajax()) {
                 return response()->json([
                     'error' => $e->getMessage(),
-                ], 500);
+                ]);
             }
         }
     }
@@ -83,7 +83,6 @@ class GudangController extends Controller
             ];
 
             $apiResponse = Http::withHeaders($headers)->post($apiurl, $data);
-
             $responseData = $apiResponse->json();
             if (
                 $apiResponse->successful() &&

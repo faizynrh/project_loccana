@@ -12,60 +12,79 @@ use Illuminate\Support\Facades\Http;
 
 class PenerimaanBarangController extends Controller
 {
+    private function buildApiUrl($endpoint)
+    {
+        return Helpers::getApiUrl() . '/loccana/itemreceipt/1.0.0/item_receipt/1.0.0' . $endpoint;
+    }
+
+    private function urlSelect($company_id)
+    {
+        return [
+            'po' => Helpers::getApiUrl() . '/loccana/po/1.0.0/purchase-order/list-select/' . $company_id,
+            'gudang' => Helpers::getApiUrl() . '/masterdata/warehouse/1.0.0/warehouse/list-select/' . $company_id
+        ];
+    }
+
+    private function ajax(Request $request)
+    {
+        try {
+            $headers = Helpers::getHeaders();
+            $month = $request->input('month');
+            $year = $request->input('year');
+            $length = $request->input('length');
+            $start = $request->input('start');
+            $search = $request->input('search.value') ?? '';
+
+            $requestbody = [
+                'search' => $search,
+                'month' => $month,
+                'year' => $year,
+                'limit' => $length,
+                'offset' => $start,
+                'company_id' => 0,
+            ];
+
+            $apiurl = $this->buildApiUrl('/lists');
+            $mtdurl = $this->buildApiUrl('/mtd');
+
+            $apiResponse = Http::withHeaders($headers)->post($apiurl, $requestbody);
+            $mtdResponse = Http::withHeaders($headers)->post($mtdurl, $requestbody);
+
+            if ($apiResponse->successful() && $mtdResponse->successful()) {
+                $data = $apiResponse->json();
+                $mtd = $mtdResponse->json();
+                return response()->json([
+                    'draw' => $request->input('draw'),
+                    'recordsTotal' => $data['data']['jumlah_filter'] ?? 0,
+                    'recordsFiltered' => $data['data']['jumlah'] ?? 0,
+                    'data' => $data['data']['table'] ?? [],
+                    'mtd' => $mtd['data'] ?? [],
+                ]);
+            }
+            return response()->json([
+                'error' => $apiResponse->json()['message']
+            ]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()]);
+        }
+    }
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            try {
-                $headers = Helpers::getHeaders();
-                $month = $request->input('month');
-                $year = $request->input('year');
-                $length = $request->input('length');
-                $start = $request->input('start');
-                $search = $request->input('search.value') ?? '';
-
-                $requestbody = [
-                    'search' => $search,
-                    'month' => $month,
-                    'year' => $year,
-                    'limit' => $length,
-                    'offset' => $start,
-                    'company_id' => 0,
-                ];
-
-                $apiurl = Helpers::getApiUrl() . '/loccana/itemreceipt/1.0.0/item_receipt/1.0.0/lists';
-                $mtdurl = Helpers::getApiUrl() . '/loccana/itemreceipt/1.0.0/item_receipt/1.0.0/mtd';
-
-                $apiResponse = Http::withHeaders($headers)->post($apiurl, $requestbody);
-                $mtdResponse = Http::withHeaders($headers)->post($mtdurl, $requestbody);
-                if ($apiResponse->successful() && $mtdResponse->successful()) {
-                    $data = $apiResponse->json();
-                    $mtd = $mtdResponse->json();
-                    return response()->json([
-                        'draw' => $request->input('draw'),
-                        'recordsTotal' => $data['data']['jumlah_filter'] ?? 0,
-                        'recordsFiltered' => $data['data']['jumlah'] ?? 0,
-                        'data' => $data['data']['table'] ?? [],
-                        'mtd' => $mtd['data'] ?? [],
-                    ]);
-                }
-                return response()->json(['error' => 'Failed to fetch data'], 500);
-            } catch (\Exception $e) {
-                return response()->json(['error' => $e->getMessage()], 500);
-            }
+            return $this->ajax($request);
         }
         return view('procurement.penerimaanbarang.index');
     }
     public function getPoDetails(Request $request, $po_id)
     {
         $headers = Helpers::getHeaders();
-        $apiurl = Helpers::getApiUrl() . "/loccana/itemreceipt/1.0.0/item_receipt/1.0.0/" . $po_id;
+        $apiurl = $this->buildApiUrl('/' . $po_id);
 
         try {
-            $response = Http::withHeaders($headers)->get($apiurl);
+            $apiResponse = Http::withHeaders($headers)->get($apiurl);
             $items = [];
-            if ($response->successful()) {
-                $data = $response->json()['data'];
-                // dd($data);
+            if ($apiResponse->successful()) {
+                $data = $apiResponse->json()['data'];
                 $items = [];
                 foreach ($data as $item) {
                     $items[] = [
@@ -96,18 +115,18 @@ class PenerimaanBarangController extends Controller
                     'items' => $items
                 ]);
             }
-            return response()->json(['error' => 'Failed to fetch PO details'], 500);
+            return response()->json(['error' => $apiResponse->json()['message']]);
         } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
+            return response()->json(['error' => $e->getMessage()]);
         }
     }
-
-
-
     public function create()
     {
         $company_id = 2;
         $headers = Helpers::getHeaders();
+
+        $pourl = $this->urlSelect($company_id)['po'];
+        $gudangurl = $this->urlSelect($company_id)['gudang'];
 
         $pourl = Helpers::getApiUrl() . '/loccana/po/1.0.0/purchase-order/list-select/' . $company_id;
         $gudangurl = Helpers::getApiUrl() . '/masterdata/warehouse/1.0.0/warehouse/list-select/' . $company_id;
@@ -117,23 +136,26 @@ class PenerimaanBarangController extends Controller
         if ($poResponse->successful() && $gudangResponse->successful()) {
             $po = $poResponse->json()['data'];
             $gudang = $gudangResponse->json()['data'];
-            // dd($po);
-            // dd($gudang);
             return view('procurement.penerimaanbarang.add', compact('po', 'gudang'));
         } else {
-            return back()->withErrors('Gagal mengambil data dari API.');
+            $errors = [];
+            if (!$poResponse->successful()) {
+                $errors[] = $poResponse->json()['message'];
+            }
+            if (!$gudangResponse->successful()) {
+                $errors[] = $gudangResponse->json()['message'];
+            }
+            return back()->withErrors($errors);
         }
     }
 
     public function store(Request $request)
     {
-        // dd($request->all());
         try {
             $headers = Helpers::getHeaders();
-            $apiurl = Helpers::getApiUrl() . '/loccana/itemreceipt/1.0.0/item_receipt/1.0.0';
+            $apiurl = $this->buildApiUrl('/');
 
             $dataitems = [];
-
             if ($request->has('items')) {
                 foreach ($request->input('items') as $item) {
                     $dataitems[] = [
@@ -162,25 +184,12 @@ class PenerimaanBarangController extends Controller
                 'items' => $dataitems
             ];
 
-            // dd($data);
-
             $apiResponse = Http::withHeaders($headers)->post($apiurl, $data);
-            // dd([
-            //     'apiResponse' => $apiResponse->json(),
-            //     'data' => $data,
-            // ]);
-            $responseData = $apiResponse->json();
-            if (
-                $apiResponse->successful() &&
-                isset($responseData['success'])
-            ) {
+            if ($apiResponse->successful()) {
                 return redirect()->route('penerimaan_barang.index')
-                    ->with('success', $responseData['message'] ?? 'Item Berhasil Ditambahkan');
+                    ->with('success', $apiResponse->json()['message']);
             } else {
-                return back()->withErrors(
-                    'Gagal menambahkan data: ' .
-                        ($responseData['message'] ?? $apiResponse->body())
-                );
+                return back()->withErrors($apiResponse->json()['message']);
             }
         } catch (\Exception $e) {
             return back()->withErrors($e->getMessage());
@@ -190,49 +199,44 @@ class PenerimaanBarangController extends Controller
     {
         try {
             $headers = Helpers::getHeaders();
-            $apiurl = Helpers::getApiUrl() . '/loccana/itemreceipt/1.0.0/item_receipt/1.0.0/' . $id;
+            $apiurl = $this->buildApiUrl('/' . $id);
             $apiResponse = Http::withHeaders($headers)->get($apiurl);
 
             if ($apiResponse->successful()) {
                 $data = $apiResponse->json()['data'];
-                // dd($data);
                 return view('procurement.penerimaanbarang.detail', compact('data'));
             } else {
-                return back()->withErrors('Gagal mengambil data item: ' . $apiResponse->status());
+                return back()->withErrors($apiResponse->json()['message']);
             }
         } catch (\Exception $e) {
             return back()->withErrors($e->getMessage());
         }
     }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function edit($id)
     {
         try {
             $headers = Helpers::getHeaders();
-            $apiurl = Helpers::getApiUrl() . '/loccana/itemreceipt/1.0.0/item_receipt/1.0.0/' . $id;
+            $apiurl = $this->buildApiUrl('/' . $id);
+
             $apiResponse = Http::withHeaders($headers)->get($apiurl);
 
             if ($apiResponse->successful()) {
                 $data = $apiResponse->json()['data'];
-                // dd($data);
                 return view('procurement.penerimaanbarang.edit', compact('data'));
             } else {
-                return back()->withErrors('Gagal mengambil data item: ' . $apiResponse->status());
+                return back()->withErrors($apiResponse->json()['message']);
             }
         } catch (\Exception $e) {
             return back()->withErrors($e->getMessage());
         }
     }
 
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
         try {
-            // dd($request->all());
             $headers = Helpers::getHeaders();
-            $apiurl = Helpers::getApiUrl() . '/loccana/itemreceipt/1.0.0/item_receipt/1.0.0/' . $id;
+            $apiurl = $this->buildApiUrl('/' . $id);
+
             $items = [];
             if ($request->has('item_id')) {
                 foreach ($request->input('item_id') as $index => $itemId) {
@@ -252,7 +256,6 @@ class PenerimaanBarangController extends Controller
                     ];
                 }
             }
-            // dd($items);
             $data = [
                 'do_number' => $request->do_number,
                 'receipt_date' => $request->receipt_date,
@@ -262,16 +265,12 @@ class PenerimaanBarangController extends Controller
                 'status' => "received",
                 'items' => $items,
             ];
-            // dd($data);
+
             $apiResponse = Http::withHeaders($headers)->put($apiurl, $data);
-            // dd([
-            //     'apiResponse' => $apiResponse->json(),
-            //     'data' => $data
-            // ]);
             if ($apiResponse->successful()) {
-                return redirect()->route('penerimaan_barang.index')->with('success', 'Data berhasil diperbarui!');
+                return redirect()->route('penerimaan_barang.index')->with('success', $apiResponse->json()['message']);
             } else {
-                return back()->withErrors('Gagal memperbarui data: ' . $apiResponse->status());
+                return back()->withErrors($apiResponse->json()['message']);
             }
         } catch (\Exception $e) {
             return back()->withErrors($e->getMessage());
@@ -281,16 +280,13 @@ class PenerimaanBarangController extends Controller
     {
         try {
             $headers = Helpers::getHeaders();
-            $apiurl = Helpers::getApiUrl() . '/loccana/itemreceipt/1.0.0/item_receipt/1.0.0/' . $id;
-            // dd($id);
+            $apiurl = $this->buildApiUrl('/' . $id);
+
             $apiResponse = Http::withHeaders($headers)->delete($apiurl);
             if ($apiResponse->successful()) {
-                return redirect()->route('penerimaan_barang.index')
-                    ->with('success', 'Data Penerimaan Barang Berhasil Dihapus!');
+                return redirect()->route('penerimaan_barang.index')->with('success', $apiResponse->json()['message']);
             } else {
-                return back()->withErrors(
-                    'Gagal menghapus data: ' . $apiResponse->body()
-                );
+                return back()->withErrors($apiResponse->json()['message']);
             }
         } catch (\Exception $e) {
             return back()->withErrors($e->getMessage());
