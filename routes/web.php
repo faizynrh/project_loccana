@@ -119,14 +119,7 @@ Route::middleware('auth.login')->group(
         Route::put('/customer/update/{id}', [CustomerController::class, 'update'])->name('customer.update');
         Route::get('/customer/show/{id}', [CustomerController::class, 'show'])->name('customer.show');
 
-        //principal
-        Route::get('/principal', [PrincipalController::class, 'index'])->name('principal.index');
-        Route::get('/principal/add', [PrincipalController::class, 'create'])->name('principal.create');
-        Route::post('/principal/add', [PrincipalController::class, 'store'])->name('principal.store');
-        Route::delete('/principal/delete/{id}', [PrincipalController::class, 'destroy'])->name('principal.destroy');
-        Route::get('/principal/edit/{id}', [PrincipalController::class, 'edit'])->name('principal.edit');
-        Route::put('/principal/update/{id}', [PrincipalController::class, 'update'])->name('principal.update');
-        Route::get('/principal/show/{id}', [PrincipalController::class, 'show'])->name('principal.show');
+
         // ===================================== END MASTERDATA ======================================
 
 

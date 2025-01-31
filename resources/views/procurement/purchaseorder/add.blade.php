@@ -215,7 +215,7 @@
             </td>
             <td><input type="text" class="form-control" value="${item ? item.order_qty : ''}"></td>
             <td><input type="text" class="form-control" value="${item ? item.price : ''}"></td>
-            <td><input type="text" class="form-control" value="${item ? item.discount : ''}"></td>
+            <td><input type="text" class="form-control"></td>
             <td><input type="text" class="form-control bg-body-secondary" value="${item ? item.total_price : ''}" readonly></td>
             <td class="text-center">
                 <button class="btn btn-danger fw-bold remove-row">-</button>
@@ -290,7 +290,6 @@
                             $('#ppn').val(response.ppn);
                             $('#fax').val(response.fax);
                             $('#phone').val(response.phone);
-
                             // Isi tabel dengan data items
                             const tableBody = $('#tableBody');
                             tableBody.empty();
@@ -308,14 +307,19 @@
                                 <td>
                                     <button type="button" class="btn btn-primary btn-sm">Lainnya</button>
                                 </td>
-                                <td><input type="text" class="form-control" value="${response.items[0].order_qty}"></td>
-                                <td><input type="text" class="form-control" value="${response.items[0].price}"></td>
-                                <td><input type="text" class="form-control" value="${response.items[0].discount}"></td>
+                                <td><input type="text" class="form-control"></td>
+                                <td><input type="text" id="price" class="form-control"></td>
+                                <td><input type="text" class="form-control"></td>
                                 <td><input type="text" class="form-control bg-body-secondary" value="${response.items[0].total_price}" readonly></td>
                                 <td></td>
                             </tr>
                             `;
+                                // ${response.}
                                 tableBody.append(firstRow);
+                                setTimeout(function() {
+                                    tableBody.find('tr:first-child input#price').val(
+                                        response.items[0].price);
+                                }, 500);
 
                                 // Add remaining rows if any
                                 for (let i = 1; i < response.items.length; i++) {

@@ -139,6 +139,27 @@ class PurchaseOrderController extends Controller
         }
     }
 
+    public function getprice($id)
+    {
+        $headers = Helpers::getHeaders();
+        $apiurl = Helpers::getApiUrl() . "/loccana/po/1.0.0/purchase-order/" . $id;
+        try {
+            $response = Http::withHeaders($headers)->get($apiurl);
+            if ($response->successful()) {
+                $data = $response->json()['data'];
+
+                $items = [];
+                foreach ($data as $item) {
+                    $items[] = [
+                        'price' => $item['unit_price'],
+                    ];
+                }
+            }
+            return response()->json(['error' => 'Failed to fetch PO details'], 500);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
 
     /**
      * Store a newly created resource in storage.
