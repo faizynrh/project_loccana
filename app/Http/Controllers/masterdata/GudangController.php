@@ -11,45 +11,54 @@ use Illuminate\Support\Facades\Http;
 
 class GudangController extends Controller
 {
+    private function buildApiUrl($endpoint)
+    {
+        return Helpers::getApiUrl() . '/masterdata/warehouse/1.0.0/warehouse' . $endpoint;
+    }
+
+    private function ajax(Request $request)
+    {
+        try {
+            $headers = Helpers::getHeaders();
+            $apiurl = $this->buildApiUrl('/lists');
+
+            $length = $request->input('length', 10);
+            $start = $request->input('start', 0);
+            $search = $request->input('search.value') ?? '';
+
+            $requestbody = [
+                'search' => $search,
+                'limit' => $length,
+                'offset' => $start,
+                'company_id' => 2
+            ];
+
+            $apiResponse = Http::withHeaders($headers)->post($apiurl, $requestbody);
+
+            if ($apiResponse->successful()) {
+                $data = $apiResponse->json();
+                return response()->json([
+                    'draw' => $request->input('draw'),
+                    'recordsTotal' => $data['data']['jumlah_filter'] ?? 0,
+                    'recordsFiltered' => $data['data']['jumlah'] ?? 0,
+                    'data' => $data['data']['table'] ?? [],
+                ]);
+            }
+            return response()->json([
+                'error' => $apiResponse->json()['message'],
+            ], 500);
+        } catch (\Exception $e) {
+            if ($request->ajax()) {
+                return response()->json([
+                    'error' => $e->getMessage(),
+                ], 500);
+            }
+        }
+    }
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            try {
-                $headers = Helpers::getHeaders();
-                $apiurl = Helpers::getApiUrl() . '/masterdata/warehouse/1.0.0/warehouse/lists';
-
-                $length = $request->input('length', 10);
-                $start = $request->input('start', 0);
-                $search = $request->input('search.value') ?? '';
-
-                $requestbody = [
-                    'search' => $search,
-                    'limit' => $length,
-                    'offset' => $start,
-                    'company_id' => 2
-                ];
-
-                $apiResponse = Http::withHeaders($headers)->post($apiurl, $requestbody);
-
-                if ($apiResponse->successful()) {
-                    $data = $apiResponse->json();
-                    return response()->json([
-                        'draw' => $request->input('draw'),
-                        'recordsTotal' => $data['data']['jumlah_filter'] ?? 0,
-                        'recordsFiltered' => $data['data']['jumlah'] ?? 0,
-                        'data' => $data['data']['table'] ?? [],
-                    ]);
-                }
-                return response()->json([
-                    'error' => 'Failed to fetch data',
-                ], 500);
-            } catch (\Exception $e) {
-                if ($request->ajax()) {
-                    return response()->json([
-                        'error' => $e->getMessage(),
-                    ], 500);
-                }
-            }
+            return $this->ajax($request);
         }
 
         return view('masterdata.gudang.index');
@@ -63,7 +72,7 @@ class GudangController extends Controller
     {
         try {
             $headers = Helpers::getHeaders();
-            $apiurl = Helpers::getApiUrl() . '/masterdata/warehouse/1.0.0/warehouse';
+            $apiurl = $this->buildApiUrl('/');
 
             $data = [
                 'name' => $request->input('name'),
@@ -81,34 +90,19 @@ class GudangController extends Controller
                 isset($responseData['success'])
             ) {
                 return redirect()->route('gudang.index')
-                    ->with('success', $responseData['message'] ?? 'Gudang Berhasil Ditambahkan');
+                    ->with('success', $apiResponse->json()['message']);
             } else {
-                return back()->withErrors(
-                    'Gagal menambahkan data: ' .
-                        ($responseData['message'] ?? $apiResponse->body())
-                );
+                return back()->withErrors($apiResponse->json()['message']);
             }
         } catch (\Exception $e) {
             return back()->withErrors($e->getMessage());
         }
     }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(string $id)
     {
         try {
             $headers = Helpers::getHeaders();
-            $apiurl = Helpers::getApiUrl() . '/masterdata/warehouse/1.0.0/warehouse/' . $id;
+            $apiurl = $this->buildApiUrl('/' . $id);
 
             $apiResponse = Http::withHeaders($headers)->get($apiurl);
 
@@ -116,21 +110,17 @@ class GudangController extends Controller
                 $data = $apiResponse->json()['data'];
                 return view('masterdata.gudang.edit', compact('data', 'id'));
             } else {
-                return back()->withErrors('Gagal mengambil data COA: ' . $apiResponse->status());
+                return back()->withErrors($apiResponse->json()['message']);
             }
         } catch (\Exception $e) {
             return back()->withErrors($e->getMessage());
         }
     }
-
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, string $id)
     {
         try {
             $headers = Helpers::getHeaders();
-            $apiurl = Helpers::getApiUrl() . '/masterdata/warehouse/1.0.0/warehouse/' . $id;
+            $apiurl = $this->buildApiUrl('/' . $id);
 
             $data = [
                 'name' => $request->name,
@@ -142,33 +132,27 @@ class GudangController extends Controller
             $apiResponse = Http::withHeaders($headers)->put($apiurl, $data);
 
             if ($apiResponse->successful()) {
-                return redirect()->route('gudang.index')->with('success', 'Data Gudang berhasil diperbarui!');
+                return redirect()->route('gudang.index')->with('success', $apiResponse->json()['message']);
             } else {
-                return back()->withErrors('Gagal memperbarui data Gudang: ' . $apiResponse->status());
+                return back()->withErrors($apiResponse->json()['message']);
             }
         } catch (\Exception $e) {
             return back()->withErrors($e->getMessage());
         }
     }
-
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(string $id)
     {
         try {
             $headers = Helpers::getHeaders();
-            $apiurl = Helpers::getApiUrl() . '/masterdata/warehouse/1.0.0/warehouse/' . $id;
+            $apiurl = $this->buildApiUrl('/' . $id);
 
             $apiResponse = Http::withHeaders($headers)->delete($apiurl);
 
             if ($apiResponse->successful()) {
                 return redirect()->route('gudang.index')
-                    ->with('success', 'Data Gudang berhasil dihapus');
+                    ->with('success', $apiResponse->json()['message']);
             } else {
-                return back()->withErrors(
-                    'Gagal menghapus data: ' . $apiResponse->body()
-                );
+                return back()->withErrors($apiResponse->body());
             }
         } catch (\Exception $e) {
             return back()->withErrors($e->getMessage());

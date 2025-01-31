@@ -16,44 +16,47 @@ class PriceController extends Controller
     {
         return Helpers::getApiUrl() . '/masterdata/price/1.0.0/price-manajement/' . $endpoint;
     }
+    private function ajax(Request $request)
+    {
+        try {
+            $headers = Helpers::getHeaders();
+            $apiurl = $this->buildApiUrl('list');
+
+            $length = $request->input('length', 10);
+            $start = $request->input('start', 0);
+            $search = $request->input('search.value') ?? '';
+
+            $requestbody = [
+                'search' => $search,
+                'limit' => $length,
+                'offset' => $start,
+                'company_id' => 2
+            ];
+
+            $apiResponse = Http::withHeaders($headers)->post($apiurl, $requestbody);
+            if ($apiResponse->successful()) {
+                $data = $apiResponse->json();
+                return response()->json([
+                    'draw' => $request->input('draw'),
+                    'recordsTotal' => $data['data']['jumlah_filter'] ?? 0,
+                    'recordsFiltered' => $data['data']['jumlah'] ?? 0,
+                    'data' => $data['data']['table'] ?? [],
+                ]);
+            }
+
+            return response()->json([
+                'error' => $apiResponse->status(),
+            ], 500);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            try {
-                $headers = Helpers::getHeaders();
-                $apiurl = $this->buildApiUrl('list');
-
-                $length = $request->input('length', 10);
-                $start = $request->input('start', 0);
-                $search = $request->input('search.value') ?? '';
-
-                $requestbody = [
-                    'search' => $search,
-                    'limit' => $length,
-                    'offset' => $start,
-                    'company_id' => 2
-                ];
-
-                $apiResponse = Http::withHeaders($headers)->post($apiurl, $requestbody);
-                if ($apiResponse->successful()) {
-                    $data = $apiResponse->json();
-                    return response()->json([
-                        'draw' => $request->input('draw'),
-                        'recordsTotal' => $data['data']['jumlah_filter'] ?? 0,
-                        'recordsFiltered' => $data['data']['jumlah'] ?? 0,
-                        'data' => $data['data']['table'] ?? [],
-                    ]);
-                }
-                return response()->json([
-                    'error' => 'Failed to fetch data',
-                ], 500);
-            } catch (\Exception $e) {
-                if ($request->ajax()) {
-                    return response()->json([
-                        'error' => $e->getMessage(),
-                    ], 500);
-                }
-            }
+            return $this->ajax($request);
         }
 
         return view('masterdata.price.index');
@@ -114,8 +117,6 @@ class PriceController extends Controller
             $apiResponse = Http::withHeaders($headers)->put($apiurl, $data);
 
             if ($apiResponse->successful()) {
-                $title = 'Delete User!';
-                $text = "Are you sure you want to delete?";
                 return redirect()->route('price.index')->with('success', 'Data Berhasil Disetujui!');
             } else {
                 return back()->withErrors('Gagal Approve Price: ' . $apiResponse->status());
