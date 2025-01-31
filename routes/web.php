@@ -124,6 +124,7 @@ Route::middleware('auth.login')->group(
             Route::get('/show/{id}', [PrincipalController::class, 'show'])->name('show');
         });
 
+
         // CUSTOMER
         Route::prefix('/customer')->name('customer.')->group(function () {
             Route::get('/', [CustomerController::class, 'index'])->name('index');

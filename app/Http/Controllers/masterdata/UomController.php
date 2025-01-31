@@ -12,74 +12,56 @@ use Faker\Extension\Helper;
 class UomController extends Controller
 {
     //
+    private function ajaxuom(Request $request)
+    {
+        try {
+            $headers = Helpers::getHeaders();
+            $apiurl = Helpers::getApiUrl() . '/loccana/masterdata/1.0.0/uoms/lists';
+            $length = $request->input('length', 10);
+            $start = $request->input('start', 0);
+            $search = $request->input('search.value', '');
+
+            $requestbody = [
+                'limit' => $length,
+                'offset' => $start,
+                'company_id' => 2
+            ];
+
+            if (!empty($search)) {
+                $requestbody['search'] = $search;
+            }
+
+            $apiResponse = Http::withHeaders($headers)->post($apiurl, $requestbody);
+
+            if ($apiResponse->successful()) {
+                $data = $apiResponse->json();
+                return response()->json([
+                    'draw' => $request->input('draw'),
+                    'recordsTotal' => $data['data']['jumlah_filter'] ?? 0,
+                    'recordsFiltered' => $data['data']['jumlah'] ?? 0,
+                    'data' => $data['data']['table'] ?? [],
+                ]);
+            }
+
+            return response()->json([
+                'error' => 'Failed to fetch data',
+            ], 500);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
 
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            try {
-                $headers = Helpers::getHeaders();
-                $apiurl = Helpers::getApiUrl() . '/loccana/masterdata/1.0.0/uoms/lists';
-
-                $length = $request->input('length', 10);
-                $start = $request->input('start', 0);
-                $search = $request->input('search.value', '');
-
-                $requestbody = [
-                    'limit' => $length,
-                    'offset' => $start,
-                    'company_id' => 2
-                ];
-
-                if (!empty($search)) {
-                    $requestbody['search'] = $search;
-                }
-
-                $apiResponse = Http::withHeaders($headers)->post($apiurl, $requestbody);
-
-                if ($apiResponse->successful()) {
-                    $data = $apiResponse->json();
-                    return response()->json([
-                        'draw' => $request->input('draw'),
-                        'recordsTotal' => $data['data']['jumlah_filter'] ?? 0,
-                        'recordsFiltered' => $data['data']['jumlah'] ?? 0,
-                        'data' => $data['data']['table'] ?? [],
-                    ]);
-                }
-                return response()->json([
-                    'error' => 'Failed to fetch data',
-                ], 500);
-            } catch (\Exception $e) {
-                if ($request->ajax()) {
-                    return response()->json([
-                        'error' => $e->getMessage(),
-                    ], 500);
-                }
-            }
+            return $this->ajaxuom($request);
         }
         return view('masterdata.uom.index');
     }
 
 
-    public function destroy($id)
-    {
-        try {
-            $headers = Helpers::getHeaders();
-            $apiurl = Helpers::getApiUrl() . '/loccana/masterdata/1.0.0/uoms/' . $id;
-
-            $apiResponse = Http::withHeaders($headers)->delete($apiurl);
-            // dd($apiResponse->json());
-            if ($apiResponse->successful()) {
-                return redirect()->route('uom.index')
-                    ->with('success', 'Data Uom berhasil dihapus');
-            } else {
-                return back()->withErrors(
-                    'Gagal menghapus data: ' . $apiResponse->body()
-                );
-            }
-        } catch (\Exception $e) {
-            return back()->withErrors($e->getMessage());
-        }
-    }
 
     public function store(Request $request)
     {
