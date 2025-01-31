@@ -6,9 +6,6 @@
                 <div class="row">
                     <div class="col-12 col-md-6 order-md-1 order-last">
                         <h3>Principal Management</h3>
-                        <p class="text-subtitle text-muted">
-                            Efficient Oversight with Principal Management.
-                        </p>
                     </div>
                     <div class="col-12 col-md-6 order-md-2 order-first">
                         <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
@@ -50,16 +47,11 @@
                         <table class="table table-striped table-bordered mt-3" id="tableprincipal">
                             <thead>
                                 <tr>
-                                    {{-- <th scope="col">Kode Principal</th>
-                    <th scope="col">Nama Principal</th>
-                    <th scope="col">Alamat</th>
-                    <th scope="col">No. Telp</th>
-                    <th scope="col">No. Fax</th> --}}
                                     <th>No</th>
                                     <th>Partner Type</th>
                                     <th>Nama</th>
                                     <th>Contact Info</th>
-                                    <th>COA ID</th>
+                                    {{-- <th>COA ID</th> --}}
                                     <th scope="col">Action</th>
                                 </tr>
                             </thead>
@@ -94,16 +86,14 @@
                             data: 'partner_type',
                         },
                         {
-                            // data: null,
-                            // defaultContent: ''
                             data: 'name',
                         },
                         {
                             data: 'contact_info',
                         },
-                        {
-                            data: 'chart_of_account_id',
-                        },
+                        // {
+                        //     data: 'chart_of_account_id',
+                        // },
                         {
                             data: null,
                             render: function(data, type, row) {

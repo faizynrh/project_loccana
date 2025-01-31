@@ -10,49 +10,51 @@ use Illuminate\Support\Facades\Log;
 
 class CustomerController extends Controller
 {
+    private function buildApiUrl($endpoint)
+    {
+        return Helpers::getApiUrl() . '/loccana/masterdata/partner/1.0.0/partner' . $endpoint;
+    }
     private function ajaxcustomer(Request $request)
     {
-        if ($request->ajax()) {
-            try {
-                $headers = Helpers::getHeaders();
-                $apiurl = Helpers::getApiUrl() . '/loccana/masterdata/partner/1.0.0/partner/lists';
-                $length = $request->input('length', 10);
-                $start = $request->input('start', 0);
-                $search = $request->input('search.value', '');
+        try {
+            $headers = Helpers::getHeaders();
+            $apiurl = $this->buildApiUrl('/lists');
+            $length = $request->input('length', 10);
+            $start = $request->input('start', 0);
+            $search = $request->input('search.value', '');
 
-                $requestbody = [
-                    'search' => '',
-                    'limit' => $length,
-                    'offset' => $start,
-                    'company_id' => 2,
-                    'is_customer' => true,
-                    'is_supplier' => false
-                ];
+            $requestbody = [
+                'search' => '',
+                'limit' => $length,
+                'offset' => $start,
+                'company_id' => 2,
+                'is_customer' => true,
+                'is_supplier' => false
+            ];
 
-                if (!empty($search)) {
-                    $requestbody['search'] = $search;
-                }
+            if (!empty($search)) {
+                $requestbody['search'] = $search;
+            }
 
-                $apiResponse = Http::withHeaders($headers)->post($apiurl, $requestbody);
+            $apiResponse = Http::withHeaders($headers)->post($apiurl, $requestbody);
 
-                if ($apiResponse->successful()) {
-                    $data = $apiResponse->json();
-                    return response()->json([
-                        'draw' => $request->input('draw'),
-                        'recordsTotal' => $data['data']['jumlah_filter'] ?? 0,
-                        'recordsFiltered' => $data['data']['jumlah'] ?? 0,
-                        'data' => $data['data']['table'] ?? [],
-                    ]);
-                }
+            if ($apiResponse->successful()) {
+                $data = $apiResponse->json();
                 return response()->json([
-                    'error' => 'Failed to fetch data',
+                    'draw' => $request->input('draw'),
+                    'recordsTotal' => $data['data']['jumlah_filter'] ?? 0,
+                    'recordsFiltered' => $data['data']['jumlah'] ?? 0,
+                    'data' => $data['data']['table'] ?? [],
+                ]);
+            }
+            return response()->json([
+                'error' => 'Failed to fetch data',
+            ], 500);
+        } catch (\Exception $e) {
+            if ($request->ajax()) {
+                return response()->json([
+                    'error' => $e->getMessage(),
                 ], 500);
-            } catch (\Exception $e) {
-                if ($request->ajax()) {
-                    return response()->json([
-                        'error' => $e->getMessage(),
-                    ], 500);
-                }
             }
         }
     }
@@ -95,7 +97,7 @@ class CustomerController extends Controller
     {
         try {
             $headers = Helpers::getHeaders();
-            $apiurl = Helpers::getApiUrl() . '/loccana/masterdata/partner/1.0.0/partner';
+            $apiurl = $this->buildApiUrl('/');
             $data = [
                 'name' => (string)$request->input('nama'),
                 'partner_type_id' => (string)$request->input('partner_type_id'),
@@ -133,7 +135,7 @@ class CustomerController extends Controller
         try {
             $companyid = 2;
             $headers = Helpers::getHeaders();
-            $apiurl = Helpers::getApiUrl() . '/loccana/masterdata/partner/1.0.0/partner/' . $id;
+            $apiurl = $this->buildApiUrl('/' . $id);
             $partnerurl = Helpers::getApiUrl() . '/loccana/masterdata/partner-type/1.0.0/partner-types/list-select';
             $coaurl = Helpers::getApiUrl() . '/loccana/masterdata/coa/1.0.0/masterdata/coa/list-select/' . $companyid;
 
@@ -170,7 +172,7 @@ class CustomerController extends Controller
     public function edit(string $id)
     {
         try {
-            $apiurl = Helpers::getApiUrl() . '/loccana/masterdata/partner/1.0.0/partner/' . $id;
+            $apiurl = $this->buildApiUrl('/' . $id);
             $companyid = 2;
             $headers = Helpers::getHeaders();
             $partnerurl = Helpers::getApiUrl() . '/loccana/masterdata/partner-type/1.0.0/partner-types/list-select';
@@ -210,7 +212,7 @@ class CustomerController extends Controller
     public function update(Request $request, string $id)
     {
         try {
-            $apiurl = Helpers::getApiUrl() . '/loccana/masterdata/partner/1.0.0/partner/' . $id;
+            $apiurl = $this->buildApiUrl('/' . $id);
             $headers = Helpers::getHeaders();
 
             $data = [
@@ -242,7 +244,7 @@ class CustomerController extends Controller
     public function destroy(string $id)
     {
         try {
-            $apiurl = Helpers::getApiUrl() . '/loccana/masterdata/partner/1.0.0/partner/' . $id;
+            $apiurl = $this->buildApiUrl('/' . $id);
             $headers = Helpers::getHeaders();
             $apiResponse = Http::withHeaders($headers)->delete($apiurl);
             // dd($apiResponse->json());
