@@ -84,7 +84,14 @@ class ItemController extends Controller
             $items = $itemResponse->json();
             return view('masterdata.item.add', compact('uoms', 'items'));
         } else {
-            return back()->withErrors($uomResponse->json()['message']);
+            $errors = [];
+            if (!$uomResponse->successful()) {
+                $errors[] = $uomResponse->json()['message'];
+            }
+            if (!$itemResponse->successful()) {
+                $errors[] = $itemResponse->json()['message'];
+            }
+            return back()->withErrors($errors);
         }
     }
 
@@ -155,7 +162,17 @@ class ItemController extends Controller
                 $data = $apiResponse->json()['data'];
                 return view('masterdata.item.edit', compact('data', 'uoms', 'items', 'id'));
             } else {
-                return back()->withErrors($apiResponse->json()['message']);
+                $errors = [];
+                if (!$uomResponse->successful()) {
+                    $errors[] = $uomResponse->json()['message'];
+                }
+                if (!$itemResponse->successful()) {
+                    $errors[] = $itemResponse->json()['message'];
+                }
+                if (!$apiResponse->successful()) {
+                    $errors[] = $apiResponse->json()['message'];
+                }
+                return back()->withErrors($errors);
             }
         } catch (\Exception $e) {
             return back()->withErrors($e->getMessage());
