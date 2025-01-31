@@ -13,6 +13,8 @@ class PurchaseOrderController extends Controller
     /**
      * Display a listing of the resource.
      */
+
+
     public function index(Request $request)
     {
         //
@@ -21,12 +23,6 @@ class PurchaseOrderController extends Controller
         $year = $request->input('year', 0);
         $length = $request->input('length', 10);
         $start = $request->input('start', 0);
-
-        // Log::info($month);
-        // Log::info($year);
-        // Log::info($length);
-        // Log::info($start);
-
 
         $requestbody = [
             'search' => '',
@@ -80,15 +76,17 @@ class PurchaseOrderController extends Controller
         //
         $company_id = 2;
         $headers = Helpers::getHeaders();
-
+        $items = Helpers::getApiUrl() . "/master/items/1.0.0/items/lists-select";
         $pourl = Helpers::getApiUrl() . '/loccana/po/1.0.0/purchase-order/list-select/' . $company_id;
 
         $poResponse = Http::withHeaders($headers)->get($pourl);
-        if ($poResponse->successful()) {
+        $itemsResponse = Http::withHeaders($headers)->get($items);
+        if ($poResponse->successful() || $itemsResponse->successful()) {
             $po = $poResponse->json()['data'];
+            $items = $itemsResponse->json()['data'];
             // dd($po);
             // dd($gudang);
-            return view('procurement.purchaseorder.add', compact('po'));
+            return view('procurement.purchaseorder.add', compact('po', 'items'));
         } else {
             return back()->withErrors('Gagal mengambil data dari API.');
         }
@@ -105,18 +103,6 @@ class PurchaseOrderController extends Controller
                 $data = $response->json()['data'];
 
                 $items = [];
-                foreach ($data as $item) {
-                    $items[] = [
-                        'item_code' => $item['item_code'],
-                        'price' => $item['unit_price'],
-                        'order_qty' => $item['qty'],
-                        'discount' => $item['discount'],
-                        'received_qty' => 0,
-                        'bonus_qty' => $item['total_discount'] ?? 0,
-                        'total_price' => $item['total_price'],
-                        'description' => $item['item_description'],
-                    ];
-                }
 
                 return response()->json([
                     'id_po' => $data[0]['id_po'],
@@ -156,6 +142,29 @@ class PurchaseOrderController extends Controller
                 }
             }
             return response()->json(['error' => 'Failed to fetch PO details'], 500);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+    public function getitem(Request $request, $po_id)
+    {
+        $headers = Helpers::getHeaders();
+        $apiurl = Helpers::getApiUrl() . "/master/items/1.0.0/items/lists-select" . $po_id;
+
+        try {
+            $response = Http::withHeaders($headers)->get($apiurl);
+            if ($response->successful()) {
+                $data = $response->json()['data'];
+
+                $items = [];
+                foreach ($data as $item) {
+                    $items[] = [
+                        'name' => $item['name'],
+                    ];
+                }
+            }
+            return response()->json(['error' => 'Failed to fetch Purchase Order Item'], 500);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
