@@ -45,7 +45,7 @@ class CoaController extends Controller
                 ]);
             }
             return response()->json([
-                'error' => 'Failed to fetch data',
+                'error' => $apiResponse->json()['message'],
             ], 500);
         } catch (\Exception $e) {
             if ($request->ajax()) {
@@ -75,7 +75,6 @@ class CoaController extends Controller
             $headers = Helpers::getHeaders();
             $apiurl = $this->buildApiUrl('/');
 
-
             $data = [
                 'account_name' => $request->input('account_name'),
                 'account_code' => $request->input('account_code'),
@@ -86,18 +85,16 @@ class CoaController extends Controller
             ];
 
             $apiResponse = Http::withHeaders($headers)->post($apiurl, $data);
-            $responseData = $apiResponse->json();
 
-            if (
-                $apiResponse->successful() &&
-                isset($responseData['success'])
-            ) {
+            if ($apiResponse->successful()) {
                 return redirect()->route('coa.index')
-                    ->with('success', $responseData['message'] ?? 'Coa Berhasil Ditambahkan');
+                    ->with(
+                        'success',
+                        $apiResponse->json()['message']
+                    );
             } else {
                 return back()->withErrors(
-                    'Gagal menambahkan data: ' .
-                        ($responseData['message'] ?? $apiResponse->body())
+                    $apiResponse->json()['message']
                 );
             }
         } catch (\Exception $e) {
@@ -117,7 +114,7 @@ class CoaController extends Controller
                 $data = $apiResponse->json()['data'];
                 return view('masterdata.coa.detail', compact('data', 'id'));
             } else {
-                return back()->withErrors('Gagal mengambil data COA: ' . $apiResponse->status());
+                return back()->withErrors($apiResponse->json()['message']);
             }
         } catch (\Exception $e) {
             return back()->withErrors($e->getMessage());
@@ -136,7 +133,7 @@ class CoaController extends Controller
                 $data = $apiResponse->json()['data'];
                 return view('masterdata.coa.edit', compact('data', 'id'));
             } else {
-                return back()->withErrors('Gagal mengambil data COA: ' . $apiResponse->status());
+                return back()->withErrors($apiResponse->json()['message']);
             }
         } catch (\Exception $e) {
             return back()->withErrors($e->getMessage());
@@ -160,9 +157,9 @@ class CoaController extends Controller
             $apiResponse = Http::withHeaders($headers)->put($apiurl, $data);
 
             if ($apiResponse->successful()) {
-                return redirect()->route('coa.index')->with('success', 'Data COA berhasil diperbarui!');
+                return redirect()->route('coa.index')->with('success', $apiResponse->json()['message']);
             } else {
-                return back()->withErrors('Gagal memperbarui data COA: ' . $apiResponse->status());
+                return back()->withErrors($apiResponse->json()['message']);
             }
         } catch (\Exception $e) {
             return back()->withErrors($e->getMessage());
@@ -177,10 +174,10 @@ class CoaController extends Controller
             $apiResponse = Http::withHeaders($headers)->delete($apiurl);
             if ($apiResponse->successful()) {
                 return redirect()->route('coa.index')
-                    ->with('success', 'Data COA berhasil dihapus');
+                    ->with('success', $apiResponse->json()['message']);
             } else {
                 return back()->withErrors(
-                    'Gagal menghapus data: ' . $apiResponse->body()
+                    $apiResponse->json()['message']
                 );
             }
         } catch (\Exception $e) {

@@ -67,11 +67,11 @@
                             </div>
                             <div class="row mb-3 align-items-center">
                                 <div class="col-md-3">
-                                    <label for="account_code" class="form-label fw-bold mb-0">COA <span
+                                    <label for="account_name" class="form-label fw-bold mb-0">COA <span
                                             class="text-danger">*</span></label>
                                 </div>
                                 <div class="col-md-9">
-                                    <input type="text" class="form-control" id="account_code" name="account_code"
+                                    <input type="text" class="form-control" id="account_name" name="account_name"
                                         placeholder="COA" required>
                                 </div>
                             </div>
