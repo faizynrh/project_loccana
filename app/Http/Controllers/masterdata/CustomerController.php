@@ -10,10 +10,8 @@ use Illuminate\Support\Facades\Log;
 
 class CustomerController extends Controller
 {
-
-    public function index(Request $request)
+    private function ajaxcustomer(Request $request)
     {
-        //
         if ($request->ajax()) {
             try {
                 $headers = Helpers::getHeaders();
@@ -57,6 +55,13 @@ class CustomerController extends Controller
                 }
             }
         }
+    }
+
+    public function index(Request $request)
+    {
+        if ($request->ajax()) {
+            return $this->ajaxcustomer($request);
+        }
         return view('masterdata.customer.index');
     }
 
@@ -66,7 +71,6 @@ class CustomerController extends Controller
      */
     public function create()
     {
-        //
         $companyid = 2;
         $headers = Helpers::getHeaders();
         $partnerurl = Helpers::getApiUrl() . '/loccana/masterdata/partner-type/1.0.0/partner-types/list-select';
@@ -89,7 +93,6 @@ class CustomerController extends Controller
      */
     public function store(Request $request)
     {
-        //
         try {
             $headers = Helpers::getHeaders();
             $apiurl = Helpers::getApiUrl() . '/loccana/masterdata/partner/1.0.0/partner';
@@ -127,7 +130,6 @@ class CustomerController extends Controller
      */
     public function show($id)
     {
-        //
         try {
             $companyid = 2;
             $headers = Helpers::getHeaders();
@@ -239,7 +241,6 @@ class CustomerController extends Controller
      */
     public function destroy(string $id)
     {
-        //
         try {
             $apiurl = Helpers::getApiUrl() . '/loccana/masterdata/partner/1.0.0/partner/' . $id;
             $headers = Helpers::getHeaders();

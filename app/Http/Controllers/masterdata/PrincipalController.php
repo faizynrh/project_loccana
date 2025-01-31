@@ -10,9 +10,8 @@ use Illuminate\Support\Facades\Log;
 
 class PrincipalController extends Controller
 {
-    public function index(Request $request)
+    private function ajaxprincipal(Request $request)
     {
-        //
         if ($request->ajax()) {
             try {
                 $headers = Helpers::getHeaders();
@@ -57,12 +56,21 @@ class PrincipalController extends Controller
                 }
             }
         }
+    }
+
+    public function index(Request $request)
+    {
+        //
+        if ($request->ajax()) {
+            return $this->ajaxprincipal($request);
+        }
         return view('masterdata.principal.index');
     }
 
     /**
      * Store a newly created resource in storage.
      */
+
     public function create()
     {
         $companyid = 2;
@@ -81,10 +89,8 @@ class PrincipalController extends Controller
         }
     }
 
-
     public function store(Request $request)
     {
-        //
         try {
             $headers = Helpers::getHeaders();
             $apiurl = Helpers::getApiUrl() . '/loccana/masterdata/partner/1.0.0/partner';
@@ -115,13 +121,12 @@ class PrincipalController extends Controller
         }
     }
 
-
     /**
      * Display the specified resource.
      */
+
     public function show(string $id)
     {
-        //
         try {
             $companyid = 2;
             $headers = Helpers::getHeaders();
@@ -143,7 +148,6 @@ class PrincipalController extends Controller
                         $coaTypes = $coaResponse->json();
                         return view('masterdata.principal.detail', ['principal' => $principal['data']], compact('partnerTypes', 'data', 'coaTypes'));
                     } else {
-                        // Jika API gagal diakses, tampilkan pesan error
                         return back()->withErrors('Gagal mengambil data dari API: Partner Types tidak tersedia.');
                     }
                 } else {
@@ -157,13 +161,12 @@ class PrincipalController extends Controller
         }
     }
 
-
     /**
      * Show the form for editing the specified resource.
      */
+
     public function edit(string $id)
     {
-        //
         try {
             $companyid = 2;
             $headers = Helpers::getHeaders();
@@ -201,7 +204,6 @@ class PrincipalController extends Controller
      * Update the specified resource in storage.
      */
 
-
     public function update(Request $request, $id)
     {
         try {
@@ -234,12 +236,10 @@ class PrincipalController extends Controller
      */
     public function destroy(string $id)
     {
-        //
         try {
             $headers = Helpers::getHeaders();
             $apiurl = Helpers::getApiUrl() . '/loccana/masterdata/partner/1.0.0/partner/' . $id;
             $apiResponse = Http::withHeaders($headers)->delete($apiurl);
-            // dd($apiResponse->json());
             if ($apiResponse->successful()) {
                 return redirect()->route('principal.index')
                     ->with('success', 'Data Principal berhasil dihapus');
