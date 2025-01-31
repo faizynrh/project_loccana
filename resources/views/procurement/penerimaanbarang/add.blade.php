@@ -153,7 +153,7 @@
                     $('#gudang').prop('disabled', false);
 
                     $.ajax({
-                        url: '/get-po-details/' + po_id,
+                        url: '/penerimaan_barang/detailspo/' + po_id,
                         type: 'GET',
                         dataType: 'json',
                         success: function(response) {

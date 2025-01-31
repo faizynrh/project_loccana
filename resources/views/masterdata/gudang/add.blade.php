@@ -112,6 +112,8 @@
                                 </div>
                                 <div class="col-md-9">
                                     <input type="number" class="form-control" name="capacity" placeholder="Kapasitas">
+                                    <small id="alert" style="color: red; display: none;">Kapasitas tidak boleh kurang
+                                        dari 1!</small>
                                 </div>
                             </div>
 

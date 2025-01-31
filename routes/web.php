@@ -141,7 +141,7 @@ Route::middleware('auth.login')->group(
         // PENERIMAAN BARANG
         Route::prefix('/penerimaan_barang')->name('penerimaan_barang.')->group(function () {
             Route::get('/', [PenerimaanBarangController::class, 'index'])->name('index');
-            Route::get('/get-po-details/{id_po}', [PenerimaanBarangController::class, 'getPoDetails'])->name('getdetails');
+            Route::get('/detailspo/{id_po}', [PenerimaanBarangController::class, 'getPoDetails'])->name('getdetails');
             Route::get('/add', [PenerimaanBarangController::class, 'create'])->name('create');
             Route::post('/add', [PenerimaanBarangController::class, 'store'])->name('store');
             Route::get('/detail/{id}', [PenerimaanBarangController::class, 'show'])->name('detail');
