@@ -53,12 +53,12 @@ class ItemController extends Controller
             }
             return response()->json([
                 'error' => $apiResponse->json()['message'],
-            ], 500);
+            ]);
         } catch (\Exception $e) {
             if ($request->ajax()) {
                 return response()->json([
                     'error' => $e->getMessage(),
-                ], 500);
+                ]);
             }
         }
     }

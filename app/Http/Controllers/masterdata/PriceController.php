@@ -46,11 +46,11 @@ class PriceController extends Controller
 
             return response()->json([
                 'error' => $apiResponse->status(),
-            ], 500);
+            ]);
         } catch (\Exception $e) {
             return response()->json([
                 'error' => $e->getMessage(),
-            ], 500);
+            ]);
         }
     }
     public function index(Request $request)
