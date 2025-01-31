@@ -6,9 +6,6 @@
                 <div class="row">
                     <div class="col-12 col-md-6 order-md-1 order-last">
                         <h3>Customer Management</h3>
-                        <p class="text-subtitle text-muted">
-                            Building Connections Through Customer Management.
-                        </p>
                     </div>
                     <div class="col-12 col-md-6 order-md-2 order-first">
                         <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
@@ -54,22 +51,11 @@
                                     <th>Contact Info</th>
                                     <th>Nama</th>
                                     <th>Partner Tipe</th>
-                                    <th>COA ID</th>
-                                    {{-- <th scope="col">Kode Customer</th>
-                    <th scope="col">Nama Customer</th>
-                    <th scope="col">Wilayah</th>
-                    <th scope="col">NPWP</th>
-                    <th scope="col">Nama NPWP</th>
-                    <th scope="col">Alamat NPWP</th>
-                    <th scope="col">Alamat Toko</th>
-                    <th scope="col">Credit Limit</th>
-                    <th scope="col">Status Limit</th>
-                    --}}
+                                    {{-- <th>COA ID</th> --}}
                                     <th scope="col">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
-
                             </tbody>
                         </table>
                     </div>
@@ -83,11 +69,9 @@
                 $('#tablecustomer').DataTable({
                     serverSide: true,
                     processing: true,
-                    // pageLength: 1,
                     ajax: {
                         url: '{{ route('customer.index') }}',
                         type: 'GET',
-
                     },
                     columns: [{
                             data: null,
@@ -96,8 +80,6 @@
                             }
                         },
                         {
-                            // data: null,
-                            // defaultContent: ''
                             data: 'contact_info',
                             defaultContent: ''
                         },
@@ -108,10 +90,10 @@
                             data: 'partner_type',
                             defaultContent: ''
                         },
-                        {
-                            data: 'chart_of_account_id',
-                            defaultContent: ''
-                        },
+                        // {
+                        //     data: 'chart_of_account_id',
+                        //     defaultContent: ''
+                        // },
                         {
                             data: null,
                             render: function(data, type, row) {
@@ -136,20 +118,6 @@
 
                 });
             });
-
-            // function confirmDelete(id) {
-            //     Swal.fire({
-            //         title: 'Apakah kamu yakin?',
-            //         text: 'Data ini akan dihapus secara permanen!',
-            //         icon: 'warning',
-            //         showCancelButton: true,
-            //         reverseButtons: true
-            //     }).then((result) => {
-            //         if (result.isConfirmed) {
-            //             document.getElementById('delete' + id).submit();
-            //         }
-            //     });
-            // }
         </script>
     @endpush
 @endsection

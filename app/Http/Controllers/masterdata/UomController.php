@@ -12,11 +12,15 @@ use Faker\Extension\Helper;
 class UomController extends Controller
 {
     //
+    private function buildApiUrl($endpoint)
+    {
+        return Helpers::getApiUrl() . '/loccana/masterdata/1.0.0/uoms' . $endpoint;
+    }
     private function ajaxuom(Request $request)
     {
         try {
             $headers = Helpers::getHeaders();
-            $apiurl = Helpers::getApiUrl() . '/loccana/masterdata/1.0.0/uoms/lists';
+            $apiurl = $this->buildApiUrl('/lists');
             $length = $request->input('length', 10);
             $start = $request->input('start', 0);
             $search = $request->input('search.value', '');
@@ -67,7 +71,7 @@ class UomController extends Controller
     {
         try {
             $headers = Helpers::getHeaders();
-            $apiurl = Helpers::getApiUrl() . '/loccana/masterdata/1.0.0/uoms';
+            $apiurl = $this->buildApiUrl('/');
 
             $data = [
                 'name' => (string)$request->input('uom_name'),
@@ -103,10 +107,8 @@ class UomController extends Controller
     {
         try {
             $headers = Helpers::getHeaders();
-            $apiurl = Helpers::getApiUrl() . '/loccana/masterdata/1.0.0/uoms/' . $id;
-            // Get UoM data
+            $apiurl = $this->buildApiUrl('/' . $id);
             $apiResponse = Http::withHeaders($headers)->get($apiurl);
-            // dd($apiResponse->json());
             if ($apiResponse->successful()) {
                 $uomData = $apiResponse->json();
 
@@ -127,16 +129,13 @@ class UomController extends Controller
     {
         try {
             $headers = Helpers::getHeaders();
-            $apiurl = Helpers::getApiUrl() . '/loccana/masterdata/1.0.0/uoms/' . $id;
-
+            $apiurl = $this->buildApiUrl('/' . $id);
             $data = [
                 'name' => $request->input('uom_name'),
                 'symbol' => $request->input('uom_symbol'),
                 'description' => $request->input('description')
             ];
-
             $apiResponse = Http::withHeaders($headers)->put($apiurl, $data);
-
             if ($apiResponse->successful()) {
                 return redirect()->route('uom.index')
                     ->with('success', 'Data UoM berhasil diperbarui.');
@@ -149,14 +148,13 @@ class UomController extends Controller
             return back()->withErrors($e->getMessage());
         }
     }
+
     public function show($id)
     {
         try {
             $headers = Helpers::getHeaders();
-            $apiurl = Helpers::getApiUrl() . '/loccana/masterdata/1.0.0/uoms/' . $id;
-            // Get UoM data
+            $apiurl = $this->buildApiUrl('/' . $id);
             $apiResponse = Http::withHeaders($headers)->get($apiurl);
-            // dd($apiResponse->json());
             if ($apiResponse->successful()) {
                 $uomData = $apiResponse->json();
                 if (isset($uomData['data'])) {
@@ -166,6 +164,25 @@ class UomController extends Controller
                 }
             } else {
                 return back()->withErrors('Gagal mengambil data UoM dari API.');
+            }
+        } catch (\Exception $e) {
+            return back()->withErrors($e->getMessage());
+        }
+    }
+
+    public function destroy(string $id)
+    {
+        try {
+            $headers = Helpers::getHeaders();
+            $apiurl = $this->buildApiUrl('/' . $id);
+            $apiResponse = Http::withHeaders($headers)->delete($apiurl);
+            if ($apiResponse->successful()) {
+                return redirect()->route('uom.index')
+                    ->with('success', 'Data Uom berhasil dihapus');
+            } else {
+                return back()->withErrors(
+                    'Gagal menghapus data: ' . $apiResponse->body()
+                );
             }
         } catch (\Exception $e) {
             return back()->withErrors($e->getMessage());

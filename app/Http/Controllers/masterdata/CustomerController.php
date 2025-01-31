@@ -10,12 +10,16 @@ use Illuminate\Support\Facades\Log;
 
 class CustomerController extends Controller
 {
+    private function buildApiUrl($endpoint)
+    {
+        return Helpers::getApiUrl() . '/loccana/masterdata/partner/1.0.0/partner' . $endpoint;
+    }
     private function ajaxcustomer(Request $request)
     {
         if ($request->ajax()) {
             try {
                 $headers = Helpers::getHeaders();
-                $apiurl = Helpers::getApiUrl() . '/loccana/masterdata/partner/1.0.0/partner/lists';
+                $apiurl = $this->buildApiUrl('/lists');
                 $length = $request->input('length', 10);
                 $start = $request->input('start', 0);
                 $search = $request->input('search.value', '');
@@ -95,7 +99,7 @@ class CustomerController extends Controller
     {
         try {
             $headers = Helpers::getHeaders();
-            $apiurl = Helpers::getApiUrl() . '/loccana/masterdata/partner/1.0.0/partner';
+            $apiurl = $this->buildApiUrl('/');
             $data = [
                 'name' => (string)$request->input('nama'),
                 'partner_type_id' => (string)$request->input('partner_type_id'),
@@ -133,7 +137,7 @@ class CustomerController extends Controller
         try {
             $companyid = 2;
             $headers = Helpers::getHeaders();
-            $apiurl = Helpers::getApiUrl() . '/loccana/masterdata/partner/1.0.0/partner/' . $id;
+            $apiurl = $this->buildApiUrl('/' . $id);
             $partnerurl = Helpers::getApiUrl() . '/loccana/masterdata/partner-type/1.0.0/partner-types/list-select';
             $coaurl = Helpers::getApiUrl() . '/loccana/masterdata/coa/1.0.0/masterdata/coa/list-select/' . $companyid;
 
@@ -170,7 +174,7 @@ class CustomerController extends Controller
     public function edit(string $id)
     {
         try {
-            $apiurl = Helpers::getApiUrl() . '/loccana/masterdata/partner/1.0.0/partner/' . $id;
+            $apiurl = $this->buildApiUrl('/' . $id);
             $companyid = 2;
             $headers = Helpers::getHeaders();
             $partnerurl = Helpers::getApiUrl() . '/loccana/masterdata/partner-type/1.0.0/partner-types/list-select';
@@ -210,7 +214,7 @@ class CustomerController extends Controller
     public function update(Request $request, string $id)
     {
         try {
-            $apiurl = Helpers::getApiUrl() . '/loccana/masterdata/partner/1.0.0/partner/' . $id;
+            $apiurl = $this->buildApiUrl('/' . $id);
             $headers = Helpers::getHeaders();
 
             $data = [
@@ -242,7 +246,7 @@ class CustomerController extends Controller
     public function destroy(string $id)
     {
         try {
-            $apiurl = Helpers::getApiUrl() . '/loccana/masterdata/partner/1.0.0/partner/' . $id;
+            $apiurl = $this->buildApiUrl('/' . $id);
             $headers = Helpers::getHeaders();
             $apiResponse = Http::withHeaders($headers)->delete($apiurl);
             // dd($apiResponse->json());

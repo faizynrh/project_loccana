@@ -6,9 +6,6 @@
                 <div class="row">
                     <div class="col-12 col-md-6 order-md-1 order-last">
                         <h3>UOM Management</h3>
-                        <p class="text-subtitle text-muted">
-                            Effortless Control for Units and Measurements.
-                        </p>
                     </div>
                     <div class="col-12 col-md-6 order-md-2 order-first">
                         <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
@@ -51,9 +48,9 @@
                             <thead>
                                 <tr>
                                     <th scope="col">No</th>
-                                    <th scope="col">Name</th>
+                                    <th scope="col">Nama</th>
                                     <th scope="col">Simbol</th>
-                                    <th scope="col">Description</th>
+                                    <th scope="col">Deskripsi</th>
                                     <th scope="col">Option</th>
                                 </tr>
                             </thead>
@@ -73,7 +70,6 @@
                 $('#tableuom').DataTable({
                     serverSide: true,
                     processing: true,
-                    // pageLength: 1,
                     ajax: {
                         url: '{{ route('uom.index') }}',
                         type: 'GET',
@@ -116,7 +112,6 @@
                             }
                         }
                     ],
-
                 });
             });
         </script>
