@@ -16,48 +16,46 @@ class PrincipalController extends Controller
     }
     private function ajaxprincipal(Request $request)
     {
-        if ($request->ajax()) {
-            try {
-                $headers = Helpers::getHeaders();
-                $apiurl = $this->buildApiUrl('/lists');
+        try {
+            $headers = Helpers::getHeaders();
+            $apiurl = $this->buildApiUrl('/lists');
 
-                $length = $request->input('length', 10);
-                $start = $request->input('start', 0);
-                $search = $request->input('search.value', '');
+            $length = $request->input('length', 10);
+            $start = $request->input('start', 0);
+            $search = $request->input('search.value', '');
 
-                $requestbody = [
-                    'search' => '',
-                    'limit' => $length,
-                    'offset' => $start,
-                    'company_id' => 2,
-                    'is_customer' => false,
-                    'is_supplier' => true
-                ];
+            $requestbody = [
+                'search' => '',
+                'limit' => $length,
+                'offset' => $start,
+                'company_id' => 2,
+                'is_customer' => false,
+                'is_supplier' => true
+            ];
 
-                if (!empty($search)) {
-                    $requestbody['search'] = $search;
-                }
+            if (!empty($search)) {
+                $requestbody['search'] = $search;
+            }
 
-                $apiResponse = Http::withHeaders($headers)->post($apiurl, $requestbody);
+            $apiResponse = Http::withHeaders($headers)->post($apiurl, $requestbody);
 
-                if ($apiResponse->successful()) {
-                    $data = $apiResponse->json();
-                    return response()->json([
-                        'draw' => $request->input('draw'),
-                        'recordsTotal' => $data['data']['jumlah_filter'] ?? 0,
-                        'recordsFiltered' => $data['data']['jumlah'] ?? 0,
-                        'data' => $data['data']['table'] ?? [],
-                    ]);
-                }
+            if ($apiResponse->successful()) {
+                $data = $apiResponse->json();
                 return response()->json([
-                    'error' => 'Failed to fetch data',
+                    'draw' => $request->input('draw'),
+                    'recordsTotal' => $data['data']['jumlah_filter'] ?? 0,
+                    'recordsFiltered' => $data['data']['jumlah'] ?? 0,
+                    'data' => $data['data']['table'] ?? [],
+                ]);
+            }
+            return response()->json([
+                'error' => 'Failed to fetch data',
+            ], 500);
+        } catch (\Exception $e) {
+            if ($request->ajax()) {
+                return response()->json([
+                    'error' => $e->getMessage(),
                 ], 500);
-            } catch (\Exception $e) {
-                if ($request->ajax()) {
-                    return response()->json([
-                        'error' => $e->getMessage(),
-                    ], 500);
-                }
             }
         }
     }
