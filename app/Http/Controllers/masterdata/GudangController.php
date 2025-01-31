@@ -83,7 +83,6 @@ class GudangController extends Controller
             ];
 
             $apiResponse = Http::withHeaders($headers)->post($apiurl, $data);
-
             $responseData = $apiResponse->json();
             if (
                 $apiResponse->successful() &&
