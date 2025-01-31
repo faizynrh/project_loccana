@@ -14,13 +14,13 @@ class PriceController extends Controller
 {
     private function buildApiUrl($endpoint)
     {
-        return Helpers::getApiUrl() . '/masterdata/price/1.0.0/price-manajement/' . $endpoint;
+        return Helpers::getApiUrl() . '/masterdata/price/1.0.0/price-manajement' . $endpoint;
     }
     private function ajax(Request $request)
     {
         try {
             $headers = Helpers::getHeaders();
-            $apiurl = $this->buildApiUrl('list');
+            $apiurl = $this->buildApiUrl('/list');
 
             $length = $request->input('length', 10);
             $start = $request->input('start', 0);
@@ -66,13 +66,13 @@ class PriceController extends Controller
     {
         try {
             $headers = Helpers::getHeaders();
-            $apiurl = $this->buildApiUrl($id);
+            $apiurl = $this->buildApiUrl('/' . $id);
             $apiResponse = Http::withHeaders($headers)->get($apiurl);
             if ($apiResponse->successful()) {
                 $data = $apiResponse->json()['data'];
                 return view('masterdata.price.edit', compact('data', 'id'));
             } else {
-                return back()->withErrors('Gagal mengambil data Price: ' . $apiResponse->status());
+                return back()->withErrors($apiResponse->json()['message']);
             }
         } catch (\Exception $e) {
             return back()->withErrors($e->getMessage());
@@ -84,7 +84,7 @@ class PriceController extends Controller
     {
         try {
             $headers = Helpers::getHeaders();
-            $apiurl = $this->buildApiUrl($id);
+            $apiurl = $this->buildApiUrl('/' . $id);
 
             $data = [
                 'harga_atas' => $request->harga_atas,
@@ -95,9 +95,9 @@ class PriceController extends Controller
 
             $apiResponse = Http::withHeaders($headers)->put($apiurl, $data);
             if ($apiResponse->successful()) {
-                return redirect()->route('price.index')->with('success', 'Data Price berhasil diperbarui!');
+                return redirect()->route('price.index')->with('success', $apiResponse->json()['message']);
             } else {
-                return back()->withErrors('Gagal memperbarui data Price: ' . $apiResponse->status());
+                return back()->withErrors($apiResponse->json()['message']);
             }
         } catch (\Exception $e) {
             return back()->withErrors($e->getMessage());
@@ -108,7 +108,7 @@ class PriceController extends Controller
     {
         try {
             $headers = Helpers::getHeaders();
-            $apiurl = $this->buildApiUrl('approve/' . $id);
+            $apiurl = $this->buildApiUrl('/approve/' . $id);
 
             $data = [
                 'status' => 'approve',
@@ -117,9 +117,9 @@ class PriceController extends Controller
             $apiResponse = Http::withHeaders($headers)->put($apiurl, $data);
 
             if ($apiResponse->successful()) {
-                return redirect()->route('price.index')->with('success', 'Data Berhasil Disetujui!');
+                return redirect()->route('price.index')->with('success', $apiResponse->json()['message']);
             } else {
-                return back()->withErrors('Gagal Approve Price: ' . $apiResponse->status());
+                return back()->withErrors($apiResponse->json()['message']);
             }
         } catch (\Exception $e) {
             return back()->withErrors($e->getMessage());
