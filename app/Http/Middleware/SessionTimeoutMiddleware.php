@@ -13,7 +13,7 @@ class SessionTimeoutMiddleware
 {
     public function handle(Request $request, Closure $next)
     {
-        $timeout = 5 * 60; // 30 menit
+        $timeout = 30 * 60; // 30 menit
         $lastActivity = Session::get('last_activity');
 
         if ($lastActivity && (time() - $lastActivity > $timeout)) {
