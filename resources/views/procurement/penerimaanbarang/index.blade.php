@@ -88,13 +88,15 @@
                                     <tr>
                                         <th scope="col">No</th>
                                         <th scope="col">No DO</th>
-                                        <th scope="col">Tanggal DO</th>
+                                        <th scope="col">Tanggal Order</th>
                                         <th scope="col">Nomor PO</th>
+                                        <th scope="col">Tanggal Diterima</th>
                                         <th scope="col">Nama Principal</th>
-                                        <th scope="col">Tanggal PO</th>
                                         <th scope="col">Harga</th>
                                         <th scope="col">Diskon</th>
-                                        <th scope="col">Value</th>
+                                        <th scope="col">Total Harga</th>
+                                        <th scope="col">Item Diterima</th>
+                                        <th scope="col">Status</th>
                                         <th scope="col">Deskripsi</th>
                                         <th scope="col">Action</th>
                                     </tr>
@@ -145,52 +147,57 @@
                             data: 'do_number'
                         },
                         {
-                            data: 'receipt_date',
-                            render: function(data) {
-                                if (data) {
-                                    var date = new Date(data);
-                                    return (
-                                        date.getFullYear() +
-                                        '-' +
-                                        (date.getMonth() + 1).toString().padStart(2, '0') +
-                                        '-' +
-                                        date.getDate().toString().padStart(2, '0')
-                                    );
-                                }
-                                return data;
-                            }
-                        },
-                        {
-                            data: 'number_po'
-                        },
-                        {
-                            data: 'name'
-                        },
-                        {
                             data: 'order_date',
                             render: function(data) {
                                 if (data) {
                                     var date = new Date(data);
                                     return (
-                                        date.getFullYear() +
+                                        date.getDate().toString().padStart(2, '0') +
                                         '-' +
                                         (date.getMonth() + 1).toString().padStart(2, '0') +
                                         '-' +
-                                        date.getDate().toString().padStart(2, '0')
+                                        date.getFullYear()
                                     );
                                 }
                                 return data;
-                            }
+                            },
+                        },
+                        {
+                            data: 'number_po'
+                        },
+                        {
+                            data: 'receipt_date',
+                            render: function(data) {
+                                if (data) {
+                                    var date = new Date(data);
+                                    return (
+                                        date.getDate().toString().padStart(2, '0') +
+                                        '-' +
+                                        (date.getMonth() + 1).toString().padStart(2, '0') +
+                                        '-' +
+                                        date.getFullYear()
+                                    );
+                                }
+                                return data;
+                            },
+                        },
+                        {
+                            data: 'name'
+                        },
+                        {
+                            data: 'total_receive_price'
+                        },
+                        {
+                            data: 'qty_bonus'
                         },
                         {
                             data: 'total_po'
                         },
                         {
-                            data: null,
-                            defaultContent: ''
+                            data: 'qty_receipt'
                         },
                         {
-                            data: 'total_receive_price'
+                            data: 'status'
                         },
                         {
                             data: 'description'
