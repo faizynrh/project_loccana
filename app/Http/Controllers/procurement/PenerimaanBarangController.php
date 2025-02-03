@@ -17,11 +17,12 @@ class PenerimaanBarangController extends Controller
         return Helpers::getApiUrl() . '/loccana/itemreceipt/1.0.0/item_receipt/1.0.0' . $endpoint;
     }
 
-    private function urlSelect($company_id)
+    private function urlSelect($id)
     {
         return [
-            'po' => Helpers::getApiUrl() . '/loccana/po/1.0.0/purchase-order/list-select/' . $company_id,
-            'gudang' => Helpers::getApiUrl() . '/masterdata/warehouse/1.0.0/warehouse/list-select/' . $company_id
+            'po' => Helpers::getApiUrl() . '/loccana/po/1.0.0/purchase-order/list-select/' . $id,
+            'gudang' => Helpers::getApiUrl() . '/masterdata/warehouse/1.0.0/warehouse/list-select/' . $id,
+            'podetail' => Helpers::getApiUrl() . '/loccana/po/1.0.0/purchase-order/' . $id
         ];
     }
 
@@ -78,7 +79,7 @@ class PenerimaanBarangController extends Controller
     public function getPoDetails(Request $request, $po_id)
     {
         $headers = Helpers::getHeaders();
-        $apiurl = $this->buildApiUrl('/' . $po_id);
+        $apiurl = Helpers::getApiUrl() . '/loccana/po/1.0.0/purchase-order/'  . $po_id;
 
         try {
             $apiResponse = Http::withHeaders($headers)->get($apiurl);
@@ -89,29 +90,23 @@ class PenerimaanBarangController extends Controller
                 foreach ($data as $item) {
                     $items[] = [
                         'item_id' => $item['item_id'],
-                        'unit_price' => $item['unit_price'],
-                        'warehouse_id' => $item['warehouse_id'],
-                        'kode' => $item['item_code'],
-                        'order_qty' => $item['item_order_qty'],
-                        'balance_qty' => $item['qty_balance'],
-                        'received_qty' => $item['qty_receipt'],
+                        'item_code' => $item['item_code'],
+                        'base_qty' => $item['base_qty'],
+                        'qty_balance' => $item['qty_balance'],
                         'qty' => $item['qty'],
-                        'bonus_qty' => $item['qty_bonus'],
-                        'deposit_qty' => $item['qty_titip'],
-                        'discount' => $item['discount'],
-                        'deskripsi_items' => $item['deskripsi_items'],
+                        'item_description' => $item['item_description'],
+                        'warehouse_id' => $item['warehouse_id'],
                     ];
                 }
                 return response()->json([
                     'id_po' => $data[0]['id_po'],
-                    'code' => $data[0]['id_po'],
                     'order_date' => $data[0]['order_date'],
-                    'principal' => $data[0]['partner_name'],
+                    'partner_name' => $data[0]['partner_name'],
                     'address' => $data[0]['address'],
                     'description' => $data[0]['description'],
                     'phone' => $data[0]['phone'],
                     'fax' => $data[0]['fax'],
-                    'gudang' => $data[0]['gudang'],
+                    'warehouse_id' => $data[0]['warehouse_id'],
                     'items' => $items
                 ]);
             }
@@ -179,7 +174,7 @@ class PenerimaanBarangController extends Controller
                 'plate_number' => $request->plate_number,
                 'received_by' => $request->input('received_by', 0),
                 'status' => "received",
-                'company_id' => $request->input('company_id', default: 2),
+                'company_id' => $request->input('company_id',  2),
                 'is_deleted' => 'true',
                 'items' => $dataitems
             ];

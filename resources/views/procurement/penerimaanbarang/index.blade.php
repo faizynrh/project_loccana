@@ -86,17 +86,19 @@
                             <table class="table table-striped table-bordered mt-3" id="tabelpenerimaan">
                                 <thead>
                                     <tr>
-                                        <th scope="col">No</th>
-                                        <th scope="col">No DO</th>
-                                        <th scope="col">Tanggal DO</th>
-                                        <th scope="col">Nomor PO</th>
-                                        <th scope="col">Nama Principal</th>
-                                        <th scope="col">Tanggal PO</th>
-                                        <th scope="col">Harga</th>
-                                        <th scope="col">Diskon</th>
-                                        <th scope="col">Value</th>
-                                        <th scope="col">Deskripsi</th>
-                                        <th scope="col">Action</th>
+                                        <th>No</th>
+                                        <th>No DO</th>
+                                        <th>Tanggal Order</th>
+                                        <th>Nomor PO</th>
+                                        <th>Tanggal Diterima</th>
+                                        <th>Nama Principal</th>
+                                        <th>Harga</th>
+                                        <th>Diskon</th>
+                                        <th>Total Harga</th>
+                                        <th>Item Diterima</th>
+                                        <th>Status</th>
+                                        <th>Deskripsi</th>
+                                        <th>Action</th>
                                     </tr>
                                 </thead>
                             </table>
@@ -145,52 +147,90 @@
                             data: 'do_number'
                         },
                         {
-                            data: 'receipt_date',
-                            render: function(data) {
-                                if (data) {
-                                    var date = new Date(data);
-                                    return (
-                                        date.getFullYear() +
-                                        '-' +
-                                        (date.getMonth() + 1).toString().padStart(2, '0') +
-                                        '-' +
-                                        date.getDate().toString().padStart(2, '0')
-                                    );
-                                }
-                                return data;
-                            }
-                        },
-                        {
-                            data: 'number_po'
-                        },
-                        {
-                            data: 'name'
-                        },
-                        {
                             data: 'order_date',
                             render: function(data) {
                                 if (data) {
                                     var date = new Date(data);
                                     return (
-                                        date.getFullYear() +
+                                        date.getDate().toString().padStart(2, '0') +
                                         '-' +
                                         (date.getMonth() + 1).toString().padStart(2, '0') +
                                         '-' +
-                                        date.getDate().toString().padStart(2, '0')
+                                        date.getFullYear()
                                     );
+                                }
+                                return data;
+                            },
+                        },
+                        {
+                            data: 'number_po'
+                        },
+                        {
+                            data: 'receipt_date',
+                            render: function(data) {
+                                if (data) {
+                                    var date = new Date(data);
+                                    return (
+                                        date.getDate().toString().padStart(2, '0') +
+                                        '-' +
+                                        (date.getMonth() + 1).toString().padStart(2, '0') +
+                                        '-' +
+                                        date.getFullYear()
+                                    );
+                                }
+                                return data;
+                            },
+                        },
+                        {
+                            data: 'name'
+                        },
+                        {
+                            data: 'total_receive_price',
+                            render: function(data) {
+                                if (data) {
+                                    return new Intl.NumberFormat('id-ID', {
+                                        style: 'currency',
+                                        currency: 'IDR',
+                                        minimumFractionDigits: 2,
+                                        maximumFractionDigits: 2
+                                    }).format(data);
                                 }
                                 return data;
                             }
                         },
                         {
-                            data: 'total_po'
+                            data: 'qty_bonus',
+                            render: function(data) {
+                                if (data) {
+                                    return new Intl.NumberFormat('id-ID', {
+                                        style: 'currency',
+                                        currency: 'IDR',
+                                        minimumFractionDigits: 2,
+                                        maximumFractionDigits: 2
+                                    }).format(data);
+                                }
+                                return data;
+                            }
                         },
                         {
-                            data: null,
-                            defaultContent: ''
+                            data: 'total_po',
+                            render: function(data) {
+                                if (data) {
+                                    return new Intl.NumberFormat('id-ID', {
+                                        style: 'currency',
+                                        currency: 'IDR',
+                                        minimumFractionDigits: 2,
+                                        maximumFractionDigits: 2
+                                    }).format(data);
+                                }
+                                return data;
+                            }
                         },
                         {
-                            data: 'total_receive_price'
+                            data: 'qty_receipt'
+                        },
+                        {
+                            data: 'status'
                         },
                         {
                             data: 'description'
