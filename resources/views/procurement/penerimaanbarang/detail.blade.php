@@ -143,7 +143,7 @@
                         </table>
                         <div class="row">
                             <div class="col-md-12 text-end">
-                                <a href="{{ route('penerimaan_barang.index') }}" class="btn btn-primary ms-2">Batal</a>
+                                <a href="{{ route('penerimaan_barang.index') }}" class="btn btn-primary ms-2">Back</a>
                             </div>
                         </div>
                     </div>
