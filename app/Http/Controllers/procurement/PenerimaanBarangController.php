@@ -95,6 +95,7 @@ class PenerimaanBarangController extends Controller
                         'qty_balance' => $item['qty_balance'],
                         'qty' => $item['qty'],
                         'item_description' => $item['item_description'],
+                        'warehouse_id' => $item['warehouse_id'],
                     ];
                 }
                 return response()->json([
@@ -105,8 +106,7 @@ class PenerimaanBarangController extends Controller
                     'description' => $data[0]['description'],
                     'phone' => $data[0]['phone'],
                     'fax' => $data[0]['fax'],
-                    // 'gudang' => $data[0]['gudang'],
-                    'warehouse_id' => 5,
+                    'warehouse_id' => $data[0]['warehouse_id'],
                     'items' => $items
                 ]);
             }
@@ -174,7 +174,7 @@ class PenerimaanBarangController extends Controller
                 'plate_number' => $request->plate_number,
                 'received_by' => $request->input('received_by', 0),
                 'status' => "received",
-                'company_id' => $request->input('company_id', default: 2),
+                'company_id' => $request->input('company_id',  2),
                 'is_deleted' => 'true',
                 'items' => $dataitems
             ];

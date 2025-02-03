@@ -184,7 +184,8 @@
                                     var row = `
                                             <tr style="border-bottom: 2px solid #000;">
                                                 <td>
-                                                    <input type="hidden" class="item_id" value="${item.item_id}">
+                                                    <input type="hidden" id="item_id" value="${item.item_id}">
+                                                    <input type="hidden" id="warehouse_id" value="${item.warehouse_id}">
                                                     <textarea type="text" class="form-control w-100" readonly rows="3">${item.item_code}</textarea>
                                                 </td>
                                                 <td><input type="number" class="form-control bg-body-secondary order_qty" value="${item.base_qty}" readonly></td>
@@ -303,8 +304,8 @@
             var items = [];
             $('#tableBody tr').each(function() {
                 items.push({
-                    item_id: $(this).find('.item_id').val(),
-                    warehouse_id: $(this).find('.warehouse_id').val(),
+                    item_id: $(this).find('#item_id').val(),
+                    warehouse_id: $(this).find('#warehouse_id').val(),
                     qty_reject: $(this).find('#qty_reject').val(),
                     qty_received: $(this).find('#qty_received').val(),
                     qty_bonus: $(this).find('#qty_bonus').val(),
