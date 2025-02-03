@@ -83,7 +83,6 @@ class CoaController extends Controller
                 'description' => $request->input('description'),
                 'company_id' => $request->input('company_id', 2),
             ];
-
             $apiResponse = Http::withHeaders($headers)->post($apiurl, $data);
 
             if ($apiResponse->successful()) {

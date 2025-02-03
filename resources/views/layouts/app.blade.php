@@ -14,7 +14,6 @@
 </head>
 
 <body>
-    <script src="assets/static/js/initTheme.js"></script>
     <div id="app">
         <x-sidebar></x-sidebar>
         <div id="main" class="layout-navbar navbar-fixed">
@@ -30,7 +29,6 @@
     <script src="{{ asset('assets/js/perfect-scrollbar/perfect-scrollbar.min.js') }}"></script>
     <script src="{{ asset('assets/js/sweetalert/sweetalert.js') }}"></script>
     <script src="{{ asset('assets/js/sweetalert/functions.js') }}"></script>
-    <script src="{{ asset('assets/js/jqueryalert.js') }}"></script>
     @stack('scripts')
     <script></script>
 </body>
