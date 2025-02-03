@@ -86,19 +86,19 @@
                             <table class="table table-striped table-bordered mt-3" id="tabelpenerimaan">
                                 <thead>
                                     <tr>
-                                        <th scope="col">No</th>
-                                        <th scope="col">No DO</th>
-                                        <th scope="col">Tanggal Order</th>
-                                        <th scope="col">Nomor PO</th>
-                                        <th scope="col">Tanggal Diterima</th>
-                                        <th scope="col">Nama Principal</th>
-                                        <th scope="col">Harga</th>
-                                        <th scope="col">Diskon</th>
-                                        <th scope="col">Total Harga</th>
-                                        <th scope="col">Item Diterima</th>
-                                        <th scope="col">Status</th>
-                                        <th scope="col">Deskripsi</th>
-                                        <th scope="col">Action</th>
+                                        <th>No</th>
+                                        <th>No DO</th>
+                                        <th>Tanggal Order</th>
+                                        <th>Nomor PO</th>
+                                        <th>Tanggal Diterima</th>
+                                        <th>Nama Principal</th>
+                                        <th>Harga</th>
+                                        <th>Diskon</th>
+                                        <th>Total Harga</th>
+                                        <th>Item Diterima</th>
+                                        <th>Status</th>
+                                        <th>Deskripsi</th>
+                                        <th>Action</th>
                                     </tr>
                                 </thead>
                             </table>
@@ -185,13 +185,46 @@
                             data: 'name'
                         },
                         {
-                            data: 'total_receive_price'
+                            data: 'total_receive_price',
+                            render: function(data) {
+                                if (data) {
+                                    return new Intl.NumberFormat('id-ID', {
+                                        style: 'currency',
+                                        currency: 'IDR',
+                                        minimumFractionDigits: 2,
+                                        maximumFractionDigits: 2
+                                    }).format(data);
+                                }
+                                return data;
+                            }
                         },
                         {
-                            data: 'qty_bonus'
+                            data: 'qty_bonus',
+                            render: function(data) {
+                                if (data) {
+                                    return new Intl.NumberFormat('id-ID', {
+                                        style: 'currency',
+                                        currency: 'IDR',
+                                        minimumFractionDigits: 2,
+                                        maximumFractionDigits: 2
+                                    }).format(data);
+                                }
+                                return data;
+                            }
                         },
                         {
-                            data: 'total_po'
+                            data: 'total_po',
+                            render: function(data) {
+                                if (data) {
+                                    return new Intl.NumberFormat('id-ID', {
+                                        style: 'currency',
+                                        currency: 'IDR',
+                                        minimumFractionDigits: 2,
+                                        maximumFractionDigits: 2
+                                    }).format(data);
+                                }
+                                return data;
+                            }
                         },
                         {
                             data: 'qty_receipt'
