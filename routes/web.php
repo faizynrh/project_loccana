@@ -160,6 +160,7 @@ Route::middleware('auth.login')->group(
             Route::delete('/delete/{id}', [PurchaseOrderController::class, 'destroy'])->name('destroy');
             Route::get('/edit/{id}', [PurchaseOrderController::class, 'edit'])->name('edit');
             Route::put('/update/{id}', [PurchaseOrderController::class, 'update'])->name('update');
+            Route::get('/getItemsList/{id}', [PurchaseOrderController::class, 'getItemsList'])->name('getitem');
         });
     }
 );
