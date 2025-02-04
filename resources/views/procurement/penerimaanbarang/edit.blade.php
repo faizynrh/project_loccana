@@ -113,7 +113,7 @@
                                         <th>Order (Kg/Lt)</th>
                                         <th>Sisa (Kg/Lt)</th>
                                         <th>Diterima</th>
-                                        <th>Qty </th>
+                                        <th>Qty Receipt</th>
                                         <th>Qty Reject</th>
                                         <th>Bonus</th>
                                         <th>Titipan</th>
@@ -145,25 +145,25 @@
                                                     name="quantity_received[{{ $index }}]" id="qty_received"
                                                     value="{{ $item['qty_receipt'] }}" readonly>
                                             </td>
-                                            <td><input type="text" class="form-control"
+                                            <td><input type="number" class="form-control"
                                                     name="qty[{{ $index }}]" id="qty"
                                                     value="{{ $item['qty'] }}" min="0">
                                             </td>
-                                            <td><input type="text" class="form-control"
+                                            <td><input type="number" class="form-control"
                                                     name="quantity_rejected[{{ $index }}]" value="0"
                                                     min="0">
                                             </td>
-                                            <td><input type="text" class="form-control"
+                                            <td><input type="number" class="form-control"
                                                     name="qty_bonus[{{ $index }}]"
                                                     value="{{ $item['qty_bonus'] }}" min="0">
                                             </td>
-                                            <td><input type="text" class="form-control"
+                                            <td><input type="number" class="form-control"
                                                     name="qty_titip[{{ $index }}]"
                                                     value="{{ $item['qty_titip'] }}" min="0">
                                             </td>
-                                            <td><input type="text" class="form-control"
+                                            <td><input type="number" class="form-control"
                                                     name="qty_diskon[{{ $index }}]"
-                                                    value="{{ $item['discount'] }}" min="0">
+                                                    value="{{ $item['discount'] }}" id="qty_discount" min="0">
                                             </td>
                                             <td><input type="text" class="form-control" placeholder="Note"
                                                     name="notes[{{ $index }}]"
@@ -176,8 +176,7 @@
 
                             <div class="row">
                                 <div class="col-md-12 text-end">
-                                    <button type="button" class="btn btn-primary" id="submitButton"
-                                        onclick="confirmEdit('submitButton', 'editForm')">Submit</button>
+                                    <button type="button" class="btn btn-primary" id="submitButton">Submit</button>
                                     <a href="/penerimaan_barang" class="btn btn-secondary ms-2">Batal</a>
                                 </div>
                             </div>
@@ -191,74 +190,68 @@
 @push('scripts')
     <script>
         $(document).ready(function() {
-            $('#tableBody').on('input', 'input[name^="qty"]', function() {
+            $('#tableBody').on('input', 'input#qty', function() {
                 var $row = $(this).closest('tr');
-                var orderQty = parseFloat($row.find('input[name^="item_order_qty"]').val());
+                var itemOrderQty = parseFloat($row.find('#qty_order').val()) || 0;
                 var qtyInputField = $(this);
-                var qtyBalanceField = $row.find('input[name^="qty_balance"]');
-                var qtyReceivedField = $row.find('input[name^="quantity_received"]');
+                var qtyBalanceField = $row.find('#qty_balance');
+                var qtyReceivedField = $row.find('#quantity_received');
 
-                if (!qtyBalanceField.data('initial')) {
-                    qtyBalanceField.data('initial', qtyBalanceField.val());
-                }
-                if (!qtyReceivedField.data('initial')) {
-                    qtyReceivedField.data('initial', qtyReceivedField.val());
-                }
+                qtyBalanceField.data('initial', qtyBalanceField.data('initial') || qtyBalanceField.val());
+                qtyReceivedField.data('initial', qtyReceivedField.data('initial') || qtyReceivedField
+                    .val());
 
                 var initialBalance = parseFloat(qtyBalanceField.data('initial')) || 0;
                 var initialReceived = parseFloat(qtyReceivedField.data('initial')) || 0;
                 var qtyInput = parseFloat(qtyInputField.val()) || 0;
 
-                console.log('Order Qty:', orderQty);
-                console.log('Initial Balance:', initialBalance);
-                console.log('Initial Received:', initialReceived);
-                console.log('Qty Input:', qtyInput);
+                console.log({
+                    itemOrderQty,
+                    initialBalance,
+                    initialReceived,
+                    qtyInput
+                });
 
-                if (qtyInputField.val().trim() === "") {
+                if (!qtyInputField.val().trim()) {
                     qtyBalanceField.val(initialBalance);
                     qtyReceivedField.val(initialReceived);
                     return;
                 }
 
-                if (qtyInput > orderQty) {
-                    Swal.fire('Peringatan', 'Receive tidak boleh lebih dari Order Qty!', 'warning');
-                    qtyInputField.val(orderQty);
+                if (qtyInput > itemOrderQty || qtyInput < 1) {
+                    Swal.fire('Peringatan',
+                        'Jumlah harus lebih dari 0 dan tidak boleh melebihi jumlah pesanan!', 'warning');
+                    qtyInputField.val(itemOrderQty);
                     qtyBalanceField.val(initialBalance);
                     qtyReceivedField.val(initialReceived);
                     return;
                 }
 
-                var newBalance = orderQty - qtyInput;
+                var newBalance = itemOrderQty - qtyInput;
                 qtyBalanceField.val(newBalance);
-                qtyReceivedField.val(orderQty - newBalance);
+                qtyReceivedField.val(itemOrderQty - newBalance);
             });
-        });
-        $(document).ready(function() {
+
             $('#submitButton').click(function(event) {
                 event.preventDefault();
 
                 var isValid = true;
                 var errorMessage = '';
 
-                $('#tableBody tr').each(function(index) {
-                    var qty = parseFloat($(this).find('input[name^="qty"]').val().trim()) || 0;
+                $('#tableBody tr').each(function() {
+                    var qty = parseFloat($(this).find('input[name^="qty"]').val()) || 0;
                     var qtyRejected = parseFloat($(this).find('input[name^="quantity_rejected"]')
-                        .val().trim()) || 0;
-                    var qtyBonus = parseFloat($(this).find('input[name^="qty_bonus"]').val()
-                        .trim()) || 0;
-                    var qtyTitip = parseFloat($(this).find('input[name^="qty_titip"]').val()
-                        .trim()) || 0;
-                    var qtyDiskon = parseFloat($(this).find('input[name^="qty_diskon"]').val()
-                        .trim()) || 0;
+                        .val()) || 0;
+                    var qtyBonus = parseFloat($(this).find('input[name^="qty_bonus"]').val()) || 0;
+                    var qtyTitip = parseFloat($(this).find('input[name^="qty_titip"]').val()) || 0;
+                    var qtyDiskon = parseFloat($(this).find('input[name^="qty_diskon"]').val()) ||
+                        0;
 
-                    if (qty < 1) {
-                        isValid = false;
-                        errorMessage = 'Nilai Qty Receipt tidak boleh kurang dari 1!';
-                    }
-                    if (qty < 0 || qtyRejected < 0 || qtyBonus < 0 || qtyTitip < 0 || qtyDiskon <
-                        0) {
+
+                    if ([qtyRejected, qtyBonus, qtyTitip, qtyDiskon].some(val => val < 0)) {
                         isValid = false;
                         errorMessage = 'Pastikan semua input telah diisi dengan benar!';
+                        return false;
                     }
                 });
 
@@ -270,7 +263,7 @@
                         confirmButtonText: 'OK'
                     });
                 } else {
-                    $('#editForm').submit();
+                    confirmEdit('submitButton', 'editForm');
                 }
             });
         });

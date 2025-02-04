@@ -253,7 +253,7 @@ class PenerimaanBarangController extends Controller
                 'receipt_date' => $request->receipt_date,
                 'shipment_info' => $request->shipment_info,
                 'plate_number' => $request->plate_number,
-                'received_by' => $request->input('received_by', 0),
+                'received_by' => $request->input('received_by', 1),
                 'status' => "received",
                 'items' => $items,
             ];
