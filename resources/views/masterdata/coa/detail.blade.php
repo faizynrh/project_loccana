@@ -28,25 +28,10 @@
             </div>
             <section class="section">
                 <div class="card">
-                    <div class="card-header">
-                        <h6 class="card-title">Harap isi data yang telah ditandai dengan <span
-                                class="text-danger bg-light px-1">*</span>, dan
-                            masukkan data
-                            dengan benar.</h6>
-                    </div>
                     <div class="card-body">
                         @if (session('success'))
                             <div class="alert alert-success alert-dismissible fade show" role="alert">
                                 {{ session('success') }}
-                                <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                    aria-label="Close"></button>
-                            </div>
-                        @endif
-                        @if ($errors->any())
-                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                @foreach ($errors->all() as $error)
-                                    <p>{{ $error }}</p>
-                                @endforeach
                                 <button type="button" class="btn-close" data-bs-dismiss="alert"
                                     aria-label="Close"></button>
                             </div>
@@ -84,15 +69,6 @@
                             </div>
                             <div class="col-md-9">
                                 <textarea class="form-control" id="keterangancoa" name="keterangancoa" rows="5" readonly>{{ $data['description'] ?? '' }}</textarea>
-                            </div>
-                        </div>
-                        <div class="row mb-3 align-items-center">
-                            <div class="col-md-3">
-                                <label for="showhide" class="form-label fw-bold mb-0">Show/Hide </label>
-                            </div>
-                            <div class="col-md-9">
-                                <input type="text" class="form-control" id="showhide" name="showhide" value="Show"
-                                    readonly>
                             </div>
                         </div>
                         <div class="row mb-3">
