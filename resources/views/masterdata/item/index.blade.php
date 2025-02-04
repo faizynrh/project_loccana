@@ -62,7 +62,7 @@
                                         <th scope="col">Satuan</th>
                                         <th scope="col">Principal</th>
                                         <th scope="col">Status</th>
-                                        <th scope="col">Opsi</th>
+                                        <th scope="col">Option</th>
                                     </tr>
                                 </thead>
                             </table>
