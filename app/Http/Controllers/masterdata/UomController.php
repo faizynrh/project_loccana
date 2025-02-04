@@ -78,20 +78,14 @@ class UomController extends Controller
                 'symbol' => (string)$request->input('uom_symbol'),
                 'description' => (string)$request->input('description',)
             ];
-
             $apiResponse = Http::withHeaders($headers)->post($apiurl, $data);
-
             $responseData = $apiResponse->json();
-
             // dd($data);
-            if ($apiResponse->successful() && isset($responseData['success']) && $responseData['success'] === true) {
+            if ($apiResponse->successful()) {
                 return redirect()->route('uom.index')
-                    ->with('success', $responseData['message'] ?? 'Data UoM berhasil ditambahkan.');
+                    ->with('success', $responseData['message']);
             } else {
-                Log::error('Error saat menambahkan UoM: ' . $apiResponse->body());
-                return back()->withErrors(
-                    'Gagal menambahkan data: ' .
-                        ($responseData['message'] ?? $apiResponse->body())
+                return back()->withErrors(($responseData['message'])
                 );
             }
         } catch (\Exception $e) {
@@ -115,10 +109,10 @@ class UomController extends Controller
                 if (isset($uomData['data'])) {
                     return view('masterdata.uom.edit', ['uom' => $uomData['data']]);
                 } else {
-                    return back()->withErrors('Data UoM tidak ditemukan.');
+                    return back()->withErrors($apiResponse->json()['message']);
                 }
             } else {
-                return back()->withErrors('Gagal mengambil data UoM dari API.');
+                return back()->withErrors($apiResponse->json()['message']);
             }
         } catch (\Exception $e) {
             return back()->withErrors($e->getMessage());
@@ -138,10 +132,10 @@ class UomController extends Controller
             $apiResponse = Http::withHeaders($headers)->put($apiurl, $data);
             if ($apiResponse->successful()) {
                 return redirect()->route('uom.index')
-                    ->with('success', 'Data UoM berhasil diperbarui.');
+                    ->with('success', $apiResponse->json()['message']);
             } else {
                 return back()->withErrors(
-                    'Gagal memperbarui data: ' . $apiResponse->body()
+                    $apiResponse->json()['message']
                 );
             }
         } catch (\Exception $e) {
@@ -160,10 +154,10 @@ class UomController extends Controller
                 if (isset($uomData['data'])) {
                     return view('masterdata.uom.detail', ['uom' => $uomData['data']]);
                 } else {
-                    return back()->withErrors('Data UoM tidak ditemukan.');
+                    return back()->withErrors($apiResponse->json()['message']);
                 }
             } else {
-                return back()->withErrors('Gagal mengambil data UoM dari API.');
+                return back()->withErrors(provider: $apiResponse->json()['message']);
             }
         } catch (\Exception $e) {
             return back()->withErrors($e->getMessage());
@@ -178,10 +172,10 @@ class UomController extends Controller
             $apiResponse = Http::withHeaders($headers)->delete($apiurl);
             if ($apiResponse->successful()) {
                 return redirect()->route('uom.index')
-                    ->with('success', 'Data Uom berhasil dihapus');
+                    ->with('success', $apiResponse->json()['message']);
             } else {
                 return back()->withErrors(
-                    'Gagal menghapus data: ' . $apiResponse->body()
+                    $apiResponse->json()['message']
                 );
             }
         } catch (\Exception $e) {

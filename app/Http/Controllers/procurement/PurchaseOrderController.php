@@ -5,6 +5,7 @@ namespace App\Http\Controllers\procurement;
 use App\Helpers\Helpers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
@@ -14,6 +15,69 @@ class PurchaseOrderController extends Controller
      * Display a listing of the resource.
      */
 
+    // public function generateCode()
+    // {
+    //     DB::beginTransaction();
+
+    //     try {
+    //         // Lock the table to prevent race conditions
+    //         $lastOrder = DB::table("purchase_orders")
+    //             ->lockForUpdate()
+    //             ->orderBy("id", "desc")
+    //             ->first();
+
+    //         $newCode = '';
+
+    //         if (!$lastOrder) {
+    //             $newCode = 'KD00001';
+    //         } else {
+    //             // Get the numeric part of the code
+    //             if (!preg_match('/^KD(\d{5})$/', $lastOrder->code, $matches)) {
+    //                 throw new \Exception("Invalid code format found: {$lastOrder->code}");
+    //             }
+
+    //             $currentNumber = (int) $matches[1];
+    //             $nextNumber = $currentNumber + 1;
+
+    //             if ($nextNumber > 99999) {
+    //                 throw new \Exception("Maximum code limit reached");
+    //             }
+
+    //             $newCode = 'KD' . str_pad($nextNumber, 5, '0', STR_PAD_LEFT);
+    //         }
+
+    //         // Verify the generated code is unique
+    //         $codeExists = DB::table("purchase_orders")
+    //             ->where('code', $newCode)
+    //             ->exists();
+
+    //         if ($codeExists) {
+    //             throw new \Exception("Generated code already exists: {$newCode}");
+    //         }
+
+    //         DB::commit();
+
+    //         return response()->json([
+    //             'code' => $newCode,
+    //             'status' => 'success'
+    //         ]);
+    //     } catch (\Exception $e) {
+    //         DB::rollBack();
+
+    //         // Log the error with detailed information
+    //         Log::error('Purchase order code generation failed', [
+    //             'error' => $e->getMessage(),
+    //             'file' => $e->getFile(),
+    //             'line' => $e->getLine(),
+    //             'trace' => $e->getTraceAsString()
+    //         ]);
+
+    //         return response()->json([
+    //             'error' => true,
+    //             'message' => 'Failed to generate unique code'
+    //         ], 500);
+    //     }
+    // }
 
     public function index(Request $request)
     {
@@ -74,24 +138,23 @@ class PurchaseOrderController extends Controller
     public function create()
     {
         $company_id = 2;
+        $customer = 'false';
+        $suplier = 'true';
         $headers = Helpers::getHeaders();
 
-        $pourl = Helpers::getApiUrl() . '/loccana/po/1.0.0/purchase-order/list-select/' . $company_id;
-        $itemsurl = Helpers::getApiUrl() . '/master/items/1.0.0/items/lists-select';
+        $partnerurl = Helpers::getApiUrl() . '/loccana/masterdata/partner/1.0.0/partner/list-select/' . $company_id . '/' .  $suplier . '/' . $customer;
 
         $data = [
             'company_id' => 2
         ];
 
-        $poResponse = Http::withHeaders($headers)->get($pourl);
-        $itemsResponse = Http::withHeaders($headers)->post($itemsurl, [
-            'company_id' => $company_id
-        ]);
+        $partnerResponse = Http::withHeaders($headers)->get($partnerurl);
 
-        if ($poResponse->successful() && $itemsResponse->successful()) {
-            $po = $poResponse->json()['data'];
-            $items = $itemsResponse->json()['data']['items'];
-            return view('procurement.purchaseorder.add', compact('po', 'items'));
+
+        if ($partnerResponse->successful()) {
+            $partner = $partnerResponse->json()['data'];
+
+            return view('procurement.purchaseorder.add', compact('partner'));
         } else {
             return response()->json([
                 'status' => 'error',
@@ -191,7 +254,57 @@ class PurchaseOrderController extends Controller
     public function store(Request $request)
     {
         //
+        try {
+            $headers = Helpers::getHeaders();
+            $apiurl = Helpers::getApiUrl() . '/loccana/po/1.0.0/purchase-order';
 
+            $item = [];
+            if ($request->has('items')) {
+                foreach ($request->input('items') as $item) {
+                    $item[] = [
+                        'item_id' => $item['item_id'],
+                        'warehouse_id' => $item['warehouse_id'],
+                        'quantity' => $item['quantity'],
+                        'unit_price' => $item['unit_price'],
+                        'discount' => $item['discount'],
+                        'uom_id' => $item['uom_id'],
+                    ];
+                }
+            }
+            dd($item);
+
+            $data = [
+                'company_id' => 2,
+                'code' => (string)$request->input('code'),
+                'order_date' => $request->input('order_date'),
+                'partner_id' => $request->input('partner_id'),
+                'term_of_payment' => $request->input('term_of_payment'),
+                'currency_id' => $request->input('currency_id'),
+                'total_amount' => $request->input('total_amount'),
+                'tax_amount' => $request->input('tax_amount'),
+                'description' => $request->input('description'),
+                'status' => $request->input('status'),
+                'requested_by' => $request->input('requested_by'),
+                'items' => $item
+            ];
+
+            $apiResponse = Http::withHeaders($headers)->post($apiurl, $data);
+            $responseData = $apiResponse->json();
+
+            dd($data);
+            if ($apiResponse->successful() && isset($responseData['success']) && $responseData['success'] === true) {
+                return redirect()->route('purchaseorder.index')
+                    ->with('success', $responseData['message'] ?? 'Data purchase order berhasil ditambahkan.');
+            } else {
+                Log::error('Error saat menambahkan purchase order: ' . $apiResponse->body());
+                return back()->withErrors(
+                    'Gagal menambahkan data: ' .
+                        ($responseData['message'] ?? $apiResponse->body())
+                );
+            }
+        } catch (\Exception $e) {
+            return back()->withErrors($e->getMessage());
+        }
     }
 
     /**

@@ -55,52 +55,33 @@
                             @csrf
                             <div class="row mb-3">
                                 <div class="col-md-6">
-                                    <label for="po_id" class="form-label fw-bold mt-2 mb-1 small">Kode</label>
-                                    <input type="text" class="form-control bg-body-secondary" id="po_code"
-                                        name="po_code" placeholder="Kode" readonly>
-
+                                    <label for="code" class="form-label fw-bold mt-2 mb-1 small">Kode</label>
+                                    <input type="text" class="form-control bg-body-secondary" id="code"
+                                        name="code" placeholder="Kode" readonly>
                                     <label for="tanggal" class="form-label fw-bold mt-2 mb-1 small">Tanggal</label>
                                     <input type="date" class="form-control" id="order_date" name="order_date">
 
-                                    <label for="principal" class="form-label fw-bold mt-2 mb-1 small">Principle</label>
+                                    <label for="principal" class="form-label fw-bold mt-2 mb-1 small">Partner</label>
                                     <select class="form-select" id="partner_id" name="partner_id">
-                                        <option value="" selected disabled>Pilih Principle</option>
-                                        @foreach ($po as $item)
-                                            <option value="{{ $item['po_id'] }}">{{ $item['name'] }}</option>
+                                        <option value="" selected disabled>Pilih Partner</option>
+                                        @foreach ($partner as $item)
+                                            <option value="{{ $item['id'] }}">{{ $item['name'] }}</option>
                                         @endforeach
                                     </select>
 
-                                    <label for="address" class="form-label fw-bold mt-2 mb-1 small">Alamat</label>
-                                    <textarea class="form-control bg-body-secondary" rows="5" id="address" name="address" readonly></textarea>
-
-                                    <label for="description" class="form-label fw-bold mt-2 mb-1 small">Att</label>
-                                    <input type="text" class="form-control bg-body-secondary" id="description"
-                                        name="description" readonly>
-
-                                    <label for="phone" class="form-label fw-bold mt-2 mb-1 small">No. Telp</label>
-                                    <input type="text" class="form-control bg-body-secondary" id="phone"
-                                        name="phone" readonly>
-
-                                    <label for="fax" class="form-label fw-bold mt-2 mb-1 small">Fax</label>
-                                    <input type="text" class="form-control bg-body-secondary" id="fax"
-                                        name="fax" readonly>
+                                    <label for="description" class="form-label fw-bold mt-2 mb-1 small">Status</label>
+                                    <input type="text" class="form-control " id="status" name="status">
+                                    <label for="requested_by" class="form-label fw-bold mt-2 mb-1 small">Requested
+                                        By</label>
+                                    <input type="text" class="form-control" id="requested_by" name="requested_by">
                                 </div>
                                 <div class="col-md-6">
-                                    <label for="ship_to" class="form-label fw-bold mt-2 mb-1 small">Ship To:</label>
-                                    <textarea class="form-control" rows="5" id="ship_to" name="ship_to"></textarea>
-
-                                    <label for="email" class="form-label fw-bold mt-2 mb-1 small">Email</label>
-                                    <input type="email" class="form-control" id="email" name="email">
-
-                                    <label for="contact" class="form-label fw-bold mt-2 mb-1 small">Telp/Fax</label>
-                                    <input type="text" class="form-control" id="contact" name="contact">
-
-                                    <label for="tax" class="form-label fw-bold mt-2 mb-1 small">VAT/PPN</label>
-                                    <input type="text" class="form-control" id="ppn" name="tax">
+                                    <label for="ppn" class="form-label fw-bold mt-2 mb-1 small">VAT/PPN</label>
+                                    <input type="text" class="form-control" id="ppn" name="ppn">
 
                                     <label for="pembayaran" class="form-label fw-bold mt-2 mb-1 small">Term
                                         Pembayaran</label>
-                                    <select id="pembayaran" class="form-select" name="payment_term">
+                                    <select id="pembayaran" class="form-select" name="term_of_payment">
                                         <option value="cash" selected>Cash</option>
                                         <option value="15">15 Hari</option>
                                         <option value="30">30 Hari</option>
@@ -117,8 +98,8 @@
                                             name="custom_payment_term">
                                     </div>
 
-                                    <label for="keterangan" class="form-label fw-bold mt-2 mb-1 small">Keterangan</label>
-                                    <textarea class="form-control" rows="5" id="notes" name="notes"></textarea>
+                                    <label for="description" class="form-label fw-bold mt-2 mb-1 small">Keterangan</label>
+                                    <textarea class="form-control" rows="5" id="description" name="description"></textarea>
                                 </div>
                             </div>
                             <div class="p-2">
@@ -140,23 +121,19 @@
                                 <tbody id="tableBody">
                                     <tr style="border-bottom: 2px solid #000" class="item-row">
                                         <td colspan="2">
-                                            {{-- <select class="form-select item-select">
-                                                <option value="" disabled selected>--Pilih Item--</option>
-                                                @foreach ($items as $item)
-                                                    <option value="{{ $item['id'] }}">{{ $item['name'] }}</option>
-                                                @endforeach
-                                            </select> --}}
-                                            <select class="form-select item-select">
+                                            <select class="form-select item-select" name="items[item_id]">
                                                 <option value="" disabled selected>Silahkan pilih principle terlebih
                                                     dahulu</option>
                                             </select>
                                         </td>
-                                        <td><input type="number" class="form-control qty-input" value="0"></td>
-                                        <td><input type="number" class="form-control price-input" value="0"></td>
-                                        <td><input type="number" class="form-control discount-input" value="0"
-                                                max="100">
+                                        <td><input type="number" name="quantity" class="form-control qty-input"
+                                                value="0"></td>
+                                        <td><input type="number" name="unit_price" class="form-control price-input"
+                                                value="0"></td>
+                                        <td><input type="number" name="discount" class="form-control discount-input"
+                                                value="0" max="100">
                                         </td>
-                                        <td colspan="2"><input type="number"
+                                        <td colspan="2"><input type="number" name=""
                                                 class="form-control bg-body-secondary total-input" value="0"
                                                 readonly></td>
                                         <td></td>
@@ -186,13 +163,13 @@
                                     <td style="float: right">0</td>
                                     <td></td>
                                 </tr class="fw-bold">
-                                <tr style="" class="fw-bold">
+                                <tr class="fw-bold">
                                     <td colspan="4"></td>
                                     <td>VAT/PPN</td>
                                     <td style="float: right">0</td>
                                     <td></td>
                                 </tr>
-                                <tr class="fw-bold">
+                                <tr class="fw-bold" style="border-top: 2px solid #000">
                                     <td colspan="4"></td>
                                     <td>Total</td>
                                     <td style="float: right">0</td>
@@ -222,50 +199,22 @@
                 console.log('Selected poId:', poId);
 
                 if (poId) {
-                    // First AJAX call - get partner details
+                    // Get items list after partner selection
+                    var companyId = 2;
                     $.ajax({
-                        url: '/purchase_order/detailspurchase/' + poId,
+                        url: '/purchase_order/getItemsList/' + companyId,
                         type: 'GET',
                         dataType: 'json',
                         success: function(response) {
-                            console.log('Partner details response:', response);
-                            if (response.error) {
-                                Swal.fire('Error', response.error, 'error');
-                                return;
-                            }
-
-                            // Fill partner details
-                            $('#po_code').val(response.code);
-                            $('#order_date').val(response.order_date);
-                            $('#address').val(response.address);
-                            $('#description').val(response.description);
-                            $('#ppn').val(response.ppn);
-                            $('#fax').val(response.fax);
-                            $('#phone').val(response.phone);
-
-                            // After successful partner details, get items
-                            var companyId = 2;
-                            $.ajax({
-                                url: '/purchase_order/getItemsList/' + companyId,
-                                type: 'GET',
-                                dataType: 'json',
-                                success: function(response) {
-                                    console.log('Items response:', response);
-                                    updateAllItemSelects(response.items);
-                                },
-                                error: function(xhr, status, error) {
-                                    console.error('Items AJAX error:', error);
-                                    Swal.fire('Error', 'Gagal mengambil data item',
-                                        'error');
-                                    $('.item-select').html(
-                                        '<option value="" disabled selected>Tidak ada item tersedia</option>'
-                                    );
-                                }
-                            });
+                            console.log('Items response:', response);
+                            updateAllItemSelects(response.items);
                         },
                         error: function(xhr, status, error) {
-                            console.error('Partner AJAX error:', error);
-                            Swal.fire('Error', 'Gagal mengambil data partner', 'error');
+                            console.error('Items AJAX error:', error);
+                            Swal.fire('Error', 'Gagal mengambil data item', 'error');
+                            $('.item-select').html(
+                                '<option value="" disabled selected>Tidak ada item tersedia</option>'
+                            );
                         }
                     });
                 }
@@ -291,7 +240,6 @@
 
             // Updated table structure with proper classes and data binding
             function createNewRow(rowCount) {
-                // Get the current items from the table data
                 const currentItems = $('#tableBody').data('current-items');
                 let itemOptions = '<option value="" disabled selected>--Pilih Item--</option>';
 
@@ -301,7 +249,7 @@
                     });
                 } else {
                     itemOptions =
-                        '<option value="" disabled selected>Silahkan pilih principle terlebih dahulu</option>';
+                        '<option value="" disabled selected>Silahkan pilih partner terlebih dahulu</option>';
                 }
 
                 return `
@@ -312,13 +260,13 @@
                     </select>
                 </td>
                 <td>
-                    <input type="number" class="form-control qty-input" name="items[${rowCount}][quantity]" value="0">
+                    <input type="number" class="form-control qty-input" name="items[${rowCount}][quantity]" value="0" min="0">
                 </td>
                 <td>
-                    <input type="number" class="form-control price-input" name="items[${rowCount}][price]" value="0">
+                    <input type="number" class="form-control price-input" name="items[${rowCount}][price]" value="0" min="0">
                 </td>
                 <td>
-                    <input type="number" class="form-control discount-input" name="items[${rowCount}][discount]" value="0" max="100">
+                    <input type="number" class="form-control discount-input" name="items[${rowCount}][discount]" value="0" min="0" max="100">
                 </td>
                 <td colspan="2">
                     <input type="number" class="form-control bg-body-secondary total-input" name="items[${rowCount}][total]" value="0" readonly>
@@ -358,59 +306,71 @@
             function calculateRowTotal(row) {
                 const qty = parseFloat(row.find('.qty-input').val()) || 0;
                 const price = parseFloat(row.find('.price-input').val()) || 0;
-                const discount = parseFloat(row.find('.discount-input').val()) || 0;
+                let discount = parseFloat(row.find('.discount-input').val()) || 0;
 
+                // Validate inputs
                 if (discount > 100) {
+                    discount = 100;
                     row.find('.discount-input').val(100);
-                }
-
-                if (qty == null) {
-                    alert('Qty tidak boleh kosong');
-                }
-
-                if (price == null) {
-                    alert('Harga tidak boleh kosong');
                 }
 
                 const subtotal = qty * price;
                 const discountAmount = subtotal * (discount / 100);
                 const total = subtotal - discountAmount;
 
-                row.find('.discount-amount').val(discountAmount.toFixed(2));
                 row.find('.total-input').val(total.toFixed(2));
             }
 
             // Update all totals
-            // function updateTotals() {
-            //     let subtotal = 0;
-            //     let totalDiscount = 0;
+            function updateTotals() {
+                let subtotal = 0;
+                let totalDiscount = 0;
 
-            //     $('.item-row').each(function() {
-            //         const qty = parseFloat($(this).find('.qty-input').val()) || 0;
-            //         const price = parseFloat($(this).find('.price-input').val()) || 0;
-            //         const discountAmount = parseFloat($(this).find('.discount-amount').val()) || 0;
+                // Calculate totals from all rows
+                $('.item-row').each(function() {
+                    const qty = parseFloat($(this).find('.qty-input').val()) || 0;
+                    const price = parseFloat($(this).find('.price-input').val()) || 0;
+                    const discount = parseFloat($(this).find('.discount-input').val()) || 0;
 
-            //         subtotal += qty * price;
-            //         totalDiscount += discountAmount;
-            //     });
+                    const rowSubtotal = qty * price;
+                    const rowDiscount = rowSubtotal * (discount / 100);
 
-            //     const taxableAmount = subtotal - totalDiscount;
-            //     const ppnRate = parseFloat($('#ppn').val()) || 0;
-            //     const ppnAmount = taxableAmount * (ppnRate / 100);
-            //     const finalTotal = taxableAmount + ppnAmount;
+                    subtotal += rowSubtotal;
+                    totalDiscount += rowDiscount;
+                });
 
-            //     // Update summary rows
-            //     $('#subtotal').text(formatNumber(subtotal));
-            //     $('#total-discount').text(formatNumber(totalDiscount));
-            //     $('#taxable-amount').text(formatNumber(taxableAmount));
-            //     $('#ppn-amount').text(formatNumber(ppnAmount));
-            //     $('#final-total').text(formatNumber(finalTotal));
-            // }
+                const taxableAmount = subtotal - totalDiscount;
+                const ppnRate = parseFloat($('#ppn').val()) || 0;
+                const ppnAmount = taxableAmount * (ppnRate / 100);
+                const finalTotal = taxableAmount + ppnAmount;
 
-            // // Format number helper
-            // function formatNumber(num) {
-            //     return num.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-            // }
+                // Update display values in the table footer
+                updateDisplayValue('Sub Total', subtotal);
+                updateDisplayValue('Diskon', totalDiscount);
+                updateDisplayValue('Taxable', taxableAmount);
+                updateDisplayValue('VAT/PPN', ppnAmount);
+                updateDisplayValue('Total', finalTotal);
+            }
+
+            // Helper function to update display values in the table footer
+            function updateDisplayValue(label, value) {
+                $('tr.fw-bold').each(function() {
+                    if ($(this).find('td:eq(1)').text().trim() === label) {
+                        $(this).find('td:eq(1)').next().text(formatNumber(value));
+                    }
+                });
+            }
+
+            // Format number helper
+            function formatNumber(num) {
+                return parseFloat(num).toLocaleString('id-ID', {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                });
+            }
+
+            // Initialize calculations
+            updateTotals();
         });
     </script>
 @endpush

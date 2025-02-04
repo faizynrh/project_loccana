@@ -86,7 +86,14 @@ class PrincipalController extends Controller
             $coaTypes = $coaResponse->json();
             return view('masterdata.principal.add', compact('partnerTypes', 'coaTypes'));
         } else {
-            return back()->withErrors('Gagal mengambil data dari API: Partner Types tidak tersedia.');
+            $errors = [];
+            if (!$coaResponse->successful()) {
+                $errors[] = $coaResponse->json()['message'];
+            }
+            if (!$partnerResponse->successful()) {
+                $errors[] = $partnerResponse->json()['message'];
+            }
+            return back()->withErrors($errors);
         }
     }
 
@@ -96,10 +103,10 @@ class PrincipalController extends Controller
             $headers = Helpers::getHeaders();
             $apiurl = $this->buildApiUrl('/');
             $data = [
-                'name' => (string)$request->input('nama'),
+                'name' => $request->input('nama'),
                 'partner_type_id' => $request->input('partner_type_id'),
-                'contact_info' => (string)$request->input('contact_info',),
-                'chart_of_account_id' => $request->input('chart_of_account_id',),
+                'contact_info' => $request->input('contact_info'),
+                'chart_of_account_id' => $request->input('chart_of_account_id'),
                 'company_id' => 2,
                 'is_customer' => false,
                 'is_supplier' => true
@@ -107,14 +114,12 @@ class PrincipalController extends Controller
 
             $apiResponse = Http::withHeaders($headers)->post($apiurl, $data);
             $responseData = $apiResponse->json();
-            if ($apiResponse->successful() && isset($responseData['success']) && $responseData['success'] === true) {
+            if ($apiResponse->successful()) {
                 return redirect()->route('principal.index')
-                    ->with('success', $responseData['message'] ?? 'Data Principal berhasil ditambahkan.');
+                    ->with('success', $responseData['message']);
             } else {
-                Log::error('Error saat menambahkan Principal: ' . $apiResponse->body());
                 return back()->withErrors(
-                    'Gagal menambahkan data: ' .
-                        ($responseData['message'] ?? $apiResponse->body())
+                    $responseData['message']
                 );
             }
         } catch (\Exception $e) {
@@ -149,13 +154,13 @@ class PrincipalController extends Controller
                         $coaTypes = $coaResponse->json();
                         return view('masterdata.principal.detail', ['principal' => $principal['data']], compact('partnerTypes', 'data', 'coaTypes'));
                     } else {
-                        return back()->withErrors('Gagal mengambil data dari API: Partner Types tidak tersedia.');
+                        return back()->withErrors($apiResponse->json()['message']);
                     }
                 } else {
-                    return back()->withErrors('Data Principal tidak ditemukan.');
+                    return back()->withErrors($apiResponse->json()['message']);
                 }
             } else {
-                return back()->withErrors('Gagal mengambil data Principal dari API.');
+                return back()->withErrors($apiResponse->json()['message']);
             }
         } catch (\Exception $e) {
             return back()->withErrors($e->getMessage());
@@ -188,13 +193,13 @@ class PrincipalController extends Controller
                         $coaTypes = $coaResponse->json();
                         return view('masterdata.principal.edit', ['principal' => $principal['data']], compact('partnerTypes', 'data', 'coaTypes'));
                     } else {
-                        return back()->withErrors('Gagal mengambil data dari API: Partner Types tidak tersedia.');
+                        return back()->withErrors($apiResponse->json()['message']);
                     }
                 } else {
-                    return back()->withErrors('Data Principal tidak ditemukan.');
+                    return back()->withErrors($apiResponse->json()['message']);
                 }
             } else {
-                return back()->withErrors('Gagal mengambil data Principal dari API.');
+                return back()->withErrors($apiResponse->json()['message']);
             }
         } catch (\Exception $e) {
             return back()->withErrors($e->getMessage());
@@ -223,7 +228,7 @@ class PrincipalController extends Controller
 
             $apiResponse = Http::withHeaders($headers)->put($apiurl, $data);
             if ($apiResponse->successful()) {
-                return redirect()->route('principal.index')->with('success', 'Data Principal berhasil diperbarui!');
+                return redirect()->route('principal.index')->with('success', $apiResponse->json()['message']);
             } else {
                 return back()->withErrors('Gagal memperbarui data Principal: ' . $apiResponse->status());
             }
@@ -243,10 +248,10 @@ class PrincipalController extends Controller
             $apiResponse = Http::withHeaders($headers)->delete($apiurl);
             if ($apiResponse->successful()) {
                 return redirect()->route('principal.index')
-                    ->with('success', 'Data Principal berhasil dihapus');
+                    ->with('success', $apiResponse->json()['message']);
             } else {
                 return back()->withErrors(
-                    'Gagal menghapus data: ' . $apiResponse->body()
+                    $apiResponse->json()['message']
                 );
             }
         } catch (\Exception $e) {

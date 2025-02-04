@@ -14,7 +14,7 @@
                                     <a href="index.html">Dashboard</a>
                                 </li>
                                 <li class="breadcrumb-item active" aria-current="page">
-                                    Detial Principal Management
+                                    Detail Principal Management
                                 </li>
                             </ol>
                         </nav>
