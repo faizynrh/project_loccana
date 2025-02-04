@@ -28,21 +28,7 @@
             </div>
             <section class="section">
                 <div class="card">
-                    <div class="card-header">
-                        <h6 class="card-title">Harap isi data yang telah ditandai dengan <span
-                                class="text-danger bg-light px-1">*</span>, dan
-                            masukkan data
-                            dengan benar.</h6>
-                    </div>
                     <div class="card-body">
-                        @if (session('success'))
-                            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                {{ session('success') }}
-                                <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                    aria-label="Close"></button>
-                            </div>
-                        @endif
-
                         @if ($errors->any())
                             <div class="alert alert-danger alert-dismissible fade show" role="alert">
                                 @foreach ($errors->all() as $error)
@@ -54,19 +40,25 @@
                         @endif
                         <div class="row mb-3 align-items-center">
                             <div class="col-md-3">
-                                <label for="name" class="form-label fw-bold mb-0">Nama Item <span
-                                        class="text-danger">*</span></label>
+                                <label class="form-label fw-bold mb-0">Kode Item</label>
+                            </div>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" name="sku" value="{{ $data['item_code'] }}"
+                                    readonly>
+                            </div>
+                        </div>
+                        <div class="row mb-3 align-items-center">
+                            <div class="col-md-3">
+                                <label class="form-label fw-bold mb-0">Nama Item </label>
                             </div>
                             <div class="col-md-9">
                                 <input type="text" class="form-control" name="name" value="{{ $data['item_name'] }}"
                                     readonly>
                             </div>
                         </div>
-
                         <div class="row mb-3 align-items-center">
                             <div class="col-md-3">
-                                <label for="description" class="form-label fw-bold mb-0">Deskripsi Item <span
-                                        class="text-danger">*</span></label>
+                                <label class="form-label fw-bold mb-0">Deskripsi </label>
                             </div>
                             <div class="col-md-9">
                                 <textarea class="form-control" name="description" rows="5" readonly>{{ $data['item_description'] }}</textarea>
@@ -74,8 +66,7 @@
                         </div>
                         <div class="row mb-3 align-items-center">
                             <div class="col-md-3">
-                                <label for="unit_of_measure_id" class="form-label fw-bold mb-0">UOM <span
-                                        class="text-danger">*</span></label>
+                                <label class="form-label fw-bold mb-0">Satuan</label>
                             </div>
                             <div class="col-md-9">
                                 <input type="text" class="form-control" name="name" value="{{ $data['uom_name'] }}"
@@ -86,8 +77,7 @@
 
                         <div class="row mb-3 align-items-center">
                             <div class="col-md-3">
-                                <label for="tipebarang" class="form-label fw-bold mb-0">Tipe Barang <span
-                                        class="text-danger">*</span></label>
+                                <label class="form-label fw-bold mb-0">Tipe Barang </label>
                             </div>
                             <div class="col-md-9">
                                 <input type="text" class="form-control" name="name"
@@ -96,21 +86,10 @@
                         </div>
                         <div class="row mb-3 align-items-center">
                             <div class="col-md-3">
-                                <label for="satuan" class="form-label fw-bold mb-0">Kategori Barang<span
-                                        class="text-danger">*</span></label>
+                                <label class="form-label fw-bold mb-0">Kategori Barang</label>
                             </div>
                             <div class="col-md-9">
                                 <input type="text" class="form-control" name="name" value="" readonly>
-                            </div>
-                        </div>
-                        <div class="row mb-3 align-items-center">
-                            <div class="col-md-3">
-                                <label for="sku" class="form-label fw-bold mb-0">SKU<span
-                                        class="text-danger">*</span></label>
-                            </div>
-                            <div class="col-md-9">
-                                <input type="text" class="form-control" name="sku" value="{{ $data['item_code'] }}"
-                                    readonly>
                             </div>
                         </div>
                         <div class="row mb-3">
