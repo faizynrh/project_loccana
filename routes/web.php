@@ -161,6 +161,7 @@ Route::middleware('auth.login')->group(
             Route::get('/edit/{id}', [PurchaseOrderController::class, 'edit'])->name('edit');
             Route::put('/update/{id}', [PurchaseOrderController::class, 'update'])->name('update');
             Route::get('/getItemsList/{id}', [PurchaseOrderController::class, 'getItemsList'])->name('getitem');
+            Route::get('/generate-code', [PurchaseOrderController::class, 'generateCode'])->name('generate.code');
         });
     }
 );

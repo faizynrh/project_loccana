@@ -80,13 +80,19 @@ class CustomerController extends Controller
 
         $partnerResponse = Http::withHeaders($headers)->get($partnerurl);
         $coaResponse = Http::withHeaders($headers)->get($coaurl);
-
         if ($partnerResponse->successful() && $coaResponse->json()) {
             $partnerTypes = $partnerResponse->json();
             $coaTypes = $coaResponse->json();
             return view('masterdata.customer.add', compact('partnerTypes', 'coaTypes'));
         } else {
-            return back()->withErrors('Gagal mengambil data dari API: Partner Types tidak tersedia.');
+            $errors = [];
+            if (!$coaResponse->successful()) {
+                $errors[] = $coaResponse->json()['message'];
+            }
+            if (!$partnerResponse->successful()) {
+                $errors[] = $partnerResponse->json()['message'];
+            }
+            return back()->withErrors($errors);
         }
     }
 
@@ -108,18 +114,14 @@ class CustomerController extends Controller
                 'is_supplier' => false
             ];
             $apiResponse = Http::withHeaders($headers)->post($apiurl, $data);
-
             $responseData = $apiResponse->json();
-
-
             if ($apiResponse->successful() && isset($responseData['success']) && $responseData['success'] === true) {
                 return redirect()->route('customer.index')
-                    ->with('success', $responseData['message'] ?? 'Data customer berhasil ditambahkan.');
+                    ->with('success', $responseData['message']);
             } else {
-                Log::error('Error saat menambahkan customer: ' . $apiResponse->body());
+                Log::error($responseData['message']);
                 return back()->withErrors(
-                    'Gagal menambahkan data: ' .
-                        ($responseData['message'] ?? $apiResponse->body())
+                    $responseData['message']
                 );
             }
         } catch (\Exception $e) {
@@ -153,13 +155,13 @@ class CustomerController extends Controller
                         $coaTypes = $coaResponse->json();
                         return view('masterdata.customer.detail', ['customer' => $customer['data']], compact('partnerTypes', 'data', 'coaTypes'));
                     } else {
-                        return back()->withErrors('Gagal mengambil data dari API: Partner Types tidak tersedia.');
+                        return back()->withErrors($apiResponse->json()['message']);
                     }
                 } else {
-                    return back()->withErrors('Data customer tidak ditemukan.');
+                    return back()->withErrors($customer['message']);
                 }
             } else {
-                return back()->withErrors('Gagal mengambil data customer dari API.');
+                return back()->withErrors($apiResponse->json()['message']);
             }
         } catch (\Exception $e) {
             return back()->withErrors($e->getMessage());
@@ -228,9 +230,9 @@ class CustomerController extends Controller
             $apiResponse = Http::withHeaders($headers)->put($apiurl, $data);
 
             if ($apiResponse->successful()) {
-                return redirect()->route('customer.index')->with('success', 'Data Customer berhasil diperbarui!');
+                return redirect()->route('customer.index')->with('success', $apiResponse->json()['message']);
             } else {
-                return back()->withErrors('Gagal memperbarui data Customer: ' . $apiResponse->status());
+                return back()->withErrors($apiResponse->json()['message']);
             }
         } catch (\Exception $e) {
             return back()->withErrors($e->getMessage());
@@ -250,10 +252,10 @@ class CustomerController extends Controller
             // dd($apiResponse->json());
             if ($apiResponse->successful()) {
                 return redirect()->route('customer.index')
-                    ->with('success', 'Data customer berhasil dihapus');
+                    ->with('success', $apiResponse->json()['message']);
             } else {
                 return back()->withErrors(
-                    'Gagal menghapus data: ' . $apiResponse->body()
+                    $apiResponse->json()['message']
                 );
             }
         } catch (\Exception $e) {

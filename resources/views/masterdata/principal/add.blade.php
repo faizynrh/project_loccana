@@ -173,7 +173,7 @@
             </div> --}}
                             <div class="row">
                                 <div class="col-md-12 text-end">
-                                    <button type="submit" class="btn btn-primary" id="submitButton"
+                                    <button type="button" class="btn btn-primary" id="submitButton"
                                         onclick="confirmSubmit('submitButton', 'createForm')">Submit</button>
                                     <a href="{{ route('principal.index') }}" class="btn btn-secondary ms-2">Batal</a>
                                 </div>
