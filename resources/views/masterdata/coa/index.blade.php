@@ -11,9 +11,6 @@
                 <div class="row">
                     <div class="col-12 col-md-6 order-md-1 order-last">
                         <h3>COA Management</h3>
-                        {{-- <p class="text-subtitle text-muted">
-                            Easily manage and adjust product prices.
-                        </p> --}}
                     </div>
                     <div class="col-12 col-md-6 order-md-2 order-first">
                         <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
@@ -48,7 +45,8 @@
                                     aria-label="Close"></button>
                             </div>
                         @endif
-                        <a href="/coa/add" class="btn btn-primary btn-lg fw-bold mt-1 mb-2">+</a>
+                        <button type="button" class="btn btn-primary btn-lg fw-bold mt-1 mb-2" data-bs-toggle="modal"
+                            data-bs-target="#addCOAModal">+</button>
                         <table class="table table-striped table-bordered mt-3" id="tablecoa">
                             <thead>
                                 <tr>
@@ -65,6 +63,9 @@
             </section>
         </div>
     </div>
+    @include('masterdata.coa.modal.add')
+    @include('masterdata.coa.modal.edit')
+    @include('masterdata.coa.modal.detail')
 @endsection
 @push('scripts')
     <script>
@@ -96,14 +97,28 @@
                         render: function(data, type, row) {
                             return `
                         <div class="d-flex mb-2">
-                                    <a href="/coa/detail/${row.id}" class="btn btn-sm btn-info me-2"
+                                    <a href="/coa/detail/${row.id}" class="btn btn-sm btn-info me-2 d-none"
                                         title="Detail">
                                         <i class="bi bi-eye"></i>
                                     </a>
-                                    <a href="/coa/edit/${row.id}" class="btn btn-sm btn-warning me-2"
+                                    <button type="button" class="btn btn-sm btn-info me-2 detail-button"
+                                        data-id="${row.id}"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#detailCOAModal"
+                                        title="Edit">
+                                        <i class="bi bi-eye"></i>
+                                    </button>
+                                    <a href="/coa/edit/${row.id}" class="btn btn-sm btn-warning me-2 d-none"
                                         title="Edit">
                                         <i class="bi bi-pencil"></i>
                                     </a>
+                                    <button type="button" class="btn btn-sm btn-warning me-2 edit-button"
+                                        data-id="${row.id}"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#editCOAModal"
+                                        title="Edit">
+                                        <i class="bi bi-pencil"></i>
+                                    </button>
                                     <form action="/coa/delete/${row.id}" method="POST"
                                         id="delete${row.id}" style="display:inline;">
                                         @csrf
@@ -118,6 +133,50 @@
                         }
                     }
                 ]
+            });
+            $(document).on('click', '.edit-button', function() {
+                const id = $(this).data('id');
+                $.ajax({
+                    url: `/coa/edit/${id}`,
+                    type: 'GET',
+                    success: function(response) {
+                        $('#editCOAForm').attr('action', `/coa/update/${id}`);
+                        $('#edit_parent_account_id').val(response.parent_account_id);
+                        $('#edit_account_code').val(response.account_code);
+                        $('#edit_account_name').val(response.account_name);
+                        $('#edit_description').val(response.description);
+
+                        $('#editCOAModal').modal('show');
+                    },
+                    error: function(xhr) {
+                        console.error(xhr);
+                        alert('Terjadi kesalahan saat mengambil data!');
+
+                    }
+                });
+            });
+            $('#editCOAModal').on('show.bs.modal', function() {
+                $('#editCOAForm')[0].reset();
+            });
+            $(document).on('click', '.detail-button', function() {
+                const id = $(this).data('id');
+                $.ajax({
+                    url: `/coa/edit/${id}`,
+                    type: 'GET',
+                    success: function(response) {
+                        $('#detail_parent_name').val(response.parent_name).trigger(
+                            'change');
+                        $('#detail_account_code').val(response.account_code);
+                        $('#detail_account_name').val(response.account_name);
+                        $('#detail_description').val(response.description);
+
+                        $('#detailCOAModal').modal('show');
+                    },
+                    error: function(xhr) {
+                        console.error(xhr);
+                        alert('Terjadi kesalahan saat mengambil data!');
+                    }
+                });
             });
         });
     </script>
