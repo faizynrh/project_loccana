@@ -48,65 +48,47 @@
                             @csrf
                             <div class="row mb-3 align-items-center">
                                 <div class="col-md-3">
-                                    <label for="name" class="form-label fw-bold mb-0">Nama Item <span
+                                    <label class="form-label fw-bold mb-0">Kode Item<span
+                                            class="text-danger">*</span></label>
+                                </div>
+                                <div class="col-md-9">
+                                    <input type="text" class="form-control" name="sku" placeholder="Kode Item">
+                                </div>
+                            </div>
+                            <div class="row mb-3 align-items-center">
+                                <div class="col-md-3">
+                                    <label class="form-label fw-bold mb-0">Nama Item <span
                                             class="text-danger">*</span></label>
                                 </div>
                                 <div class="col-md-9">
                                     <input type="text" class="form-control" name="name" placeholder="Nama Item">
                                 </div>
                             </div>
-
                             <div class="row mb-3 align-items-center">
                                 <div class="col-md-3">
-                                    <label for="description" class="form-label fw-bold mb-0">Deskripsi Item <span
-                                            class="text-danger">*</span></label>
+                                    <ription" class="form-label fw-bold mb-0">Deskripsi<span class="text-danger">*</span></>
                                 </div>
                                 <div class="col-md-9">
                                     <textarea class="form-control" name="description" rows="5"></textarea>
                                 </div>
                             </div>
-
-                            {{-- <div class="row mb-3 align-items-center">
-                <div class="col-md-3">
-                    <label for="unit_of_measure_id" class="form-label fw-bold mb-0">Ukuran <span
-                            class="text-danger">*</span></label>
-                </div>
-                <div class="col-md-9">
-                    <input type="number" class="form-control" id="unit_of_measure_id" name="unit_of_measure_id"
-                        placeholder="Ukuran">
-                </div>
-            </div> --}}
-
                             <div class="row mb-3 align-items-center">
                                 <div class="col-md-3">
-                                    <label for="satuan" class="form-label fw-bold mb-0">UOM<span
-                                            class="text-danger">*</span></label>
+                                    <an" class="form-label fw-bold mb-0">Satuan<span class="text-danger">*</span></ription>
                                 </div>
                                 <div class="col-md-9">
                                     <select class="form-select" name="unit_of_measure_id">
-                                        <option value="" selected disabled>Pilih Unit</option>
+                                        <option value="" selected disabled>Pilih Satuan</option>
                                         @foreach ($uoms['data'] as $uom)
                                             <option value="{{ $uom['id'] }}">{{ $uom['name'] }}</option>
                                         @endforeach
                                     </select>
                                 </div>
                             </div>
-
-                            {{-- <div class="row mb-3 align-items-center">
-                <div class="col-md-3">
-                    <label for="unitperbox" class="form-label fw-bold mb-0">Unit Per Box<span
-                            class="text-danger">*</span></label>
-                </div>
-                <div class="col-md-9">
-                    <input type="number" class="form-control" id="unit_of_measure_id" name="unit_of_measure_id"
-                        placeholder="Quantity">
-                </div>
-            </div> --}}
-
                             <div class="row mb-3 align-items-center">
                                 <div class="col-md-3">
-                                    <label for="tipebarang" class="form-label fw-bold mb-0">Tipe Barang <span
-                                            class="text-danger">*</span></label>
+                                    <barang" class="form-label fw-bold mb-0">Tipe Barang <span class="text-danger">*</span>
+                                        </an>
                                 </div>
                                 <div class="col-md-9">
                                     <select class="form-select" name="item_type_id">
@@ -117,51 +99,15 @@
                                     </select>
                                 </div>
                             </div>
-
-                            {{-- <div class="row mb-3 align-items-center">
-                <div class="col-md-3">
-                    <label for="principal" class="form-label fw-bold mb-0">Pajak <span class="text-danger">*</span></label>
-                </div>
-                <div class="col-md-9">
-                    <select class="form-select" id="principal" name="tax">
-                        <option value="" selected disabled>Pilih Pajak</option>
-                        <option value="10">10%</option>
-                        <option value="0">0%</option>
-                    </select>
-                </div>
-            </div> --}}
-
-                            {{-- <div class="row mb-3 align-items-center">
-                <div class="col-md-3">
-                    <label for="principal" class="form-label fw-bold mb-0">Principal<span
-                            class="text-danger">*</span></label>
-                </div>
-                <div class="col-md-9">
-                    <select class="form-select" id="principal" name="principal">
-                        <option value="" selected disabled>Pilih Principal</option>
-                        <option value="CV.KHARISMA EKA PUTRA">CV.KHARISMA EKA PUTRA</option>
-                        <option value="CV.MITRA TANI ABADI JAYA">CV.MITRA TANI ABADI JAYA</option>
-                    </select>
-                </div>
-            </div> --}}
                             <div class="row mb-3 align-items-center">
                                 <div class="col-md-3">
-                                    <label for="satuan" class="form-label fw-bold mb-0">Kategori Barang<span
-                                            class="text-danger">*</span></label>
+                                    <an" class="form-label fw-bold mb-0">Kategori Barang<span class="text-danger">*</span>
+                                        </barang>
                                 </div>
                                 <div class="col-md-9">
                                     <select class="form-select" name="item_category_id">
-                                        <option value="" selected disabled>Pilih Kategori</option>
+                                        <option value="" selected disabled>Pilih Kategori Barang</option>
                                     </select>
-                                </div>
-                            </div>
-                            <div class="row mb-3 align-items-center">
-                                <div class="col-md-3">
-                                    <label for="sku" class="form-label fw-bold mb-0">SKU<span
-                                            class="text-danger">*</span></label>
-                                </div>
-                                <div class="col-md-9">
-                                    <input type="text" class="form-control" name="sku" placeholder="Kode Item">
                                 </div>
                             </div>
                             <div class="row">

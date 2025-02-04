@@ -58,10 +58,9 @@
                                     <th scope="col">No</th>
                                     <th scope="col">Kode Item</th>
                                     <th scope="col">Nama Item</th>
-                                    <th scope="col">Nama Principal</th>
+                                    <th scope="col">Principal</th>
                                     <th scope="col">Harga Pokok </th>
                                     <th scope="col">Harga Beli</th>
-                                    {{-- <th scope="col">Status</th> --}}
                                     <th scope="col">Option</th>
                                 </tr>
                             </thead>
@@ -107,12 +106,12 @@
                         data: null,
                         render: function(data, type, row) {
                             return `
-                        <div class="d-flex align-items-center">
-                <a href="/price/edit/${row.id}" class="btn btn-sm btn-warning me-2"
+                                <div class="d-flex align-items-center">
+                                <a href="/price/edit/${row.id}" class="btn btn-sm btn-warning me-2"
                                 title="Edit">
                                 <i class="bi bi-pencil"></i>
-                            </a>
-                            <form id="approve${row.id}"
+                                </a>
+                                <form id="approve${row.id}"
                                 action="/price/approve/${row.id}" method="POST">
                                 @csrf
                                 @method('PUT')
@@ -120,9 +119,9 @@
                                     onclick="confirmApprove(${row.id})">
                                     <i class="bi bi-check"></i>
                                 </button>
-                            </form>
-                            </div>
-            `;
+                                </form>
+                                </div>
+                            `;
                         }
                     }
                 ]

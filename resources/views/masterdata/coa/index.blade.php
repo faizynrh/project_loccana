@@ -114,9 +114,6 @@
                                         </button>
                                     </form>
                                 </div>
-                                <a href="" class="btn btn-sm btn-danger" style="width:110px" title="Hide">
-                                    <i class="bi bi-search me-1"></i> Hide
-                                </a>
                     `;
                         }
                     }

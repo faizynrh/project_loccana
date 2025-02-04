@@ -59,8 +59,9 @@
                                         <th scope="col">Kode Item</th>
                                         <th scope="col">Nama Item</th>
                                         <th scope="col">Deskripsi</th>
-                                        <th scope="col">UoM</th>
+                                        <th scope="col">Satuan</th>
                                         <th scope="col">Principal</th>
+                                        <th scope="col">Status</th>
                                         <th scope="col">Option</th>
                                     </tr>
                                 </thead>
@@ -102,6 +103,9 @@
                     },
                     {
                         data: 'partner_name'
+                    },
+                    {
+                        data: 'status'
                     },
                     {
                         data: null,

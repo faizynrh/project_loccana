@@ -109,16 +109,16 @@
                             <table class="table mt-3">
                                 <thead>
                                     <tr style="border-bottom: 3px solid #000;">
-                                        <th style="width: 140px">Kode</th>
-                                        <th style="width: 90px"></th>
-                                        <th style="width: 45px">Order (Kg/Lt)</th>
-                                        <th style="width: 45px">Sisa (Kg/Lt)</th>
-                                        <th style="width: 45px">Diterima</th>
-                                        <th style="width: 70px">Qty</th>
-                                        <th style="width: 45px">Bonus</th>
-                                        <th style="width: 45px">Titipan</th>
-                                        <th style="width: 45px">Diskon</th>
-                                        <th style="width: 45px">Keterangan</th>
+                                        <th style="width: 90px">Kode</th>
+                                        <th>Order (Kg/Lt)</th>
+                                        <th>Sisa (Kg/Lt)</th>
+                                        <th>Diterima</th>
+                                        <th>Qty Receipt</th>
+                                        <th>Qty Reject</th>
+                                        <th>Bonus</th>
+                                        <th>Titipan</th>
+                                        <th>Diskon</th>
+                                        <th>Keterangan</th>
                                     </tr>
                                 </thead>
                                 <tbody id="tableBody">
@@ -129,37 +129,41 @@
                                                     value="{{ $item['item_id'] }}">
                                                 <input type="hidden" name="warehouse_id[{{ $index }}]"
                                                     value="{{ $item['warehouse_id'] }}">
+                                                <input type="hidden" name="id_item_receipt_detail[{{ $index }}]"
+                                                    value="{{ $item['id_item_receipt_detail'] }}">
                                                 <textarea type="text" class="form-control w-100" readonly rows="3">{{ $item['item_code'] }}</textarea>
                                             </td>
-                                            <td>
-                                                <textarea class="form-control" value="0" rows="3" readonly>{{ $item['unit_price'] }}</textarea>
-                                            </td>
                                             <td><input type="text" class="form-control bg-body-secondary"
-                                                    name="item_order_qty[{{ $index }}]"
+                                                    name="item_order_qty[{{ $index }}]" id="qty_order"
                                                     value="{{ $item['item_order_qty'] }}" readonly>
                                             </td>
                                             <td><input type="text" class="form-control bg-body-secondary"
-                                                    name="qty_balance[{{ $index }}]"
+                                                    name="qty_balance[{{ $index }}]" id="qty_balance"
                                                     value="{{ $item['qty_balance'] }}" readonly>
                                             </td>
                                             <td><input type="text" class="form-control bg-body-secondary"
-                                                    name="quantity_received[{{ $index }}]"
+                                                    name="quantity_received[{{ $index }}]" id="qty_received"
                                                     value="{{ $item['qty_receipt'] }}" readonly>
                                             </td>
-                                            <td><input type="text" class="form-control"
-                                                    name="qty[{{ $index }}]" value="{{ $item['qty'] }}">
+                                            <td><input type="number" class="form-control"
+                                                    name="qty[{{ $index }}]" id="qty"
+                                                    value="{{ $item['qty'] }}" min="0">
                                             </td>
-                                            <td><input type="text" class="form-control"
+                                            <td><input type="number" class="form-control"
+                                                    name="quantity_rejected[{{ $index }}]" value="0"
+                                                    min="0">
+                                            </td>
+                                            <td><input type="number" class="form-control"
                                                     name="qty_bonus[{{ $index }}]"
-                                                    value="{{ $item['qty_bonus'] }}">
+                                                    value="{{ $item['qty_bonus'] }}" min="0">
                                             </td>
-                                            <td><input type="text" class="form-control"
+                                            <td><input type="number" class="form-control"
                                                     name="qty_titip[{{ $index }}]"
-                                                    value="{{ $item['qty_titip'] }}">
+                                                    value="{{ $item['qty_titip'] }}" min="0">
                                             </td>
-                                            <td><input type="text" class="form-control"
+                                            <td><input type="number" class="form-control"
                                                     name="qty_diskon[{{ $index }}]"
-                                                    value="{{ $item['discount'] }}">
+                                                    value="{{ $item['discount'] }}" id="qty_discount" min="0">
                                             </td>
                                             <td><input type="text" class="form-control" placeholder="Note"
                                                     name="notes[{{ $index }}]"
@@ -172,8 +176,7 @@
 
                             <div class="row">
                                 <div class="col-md-12 text-end">
-                                    <button type="button" class="btn btn-primary" id="submitButton"
-                                        onclick="confirmEdit('submitButton', 'editForm')">Submit</button>
+                                    <button type="button" class="btn btn-primary" id="submitButton">Submit</button>
                                     <a href="/penerimaan_barang" class="btn btn-secondary ms-2">Batal</a>
                                 </div>
                             </div>
@@ -185,5 +188,84 @@
     </div>
 @endsection
 @push('scripts')
-    <script></script>
+    <script>
+        $(document).ready(function() {
+            $('#tableBody').on('input', 'input#qty', function() {
+                var $row = $(this).closest('tr');
+                var itemOrderQty = parseFloat($row.find('#qty_order').val()) || 0;
+                var qtyInputField = $(this);
+                var qtyBalanceField = $row.find('#qty_balance');
+                var qtyReceivedField = $row.find('#quantity_received');
+
+                qtyBalanceField.data('initial', qtyBalanceField.data('initial') || qtyBalanceField.val());
+                qtyReceivedField.data('initial', qtyReceivedField.data('initial') || qtyReceivedField
+                    .val());
+
+                var initialBalance = parseFloat(qtyBalanceField.data('initial')) || 0;
+                var initialReceived = parseFloat(qtyReceivedField.data('initial')) || 0;
+                var qtyInput = parseFloat(qtyInputField.val()) || 0;
+
+                console.log({
+                    itemOrderQty,
+                    initialBalance,
+                    initialReceived,
+                    qtyInput
+                });
+
+                if (!qtyInputField.val().trim()) {
+                    qtyBalanceField.val(initialBalance);
+                    qtyReceivedField.val(initialReceived);
+                    return;
+                }
+
+                if (qtyInput > itemOrderQty || qtyInput < 1) {
+                    Swal.fire('Peringatan',
+                        'Jumlah harus lebih dari 0 dan tidak boleh melebihi jumlah pesanan!', 'warning');
+                    qtyInputField.val(itemOrderQty);
+                    qtyBalanceField.val(initialBalance);
+                    qtyReceivedField.val(initialReceived);
+                    return;
+                }
+
+                var newBalance = itemOrderQty - qtyInput;
+                qtyBalanceField.val(newBalance);
+                qtyReceivedField.val(itemOrderQty - newBalance);
+            });
+
+            $('#submitButton').click(function(event) {
+                event.preventDefault();
+
+                var isValid = true;
+                var errorMessage = '';
+
+                $('#tableBody tr').each(function() {
+                    var qty = parseFloat($(this).find('input[name^="qty"]').val()) || 0;
+                    var qtyRejected = parseFloat($(this).find('input[name^="quantity_rejected"]')
+                        .val()) || 0;
+                    var qtyBonus = parseFloat($(this).find('input[name^="qty_bonus"]').val()) || 0;
+                    var qtyTitip = parseFloat($(this).find('input[name^="qty_titip"]').val()) || 0;
+                    var qtyDiskon = parseFloat($(this).find('input[name^="qty_diskon"]').val()) ||
+                        0;
+
+
+                    if ([qtyRejected, qtyBonus, qtyTitip, qtyDiskon].some(val => val < 0)) {
+                        isValid = false;
+                        errorMessage = 'Pastikan semua input telah diisi dengan benar!';
+                        return false;
+                    }
+                });
+
+                if (!isValid) {
+                    Swal.fire({
+                        title: 'Peringatan!',
+                        text: errorMessage,
+                        icon: 'warning',
+                        confirmButtonText: 'OK'
+                    });
+                } else {
+                    confirmEdit('submitButton', 'editForm');
+                }
+            });
+        });
+    </script>
 @endpush

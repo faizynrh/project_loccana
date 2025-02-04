@@ -237,16 +237,13 @@ class PenerimaanBarangController extends Controller
                 foreach ($request->input('item_id') as $index => $itemId) {
                     $items[] = [
                         'item_id' => $itemId,
-                        'quantity_received' => $request->input('quantity_received')[$index],
-                        // 'quantity_received_old' => $request->input('quantity_received')[$index],
-                        //tidak ada data
-                        // 'quantity_rejected' => $request->input('quantity_rejected')[$index],
+                        'item_receipt_details_id' => $request->input('id_item_receipt_detail')[$index],
+                        'quantity_received' => $request->input('qty')[$index],
+                        'quantity_rejected' => $request->input('quantity_rejected')[$index],
                         'notes' => $request->input('notes')[$index],
                         'qty_titip' => $request->input('qty_titip')[$index],
-                        // 'qty_titip_old' => $request->input('qty_titip')[$index],
                         'qty_diskon' => $request->input('qty_diskon')[$index],
                         'qty_bonus' => $request->input('qty_bonus')[$index],
-                        // 'qty_bonus_old' => $request->input('qty_bonus')[$index],
                         'warehouse_id' => $request->input('warehouse_id')[$index],
                     ];
                 }
@@ -256,7 +253,7 @@ class PenerimaanBarangController extends Controller
                 'receipt_date' => $request->receipt_date,
                 'shipment_info' => $request->shipment_info,
                 'plate_number' => $request->plate_number,
-                'received_by' => $request->input('received_by', 0),
+                'received_by' => $request->input('received_by', 1),
                 'status' => "received",
                 'items' => $items,
             ];
