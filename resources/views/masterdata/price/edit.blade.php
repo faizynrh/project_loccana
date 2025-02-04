@@ -55,11 +55,8 @@
                                 </div>
                                 <div class="col-md-9">
                                     <label for="namaitem" class="form-label fw-bold mb-0">{{ $data['kode_item'] }}</label>
-                                    {{-- <input type="text" class="form-control" id="kode_item" name="kode_item"
-                        value="{{ $data['kode_item'] }}" placeholder="Kode Item" style="font-weight: bold" disabled> --}}
                                 </div>
                             </div>
-
                             <div class="row mb-3 align-items-center">
                                 <div class="col-md-3">
                                     <label for="namaitem" class="form-label fw-bold mb-0">Nama Item <span
@@ -67,11 +64,8 @@
                                 </div>
                                 <div class="col-md-9">
                                     <label for="namaitem" class="form-label fw-bold mb-0">{{ $data['nama_item'] }}</label>
-                                    {{-- <input type="text" class="form-control" id="nama_item" name="nama_item" placeholder="Nama Item"
-                            value="{{ $data['nama_item'] }}" style="font-weight: bold" disabled> --}}
                                 </div>
                             </div>
-
                             <div class="row mb-3 align-items-center">
                                 <div class="col-md-3">
                                     <label for="hargaatas" class="form-label fw-bold mb-0">Harga Atas<span
@@ -82,7 +76,6 @@
                                         value="{{ $data['harga_atas'] }}" placeholder="Harga Atas">
                                 </div>
                             </div>
-
                             <div class="row mb-3 align-items-center">
                                 <div class="col-md-3">
                                     <label for="hargabawah" class="form-label fw-bold mb-0">Harga Bawah<span
@@ -98,8 +91,9 @@
                                     <label for="hargapokok" class="form-label fw-bold mb-0">Harga Pokok
                                 </div>
                                 <div class="col-md-9">
-                                    <input type="text" class="form-control" id="harga_pokok" name="harga_pokok"
-                                        value="{{ $data['harga_pokok'] }}" placeholder="Harga Pokok" readonly>
+                                    <input type="text" class="form-control bg-body-secondary" id="harga_pokok"
+                                        name="harga_pokok" value="{{ $data['harga_pokok'] }}" placeholder="Harga Pokok"
+                                        readonly>
                                 </div>
                             </div>
                             <div class="row mb-3 align-items-center">
