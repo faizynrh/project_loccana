@@ -70,6 +70,7 @@
             </section>
         </div>
     </div>
+    @include('masterdata.price.ajax.modal')
 @endsection
 @push('scripts')
     <script>
@@ -106,11 +107,12 @@
                         data: null,
                         render: function(data, type, row) {
                             return `
-                                <div class="d-flex align-items-center">
-                                <a href="/price/edit/${row.id}" class="btn btn-sm btn-warning me-2"
-                                title="Edit">
-                                <i class="bi bi-pencil"></i>
-                                </a>
+                                <div class="d-flex">
+                                <button type="button" class="btn btn-sm btn-warning me-2 btn-edit-price"
+                                    data-id="${row.id}"
+                                    title="Edit">
+                                    <i class="bi bi-pencil"></i>
+                                </button>
                                 <form id="approve${row.id}"
                                 action="/price/approve/${row.id}" method="POST">
                                 @csrf
@@ -126,6 +128,49 @@
                     }
                 ]
             });
+
+            function updateModal(modalId, title, content, sizeClass) {
+                let modalDialog = $(`${modalId} .modal-dialog`);
+                modalDialog.removeClass('modal-full modal-xl modal-lg modal-md').addClass(sizeClass);
+
+                $(`${modalId} .modal-title`).text(title);
+                $(`${modalId} .modal-body`).html(content);
+
+                let myModal = new bootstrap.Modal(document.getElementById(modalId.substring(1)));
+                myModal.show();
+            }
+
+            $(document).on('click', '.btn-edit-price', function(e) {
+                e.preventDefault();
+                const priceId = $(this).data('id');
+                const url = '{{ route('price.edit', ':priceId') }}'.replace(':priceId', priceId);
+                const $button = $(this);
+
+                $('#loading-overlay').fadeIn();
+
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    dataType: 'html',
+                    beforeSend: function() {
+                        //
+                    },
+                    success: function(response) {
+                        updateModal('#modal-price', 'Edit COA', response,
+                            'modal-lg');
+                    },
+                    error: function(xhr) {
+                        let errorMsg = xhr.responseText ||
+                            '<p>An error occurred while loading the content.</p>';
+                        $('#content-price').html(errorMsg);
+                    },
+                    complete: function() {
+                        $('#loading-overlay').fadeOut();
+                    }
+                });
+            });
+
+
         });
     </script>
 @endpush
