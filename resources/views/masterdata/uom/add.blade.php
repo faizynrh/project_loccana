@@ -81,8 +81,8 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-md-12 text-end">
-                                        <button type="button" class="btn btn-primary" id="submitButton"
-                                            onclick="confirmSubmit('submitButton', 'createForm')">Submit</button>
+                                        <button type="submit" class="btn btn-primary" id="submitBtn"
+                                            onclick="disableButton(this)">Submit</button>
                                         <a href="{{ route('uom.index') }}" class="btn btn-secondary ms-2">Batal</a>
                                     </div>
                                 </div>
@@ -94,6 +94,12 @@
         </div>
     </div>
     @push('scripts')
-        <script></script>
+        <script>
+            function disableButton(button) {
+                button.disabled = true;
+                button.innerText = "Sedang Diproses...";
+                document.getElementById("createForm").submit();
+            }
+        </script>
     @endpush
 @endsection
