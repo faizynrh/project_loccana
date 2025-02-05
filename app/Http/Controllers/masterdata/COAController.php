@@ -59,111 +59,99 @@ class CoaController extends Controller
         return view('masterdata.coa.index');
     }
 
-    // public function create()
-    // {
-    //     return view('masterdata.coa.add');
-    // }
+    public function create()
+    {
+        return view('masterdata.coa.ajax.add');
+    }
 
-    // public function store(Request $request)
-    // {
-    //     try {
-    //         $headers = Helpers::getHeaders();
-    //         $apiurl = $this->buildApiUrl('/');
+    public function store(Request $request)
+    {
+        try {
+            $data = [
+                'account_name' => $request->input('account_name'),
+                'account_code' => $request->input('account_code'),
+                'parent_account_id' => $request->input('parent_account_id', 2),
+                'account_type_id' => $request->input('account_type_id', 2),
+                'description' => $request->input('description'),
+                'company_id' => $request->input('company_id', 2),
+            ];
+            $apiResponse = Helpers::storeApi($this->buildApiUrl('/'), $data);
 
-    //         $data = [
-    //             'account_name' => $request->input('account_name'),
-    //             'account_code' => $request->input('account_code'),
-    //             'parent_account_id' => $request->input('parent_account_id', 2),
-    //             'account_type_id' => $request->input('account_type_id', 2),
-    //             'description' => $request->input('description'),
-    //             'company_id' => $request->input('company_id', 2),
-    //         ];
-    //         $apiResponse = Http::withHeaders($headers)->post($apiurl, $data);
+            if ($apiResponse->successful()) {
+                return redirect()->route('coa.index')
+                    ->with(
+                        'success',
+                        $apiResponse->json()['message']
+                    );
+            } else {
+                return back()->withErrors(
+                    $apiResponse->json()['message']
+                );
+            }
+        } catch (\Exception $e) {
+            return back()->withErrors($e->getMessage());
+        }
+    }
 
-    //         if ($apiResponse->successful()) {
-    //             return redirect()->route('coa.index')
-    //                 ->with(
-    //                     'success',
-    //                     $apiResponse->json()['message']
-    //                 );
-    //         } else {
-    //             return back()->withErrors(
-    //                 $apiResponse->json()['message']
-    //             );
-    //         }
-    //     } catch (\Exception $e) {
-    //         return back()->withErrors($e->getMessage());
-    //     }
-    // }
+    public function show($id)
+    {
+        try {
+            $apiResponse = Helpers::fectApi($this->buildApiUrl('/' . $id));
+            $data = json_decode($apiResponse->getBody()->getContents());
+            return view('masterdata.coa.ajax.detail', compact('data'));
+        } catch (\Exception $e) {
+            return back()->withErrors($e->getMessage());
+        }
+    }
 
-    // public function show($id)
-    // {
-    //     try {
-    //         $headers = Helpers::getHeaders();
-    //         $apiurl = $this->buildApiUrl('/' . $id);
+    public function edit($id)
+    {
+        try {
+            $apiResponse = Helpers::fectApi($this->buildApiUrl('/' . $id));
+            $data = json_decode($apiResponse->getBody()->getContents());
+            return view('masterdata.coa.ajax.edit', data: compact('data'));
+        } catch (\Exception $e) {
+            return back()->withErrors($e->getMessage());
+        }
+    }
 
-    //         $apiResponse = Http::withHeaders($headers)->get($apiurl);
-    //         $data = json_decode($apiResponse->getBody()->getContents());
-    //         return view('masterdata.coa.ajax.detail', compact('data'));
-    //     } catch (\Exception $e) {
-    //         return back()->withErrors($e->getMessage());
-    //     }
-    // }
+    public function update(Request $request, $id)
+    {
+        try {
 
-    // public function edit($id)
-    // {
-    //     try {
-    //         $headers = Helpers::getHeaders();
-    //         $apiurl = $this->buildApiUrl('/' . $id);
-    //         $apiResponse = Http::withHeaders($headers)->get($apiurl);
-    //         $data = json_decode($apiResponse->getBody()->getContents());
-    //         return view('masterdata.coa.ajax.edit', data: compact('data'));
-    //     } catch (\Exception $e) {
-    //         return back()->withErrors($e->getMessage());
-    //     }
-    // }
+            $data = [
+                'account_name' => $request->account_name,
+                'account_code' => $request->account_code,
+                'parent_account_id' => $request->input('parent_account_id', 2),
+                'account_type_id' => $request->input('account_type_id', 2),
+                'description' => $request->description,
+            ];
 
-    // public function update(Request $request, $id)
-    // {
-    //     try {
-    //         $headers = Helpers::getHeaders();
-    //         $apiurl = $this->buildApiUrl('/' . $id);
+            $apiResponse = Helpers::updateApi($this->buildApiUrl('/' . $id), $data);
+            if ($apiResponse->successful()) {
+                return redirect()->route('coa.index')->with('success', $apiResponse->json()['message']);
+            } else {
+                return back()->withErrors($apiResponse->json()['message']);
+            }
+        } catch (\Exception $e) {
+            return back()->withErrors($e->getMessage());
+        }
+    }
 
-    //         $data = [
-    //             'account_name' => $request->account_name,
-    //             'account_code' => $request->account_code,
-    //             'parent_account_id' => $request->input('parent_account_id', 2),
-    //             'account_type_id' => $request->input('account_type_id', 2),
-    //             'description' => $request->description,
-    //         ];
-
-    //         $apiResponse = Http::withHeaders($headers)->put($apiurl, $data);
-    //         if ($apiResponse->successful()) {
-    //             return redirect()->route('coa.index')->with('success', $apiResponse->json()['message']);
-    //         } else {
-    //             return back()->withErrors($apiResponse->json()['message']);
-    //         }
-    //     } catch (\Exception $e) {
-    //         return back()->withErrors($e->getMessage());
-    //     }
-    // }
-    // public function destroy($id)
-    // {
-    //     try {
-    //         $headers = Helpers::getHeaders();
-    //         $apiurl = $this->buildApiUrl('/' . $id);
-
-    //         $apiResponse = Http::withHeaders($headers)->delete($apiurl);
-    //         if ($apiResponse->successful()) {
-    //             return redirect()->route('coa.index')
-    //                 ->with('success', $apiResponse->json()['message']);
-    //         } else {
-    //             return back()->withErrors(
-    //                 $apiResponse->json()['message']
-    //             );
-    //         }
-    //     } catch (\Exception $e) {
-    //         return back()->withErrors($e->getMessage());
-    //     }
-    // }
+    public function destroy($id)
+    {
+        try {
+            $apiResponse = Helpers::deleteApi($this->buildApiUrl('/' . $id));
+            if ($apiResponse->successful()) {
+                return redirect()->route('coa.index')
+                    ->with('success', $apiResponse->json()['message']);
+            } else {
+                return back()->withErrors(
+                    $apiResponse->json()['message']
+                );
+            }
+        } catch (\Exception $e) {
+            return back()->withErrors($e->getMessage());
+        }
+    }
 }

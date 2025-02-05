@@ -34,4 +34,31 @@ class Helpers
 
         return $response;
     }
+
+    public static function updateApi($apiUrl, $payloads)
+    {
+        $access_token = session('access_token_2');
+        $response = Http::withOptions(['verify' => false])
+            ->withHeaders([
+                'Authorization' => 'Bearer ' . $access_token,
+                'Content-Type' => 'application/json',
+            ])
+            ->withBody(json_encode($payloads), 'application/json')
+            ->put($apiUrl);
+
+        return $response;
+    }
+
+    public static function deleteApi($apiUrl)
+    {
+        $access_token = session('access_token_2');
+        $response = Http::withOptions(['verify' => false])
+            ->withHeaders([
+                'Authorization' => 'Bearer ' . $access_token,
+                'Content-Type' => 'application/json',
+            ])
+            ->delete($apiUrl);
+
+        return $response;
+    }
 }
