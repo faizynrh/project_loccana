@@ -48,9 +48,7 @@
                                     aria-label="Close"></button>
                             </div>
                         @endif
-                        <div class="d-flex justify-content-between align-items-center">
-                            <a href="/item/add" class="btn btn-primary fw-bold ">+ Tambah Item</a>
-                        </div>
+                        <button type="button" class="btn btn-primary fw-bold btn-add-item">+ Tambah Item</button>
                         <div class="table-responsive">
                             <table class="table table-striped table-bordered mt-1" id="tableitem">
                                 <thead>
@@ -72,6 +70,7 @@
             </section>
         </div>
     </div>
+    @include('masterdata.item.ajax.modal')
 @endsection
 @push('scripts')
     <script>
@@ -111,16 +110,20 @@
                         data: null,
                         render: function(data, type, row) {
                             return `
-                        <a href="/item/detail/${row.id}" class="btn btn-sm btn-info mb-2" title="Detail">
+                        <button type="button" class="btn btn-sm btn-info btn-detail-item"
+                            data-id="${row.id}"
+                            title="Detail">
                             <i class="bi bi-eye"></i>
-                        </a>
-                        <a href="/item/edit/${row.id}" class="btn btn-sm btn-warning mb-2" title="Edit">
+                        </button>
+                        <button type="button" class="btn btn-sm btn-warning btn-edit-item"
+                            data-id="${row.id}"
+                            title="Edit">
                             <i class="bi bi-pencil"></i>
-                        </a>
+                        </button>
                         <form action="/item/delete/${row.id}" method="POST" id="delete${row.id}" style="display:inline;">
                             @csrf
                             @method('DELETE')
-                            <button type="button" class="btn btn-sm btn-danger mb-2" title="Hapus" onclick="confirmDelete(${row.id})">
+                            <button type="button" class="btn btn-sm btn-danger" title="Hapus" onclick="confirmDelete(${row.id})">
                                 <i class="bi bi-trash"></i>
                             </button>
                         </form>
@@ -128,6 +131,107 @@
                         }
                     }
                 ]
+            });
+
+            function updateModal(modalId, title, content, sizeClass) {
+                let modalDialog = $(`${modalId} .modal-dialog`);
+                modalDialog.removeClass('modal-full modal-xl modal-lg modal-md').addClass(sizeClass);
+
+                $(`${modalId} .modal-title`).text(title);
+                $(`${modalId} .modal-body`).html(content);
+
+                let myModal = new bootstrap.Modal(document.getElementById(modalId.substring(1)));
+                myModal.show();
+            }
+
+            $(document).on('click', '.btn-add-item', function(e) {
+                e.preventDefault();
+                const url = '{{ route('item.create') }}'
+                const $button = $(this);
+
+                $('#loading-overlay').fadeIn();
+
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    dataType: 'html',
+                    beforeSend: function() {
+                        //
+                    },
+                    success: function(response) {
+                        console.log(response);
+                        updateModal('#modal-item', 'Detail Item', response,
+                            'modal-lg');
+                    },
+                    error: function(xhr) {
+                        let errorMsg = xhr.responseText ||
+                            '<p>An error occurred while loading the content.</p>';
+                        $('#content-item').html(errorMsg);
+                    },
+                    complete: function() {
+                        $('#loading-overlay').fadeOut();
+                    }
+                });
+            });
+
+            $(document).on('click', '.btn-detail-item', function(e) {
+                e.preventDefault();
+                const itemid = $(this).data('id');
+                const url = '{{ route('item.detail', ':itemid') }}'.replace(':itemid', itemid);
+                const $button = $(this);
+
+                $('#loading-overlay').fadeIn();
+
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    dataType: 'html',
+                    beforeSend: function() {
+                        //
+                    },
+                    success: function(response) {
+                        updateModal('#modal-item', 'Detail Item', response,
+                            'modal-lg');
+                    },
+                    error: function(xhr) {
+                        let errorMsg = xhr.responseText ||
+                            '<p>An error occurred while loading the content.</p>';
+                        $('#content-item').html(errorMsg);
+                    },
+                    complete: function() {
+                        $('#loading-overlay').fadeOut();
+                    }
+                });
+            });
+
+            $(document).on('click', '.btn-edit-item', function(e) {
+                e.preventDefault();
+                const itemid = $(this).data('id');
+                const url = '{{ route('item.edit', ':itemid') }}'.replace(':itemid', itemid);
+                const $button = $(this);
+
+                $('#loading-overlay').fadeIn();
+
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    dataType: 'html',
+                    beforeSend: function() {
+                        //
+                    },
+                    success: function(response) {
+                        updateModal('#modal-item', 'Edit Item', response,
+                            'modal-lg');
+                    },
+                    error: function(xhr) {
+                        let errorMsg = xhr.responseText ||
+                            '<p>An error occurred while loading the content.</p>';
+                        $('#content-item').html(errorMsg);
+                    },
+                    complete: function() {
+                        $('#loading-overlay').fadeOut();
+                    }
+                });
             });
         });
     </script>

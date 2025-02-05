@@ -74,11 +74,7 @@ class GudangController extends Controller
                 'capacity' => $request->input('capacity', 0),
             ];
             $apiResponse = storeApi($this->buildApiUrl('/'), $data);
-            $responseData = $apiResponse->json();
-            if (
-                $apiResponse->successful() &&
-                isset($responseData['success'])
-            ) {
+            if ($apiResponse->successful()) {
                 return redirect()->route('gudang.index')
                     ->with('success', $apiResponse->json()['message']);
             } else {
@@ -92,16 +88,8 @@ class GudangController extends Controller
     {
         try {
             $apiResponse = fectApi($this->buildApiUrl('/' . $id));
-            if (!$apiResponse->successful()) {
-                return back()->withErrors($apiResponse->json()['message'] ?? 'Failed to fetch data');
-            }
-
-            $data = json_decode($apiResponse->body(), false);
-            if (!$data) {
-                return back()->withErrors('No data found or invalid JSON response');
-            }
-
-            return view('masterdata.gudang.ajax.edit', compact('data'));
+            $data = json_decode($apiResponse->getBody()->getContents());
+            return view('masterdata.gudang.ajax.edit', data: compact('data'));
         } catch (\Exception $e) {
             return back()->withErrors($e->getMessage());
         }
