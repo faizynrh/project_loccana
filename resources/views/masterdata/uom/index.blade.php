@@ -56,7 +56,6 @@
                             </thead>
                             <tbody>
                                 {{-- {{ dd($data) }} --}}
-
                             </tbody>
                         </table>
                     </div>
@@ -65,6 +64,7 @@
         </div>
     </div>
     @push('scripts')
+        @include('masterdata.uom.ajax.modal')
         <script>
             $(document).ready(function() {
                 $('#tableuom').DataTable({
@@ -219,15 +219,6 @@
             function disableButton(event) {
                 let form = event.target;
                 if (form.checkValidity()) { // Pastikan form valid
-                    let button = document.getElementById('submitButton');
-                    button.disabled = true;
-                    button.innerText = 'Processing...';
-                }
-            }
-
-            function disableButton(event) {
-                let form = event.target;
-                if (form.checkValidity()) {
                     let button = document.getElementById('submitButton');
                     button.disabled = true;
                     button.innerText = 'Processing...';
