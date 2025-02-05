@@ -5,6 +5,7 @@ namespace App\Http\Controllers\authentication;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Redirect;
 use GuzzleHttp\Exception\RequestException;
@@ -95,6 +96,25 @@ class AuthController extends Controller
                         'scope' => $scope,
                     ]);
 
+                    // access token
+                    $tokenurl = env('API_TOKEN_URL');
+                    $clientid = env('API_CLIENT_ID');
+                    $clientsecret = env('API_CLIENT_SECRET');
+
+                    $tokenResponse = Http::asForm()->post($tokenurl, [
+                        'grant_type' => 'client_credentials',
+                        'client_id' => $clientid,
+                        'client_secret' => $clientsecret,
+                    ]);
+
+                    if (!$tokenResponse->successful()) {
+                        throw new \Exception('Failed to fetch access token');
+                    }
+
+                    $accessToken2 = $tokenResponse->json()['access_token'];
+
+                    Session::put('access_token_2', $accessToken2);
+
                     return redirect()->route('dashboard-dev');
                 } else {
                     return response('Error: Invalid ID token format.', 400);
@@ -103,7 +123,7 @@ class AuthController extends Controller
                 return response('Error: No ID token received.', 400);
             }
         } catch (RequestException $e) {
-            $responseBody = $e->getResponse() ? (string)$e->getResponse()->getBody() : 'No response';
+            $responseBody = $e->getResponse() ? (string) $e->getResponse()->getBody() : 'No response';
             return response('Error: ' . $e->getMessage() . "<br>Response: " . $responseBody, 500);
         }
     }

@@ -22,6 +22,7 @@
             <x-footer></x-footer>
         </div>
     </div>
+    @include('loading.loading')
     <script src="{{ asset('assets/js/jquery-3.7.1.js') }}"></script>
     <script src="{{ asset('assets/js/chart.js') }}"></script>
     <script src="{{ asset('assets/js/dataTables.min.js') }}"></script>
