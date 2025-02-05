@@ -42,7 +42,7 @@
                             </div>
                         @endif
                         <div class="d-flex justify-content-between align-items-center">
-                            <a href="/uom/add" class="btn btn-primary fw-bold ">+ Tambah UOM</a>
+                            <button type="button" class="btn btn-primary fw-bold btn-add-uom">+ Tambah UOM</button>
                         </div>
                         <table class="table table-striped table-bordered mt-3 table-responsive" id="tableuom">
                             <thead>
@@ -114,6 +114,125 @@
                     ],
                 });
             });
+
+            function updateModal(modalId, title, content, sizeClass) {
+                let modalDialog = $(`${modalId} .modal-dialog`);
+                modalDialog.removeClass('modal-full modal-xl modal-lg modal-md').addClass(sizeClass);
+
+                $(`${modalId} .modal-title`).text(title);
+                $(`${modalId} .modal-body`).html(content);
+
+                let myModal = new bootstrap.Modal(document.getElementById(modalId.substring(1)));
+                myModal.show();
+            }
+
+            $(document).on('click', '.btn-add-uom', function(e) {
+                e.preventDefault();
+                const url = '{{ route('uom.store') }}'
+                const $button = $(this);
+
+                // $('#loading-overlay').fadeIn();
+
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    dataType: 'html',
+                    beforeSend: function() {
+                        //
+                    },
+                    success: function(response) {
+                        updateModal('#modal-uom', 'Detail Uom', response,
+                            'modal-lg');
+                    },
+                    error: function(xhr) {
+                        let errorMsg = xhr.responseText ||
+                            '<p>An error occurred while loading the content.</p>';
+                        $('#content-uom').html(errorMsg);
+                    },
+                    complete: function() {
+                        // $('#loading-overlay').fadeOut();
+                    }
+                });
+            });
+
+            $(document).on('click', '.btn-detail-uom', function(e) {
+                e.preventDefault();
+                const uomId = $(this).data('id');
+                const url = '{{ route('uom.show', ':uomId') }}'.replace(':uomId', uomId);
+                const $button = $(this);
+
+                $('#loading-overlay').fadeIn();
+
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    dataType: 'html',
+                    beforeSend: function() {
+                        //
+                    },
+                    success: function(response) {
+                        updateModal('#modal-uom', 'Detail uom', response,
+                            'modal-lg');
+                    },
+                    error: function(xhr) {
+                        let errorMsg = xhr.responseText ||
+                            '<p>An error occurred while loading the content.</p>';
+                        $('#content-uom').html(errorMsg);
+                    },
+                    complete: function() {
+                        $('#loading-overlay').fadeOut();
+                    }
+                });
+            });
+
+            $(document).on('click', '.btn-edit-uom', function(e) {
+                e.preventDefault();
+                const uomId = $(this).data('id');
+                const url = '{{ route('uom.edit', ':uomId') }}'.replace(':uomId', uomId);
+                const $button = $(this);
+
+                $('#loading-overlay').fadeIn();
+
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    dataType: 'html',
+                    beforeSend: function() {
+                        //
+                    },
+                    success: function(response) {
+                        updateModal('#modal-uom', 'Edit uom', response,
+                            'modal-lg');
+                    },
+                    error: function(xhr) {
+                        let errorMsg = xhr.responseText ||
+                            '<p>An error occurred while loading the content.</p>';
+                        $('#content-uom').html(errorMsg);
+                    },
+                    complete: function() {
+                        $('#loading-overlay').fadeOut();
+                    }
+                });
+            });
+
+
+            function disableButton(event) {
+                let form = event.target;
+                if (form.checkValidity()) { // Pastikan form valid
+                    let button = document.getElementById('submitButton');
+                    button.disabled = true;
+                    button.innerText = 'Processing...';
+                }
+            }
+
+            function disableButton(event) {
+                let form = event.target;
+                if (form.checkValidity()) {
+                    let button = document.getElementById('submitButton');
+                    button.disabled = true;
+                    button.innerText = 'Processing...';
+                }
+            }
         </script>
     @endpush
 @endsection

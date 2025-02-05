@@ -85,7 +85,7 @@ class UomController extends Controller
 
     public function create()
     {
-        return view('masterdata.uom.add');
+        return view('masterdata.uom.ajax.add');
     }
     public function edit($id)
     {
@@ -95,7 +95,7 @@ class UomController extends Controller
                 $uomData = $apiResponse->json();
 
                 if (isset($uomData['data'])) {
-                    return view('masterdata.uom.edit', ['uom' => $uomData['data']]);
+                    return view('masterdata.uom.ajax.edit', ['uom' => $uomData['data']]);
                 } else {
                     return back()->withErrors($apiResponse->json()['message']);
                 }
@@ -107,29 +107,29 @@ class UomController extends Controller
         }
     }
 
-    // public function update(Request $request, $id)
-    // {
-    //     try {
-    //         $headers = Helpers::getHeaders();
-    //         $apiurl = $this->buildApiUrl('/' . $id);
-    //         $data = [
-    //             'name' => $request->input('uom_name'),
-    //             'symbol' => $request->input('uom_symbol'),
-    //             'description' => $request->input('description')
-    //         ];
-    //         $apiResponse = Http::withHeaders($headers)->put($apiurl, $data);
-    //         if ($apiResponse->successful()) {
-    //             return redirect()->route('uom.index')
-    //                 ->with('success', $apiResponse->json()['message']);
-    //         } else {
-    //             return back()->withErrors(
-    //                 $apiResponse->json()['message']
-    //             );
-    //         }
-    //     } catch (\Exception $e) {
-    //         return back()->withErrors($e->getMessage());
-    //     }
-    // }
+    public function update(Request $request, $id)
+    {
+        try {
+
+            $data = [
+                'name' => $request->input('uom_name'),
+                'symbol' => $request->input('uom_symbol'),
+                'description' => $request->input('description')
+            ];
+            $apiResponse = Helpers::updateApi($this->buildApiUrl('/' . $id), $data);
+
+            if ($apiResponse->successful()) {
+                return redirect()->route('uom.index')
+                    ->with('success', $apiResponse->json()['message']);
+            } else {
+                return back()->withErrors(
+                    $apiResponse->json()['message']
+                );
+            }
+        } catch (\Exception $e) {
+            return back()->withErrors($e->getMessage());
+        }
+    }
 
     public function show($id)
     {
@@ -138,7 +138,7 @@ class UomController extends Controller
             if ($apiResponse->successful()) {
                 $uomData = $apiResponse->json();
                 if (isset($uomData['data'])) {
-                    return view('masterdata.uom.detail', ['uom' => $uomData['data']]);
+                    return view('masterdata.uom.ajax.detail', ['uom' => $uomData['data']]);
                 } else {
                     return back()->withErrors($apiResponse->json()['message']);
                 }
@@ -150,22 +150,20 @@ class UomController extends Controller
         }
     }
 
-    // public function destroy(string $id)
-    // {
-    //     try {
-    //         $headers = Helpers::getHeaders();
-    //         $apiurl = $this->buildApiUrl('/' . $id);
-    //         $apiResponse = Http::withHeaders($headers)->delete($apiurl);
-    //         if ($apiResponse->successful()) {
-    //             return redirect()->route('uom.index')
-    //                 ->with('success', $apiResponse->json()['message']);
-    //         } else {
-    //             return back()->withErrors(
-    //                 $apiResponse->json()['message']
-    //             );
-    //         }
-    //     } catch (\Exception $e) {
-    //         return back()->withErrors($e->getMessage());
-    //     }
-    // }
+    public function destroy(string $id)
+    {
+        try {
+            $apiResponse = Helpers::deleteApi($this->buildApiUrl('/' . $id));
+            if ($apiResponse->successful()) {
+                return redirect()->route('uom.index')
+                    ->with('success', $apiResponse->json()['message']);
+            } else {
+                return back()->withErrors(
+                    $apiResponse->json()['message']
+                );
+            }
+        } catch (\Exception $e) {
+            return back()->withErrors($e->getMessage());
+        }
+    }
 }
