@@ -11,17 +11,9 @@ use Illuminate\Support\Facades\Http;
 
 class GudangController extends Controller
 {
-    private function buildApiUrl($endpoint)
-    {
-        return Helpers::getApiUrl() . '/masterdata/warehouse/1.0.0/warehouse' . $endpoint;
-    }
-
     private function ajax(Request $request)
     {
         try {
-            $headers = Helpers::getHeaders();
-            $apiurl = $this->buildApiUrl('/lists');
-
             $length = $request->input('length', 10);
             $start = $request->input('start', 0);
             $search = $request->input('search.value') ?? '';
@@ -32,8 +24,7 @@ class GudangController extends Controller
                 'offset' => $start,
                 'company_id' => 2
             ];
-
-            $apiResponse = Http::withHeaders($headers)->post($apiurl, $requestbody);
+            $apiResponse = Helpers::storeApi(Env('API_URL') . '/masterdata/warehouse/1.0.0/warehouse/lists', $requestbody);
 
             if ($apiResponse->successful()) {
                 $data = $apiResponse->json();
@@ -71,9 +62,6 @@ class GudangController extends Controller
     public function store(Request $request)
     {
         try {
-            $headers = Helpers::getHeaders();
-            $apiurl = $this->buildApiUrl('/');
-
             $data = [
                 'name' => $request->input('name'),
                 'location' => $request->input('location'),
@@ -81,8 +69,7 @@ class GudangController extends Controller
                 'description' => $request->input('description'),
                 'capacity' => $request->input('capacity', 0),
             ];
-
-            $apiResponse = Http::withHeaders($headers)->post($apiurl, $data);
+            $apiResponse = Helpers::storeApi(Env('API_URL') . '/masterdata/warehouse/1.0.0/warehouse', $data);
             $responseData = $apiResponse->json();
             if (
                 $apiResponse->successful() &&
@@ -97,64 +84,66 @@ class GudangController extends Controller
             return back()->withErrors($e->getMessage());
         }
     }
-    public function edit(string $id)
+    public function edit($id)
     {
         try {
-            $headers = Helpers::getHeaders();
-            $apiurl = $this->buildApiUrl('/' . $id);
-
-            $apiResponse = Http::withHeaders($headers)->get($apiurl);
-
-            if ($apiResponse->successful()) {
-                $data = $apiResponse->json()['data'];
-                return view('masterdata.gudang.edit', compact('data', 'id'));
-            } else {
-                return back()->withErrors($apiResponse->json()['message']);
+            $url = env('API_URL') . '/masterdata/warehouse/1.0.0/warehouse/' . $id;
+            $apiResponse = Helpers::fectApi($url);
+            if (!$apiResponse->successful()) {
+                return back()->withErrors($apiResponse->json()['message'] ?? 'Failed to fetch data');
             }
+
+            // Decode JSON response
+            $data = json_decode($apiResponse->body(), false);
+            if (!$data) {
+                return back()->withErrors('No data found or invalid JSON response');
+            }
+
+            return view('masterdata.gudang.edit', compact('data'));
         } catch (\Exception $e) {
             return back()->withErrors($e->getMessage());
         }
     }
-    public function update(Request $request, string $id)
-    {
-        try {
-            $headers = Helpers::getHeaders();
-            $apiurl = $this->buildApiUrl('/' . $id);
+    // public function update(Request $request, string $id)
+    // {
+    //     try {
+    //         $headers = Helpers::getHeaders();
+    //         $apiurl = $this->buildApiUrl('/' . $id);
 
-            $data = [
-                'name' => $request->name,
-                'location' => $request->location,
-                'description' => $request->description,
-                'capacity' => $request->capacity,
-            ];
+    //         $data = [
+    //             'name' => $request->name,
+    //             'location' => $request->location,
+    //             'description' => $request->description,
+    //             'capacity' => $request->capacity,
+    //         ];
 
-            $apiResponse = Http::withHeaders($headers)->put($apiurl, $data);
+    //         $apiResponse = Http::withHeaders($headers)->put($apiurl, $data);
 
-            if ($apiResponse->successful()) {
-                return redirect()->route('gudang.index')->with('success', $apiResponse->json()['message']);
-            } else {
-                return back()->withErrors($apiResponse->json()['message']);
-            }
-        } catch (\Exception $e) {
-            return back()->withErrors($e->getMessage());
-        }
-    }
-    public function destroy(string $id)
-    {
-        try {
-            $headers = Helpers::getHeaders();
-            $apiurl = $this->buildApiUrl('/' . $id);
+    //         if ($apiResponse->successful()) {
+    //             return redirect()->route('gudang.index')->with('success', $apiResponse->json()['message']);
+    //         } else {
+    //             return back()->withErrors($apiResponse->json()['message']);
+    //         }
+    //     } catch (\Exception $e) {
+    //         return back()->withErrors($e->getMessage());
+    //     }
+    // }
+    // public function destroy(string $id)
+    // {
+    //     try {
+    //         $headers = Helpers::getHeaders();
+    //         $apiurl = $this->buildApiUrl('/' . $id);
 
-            $apiResponse = Http::withHeaders($headers)->delete($apiurl);
+    //         $apiResponse = Http::withHeaders($headers)->delete($apiurl);
 
-            if ($apiResponse->successful()) {
-                return redirect()->route('gudang.index')
-                    ->with('success', $apiResponse->json()['message']);
-            } else {
-                return back()->withErrors($apiResponse->body());
-            }
-        } catch (\Exception $e) {
-            return back()->withErrors($e->getMessage());
-        }
-    }
+    //         if ($apiResponse->successful()) {
+    //             return redirect()->route('gudang.index')
+    //                 ->with('success', $apiResponse->json()['message']);
+    //         } else {
+    //             return back()->withErrors($apiResponse->body());
+    //         }
+    //     } catch (\Exception $e) {
+    //         return back()->withErrors($e->getMessage());
+    //     }
+    // }
 }

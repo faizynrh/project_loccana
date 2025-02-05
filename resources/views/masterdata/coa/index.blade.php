@@ -45,27 +45,26 @@
                                     aria-label="Close"></button>
                             </div>
                         @endif
-                        <button type="button" class="btn btn-primary btn-lg fw-bold mt-1 mb-2" data-bs-toggle="modal"
-                            data-bs-target="#addCOAModal">+</button>
-                        <table class="table table-striped table-bordered mt-3" id="tablecoa">
-                            <thead>
-                                <tr>
-                                    <th scope="col" class="col-1">No</th>
-                                    <th scope="col" class="col-5">Parent</th>
-                                    <th scope="col" class="col-2">COA</th>
-                                    <th scope="col" class="col-3">Keterangan</th>
-                                    <th scope="col" class="col-2">Option</th>
-                                </tr>
-                            </thead>
-                        </table>
+                        <button type="button" class="btn btn-primary btn-lg fw-bold mt-1 mb-2 btn-add-coa">+</button>
+                        <div class="table-responsive">
+                            <table class="table table-striped table-bordered mt-3" id="tablecoa">
+                                <thead>
+                                    <tr>
+                                        <th scope="col" class="col-1">No</th>
+                                        <th scope="col" class="col-5">Parent</th>
+                                        <th scope="col" class="col-2">COA</th>
+                                        <th scope="col" class="col-3">Keterangan</th>
+                                        <th scope="col" class="col-2">Option</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
                     </div>
-                </div>
             </section>
         </div>
     </div>
+    @include('masterdata.coa.modal.modal')
     @include('masterdata.coa.modal.add')
-    @include('masterdata.coa.modal.edit')
-    @include('masterdata.coa.modal.detail')
 @endsection
 @push('scripts')
     <script>
@@ -96,85 +95,177 @@
                         data: null,
                         render: function(data, type, row) {
                             return `
-                        <div class="d-flex mb-2">
-                                    <a href="/coa/detail/${row.id}" class="btn btn-sm btn-info me-2 d-none"
-                                        title="Detail">
-                                        <i class="bi bi-eye"></i>
-                                    </a>
-                                    <button type="button" class="btn btn-sm btn-info me-2 detail-button"
-                                        data-id="${row.id}"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#detailCOAModal"
-                                        title="Edit">
-                                        <i class="bi bi-eye"></i>
-                                    </button>
-                                    <a href="/coa/edit/${row.id}" class="btn btn-sm btn-warning me-2 d-none"
-                                        title="Edit">
-                                        <i class="bi bi-pencil"></i>
-                                    </a>
-                                    <button type="button" class="btn btn-sm btn-warning me-2 edit-button"
-                                        data-id="${row.id}"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#editCOAModal"
-                                        title="Edit">
-                                        <i class="bi bi-pencil"></i>
-                                    </button>
-                                    <form action="/coa/delete/${row.id}" method="POST"
-                                        id="delete${row.id}" style="display:inline;">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="button" class="btn btn-sm btn-danger" title="Hapus"
-                                            onclick="confirmDelete(${row.id})">
-                                            <i class="bi bi-trash"></i>
-                                        </button>
-                                    </form>
-                                </div>
-                    `;
+                                    <div class="d-flex mb-2">
+                                                <button type="button" class="btn btn-sm btn-info me-2 btn-detail-coa"
+                                                    data-id="${row.id}"
+                                                    title="Detail">
+                                                    <i class="bi bi-eye"></i>
+                                                </button>
+                                                <button type="button" class="btn btn-sm btn-warning me-2 btn-edit-coa"
+                                                    data-id="${row.id}"
+                                                    title="Edit">
+                                                    <i class="bi bi-pencil"></i>
+                                                </button>
+                                                <form action="/coa/delete/${row.id}" method="POST"
+                                                    id="delete${row.id}" style="display:inline;">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="button" class="btn btn-sm btn-danger" title="Hapus"
+                                                        onclick="confirmDelete(${row.id})">
+                                                        <i class="bi bi-trash"></i>
+                                                    </button>
+                                                </form>
+                                    </div>
+                                `;
                         }
                     }
                 ]
             });
-            $(document).on('click', '.edit-button', function() {
-                const id = $(this).data('id');
-                $.ajax({
-                    url: `/coa/edit/${id}`,
-                    type: 'GET',
-                    success: function(response) {
-                        $('#editCOAForm').attr('action', `/coa/update/${id}`);
-                        $('#edit_parent_account_id').val(response.parent_account_id);
-                        $('#edit_account_code').val(response.account_code);
-                        $('#edit_account_name').val(response.account_name);
-                        $('#edit_description').val(response.description);
 
-                        $('#editCOAModal').modal('show');
+            // $(document).on('click', '.edit-button', function () {
+            //     const id = $(this).data('id');
+            //     $.ajax({
+            //         url: `/coa/edit/${id}`,
+            //         type: 'GET',
+            //         success: function (response) {
+            //             $('#editCOAForm').attr('action', `/coa/update/${id}`);
+            //             $('#edit_parent_account_id').val(response.parent_account_id);
+            //             $('#edit_account_code').val(response.account_code);
+            //             $('#edit_account_name').val(response.account_name);
+            //             $('#edit_description').val(response.description);
+
+            //             $('#editCOAModal').modal('show');
+            //         },
+            //         error: function (xhr) {
+            //             console.error(xhr);
+            //             alert('Terjadi kesalahan saat mengambil data!');
+
+            //         }
+            //     });
+            // });
+
+            // $('#editCOAModal').on('show.bs.modal', function () {
+            //     $('#editCOAForm')[0].reset();
+            // });
+
+            // $(document).on('click', '.detail-button', function () {
+            //     const id = $(this).data('id');
+            //     $.ajax({
+            //         url: `/coa/edit/${id}`,
+            //         type: 'GET',
+            //         success: function (response) {
+            //             $('#detail_parent_name').val(response.parent_name).trigger(
+            //                 'change');
+            //             $('#detail_account_code').val(response.account_code);
+            //             $('#detail_account_name').val(response.account_name);
+            //             $('#detail_description').val(response.description);
+
+            //             $('#detailCOAModal').modal('show');
+            //         },
+            //         error: function (xhr) {
+            //             console.error(xhr);
+            //             alert('Terjadi kesalahan saat mengambil data!');
+            //         }
+            //     });
+            // });
+
+            function updateModal(modalId, title, content, sizeClass) {
+                let modalDialog = $(`${modalId} .modal-dialog`);
+                modalDialog.removeClass('modal-full modal-xl modal-lg modal-md').addClass(sizeClass);
+
+                $(`${modalId} .modal-title`).text(title);
+                $(`${modalId} .modal-body`).html(content);
+
+                let myModal = new bootstrap.Modal(document.getElementById(modalId.substring(1)));
+                myModal.show();
+            }
+
+            $(document).on('click', '.btn-add-coa', function(e) {
+                e.preventDefault();
+                const coaId = $(this).data('id');
+                const url = '{{ route('coa.detail', ':coaId') }}'.replace(':coaId', coaId);
+                const $button = $(this);
+
+                $('#loading-overlay').fadeIn();
+
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    dataType: 'html',
+                    beforeSend: function() {
+                        //
+                    },
+                    success: function(response) {
+                        updateModal('#modal-coa', 'Detail COA', response,
+                            'modal-lg');
                     },
                     error: function(xhr) {
-                        console.error(xhr);
-                        alert('Terjadi kesalahan saat mengambil data!');
-
+                        let errorMsg = xhr.responseText ||
+                            '<p>An error occurred while loading the content.</p>';
+                        $('#content-coa').html(errorMsg);
+                    },
+                    complete: function() {
+                        $('#loading-overlay').fadeOut();
                     }
                 });
             });
-            $('#editCOAModal').on('show.bs.modal', function() {
-                $('#editCOAForm')[0].reset();
-            });
-            $(document).on('click', '.detail-button', function() {
-                const id = $(this).data('id');
-                $.ajax({
-                    url: `/coa/edit/${id}`,
-                    type: 'GET',
-                    success: function(response) {
-                        $('#detail_parent_name').val(response.parent_name).trigger(
-                            'change');
-                        $('#detail_account_code').val(response.account_code);
-                        $('#detail_account_name').val(response.account_name);
-                        $('#detail_description').val(response.description);
 
-                        $('#detailCOAModal').modal('show');
+            $(document).on('click', '.btn-detail-coa', function(e) {
+                e.preventDefault();
+                const coaId = $(this).data('id');
+                const url = '{{ route('coa.detail', ':coaId') }}'.replace(':coaId', coaId);
+                const $button = $(this);
+
+                $('#loading-overlay').fadeIn();
+
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    dataType: 'html',
+                    beforeSend: function() {
+                        //
+                    },
+                    success: function(response) {
+                        updateModal('#modal-coa', 'Detail COA', response,
+                            'modal-lg');
                     },
                     error: function(xhr) {
-                        console.error(xhr);
-                        alert('Terjadi kesalahan saat mengambil data!');
+                        let errorMsg = xhr.responseText ||
+                            '<p>An error occurred while loading the content.</p>';
+                        $('#content-coa').html(errorMsg);
+                    },
+                    complete: function() {
+                        $('#loading-overlay').fadeOut();
+                    }
+                });
+            });
+
+            $(document).on('click', '.btn-edit-coa', function(e) {
+                e.preventDefault();
+                const coaId = $(this).data('id');
+                const url = '{{ route('coa.edit', ':coaId') }}'.replace(':coaId', coaId);
+                const $button = $(this);
+
+                $('#loading-overlay').fadeIn();
+
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    dataType: 'html',
+                    beforeSend: function() {
+                        //
+                    },
+                    success: function(response) {
+                        updateModal('#modal-coa', 'Edit COA', response,
+                            'modal-lg');
+                    },
+                    error: function(xhr) {
+                        let errorMsg = xhr.responseText ||
+                            '<p>An error occurred while loading the content.</p>';
+                        $('#content-coa').html(errorMsg);
+                    },
+                    complete: function() {
+                        $('#loading-overlay').fadeOut();
                     }
                 });
             });

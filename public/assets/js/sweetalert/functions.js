@@ -15,60 +15,6 @@ function confirmApprove(id) {
     });
 }
 
-//////////// ADD //////////
-function confirmSubmit(buttonId, formId) {
-    const form = document.getElementById(formId);
-    if (!form.checkValidity()) {
-        form.reportValidity();
-        return;
-    }
-    Swal.fire({
-        title: "Apakah anda yakin?",
-        text: "Data yang dimasukkan akan disimpan!",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonText: "Ya, Simpan!",
-        cancelButtonText: "Batal",
-        reverseButtons: true,
-    }).then((result) => {
-        if (result.isConfirmed) {
-            const form = document.getElementById(formId);
-            if (form) {
-                form.submit();
-            } else {
-                Swal.fire("Error", "Form tidak ditemukan", "error");
-            }
-        }
-    });
-}
-
-//////////// EDIT //////////
-function confirmEdit(buttonId, formId) {
-    const form = document.getElementById(formId);
-    if (!form.checkValidity()) {
-        form.reportValidity();
-        return;
-    }
-    Swal.fire({
-        title: "Apakah anda yakin?",
-        text: "Perubahan yang Anda buat akan disimpan!",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonText: "Ya, Simpan!",
-        cancelButtonText: "Batal",
-        reverseButtons: true,
-    }).then((result) => {
-        if (result.isConfirmed) {
-            const form = document.getElementById(formId);
-            if (form) {
-                form.submit();
-            } else {
-                Swal.fire("Error", "Form tidak ditemukan", "error");
-            }
-        }
-    });
-}
-
 //////////// DELETE //////////
 function confirmDelete(id) {
     Swal.fire({

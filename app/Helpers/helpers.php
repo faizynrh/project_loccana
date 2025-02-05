@@ -6,37 +6,32 @@ use Illuminate\Support\Facades\Http;
 
 class Helpers
 {
-    public static function getAccessToken()
+    public static function fectApi($apiUrl)
     {
-        $tokenurl = env('API_TOKEN_URL');
-        $clientid = env('API_CLIENT_ID');
-        $clientsecret = env('API_CLIENT_SECRET');
-
-        $tokenResponse = Http::asForm()->post($tokenurl, [
-            'grant_type' => 'client_credentials',
-            'client_id' => $clientid,
-            'client_secret' => $clientsecret,
-        ]);
-
-        if (!$tokenResponse->successful()) {
-            throw new \Exception('Failed to fetch access token');
+        $access_token = session('access_token_2');
+        if (!$access_token) {
+            throw new \Exception('Access token is missing from session.');
         }
-
-        return $tokenResponse->json()['access_token'];
+        $response = Http::withOptions(['verify' => false])
+            ->withHeaders([
+                'Authorization' => 'Bearer ' . $access_token,
+                'Accept' => 'application/json',
+            ])
+            ->get($apiUrl);
+        return $response;
     }
 
-    public static function getHeaders()
+    public static function storeApi($apiUrl, $payloads)
     {
-        $accessToken = self::getAccessToken();
-        return [
-            'Authorization' => 'Bearer ' . $accessToken,
-            'Content-Type' => 'application/json'
-        ];
-    }
+        $access_token = session('access_token_2');
+        $response = Http::withOptions(['verify' => false])
+            ->withHeaders([
+                'Authorization' => 'Bearer ' . $access_token,
+                'Content-Type' => 'application/json',
+            ])
+            ->withBody(json_encode($payloads), 'application/json')
+            ->post($apiUrl);
 
-    public static function getApiUrl()
-    {
-        $apiurl = env('API_URL');
-        return $apiurl;
+        return $response;
     }
 }

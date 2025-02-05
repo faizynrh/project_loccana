@@ -11,7 +11,8 @@
                         <label for="parent_account_id" class="form-label fw-bold mb-0">Parent </label>
                     </div>
                     <div class="col-md-9">
-                        <input type="text" class="form-control" id="detail_parent_name" name="account_code" readonly>
+                        <input type="text" class="form-control" id="detail_parent_name" name="account_code"
+                            value="" readonly>
                     </div>
                 </div>
                 <div class="row mb-3 align-items-center">

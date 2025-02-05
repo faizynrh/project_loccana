@@ -44,7 +44,7 @@
                                     aria-label="Close"></button>
                             </div>
                         @endif
-                        <form action="{{ route('gudang.update', $data['id']) }}" method="POST" id="updateForm">
+                        <form action="{{ route('gudang.update', $data->data->id) }}" method="POST" id="updateForm">
                             @csrf
                             @method('PUT')
                             <div class="row mb-3 align-items-center">
@@ -54,7 +54,7 @@
                                 </div>
                                 <div class="col-md-9">
                                     <input type="text" class="form-control" id="name" name="name"
-                                        placeholder="Nama Gudang" value="{{ $data['name'] }}" minlength="3" required>
+                                        placeholder="Nama Gudang" value="{{ $data->data->name }}" minlength="3" required>
                                 </div>
                             </div>
                             <div class="row mb-3 align-items-center">
@@ -63,7 +63,7 @@
                                             class="text-danger">*</span></label>
                                 </div>
                                 <div class="col-md-9">
-                                    <textarea class="form-control" name="description" rows="5">{{ $data['description'] }}</textarea>
+                                    <textarea class="form-control" name="description" rows="5">{{ $data->data->description }}</textarea>
                                 </div>
                             </div>
                             <div class="row mb-3 align-items-center">
@@ -73,7 +73,7 @@
                                 </div>
                                 <div class="col-md-9">
                                     <input type="text" class="form-control" name="location" placeholder="Lokasi Gudang"
-                                        value="{{ $data['location'] }}">
+                                        value="{{ $data->data->location }}">
                                 </div>
                             </div>
                             <div class="row mb-3 align-items-center">
@@ -83,13 +83,12 @@
                                 </div>
                                 <div class="col-md-9">
                                     <input type="number" class="form-control" name="capacity" placeholder="Kapasitas"
-                                        value="{{ $data['capacity'] }}" required min="1">
+                                        value="{{ $data->data->capacity }}" required min="1">
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-12 text-end">
-                                    <button type="button" id="submitButton" class="btn btn-primary"
-                                        onclick="confirmEdit('submitButton', 'updateForm')">Submit</button>
+                                    <button type="submit" id="submitButton" class="btn btn-primary">Submit</button>
                                     <a href="{{ route('gudang.index') }}" class="btn btn-secondary ms-2">Batal</a>
                                 </div>
                             </div>
