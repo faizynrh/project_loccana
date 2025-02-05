@@ -57,7 +57,7 @@
                                 <div class="col-md-6">
                                     <label for="code" class="form-label fw-bold mt-2 mb-1 small">Kode</label>
                                     <input type="text" class="form-control bg-body-secondary" id="code"
-                                        name="code" placeholder="Kode" readonly>
+                                        name="code" placeholder="Kode">
                                     <label for="tanggal" class="form-label fw-bold mt-2 mb-1 small">Tanggal</label>
                                     <input type="date" class="form-control" id="order_date" name="order_date">
 
@@ -69,7 +69,7 @@
                                         @endforeach
                                     </select>
 
-                                    <label for="description" class="form-label fw-bold mt-2 mb-1 small">Status</label>
+                                    <label for="gudang" class="form-label fw-bold mt-2 mb-1 small">Status</label>
                                     <input type="text" class="form-control " id="status" name="status">
                                     <label for="requested_by" class="form-label fw-bold mt-2 mb-1 small">Requested
                                         By</label>
@@ -100,6 +100,14 @@
 
                                     <label for="description" class="form-label fw-bold mt-2 mb-1 small">Keterangan</label>
                                     <textarea class="form-control" rows="5" id="description" name="description"></textarea>
+
+                                    <label for="gudang" class="form-label fw-bold mt-2 mb-1 small">Gudang</label>
+                                    <select class="form-select" id="gudang" name="gudang">
+                                        <option value="" selected disabled>Pilih Gudang</option>
+                                        @foreach ($gudang as $items)
+                                            <option value="{{ $items['id'] }}">{{ $items['name'] }}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
                             </div>
                             <div class="p-2">
@@ -121,21 +129,30 @@
                                 <tbody id="tableBody">
                                     <tr style="border-bottom: 2px solid #000" class="item-row">
                                         <td colspan="2">
-                                            <select class="form-select item-select" name="items[item_id]">
+                                            <select class="form-select item-select" name="items[0][item_id]">
                                                 <option value="" disabled selected>Silahkan pilih principle terlebih
                                                     dahulu</option>
+                                                <!-- Pastikan option akan diisi melalui JavaScript (sama seperti row baru) -->
                                             </select>
                                         </td>
-                                        <td><input type="number" name="quantity" class="form-control qty-input"
-                                                value="0"></td>
-                                        <td><input type="number" name="unit_price" class="form-control price-input"
-                                                value="0"></td>
-                                        <td><input type="number" name="discount" class="form-control discount-input"
-                                                value="0" max="100">
+                                        <td>
+                                            <input type="number" name="items[0][quantity]"
+                                                class="form-control qty-input" value="0" min="0">
                                         </td>
-                                        <td colspan="2"><input type="number" name=""
+                                        <td>
+                                            <input type="number" name="items[0][unit_price]"
+                                                class="form-control price-input" value="0" min="0">
+                                        </td>
+                                        <td>
+                                            <input type="number" name="items[0][discount]"
+                                                class="form-control discount-input" value="0" min="0"
+                                                max="100">
+                                        </td>
+                                        <td colspan="2">
+                                            <input type="number" name="items[0][total]"
                                                 class="form-control bg-body-secondary total-input" value="0"
-                                                readonly></td>
+                                                readonly>
+                                        </td>
                                         <td></td>
                                     </tr>
                                     <tr style="border-bottom: 2px solid #000;">
