@@ -130,7 +130,8 @@ class CoaController extends Controller
 
             if ($apiResponse->successful()) {
                 $data = $apiResponse->json()['data'];
-                return view('masterdata.coa.edit', compact('data', 'id'));
+                // return view('masterdata.coa.edit', compact('data', 'id'));
+                return response()->json($data);
             } else {
                 return back()->withErrors($apiResponse->json()['message']);
             }
@@ -154,7 +155,6 @@ class CoaController extends Controller
             ];
 
             $apiResponse = Http::withHeaders($headers)->put($apiurl, $data);
-
             if ($apiResponse->successful()) {
                 return redirect()->route('coa.index')->with('success', $apiResponse->json()['message']);
             } else {
