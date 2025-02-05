@@ -63,8 +63,7 @@
             </section>
         </div>
     </div>
-    @include('masterdata.coa.modal.modal')
-    @include('masterdata.coa.modal.add')
+    @include('masterdata.coa.ajax.modal')
 @endsection
 @push('scripts')
     <script>
@@ -122,53 +121,6 @@
                 ]
             });
 
-            // $(document).on('click', '.edit-button', function () {
-            //     const id = $(this).data('id');
-            //     $.ajax({
-            //         url: `/coa/edit/${id}`,
-            //         type: 'GET',
-            //         success: function (response) {
-            //             $('#editCOAForm').attr('action', `/coa/update/${id}`);
-            //             $('#edit_parent_account_id').val(response.parent_account_id);
-            //             $('#edit_account_code').val(response.account_code);
-            //             $('#edit_account_name').val(response.account_name);
-            //             $('#edit_description').val(response.description);
-
-            //             $('#editCOAModal').modal('show');
-            //         },
-            //         error: function (xhr) {
-            //             console.error(xhr);
-            //             alert('Terjadi kesalahan saat mengambil data!');
-
-            //         }
-            //     });
-            // });
-
-            // $('#editCOAModal').on('show.bs.modal', function () {
-            //     $('#editCOAForm')[0].reset();
-            // });
-
-            // $(document).on('click', '.detail-button', function () {
-            //     const id = $(this).data('id');
-            //     $.ajax({
-            //         url: `/coa/edit/${id}`,
-            //         type: 'GET',
-            //         success: function (response) {
-            //             $('#detail_parent_name').val(response.parent_name).trigger(
-            //                 'change');
-            //             $('#detail_account_code').val(response.account_code);
-            //             $('#detail_account_name').val(response.account_name);
-            //             $('#detail_description').val(response.description);
-
-            //             $('#detailCOAModal').modal('show');
-            //         },
-            //         error: function (xhr) {
-            //             console.error(xhr);
-            //             alert('Terjadi kesalahan saat mengambil data!');
-            //         }
-            //     });
-            // });
-
             function updateModal(modalId, title, content, sizeClass) {
                 let modalDialog = $(`${modalId} .modal-dialog`);
                 modalDialog.removeClass('modal-full modal-xl modal-lg modal-md').addClass(sizeClass);
@@ -182,11 +134,10 @@
 
             $(document).on('click', '.btn-add-coa', function(e) {
                 e.preventDefault();
-                const coaId = $(this).data('id');
-                const url = '{{ route('coa.detail', ':coaId') }}'.replace(':coaId', coaId);
+                const url = '{{ route('coa.store') }}'
                 const $button = $(this);
 
-                $('#loading-overlay').fadeIn();
+                // $('#loading-overlay').fadeIn();
 
                 $.ajax({
                     url: url,
@@ -205,7 +156,7 @@
                         $('#content-coa').html(errorMsg);
                     },
                     complete: function() {
-                        $('#loading-overlay').fadeOut();
+                        // $('#loading-overlay').fadeOut();
                     }
                 });
             });
@@ -270,5 +221,14 @@
                 });
             });
         });
+
+        function disableButton(event) {
+            let form = event.target;
+            if (form.checkValidity()) { // Pastikan form valid
+                let button = document.getElementById('submitButton');
+                button.disabled = true;
+                button.innerText = 'Processing...';
+            }
+        }
     </script>
 @endpush

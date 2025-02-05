@@ -4,17 +4,15 @@
             masukkan data dengan benar.</h6>
     </div>
     <div class="col-12">
-        <form id="editCOAForm" method="POST" action="{{ route('coa.update', $data->data->id) }}"
-            onsubmit="disableButton(event)">
+        <form action="{{ route('coa.store') }}" method="POST" id="createForm" onsubmit="disableButton(event)">
             @csrf
-            @method('PUT')
             <div class="row mb-3 align-items-center">
                 <div class="col-md-3">
                     <label for="parent_account_id" class="form-label fw-bold mb-0">Parent <span
                             class="text-danger">*</span></label>
                 </div>
                 <div class="col-md-9">
-                    <select class="form-select" id="edit_parent_account_id" name="parent_account_id">
+                    <select class="form-select" id="parent_account_id" name="parent_account_id">
                         <option value="" selected disabled>Pilih Parent</option>
                     </select>
                 </div>
@@ -25,8 +23,8 @@
                             class="text-danger">*</span></label>
                 </div>
                 <div class="col-md-9">
-                    <input type="text" class="form-control" id="edit_account_code" name="account_code"
-                        value="{{ $data->data->account_code }}" placeholder="Kode Akun" required>
+                    <input type="text" class="form-control" id="account_code" name="account_code"
+                        placeholder="Kode Akun" required>
                 </div>
             </div>
             <div class="row mb-3 align-items-center">
@@ -35,8 +33,8 @@
                             class="text-danger">*</span></label>
                 </div>
                 <div class="col-md-9">
-                    <input type="text" class="form-control" id="edit_account_name" name="account_name"
-                        placeholder="Nama Akun" value="{{ $data->data->account_name }}" required>
+                    <input type="text" class="form-control" id="account_name" name="account_name"
+                        placeholder="Nama Akun" required>
                 </div>
             </div>
             <div class="row mb-3 align-items-center">
@@ -45,11 +43,12 @@
                             class="text-danger">*</span></label>
                 </div>
                 <div class="col-md-9">
-                    <textarea class="form-control" id="edit_description" name="description" rows="5">{{ $data->data->description }}</textarea>
+                    <textarea class="form-control" id="description" name="description" rows="5" required></textarea>
                 </div>
             </div>
+
             <div class="modal-footer">
-                <button type="submit" class="btn btn-primary btn-save" id="submitButton">Submit</button>
+                <button type="submit" class="btn btn-primary" id="submitButton">Submit</button>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
                     aria-label="Close">Batal</button>
             </div>
