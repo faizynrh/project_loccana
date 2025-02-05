@@ -45,7 +45,7 @@
                                     aria-label="Close"></button>
                             </div>
                         @endif
-                        <button type="button" class="btn btn-primary btn-lg fw-bold mt-1 mb-2 btn-add-coa">+</button>
+                        <button type="button" class="btn btn-primary fw-bold btn-add-coa">+ Tambah COA</button>
                         <div class="table-responsive">
                             <table class="table table-striped table-bordered mt-3" id="tablecoa">
                                 <thead>
@@ -148,7 +148,7 @@
                     },
                     success: function(response) {
                         console.log(response);
-                        updateModal('#modal-coa', 'Detail COA', response,
+                        updateModal('#modal-coa', 'Tambah COA', response,
                             'modal-lg');
                     },
                     error: function(xhr) {

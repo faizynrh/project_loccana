@@ -2,33 +2,27 @@
 
 namespace App\Http\Controllers\masterdata;
 
-use App\Helpers\Helpers;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Http;
 
 class ItemController extends Controller
 {
     private function buildApiUrl($endpoint)
     {
-        return getApiUrl() . '/master/items/1.0.0/items' . $endpoint;
+        return env('API_URL') . '/master/items/1.0.0/items' . $endpoint;
     }
 
     private function urlSelect()
     {
         return [
-            'uom' => getApiUrl() . '/loccana/masterdata/1.0.0/uoms/list-select',
-            'item' => getApiUrl() . '/loccana/masterdata/item-types/1.0.0/item-types/list-select'
+            'uom' => env('API_URL') . '/loccana/masterdata/1.0.0/uoms/list-select',
+            'item' => env('API_URL') . '/loccana/masterdata/item-types/1.0.0/item-types/list-select'
         ];
     }
 
     private function ajax(Request $request)
     {
         try {
-            $headers = getHeaders();
-            $apiurl = $this->buildApiUrl('/lists');
-
             $length = $request->input('length', 10);
             $start = $request->input('start', 0);
             $search = $request->input('search.value') ?? '';
@@ -39,8 +33,7 @@ class ItemController extends Controller
                 'offset' => $start,
                 'company_id' => 2
             ];
-
-            $apiResponse = Http::withHeaders($headers)->post($apiurl, $requestbody);
+            $apiResponse = storeApi($this->buildApiUrl('/lists'), $requestbody);
 
             if ($apiResponse->successful()) {
                 $data = $apiResponse->json();
@@ -72,17 +65,13 @@ class ItemController extends Controller
 
     public function create()
     {
-        $headers = getHeaders();
-        $uomurl = $this->urlSelect()['uom'];
-        $itemurl = $this->urlSelect()['item'];
-
-        $uomResponse = Http::withHeaders($headers)->get($uomurl);
-        $itemResponse = Http::withHeaders($headers)->get($itemurl);
+        $uomResponse = fectApi($this->urlSelect()['uom']);
+        $itemResponse = fectApi($this->urlSelect()['item']);
 
         if ($uomResponse->successful() && $itemResponse->successful()) {
-            $uoms = $uomResponse->json();
-            $items = $itemResponse->json();
-            return view('masterdata.item.add', compact('uoms', 'items'));
+            $uom = json_decode($uomResponse->body(), false);
+            $item = json_decode($itemResponse->body(), false);
+            return view('masterdata.item.ajax.add', compact('uom', 'item'));
         } else {
             $errors = [];
             if (!$uomResponse->successful()) {
@@ -98,22 +87,17 @@ class ItemController extends Controller
     public function store(Request $request)
     {
         try {
-            $headers = getHeaders();
-            $apiurl = $this->buildApiUrl('/');
-
             $data = [
                 'name' => $request->input('name'),
                 'description' => $request->input('description'),
                 'unit_of_measure_id' => $request->input('unit_of_measure_id'),
                 'item_type_id' => $request->input('item_type_id'),
                 'item_category_id' => $request->input('item_category_id', 1),
-                'sku' => $request->input('sku'), //
+                'sku' => $request->input('sku'),
                 'company_id' => $request->input('company_id', 2),
             ];
+            $apiResponse = storeApi($this->buildApiUrl('/'), $data);
 
-            $apiResponse = Http::withHeaders($headers)->post($apiurl, $data);
-
-            $responseData = $apiResponse->json();
             if ($apiResponse->successful()) {
                 return redirect()->route('item.index')
                     ->with('success', $apiResponse->json()['message']);
@@ -128,17 +112,9 @@ class ItemController extends Controller
     public function show($id)
     {
         try {
-            $headers = getHeaders();
-            $apiurl = $this->buildApiUrl('/' . $id);
-
-            $apiResponse = Http::withHeaders($headers)->get($apiurl);
-
-            if ($apiResponse->successful()) {
-                $data = $apiResponse->json()['data'];
-                return view('masterdata.item.detail', compact('data'));
-            } else {
-                return back()->withErrors($apiResponse->json()['message']);
-            }
+            $apiResponse = fectApi($this->buildApiUrl('/' . $id));
+            $data = json_decode($apiResponse->getBody()->getContents());
+            return view('masterdata.item.ajax.detail', compact('data'));
         } catch (\Exception $e) {
             return back()->withErrors($e->getMessage());
         }
@@ -147,20 +123,15 @@ class ItemController extends Controller
     public function edit($id)
     {
         try {
-            $headers = getHeaders();
-            $apiurl = $this->buildApiUrl('/' . $id);
-            $uomurl = $this->urlSelect()['uom'];
-            $itemurl = $this->urlSelect()['item'];
-
-            $apiResponse = Http::withHeaders($headers)->get($apiurl);
-            $uomResponse = Http::withHeaders($headers)->get($uomurl);
-            $itemResponse = Http::withHeaders($headers)->get($itemurl);
+            $apiResponse = fectApi($this->buildApiUrl('/' . $id));
+            $uomResponse = fectApi($this->urlSelect()['uom']);
+            $itemResponse = fectApi($this->urlSelect()['item']);
 
             if ($uomResponse->successful() && $itemResponse->successful() && $apiResponse->successful()) {
-                $uoms = $uomResponse->json()['data'];
-                $items = $itemResponse->json()['data'];
-                $data = $apiResponse->json()['data'];
-                return view('masterdata.item.edit', compact('data', 'uoms', 'items', 'id'));
+                $uom = json_decode($uomResponse->getBody()->getContents());
+                $item = json_decode($itemResponse->getBody()->getContents());
+                $data = json_decode($apiResponse->getBody()->getContents());
+                return view('masterdata.item.ajax.edit', compact('data', 'uom', 'item'));
             } else {
                 $errors = [];
                 if (!$uomResponse->successful()) {
@@ -182,9 +153,6 @@ class ItemController extends Controller
     public function update(Request $request, string $id)
     {
         try {
-            $headers = getHeaders();
-            $apiurl = $this->buildApiUrl('/' . $id);
-
             $data = [
                 'name' => $request->name,
                 'description' => $request->description,
@@ -194,8 +162,7 @@ class ItemController extends Controller
                 'sku' => $request->sku,
             ];
 
-            $apiResponse = Http::withHeaders($headers)->put($apiurl, $data);
-
+            $apiResponse = updateApi($this->buildApiUrl('/' . $id), $data);
             if ($apiResponse->successful()) {
                 return redirect()->route('item.index')->with('success', $apiResponse->json()['message']);
             } else {
@@ -209,10 +176,7 @@ class ItemController extends Controller
     public function destroy(string $id)
     {
         try {
-            $headers = getHeaders();
-            $apiurl = $this->buildApiUrl('/' . $id);
-
-            $apiResponse = Http::withHeaders($headers)->delete($apiurl);
+            $apiResponse = deleteApi($this->buildApiUrl('/' . $id));
 
             if ($apiResponse->successful()) {
                 return redirect()->route('item.index')->with('success', $apiResponse->json()['message']);

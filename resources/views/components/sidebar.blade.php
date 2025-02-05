@@ -27,7 +27,7 @@
                     </a>
                     <ul class="submenu active">
                         <li class="submenu-item {{ Request::is('item*') ? 'active' : '' }}">
-                            <a href="/item" class="submenu-link">Items</a>
+                            <a href="/item" class="submenu-link">Item</a>
                         </li>
                         <li class="submenu-item {{ Request::is('user*') ? 'active' : '' }}">
                             <a href="/user" class="submenu-link">User</a>
