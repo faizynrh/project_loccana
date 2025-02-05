@@ -143,18 +143,19 @@ class PurchaseOrderController extends Controller
         $headers = Helpers::getHeaders();
 
         $partnerurl = Helpers::getApiUrl() . '/loccana/masterdata/partner/1.0.0/partner/list-select/' . $company_id . '/' .  $suplier . '/' . $customer;
-
+        $gudang = Helpers::getApiUrl() . '/masterdata/warehouse/1.0.0/warehouse/list-select/' . $company_id;
         $data = [
             'company_id' => 2
         ];
 
         $partnerResponse = Http::withHeaders($headers)->get($partnerurl);
+        $gudangResponse = Http::withHeaders($headers)->get($gudang);
 
-
-        if ($partnerResponse->successful()) {
+        if ($partnerResponse->successful() && $gudangResponse->successful()) {
             $partner = $partnerResponse->json()['data'];
+            $gudang = $gudangResponse->json()['data'];
 
-            return view('procurement.purchaseorder.add', compact('partner'));
+            return view('procurement.purchaseorder.add', compact('partner', 'gudang'));
         } else {
             return response()->json([
                 'status' => 'error',
@@ -253,59 +254,70 @@ class PurchaseOrderController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        dd($request->all());
         try {
+            // Mengambil header dan URL API
             $headers = Helpers::getHeaders();
             $apiurl = Helpers::getApiUrl() . '/loccana/po/1.0.0/purchase-order';
 
-            $item = [];
-            if ($request->has('items')) {
-                foreach ($request->input('items') as $item) {
-                    $item[] = [
-                        'item_id' => $item['item_id'],
-                        'warehouse_id' => $item['warehouse_id'],
-                        'quantity' => $item['quantity'],
-                        'unit_price' => $item['unit_price'],
-                        'discount' => $item['discount'],
-                        'uom_id' => $item['uom_id'],
+            // Ambil data items dari request
+            $itemsRequest = $request->input('items');
+
+            // Jika items yang dikirim hanya satu item (asosiatif) bukan array dari item,
+            // bungkus ke dalam array
+            if (is_array($itemsRequest) && isset($itemsRequest['item_id'])) {
+                $itemsRequest = [$itemsRequest];
+            }
+
+            $items = [];
+            if (is_array($itemsRequest)) {
+                foreach ($itemsRequest as $itemData) {
+                    // Pastikan setiap item memiliki struktur yang tepat
+                    $items[] = [
+                        'item_id'      => $itemData['item_id'] ?? null,
+                        'warehouse_id' => $itemData['warehouse_id'] ?? null,
+                        'quantity'     => $itemData['quantity'] ?? 0,
+                        'unit_price'   => $itemData['unit_price'] ?? 0,
+                        'discount'     => $itemData['discount'] ?? 0,
+                        'uom_id'       => $itemData['uom_id'] ?? null,
                     ];
                 }
             }
-            dd($item);
 
+            // Susun data purchase order yang akan dikirim ke API
             $data = [
-                'company_id' => 2,
-                'code' => (string)$request->input('code'),
-                'order_date' => $request->input('order_date'),
-                'partner_id' => $request->input('partner_id'),
+                'company_id'      => 2,
+                'code'            => (string) $request->input('code'),
+                'order_date'      => $request->input('order_date'),
+                'partner_id'      => $request->input('partner_id'),
                 'term_of_payment' => $request->input('term_of_payment'),
-                'currency_id' => $request->input('currency_id'),
-                'total_amount' => $request->input('total_amount'),
-                'tax_amount' => $request->input('tax_amount'),
-                'description' => $request->input('description'),
-                'status' => $request->input('status'),
-                'requested_by' => $request->input('requested_by'),
-                'items' => $item
+                'currency_id'     => $request->input('currency_id'),
+                'total_amount'    => $request->input('total_amount'),
+                'tax_amount'      => $request->input('tax_amount'),
+                'description'     => $request->input('description'),
+                'status'          => $request->input('status'),
+                'requested_by'    => $request->input('requested_by'),
+                'items'           => $items,
             ];
 
+            // Kirim data ke API
             $apiResponse = Http::withHeaders($headers)->post($apiurl, $data);
             $responseData = $apiResponse->json();
 
-            dd($data);
             if ($apiResponse->successful() && isset($responseData['success']) && $responseData['success'] === true) {
                 return redirect()->route('purchaseorder.index')
                     ->with('success', $responseData['message'] ?? 'Data purchase order berhasil ditambahkan.');
             } else {
                 Log::error('Error saat menambahkan purchase order: ' . $apiResponse->body());
                 return back()->withErrors(
-                    'Gagal menambahkan data: ' .
-                        ($responseData['message'] ?? $apiResponse->body())
+                    'Gagal menambahkan data: ' . ($responseData['message'] ?? $apiResponse->body())
                 );
             }
         } catch (\Exception $e) {
             return back()->withErrors($e->getMessage());
         }
     }
+
 
     /**
      * Display the specified resource.
