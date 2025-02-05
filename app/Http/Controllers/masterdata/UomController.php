@@ -92,33 +92,26 @@ class UomController extends Controller
     {
         try {
             $apiResponse = fectApi($this->buildApiUrl('/' . $id));
-            if ($apiResponse->successful()) {
-                $uomData = $apiResponse->json();
+            $data = json_decode($apiResponse->getBody()->getContents());
+            // dd($data);
+            return view(
+                'masterdata.uom.ajax.edit',
 
-                if (isset($uomData['data'])) {
-                    return view('masterdata.uom.ajax.edit', ['uom' => $uomData['data']]);
-                } else {
-                    return back()->withErrors($apiResponse->json()['message']);
-                }
-            } else {
-                return back()->withErrors($apiResponse->json()['message']);
-            }
+                compact('data')
+            );;
         } catch (\Exception $e) {
             return back()->withErrors($e->getMessage());
         }
     }
-
     public function update(Request $request, $id)
     {
         try {
-
             $data = [
                 'name' => $request->input('uom_name'),
                 'symbol' => $request->input('uom_symbol'),
                 'description' => $request->input('description')
             ];
             $apiResponse = updateApi($this->buildApiUrl('/' . $id), $data);
-
             if ($apiResponse->successful()) {
                 return redirect()->route('uom.index')
                     ->with('success', $apiResponse->json()['message']);
@@ -132,24 +125,23 @@ class UomController extends Controller
         }
     }
 
+
     public function show($id)
     {
         try {
             $apiResponse = fectApi($this->buildApiUrl('/' . $id));
-            if ($apiResponse->successful()) {
-                $uomData = $apiResponse->json();
-                if (isset($uomData['data'])) {
-                    return view('masterdata.uom.ajax.detail', ['uom' => $uomData['data']]);
-                } else {
-                    return back()->withErrors($apiResponse->json()['message']);
-                }
-            } else {
-                return back()->withErrors(provider: $apiResponse->json()['message']);
-            }
+            $data = json_decode($apiResponse->getBody()->getContents());
+            // dd($data);
+            return view(
+                'masterdata.uom.ajax.detail',
+
+                compact('data')
+            );;
         } catch (\Exception $e) {
             return back()->withErrors($e->getMessage());
         }
     }
+
 
     public function destroy(string $id)
     {

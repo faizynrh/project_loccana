@@ -95,12 +95,12 @@
                             data: null,
                             render: function(data, type, row) {
                                 return `
-                    <a href="/uom/detail/${row.id}" class="btn btn-sm btn-info mb-2" title="Detail">
+                    <button type="button" class="btn btn-sm btn-info mb-2 btn-detail-uom" title="Detail" data-id="${row.id}" >
                         <i class="bi bi-eye"></i>
-                    </a>
-                    <a href="/uom/edit/${row.id}" class="btn btn-sm btn-warning mb-2" title="Edit">
+                    </button>
+                    <button type="button" class="btn btn-sm btn-warning mb-2 btn-edit-uom" data-id="${row.id}" title="Edit"  >
                         <i class="bi bi-pencil"></i>
-                    </a>
+                    </button>
                     <form action="/uom/delete/${row.id}" method="POST" id="delete${row.id}" style="display:inline;">
                         @csrf
                         @method('DELETE')
@@ -141,7 +141,7 @@
                         //
                     },
                     success: function(response) {
-                        updateModal('#modal-uom', 'Detail Uom', response,
+                        updateModal('#modal-uom', 'Tambah Uom', response,
                             'modal-lg');
                     },
                     error: function(xhr) {
@@ -201,7 +201,7 @@
                         //
                     },
                     success: function(response) {
-                        updateModal('#modal-uom', 'Edit uom', response,
+                        updateModal('#modal-uom', 'Edit Uom', response,
                             'modal-lg');
                     },
                     error: function(xhr) {
