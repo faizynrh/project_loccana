@@ -14,22 +14,22 @@ class PenerimaanBarangController extends Controller
 {
     private function buildApiUrl($endpoint)
     {
-        return getApiUrl() . '/loccana/itemreceipt/1.0.0/item_receipt/1.0.0' . $endpoint;
+        return env('API_URL') . '/loccana/itemreceipt/1.0.0/item_receipt/1.0.0' . $endpoint;
     }
 
-    private function urlSelect($id)
+    private function url($id)
     {
         return [
-            'po' => getApiUrl() . '/loccana/po/1.0.0/purchase-order/list-select/' . $id,
-            'gudang' => getApiUrl() . '/masterdata/warehouse/1.0.0/warehouse/list-select/' . $id,
-            'podetail' => getApiUrl() . '/loccana/po/1.0.0/purchase-order/' . $id
+            'po' => env('API_URL') . '/loccana/po/1.0.0/purchase-order/list-select/' . $id,
+            'detailpo' => env('API_URL') . '/loccana/po/1.0.0/purchase-order/' . $id,
+            'gudang' => env('API_URL') . '/masterdata/warehouse/1.0.0/warehouse/list-select/' . $id,
+            'podetail' => env('API_URL') . '/loccana/po/1.0.0/purchase-order/' . $id
         ];
     }
 
     private function ajax(Request $request)
     {
         try {
-            $headers = getHeaders();
             $month = $request->input('month');
             $year = $request->input('year');
             $length = $request->input('length');
@@ -45,11 +45,8 @@ class PenerimaanBarangController extends Controller
                 'company_id' => 0,
             ];
 
-            $apiurl = $this->buildApiUrl('/lists');
-            $mtdurl = $this->buildApiUrl('/mtd');
-
-            $apiResponse = Http::withHeaders($headers)->post($apiurl, $requestbody);
-            $mtdResponse = Http::withHeaders($headers)->post($mtdurl, $requestbody);
+            $apiResponse = storeApi($this->buildApiUrl('/lists'), $requestbody);
+            $mtdResponse = storeApi($this->buildApiUrl('/mtd'), $requestbody);
 
             if ($apiResponse->successful() && $mtdResponse->successful()) {
                 $data = $apiResponse->json();
@@ -76,13 +73,11 @@ class PenerimaanBarangController extends Controller
         }
         return view('procurement.penerimaanbarang.index');
     }
-    public function getPoDetails(Request $request, $po_id)
+    public function getPoDetails(Request $request, $id)
     {
-        $headers = getHeaders();
-        $apiurl = getApiUrl() . '/loccana/po/1.0.0/purchase-order/' . $po_id;
-
         try {
-            $apiResponse = Http::withHeaders($headers)->get($apiurl);
+            $apiResponse = fectApi($this->url($id)['detailpo']);
+            dd($apiResponse->json());
             $items = [];
             if ($apiResponse->successful()) {
                 $data = $apiResponse->json()['data'];
@@ -118,16 +113,12 @@ class PenerimaanBarangController extends Controller
     public function create()
     {
         $company_id = 2;
-        $headers = getHeaders();
 
-        $pourl = $this->urlSelect($company_id)['po'];
-        $gudangurl = $this->urlSelect($company_id)['gudang'];
+        $pourl = $this->url($company_id)['po'];
+        $gudangurl = $this->url($company_id)['gudang'];
 
-        $pourl = getApiUrl() . '/loccana/po/1.0.0/purchase-order/list-select/' . $company_id;
-        $gudangurl = getApiUrl() . '/masterdata/warehouse/1.0.0/warehouse/list-select/' . $company_id;
-
-        $poResponse = Http::withHeaders($headers)->get($pourl);
-        $gudangResponse = Http::withHeaders($headers)->get($gudangurl);
+        $poResponse = fectApi($this->url($company_id)['po']);
+        $gudangResponse = fectApi($this->url($company_id)['gudang']);
         if ($poResponse->successful() && $gudangResponse->successful()) {
             $po = $poResponse->json()['data'];
             $gudang = $gudangResponse->json()['data'];
@@ -147,9 +138,6 @@ class PenerimaanBarangController extends Controller
     public function store(Request $request)
     {
         try {
-            $headers = getHeaders();
-            $apiurl = $this->buildApiUrl('/');
-
             $dataitems = [];
             if ($request->has('items')) {
                 foreach ($request->input('items') as $item) {
@@ -179,7 +167,8 @@ class PenerimaanBarangController extends Controller
                 'items' => $dataitems
             ];
 
-            $apiResponse = Http::withHeaders($headers)->post($apiurl, $data);
+            $apiResponse = storeApi($this->buildApiUrl('/'), $data);
+
             if ($apiResponse->successful()) {
                 return redirect()->route('penerimaan_barang.index')
                     ->with('success', $apiResponse->json()['message']);
