@@ -147,6 +147,7 @@
                         //
                     },
                     success: function(response) {
+
                         updateModal('#modal-coa', 'Detail COA', response,
                             'modal-lg');
                     },
@@ -221,14 +222,5 @@
                 });
             });
         });
-
-        function disableButton(event) {
-            let form = event.target;
-            if (form.checkValidity()) { // Pastikan form valid
-                let button = document.getElementById('submitButton');
-                button.disabled = true;
-                button.innerText = 'Processing...';
-            }
-        }
     </script>
 @endpush

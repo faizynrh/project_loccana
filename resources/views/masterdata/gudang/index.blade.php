@@ -48,7 +48,7 @@
                                     aria-label="Close"></button>
                             </div>
                         @endif
-                        <a href="/gudang/add" class="btn btn-primary btn-lg fw-bold mt-1 mb-2">+</a>
+                        <button type="button" class="btn btn-primary btn-lg fw-bold mt-1 mb-2 btn-add-gudang">+</button>
                         <div class="table-responsive">
                             <table class="table table-striped table-bordered mt-3" id="tablegudang">
                                 <thead>
@@ -68,6 +68,7 @@
             </section>
         </div>
     </div>
+    @include('masterdata.gudang.ajax.modal')
 @endsection
 @push('scripts')
     <script>
@@ -101,10 +102,11 @@
                         data: null,
                         render: function(data, type, row) {
                             return `
-                        <a href="/gudang/edit/${row.id}" class="btn btn-sm btn-warning"
-                                    title="Edit">
-                                    <i class="bi bi-pencil"></i>
-                                </a>
+                                <button type="button" class="btn btn-sm btn-warning me-2 btn-edit-gudang"
+                                                    data-id="${row.id}"
+                                                    title="Edit">
+                                                    <i class="bi bi-pencil"></i>
+                                </button>
                                 <form action="/gudang/delete/${row.id}" method="POST" id="delete${row.id}" style="display:inline;">
                                     @csrf
                                     @method('DELETE')
@@ -117,6 +119,76 @@
                         }
                     }
                 ]
+            });
+
+            function updateModal(modalId, title, content, sizeClass) {
+                let modalDialog = $(`${modalId} .modal-dialog`);
+                modalDialog.removeClass('modal-full modal-xl modal-lg modal-md').addClass(sizeClass);
+
+                $(`${modalId} .modal-title`).text(title);
+                $(`${modalId} .modal-body`).html(content);
+
+                let myModal = new bootstrap.Modal(document.getElementById(modalId.substring(1)));
+                myModal.show();
+            }
+
+            $(document).on('click', '.btn-add-gudang', function(e) {
+                e.preventDefault();
+                const url = '{{ route('gudang.store') }}'
+                const $button = $(this);
+
+                // $('#loading-overlay').fadeIn();
+
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    dataType: 'html',
+                    beforeSend: function() {
+                        //
+                    },
+                    success: function(response) {
+                        updateModal('#modal-gudang', 'Add Gudang', response,
+                            'modal-lg');
+                    },
+                    error: function(xhr) {
+                        let errorMsg = xhr.responseText ||
+                            '<p>An error occurred while loading the content.</p>';
+                        $('#content-gudang').html(errorMsg);
+                    },
+                    complete: function() {
+                        // $('#loading-overlay').fadeOut();
+                    }
+                });
+            });
+
+            $(document).on('click', '.btn-edit-gudang', function(e) {
+                e.preventDefault();
+                const gudangid = $(this).data('id');
+                const url = '{{ route('gudang.edit', ':gudangid') }}'.replace(':gudangid', gudangid);
+                const $button = $(this);
+
+                $('#loading-overlay').fadeIn();
+
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    dataType: 'html',
+                    beforeSend: function() {
+                        //
+                    },
+                    success: function(response) {
+                        updateModal('#modal-gudang', 'Edit COA', response,
+                            'modal-lg');
+                    },
+                    error: function(xhr) {
+                        let errorMsg = xhr.responseText ||
+                            '<p>An error occurred while loading the content.</p>';
+                        $('#content-gudang').html(errorMsg);
+                    },
+                    complete: function() {
+                        $('#loading-overlay').fadeOut();
+                    }
+                });
             });
         });
     </script>

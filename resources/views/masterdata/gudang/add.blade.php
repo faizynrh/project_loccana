@@ -54,8 +54,6 @@
                                 <div class="col-md-9">
                                     <input type="text" class="form-control" name="name" placeholder="Nama Gudang"
                                         required minlength="3">
-                                    <small id="alertnama" style="color: red; display: none;">Nama minimal memiliki 3
-                                        karakter!</small>
                                 </div>
                             </div>
                             <div class="row mb-3 align-items-center">
