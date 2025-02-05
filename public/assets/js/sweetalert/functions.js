@@ -31,3 +31,12 @@ function confirmDelete(id) {
         }
     });
 }
+
+function disableButton(event) {
+    let form = event.target;
+    if (form.checkValidity()) { // Pastikan form valid
+        let button = document.getElementById('submitButton');
+        button.disabled = true;
+        button.innerText = 'Processing...';
+    }
+}
