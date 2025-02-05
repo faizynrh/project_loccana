@@ -13,11 +13,6 @@ class UomController extends Controller
 {
     //
 
-    private function buildApiUrl($endpoint)
-    {
-        return env('API_URL') . '/loccana/masterdata/1.0.0/uoms' . $endpoint;
-    }
-
     public function ajaxuom(Request $request)
     {
         try {

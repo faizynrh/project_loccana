@@ -50,6 +50,16 @@ Route::prefix('/uom')->name('uom.')->group(
         Route::get('/detail/{id}', [UomController::class, 'show'])->name('show');
     }
 );
+Route::prefix('/principal')->name('principal.')->group(function () {
+    Route::get('/', [PrincipalController::class, 'index'])->name('index');
+    Route::get('/add', [PrincipalController::class, 'create'])->name('create');
+    Route::get('/ajax', [PrincipalController::class, 'ajaxprincipal'])->name('ajax');
+    Route::post('/add', [PrincipalController::class, 'store'])->name('store');
+    Route::delete('/delete/{id}', [PrincipalController::class, 'destroy'])->name('destroy');
+    Route::get('/edit/{id}', [PrincipalController::class, 'edit'])->name('edit');
+    Route::put('/update/{id}', [PrincipalController::class, 'update'])->name('update');
+    Route::get('/show/{id}', [PrincipalController::class, 'show'])->name('show');
+});
 
 //MIDDLEWARE
 Route::middleware('auth.login')->group(
@@ -120,15 +130,7 @@ Route::middleware('auth.login')->group(
         });
 
         // PRINCIPAL
-        Route::prefix('/principal')->name('principal.')->group(function () {
-            Route::get('/', [PrincipalController::class, 'index'])->name('index');
-            Route::get('/add', [PrincipalController::class, 'create'])->name('create');
-            Route::post('/add', [PrincipalController::class, 'store'])->name('store');
-            Route::delete('/delete/{id}', [PrincipalController::class, 'destroy'])->name('destroy');
-            Route::get('/edit/{id}', [PrincipalController::class, 'edit'])->name('edit');
-            Route::put('/update/{id}', [PrincipalController::class, 'update'])->name('update');
-            Route::get('/show/{id}', [PrincipalController::class, 'show'])->name('show');
-        });
+
 
 
         // CUSTOMER

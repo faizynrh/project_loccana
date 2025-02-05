@@ -42,7 +42,8 @@
                             </div>
                         @endif
                         <div class="d-flex justify-content-between align-items-center">
-                            <a href="/principal/add" class="btn btn-primary fw-bold ">+ Tambah Principal</a>
+                            <button type="button" class="btn btn-primary fw-bold btn-add-principal">+ Tambah
+                                Principal</button>
                         </div>
                         <table class="table table-striped table-bordered mt-3" id="tableprincipal">
                             <thead>
@@ -65,6 +66,7 @@
             </section>
         </div>
     </div>
+    @include('masterdata.principal.ajax.modal')
     @push('scripts')
         <script>
             $(document).ready(function() {
@@ -73,7 +75,7 @@
                     processing: true,
                     // pageLength: 1,
                     ajax: {
-                        url: '{{ route('principal.index') }}',
+                        url: '{{ route('principal.ajax') }}',
                         type: 'GET',
 
                     },
@@ -98,12 +100,12 @@
                             data: null,
                             render: function(data, type, row) {
                                 return `
-                    <a href="/principal/show/${row.id}" class="btn btn-sm btn-info mb-2" title="Detail">
+                    <button type="button" data-id="${row.id}" class="btn btn-sm btn-info mb-2 btn-detail-principal" title="Detail">
                         <i class="bi bi-eye"></i>
-                    </a>
-                    <a href="/principal/edit/${row.id}" class="btn btn-sm btn-warning mb-2" title="Edit">
+                    </button>
+                    <button type="button" data-id="${row.id}" class="btn btn-sm btn-warning mb-2 btn-edit-principal" title="Edit">
                         <i class="bi bi-pencil"></i>
-                    </a>
+                    </button>
                     <form action="/principal/delete/${row.id}" method="POST" id="delete${row.id}" style="display:inline;">
                         @csrf
                         @method('DELETE')
@@ -118,6 +120,116 @@
 
                 });
             });
+
+            function updateModal(modalId, title, content, sizeClass) {
+                let modalDialog = $(`${modalId} .modal-dialog`);
+                modalDialog.removeClass('modal-full modal-xl modal-lg modal-md').addClass(sizeClass);
+
+                $(`${modalId} .modal-title`).text(title);
+                $(`${modalId} .modal-body`).html(content);
+
+                let myModal = new bootstrap.Modal(document.getElementById(modalId.substring(1)));
+                myModal.show();
+            }
+
+            $(document).on('click', '.btn-add-principal', function(e) {
+                e.preventDefault();
+                const url = '{{ route('principal.store') }}'
+                const $button = $(this);
+
+                // $('#loading-overlay').fadeIn();
+
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    dataType: 'html',
+                    beforeSend: function() {
+                        //
+                    },
+                    success: function(response) {
+                        updateModal('#modal-principal', 'Tambah principal', response,
+                            'modal-lg');
+                    },
+                    error: function(xhr) {
+                        let errorMsg = xhr.responseText ||
+                            '<p>An error occurred while loading the content.</p>';
+                        $('#content-principal').html(errorMsg);
+                    },
+                    complete: function() {
+                        // $('#loading-overlay').fadeOut();
+                    }
+                });
+            });
+
+            $(document).on('click', '.btn-detail-principal', function(e) {
+                e.preventDefault();
+                const principalId = $(this).data('id');
+                const url = '{{ route('principal.show', ':principalId') }}'.replace(':principalId', principalId);
+                const $button = $(this);
+
+                $('#loading-overlay').fadeIn();
+
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    dataType: 'html',
+                    beforeSend: function() {
+                        //
+                    },
+                    success: function(response) {
+                        updateModal('#modal-principal', 'Detail principal', response,
+                            'modal-lg');
+                    },
+                    error: function(xhr) {
+                        let errorMsg = xhr.responseText ||
+                            '<p>An error occurred while loading the content.</p>';
+                        $('#content-principal').html(errorMsg);
+                    },
+                    complete: function() {
+                        $('#loading-overlay').fadeOut();
+                    }
+                });
+            });
+
+            $(document).on('click', '.btn-edit-principal', function(e) {
+                e.preventDefault();
+                const principalId = $(this).data('id');
+                const url = '{{ route('principal.edit', ':principalId') }}'.replace(':principalId', principalId);
+                const $button = $(this);
+
+                $('#loading-overlay').fadeIn();
+
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    dataType: 'html',
+                    beforeSend: function() {
+                        //
+                    },
+                    success: function(response) {
+                        updateModal('#modal-principal', 'Edit principal', response,
+                            'modal-lg');
+                    },
+                    error: function(xhr) {
+                        let errorMsg = xhr.responseText ||
+                            '<p>An error occurred while loading the content.</p>';
+                        $('#content-principal').html(errorMsg);
+                    },
+                    complete: function() {
+                        $('#loading-overlay').fadeOut();
+                    }
+                });
+            });
+
+
+            function disableButton(event) {
+                let form = event.target;
+                if (form.checkValidity()) { // Pastikan form valid
+                    let button = document.getElementById('submitButton');
+                    button.disabled = true;
+                    button.innerText = 'Processing...';
+                }
+            }
         </script>
     @endpush
 @endsection
