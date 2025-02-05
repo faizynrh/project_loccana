@@ -82,7 +82,7 @@ class PurchaseOrderController extends Controller
     public function index(Request $request)
     {
         //
-        $headers = Helpers::getHeaders();
+        $headers = getHeaders();
         $month = $request->input('month', 11);
         $year = $request->input('year', 0);
         $length = $request->input('length', 10);
@@ -101,8 +101,8 @@ class PurchaseOrderController extends Controller
             $requestbody['search'] = $search;
         }
 
-        $apiurl = Helpers::getApiUrl() . '/loccana/po/1.0.0/purchase-order/list';
-        // $mtdurl = Helpers::getApiUrl() . '/loccana/itemreceipt/1.0.0/item_receipt/1.0.0/mtd';
+        $apiurl = getApiUrl() . '/loccana/po/1.0.0/purchase-order/list';
+        // $mtdurl = getApiUrl() . '/loccana/itemreceipt/1.0.0/item_receipt/1.0.0/mtd';
 
         if ($request->ajax()) {
             try {
@@ -140,10 +140,10 @@ class PurchaseOrderController extends Controller
         $company_id = 2;
         $customer = 'false';
         $suplier = 'true';
-        $headers = Helpers::getHeaders();
+        $headers = getHeaders();
 
-        $partnerurl = Helpers::getApiUrl() . '/loccana/masterdata/partner/1.0.0/partner/list-select/' . $company_id . '/' .  $suplier . '/' . $customer;
-        $gudang = Helpers::getApiUrl() . '/masterdata/warehouse/1.0.0/warehouse/list-select/' . $company_id;
+        $partnerurl = getApiUrl() . '/loccana/masterdata/partner/1.0.0/partner/list-select/' . $company_id . '/' . $suplier . '/' . $customer;
+        $gudang = getApiUrl() . '/masterdata/warehouse/1.0.0/warehouse/list-select/' . $company_id;
         $data = [
             'company_id' => 2
         ];
@@ -166,8 +166,8 @@ class PurchaseOrderController extends Controller
 
     protected function getItemsList($company_id)
     {
-        $headers = Helpers::getHeaders();
-        $itemsUrl = Helpers::getApiUrl() . '/master/items/1.0.0/items/lists-select';
+        $headers = getHeaders();
+        $itemsUrl = getApiUrl() . '/master/items/1.0.0/items/lists-select';
 
         $itemsResponse = Http::withHeaders($headers)->post($itemsUrl, [
             'company_id' => $company_id
@@ -184,8 +184,8 @@ class PurchaseOrderController extends Controller
 
     public function getPurchaseOrderDetails(Request $request, $po_id)
     {
-        $headers = Helpers::getHeaders();
-        $apiurl = Helpers::getApiUrl() . "/loccana/po/1.0.0/purchase-order/" . $po_id;
+        $headers = getHeaders();
+        $apiurl = getApiUrl() . "/loccana/po/1.0.0/purchase-order/" . $po_id;
 
         try {
             $response = Http::withHeaders($headers)->get($apiurl);
@@ -229,8 +229,8 @@ class PurchaseOrderController extends Controller
 
     public function getprice($id)
     {
-        $headers = Helpers::getHeaders();
-        $apiurl = Helpers::getApiUrl() . "/loccana/po/1.0.0/purchase-order/" . $id;
+        $headers = getHeaders();
+        $apiurl = getApiUrl() . "/loccana/po/1.0.0/purchase-order/" . $id;
         try {
             $response = Http::withHeaders($headers)->get($apiurl);
             if ($response->successful()) {
@@ -257,8 +257,8 @@ class PurchaseOrderController extends Controller
         dd($request->all());
         try {
             // Mengambil header dan URL API
-            $headers = Helpers::getHeaders();
-            $apiurl = Helpers::getApiUrl() . '/loccana/po/1.0.0/purchase-order';
+            $headers = getHeaders();
+            $apiurl = getApiUrl() . '/loccana/po/1.0.0/purchase-order';
 
             // Ambil data items dari request
             $itemsRequest = $request->input('items');
@@ -274,30 +274,30 @@ class PurchaseOrderController extends Controller
                 foreach ($itemsRequest as $itemData) {
                     // Pastikan setiap item memiliki struktur yang tepat
                     $items[] = [
-                        'item_id'      => $itemData['item_id'] ?? null,
+                        'item_id' => $itemData['item_id'] ?? null,
                         'warehouse_id' => $itemData['warehouse_id'] ?? null,
-                        'quantity'     => $itemData['quantity'] ?? 0,
-                        'unit_price'   => $itemData['unit_price'] ?? 0,
-                        'discount'     => $itemData['discount'] ?? 0,
-                        'uom_id'       => $itemData['uom_id'] ?? null,
+                        'quantity' => $itemData['quantity'] ?? 0,
+                        'unit_price' => $itemData['unit_price'] ?? 0,
+                        'discount' => $itemData['discount'] ?? 0,
+                        'uom_id' => $itemData['uom_id'] ?? null,
                     ];
                 }
             }
 
             // Susun data purchase order yang akan dikirim ke API
             $data = [
-                'company_id'      => 2,
-                'code'            => (string) $request->input('code'),
-                'order_date'      => $request->input('order_date'),
-                'partner_id'      => $request->input('partner_id'),
+                'company_id' => 2,
+                'code' => (string) $request->input('code'),
+                'order_date' => $request->input('order_date'),
+                'partner_id' => $request->input('partner_id'),
                 'term_of_payment' => $request->input('term_of_payment'),
-                'currency_id'     => $request->input('currency_id'),
-                'total_amount'    => $request->input('total_amount'),
-                'tax_amount'      => $request->input('tax_amount'),
-                'description'     => $request->input('description'),
-                'status'          => $request->input('status'),
-                'requested_by'    => $request->input('requested_by'),
-                'items'           => $items,
+                'currency_id' => $request->input('currency_id'),
+                'total_amount' => $request->input('total_amount'),
+                'tax_amount' => $request->input('tax_amount'),
+                'description' => $request->input('description'),
+                'status' => $request->input('status'),
+                'requested_by' => $request->input('requested_by'),
+                'items' => $items,
             ];
 
             // Kirim data ke API
@@ -326,8 +326,8 @@ class PurchaseOrderController extends Controller
     {
         //
         try {
-            $headers = Helpers::getHeaders();
-            $apiurl = Helpers::getApiUrl() . '/loccana/po/1.0.0/purchase-order/' . $id;
+            $headers = getHeaders();
+            $apiurl = getApiUrl() . '/loccana/po/1.0.0/purchase-order/' . $id;
             $apiResponse = Http::withHeaders($headers)->get($apiurl);
 
             if ($apiResponse->successful()) {
@@ -349,8 +349,8 @@ class PurchaseOrderController extends Controller
     {
         //
         try {
-            $headers = Helpers::getHeaders();
-            $apiurl = Helpers::getApiUrl() . '/loccana/po/1.0.0/purchase-order/' . $id;
+            $headers = getHeaders();
+            $apiurl = getApiUrl() . '/loccana/po/1.0.0/purchase-order/' . $id;
             $apiResponse = Http::withHeaders($headers)->get($apiurl);
 
             if ($apiResponse->successful()) {
@@ -380,8 +380,8 @@ class PurchaseOrderController extends Controller
     {
         //
         try {
-            $headers = Helpers::getHeaders();
-            $apiurl = Helpers::getApiUrl() . '/loccana/po/1.0.0/purchase-order/' . $id;
+            $headers = getHeaders();
+            $apiurl = getApiUrl() . '/loccana/po/1.0.0/purchase-order/' . $id;
             // dd($id);
             $apiResponse = Http::withHeaders($headers)->delete($apiurl);
             if ($apiResponse->successful()) {

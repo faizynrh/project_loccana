@@ -28,7 +28,7 @@ class GudangController extends Controller
                 'offset' => $start,
                 'company_id' => 2
             ];
-            $apiResponse = Helpers::storeApi($this->buildApiUrl('/lists'), $requestbody);
+            $apiResponse = storeApi($this->buildApiUrl('/lists'), $requestbody);
 
             if ($apiResponse->successful()) {
                 $data = $apiResponse->json();
@@ -73,7 +73,7 @@ class GudangController extends Controller
                 'description' => $request->input('description'),
                 'capacity' => $request->input('capacity', 0),
             ];
-            $apiResponse = Helpers::storeApi($this->buildApiUrl('/'), $data);
+            $apiResponse = storeApi($this->buildApiUrl('/'), $data);
             $responseData = $apiResponse->json();
             if (
                 $apiResponse->successful() &&
@@ -91,7 +91,7 @@ class GudangController extends Controller
     public function edit($id)
     {
         try {
-            $apiResponse = Helpers::fectApi($this->buildApiUrl('/' . $id));
+            $apiResponse = fectApi($this->buildApiUrl('/' . $id));
             if (!$apiResponse->successful()) {
                 return back()->withErrors($apiResponse->json()['message'] ?? 'Failed to fetch data');
             }
@@ -116,7 +116,7 @@ class GudangController extends Controller
                 'capacity' => $request->capacity,
             ];
 
-            $apiResponse = Helpers::updateApi($this->buildApiUrl('/' . $id), $data);
+            $apiResponse = updateApi($this->buildApiUrl('/' . $id), $data);
 
             if ($apiResponse->successful()) {
                 return redirect()->route('gudang.index')->with('success', $apiResponse->json()['message']);
@@ -130,7 +130,7 @@ class GudangController extends Controller
     public function destroy(string $id)
     {
         try {
-            $apiResponse = Helpers::deleteApi($this->buildApiUrl('/' . $id));
+            $apiResponse = deleteApi($this->buildApiUrl('/' . $id));
 
             if ($apiResponse->successful()) {
                 return redirect()->route('gudang.index')

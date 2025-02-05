@@ -96,25 +96,6 @@ class AuthController extends Controller
                         'scope' => $scope,
                     ]);
 
-                    // access token
-                    $tokenurl = env('API_TOKEN_URL');
-                    $clientid = env('API_CLIENT_ID');
-                    $clientsecret = env('API_CLIENT_SECRET');
-
-                    $tokenResponse = Http::asForm()->post($tokenurl, [
-                        'grant_type' => 'client_credentials',
-                        'client_id' => $clientid,
-                        'client_secret' => $clientsecret,
-                    ]);
-
-                    if (!$tokenResponse->successful()) {
-                        throw new \Exception('Failed to fetch access token');
-                    }
-
-                    $accessToken2 = $tokenResponse->json()['access_token'];
-
-                    Session::put('access_token_2', $accessToken2);
-
                     return redirect()->route('dashboard-dev');
                 } else {
                     return response('Error: Invalid ID token format.', 400);

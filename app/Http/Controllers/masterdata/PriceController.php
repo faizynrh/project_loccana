@@ -14,12 +14,12 @@ class PriceController extends Controller
 {
     private function buildApiUrl($endpoint)
     {
-        return Helpers::getApiUrl() . '/masterdata/price/1.0.0/price-manajement' . $endpoint;
+        return getApiUrl() . '/masterdata/price/1.0.0/price-manajement' . $endpoint;
     }
     private function ajax(Request $request)
     {
         try {
-            $headers = Helpers::getHeaders();
+            $headers = getHeaders();
             $apiurl = $this->buildApiUrl('/list');
 
             $length = $request->input('length', 10);
@@ -65,7 +65,7 @@ class PriceController extends Controller
     public function edit($id)
     {
         try {
-            $headers = Helpers::getHeaders();
+            $headers = getHeaders();
             $apiurl = $this->buildApiUrl('/' . $id);
             $apiResponse = Http::withHeaders($headers)->get($apiurl);
             if ($apiResponse->successful()) {
@@ -83,7 +83,7 @@ class PriceController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            $headers = Helpers::getHeaders();
+            $headers = getHeaders();
             $apiurl = $this->buildApiUrl('/' . $id);
 
             $data = [
@@ -107,7 +107,7 @@ class PriceController extends Controller
     public function approve(Request $request, $id)
     {
         try {
-            $headers = Helpers::getHeaders();
+            $headers = getHeaders();
             $apiurl = $this->buildApiUrl('/approve/' . $id);
 
             $data = [

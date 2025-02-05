@@ -12,12 +12,12 @@ class CustomerController extends Controller
 {
     private function buildApiUrl($endpoint)
     {
-        return Helpers::getApiUrl() . '/loccana/masterdata/partner/1.0.0/partner' . $endpoint;
+        return getApiUrl() . '/loccana/masterdata/partner/1.0.0/partner' . $endpoint;
     }
     private function ajaxcustomer(Request $request)
     {
         try {
-            $headers = Helpers::getHeaders();
+            $headers = getHeaders();
             $apiurl = $this->buildApiUrl('/lists');
             $length = $request->input('length', 10);
             $start = $request->input('start', 0);
@@ -74,9 +74,9 @@ class CustomerController extends Controller
     public function create()
     {
         $companyid = 2;
-        $headers = Helpers::getHeaders();
-        $partnerurl = Helpers::getApiUrl() . '/loccana/masterdata/partner-type/1.0.0/partner-types/list-select';
-        $coaurl = Helpers::getApiUrl() . '/loccana/masterdata/coa/1.0.0/masterdata/coa/list-select/' . $companyid;
+        $headers = getHeaders();
+        $partnerurl = getApiUrl() . '/loccana/masterdata/partner-type/1.0.0/partner-types/list-select';
+        $coaurl = getApiUrl() . '/loccana/masterdata/coa/1.0.0/masterdata/coa/list-select/' . $companyid;
 
         $partnerResponse = Http::withHeaders($headers)->get($partnerurl);
         $coaResponse = Http::withHeaders($headers)->get($coaurl);
@@ -102,13 +102,13 @@ class CustomerController extends Controller
     public function store(Request $request)
     {
         try {
-            $headers = Helpers::getHeaders();
+            $headers = getHeaders();
             $apiurl = $this->buildApiUrl('/');
             $data = [
-                'name' => (string)$request->input('nama'),
-                'partner_type_id' => (string)$request->input('partner_type_id'),
-                'contact_info' => (string)$request->input('contact_info'),
-                'chart_of_account_id' => (string)$request->input('chart_of_account_id'),
+                'name' => (string) $request->input('nama'),
+                'partner_type_id' => (string) $request->input('partner_type_id'),
+                'contact_info' => (string) $request->input('contact_info'),
+                'chart_of_account_id' => (string) $request->input('chart_of_account_id'),
                 'company_id' => 2,
                 'is_customer' => true,
                 'is_supplier' => false
@@ -136,10 +136,10 @@ class CustomerController extends Controller
     {
         try {
             $companyid = 2;
-            $headers = Helpers::getHeaders();
+            $headers = getHeaders();
             $apiurl = $this->buildApiUrl('/' . $id);
-            $partnerurl = Helpers::getApiUrl() . '/loccana/masterdata/partner-type/1.0.0/partner-types/list-select';
-            $coaurl = Helpers::getApiUrl() . '/loccana/masterdata/coa/1.0.0/masterdata/coa/list-select/' . $companyid;
+            $partnerurl = getApiUrl() . '/loccana/masterdata/partner-type/1.0.0/partner-types/list-select';
+            $coaurl = getApiUrl() . '/loccana/masterdata/coa/1.0.0/masterdata/coa/list-select/' . $companyid;
 
             $partnerResponse = Http::withHeaders($headers)->get($partnerurl);
             $coaResponse = Http::withHeaders($headers)->get($coaurl);
@@ -176,9 +176,9 @@ class CustomerController extends Controller
         try {
             $apiurl = $this->buildApiUrl('/' . $id);
             $companyid = 2;
-            $headers = Helpers::getHeaders();
-            $partnerurl = Helpers::getApiUrl() . '/loccana/masterdata/partner-type/1.0.0/partner-types/list-select';
-            $coaurl = Helpers::getApiUrl() . '/loccana/masterdata/coa/1.0.0/masterdata/coa/list-select/' . $companyid;
+            $headers = getHeaders();
+            $partnerurl = getApiUrl() . '/loccana/masterdata/partner-type/1.0.0/partner-types/list-select';
+            $coaurl = getApiUrl() . '/loccana/masterdata/coa/1.0.0/masterdata/coa/list-select/' . $companyid;
 
             $partnerResponse = Http::withHeaders($headers)->get($partnerurl);
             $coaResponse = Http::withHeaders($headers)->get($coaurl);
@@ -215,13 +215,13 @@ class CustomerController extends Controller
     {
         try {
             $apiurl = $this->buildApiUrl('/' . $id);
-            $headers = Helpers::getHeaders();
+            $headers = getHeaders();
 
             $data = [
-                'name' => (string)$request->input('nama'),
+                'name' => (string) $request->input('nama'),
                 'partner_type_id' => $request->input('partner_type_id'),
-                'contact_info' => $request->input('contact_info',),
-                'chart_of_account_id' => $request->input('chart_of_account_id',),
+                'contact_info' => $request->input('contact_info', ),
+                'chart_of_account_id' => $request->input('chart_of_account_id', ),
                 'company_id' => 2,
                 'is_customer' => true,
                 'is_supplier' => false
@@ -247,7 +247,7 @@ class CustomerController extends Controller
     {
         try {
             $apiurl = $this->buildApiUrl('/' . $id);
-            $headers = Helpers::getHeaders();
+            $headers = getHeaders();
             $apiResponse = Http::withHeaders($headers)->delete($apiurl);
             // dd($apiResponse->json());
             if ($apiResponse->successful()) {

@@ -32,7 +32,7 @@ class UomController extends Controller
             if (!empty($search)) {
                 $requestbody['search'] = $search;
             }
-            $apiResponse = Helpers::storeApi($this->buildApiUrl('/lists'), $requestbody);
+            $apiResponse = storeApi($this->buildApiUrl('/lists'), $requestbody);
             if ($apiResponse->successful()) {
                 $data = $apiResponse->json();
                 return response()->json([
@@ -64,18 +64,19 @@ class UomController extends Controller
     {
         try {
             $data = [
-                'name' => (string)$request->input('uom_name'),
-                'symbol' => (string)$request->input('uom_symbol'),
-                'description' => (string)$request->input('description',)
+                'name' => (string) $request->input('uom_name'),
+                'symbol' => (string) $request->input('uom_symbol'),
+                'description' => (string) $request->input('description', )
             ];
-            $apiResponse = Helpers::storeApi($this->buildApiUrl('/'),  $data);
+            $apiResponse = storeApi($this->buildApiUrl('/'), $data);
             $responseData = $apiResponse->json();
             // dd($data);
             if ($apiResponse->successful()) {
                 return redirect()->route('uom.index')
                     ->with('success', $responseData['message']);
             } else {
-                return back()->withErrors(($responseData['message'])
+                return back()->withErrors(
+                    ($responseData['message'])
                 );
             }
         } catch (\Exception $e) {
@@ -90,7 +91,7 @@ class UomController extends Controller
     public function edit($id)
     {
         try {
-            $apiResponse = Helpers::fectApi($this->buildApiUrl('/' . $id));
+            $apiResponse = fectApi($this->buildApiUrl('/' . $id));
             if ($apiResponse->successful()) {
                 $uomData = $apiResponse->json();
 
@@ -110,7 +111,7 @@ class UomController extends Controller
     // public function update(Request $request, $id)
     // {
     //     try {
-    //         $headers = Helpers::getHeaders();
+    //         $headers = getHeaders();
     //         $apiurl = $this->buildApiUrl('/' . $id);
     //         $data = [
     //             'name' => $request->input('uom_name'),
@@ -134,7 +135,7 @@ class UomController extends Controller
     public function show($id)
     {
         try {
-            $apiResponse = Helpers::fectApi($this->buildApiUrl('/' . $id));
+            $apiResponse = fectApi($this->buildApiUrl('/' . $id));
             if ($apiResponse->successful()) {
                 $uomData = $apiResponse->json();
                 if (isset($uomData['data'])) {
@@ -153,7 +154,7 @@ class UomController extends Controller
     // public function destroy(string $id)
     // {
     //     try {
-    //         $headers = Helpers::getHeaders();
+    //         $headers = getHeaders();
     //         $apiurl = $this->buildApiUrl('/' . $id);
     //         $apiResponse = Http::withHeaders($headers)->delete($apiurl);
     //         if ($apiResponse->successful()) {

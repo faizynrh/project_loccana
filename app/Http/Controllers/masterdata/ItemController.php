@@ -12,21 +12,21 @@ class ItemController extends Controller
 {
     private function buildApiUrl($endpoint)
     {
-        return Helpers::getApiUrl() . '/master/items/1.0.0/items' . $endpoint;
+        return getApiUrl() . '/master/items/1.0.0/items' . $endpoint;
     }
 
     private function urlSelect()
     {
         return [
-            'uom'  => Helpers::getApiUrl() . '/loccana/masterdata/1.0.0/uoms/list-select',
-            'item' => Helpers::getApiUrl() . '/loccana/masterdata/item-types/1.0.0/item-types/list-select'
+            'uom' => getApiUrl() . '/loccana/masterdata/1.0.0/uoms/list-select',
+            'item' => getApiUrl() . '/loccana/masterdata/item-types/1.0.0/item-types/list-select'
         ];
     }
 
     private function ajax(Request $request)
     {
         try {
-            $headers = Helpers::getHeaders();
+            $headers = getHeaders();
             $apiurl = $this->buildApiUrl('/lists');
 
             $length = $request->input('length', 10);
@@ -72,7 +72,7 @@ class ItemController extends Controller
 
     public function create()
     {
-        $headers = Helpers::getHeaders();
+        $headers = getHeaders();
         $uomurl = $this->urlSelect()['uom'];
         $itemurl = $this->urlSelect()['item'];
 
@@ -98,7 +98,7 @@ class ItemController extends Controller
     public function store(Request $request)
     {
         try {
-            $headers = Helpers::getHeaders();
+            $headers = getHeaders();
             $apiurl = $this->buildApiUrl('/');
 
             $data = [
@@ -128,7 +128,7 @@ class ItemController extends Controller
     public function show($id)
     {
         try {
-            $headers = Helpers::getHeaders();
+            $headers = getHeaders();
             $apiurl = $this->buildApiUrl('/' . $id);
 
             $apiResponse = Http::withHeaders($headers)->get($apiurl);
@@ -147,7 +147,7 @@ class ItemController extends Controller
     public function edit($id)
     {
         try {
-            $headers = Helpers::getHeaders();
+            $headers = getHeaders();
             $apiurl = $this->buildApiUrl('/' . $id);
             $uomurl = $this->urlSelect()['uom'];
             $itemurl = $this->urlSelect()['item'];
@@ -182,7 +182,7 @@ class ItemController extends Controller
     public function update(Request $request, string $id)
     {
         try {
-            $headers = Helpers::getHeaders();
+            $headers = getHeaders();
             $apiurl = $this->buildApiUrl('/' . $id);
 
             $data = [
@@ -209,7 +209,7 @@ class ItemController extends Controller
     public function destroy(string $id)
     {
         try {
-            $headers = Helpers::getHeaders();
+            $headers = getHeaders();
             $apiurl = $this->buildApiUrl('/' . $id);
 
             $apiResponse = Http::withHeaders($headers)->delete($apiurl);

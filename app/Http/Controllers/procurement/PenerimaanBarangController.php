@@ -14,22 +14,22 @@ class PenerimaanBarangController extends Controller
 {
     private function buildApiUrl($endpoint)
     {
-        return Helpers::getApiUrl() . '/loccana/itemreceipt/1.0.0/item_receipt/1.0.0' . $endpoint;
+        return getApiUrl() . '/loccana/itemreceipt/1.0.0/item_receipt/1.0.0' . $endpoint;
     }
 
     private function urlSelect($id)
     {
         return [
-            'po' => Helpers::getApiUrl() . '/loccana/po/1.0.0/purchase-order/list-select/' . $id,
-            'gudang' => Helpers::getApiUrl() . '/masterdata/warehouse/1.0.0/warehouse/list-select/' . $id,
-            'podetail' => Helpers::getApiUrl() . '/loccana/po/1.0.0/purchase-order/' . $id
+            'po' => getApiUrl() . '/loccana/po/1.0.0/purchase-order/list-select/' . $id,
+            'gudang' => getApiUrl() . '/masterdata/warehouse/1.0.0/warehouse/list-select/' . $id,
+            'podetail' => getApiUrl() . '/loccana/po/1.0.0/purchase-order/' . $id
         ];
     }
 
     private function ajax(Request $request)
     {
         try {
-            $headers = Helpers::getHeaders();
+            $headers = getHeaders();
             $month = $request->input('month');
             $year = $request->input('year');
             $length = $request->input('length');
@@ -78,8 +78,8 @@ class PenerimaanBarangController extends Controller
     }
     public function getPoDetails(Request $request, $po_id)
     {
-        $headers = Helpers::getHeaders();
-        $apiurl = Helpers::getApiUrl() . '/loccana/po/1.0.0/purchase-order/'  . $po_id;
+        $headers = getHeaders();
+        $apiurl = getApiUrl() . '/loccana/po/1.0.0/purchase-order/' . $po_id;
 
         try {
             $apiResponse = Http::withHeaders($headers)->get($apiurl);
@@ -118,13 +118,13 @@ class PenerimaanBarangController extends Controller
     public function create()
     {
         $company_id = 2;
-        $headers = Helpers::getHeaders();
+        $headers = getHeaders();
 
         $pourl = $this->urlSelect($company_id)['po'];
         $gudangurl = $this->urlSelect($company_id)['gudang'];
 
-        $pourl = Helpers::getApiUrl() . '/loccana/po/1.0.0/purchase-order/list-select/' . $company_id;
-        $gudangurl = Helpers::getApiUrl() . '/masterdata/warehouse/1.0.0/warehouse/list-select/' . $company_id;
+        $pourl = getApiUrl() . '/loccana/po/1.0.0/purchase-order/list-select/' . $company_id;
+        $gudangurl = getApiUrl() . '/masterdata/warehouse/1.0.0/warehouse/list-select/' . $company_id;
 
         $poResponse = Http::withHeaders($headers)->get($pourl);
         $gudangResponse = Http::withHeaders($headers)->get($gudangurl);
@@ -147,7 +147,7 @@ class PenerimaanBarangController extends Controller
     public function store(Request $request)
     {
         try {
-            $headers = Helpers::getHeaders();
+            $headers = getHeaders();
             $apiurl = $this->buildApiUrl('/');
 
             $dataitems = [];
@@ -174,7 +174,7 @@ class PenerimaanBarangController extends Controller
                 'plate_number' => $request->plate_number,
                 'received_by' => $request->input('received_by', 0),
                 'status' => "received",
-                'company_id' => $request->input('company_id',  2),
+                'company_id' => $request->input('company_id', 2),
                 'is_deleted' => 'true',
                 'items' => $dataitems
             ];
@@ -193,7 +193,7 @@ class PenerimaanBarangController extends Controller
     public function show($id)
     {
         try {
-            $headers = Helpers::getHeaders();
+            $headers = getHeaders();
             $apiurl = $this->buildApiUrl('/' . $id);
             $apiResponse = Http::withHeaders($headers)->get($apiurl);
 
@@ -210,7 +210,7 @@ class PenerimaanBarangController extends Controller
     public function edit($id)
     {
         try {
-            $headers = Helpers::getHeaders();
+            $headers = getHeaders();
             $apiurl = $this->buildApiUrl('/' . $id);
 
             $apiResponse = Http::withHeaders($headers)->get($apiurl);
@@ -229,7 +229,7 @@ class PenerimaanBarangController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            $headers = Helpers::getHeaders();
+            $headers = getHeaders();
             $apiurl = $this->buildApiUrl('/' . $id);
 
             $items = [];
@@ -271,7 +271,7 @@ class PenerimaanBarangController extends Controller
     public function destroy($id)
     {
         try {
-            $headers = Helpers::getHeaders();
+            $headers = getHeaders();
             $apiurl = $this->buildApiUrl('/' . $id);
 
             $apiResponse = Http::withHeaders($headers)->delete($apiurl);

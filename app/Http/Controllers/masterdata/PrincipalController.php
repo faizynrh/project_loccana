@@ -12,12 +12,12 @@ class PrincipalController extends Controller
 {
     private function buildApiUrl($endpoint)
     {
-        return Helpers::getApiUrl() . '/loccana/masterdata/partner/1.0.0/partner' . $endpoint;
+        return getApiUrl() . '/loccana/masterdata/partner/1.0.0/partner' . $endpoint;
     }
     private function ajaxprincipal(Request $request)
     {
         try {
-            $headers = Helpers::getHeaders();
+            $headers = getHeaders();
             $apiurl = $this->buildApiUrl('/lists');
 
             $length = $request->input('length', 10);
@@ -76,9 +76,9 @@ class PrincipalController extends Controller
     public function create()
     {
         $companyid = 2;
-        $partnerurl = Helpers::getApiUrl() . '/loccana/masterdata/partner-type/1.0.0/partner-types/list-select';
-        $headers = Helpers::getHeaders();
-        $coaurl = Helpers::getApiUrl() . '/loccana/masterdata/coa/1.0.0/masterdata/coa/list-select/' . $companyid;
+        $partnerurl = getApiUrl() . '/loccana/masterdata/partner-type/1.0.0/partner-types/list-select';
+        $headers = getHeaders();
+        $coaurl = getApiUrl() . '/loccana/masterdata/coa/1.0.0/masterdata/coa/list-select/' . $companyid;
         $partnerResponse = Http::withHeaders($headers)->get($partnerurl);
         $coaResponse = Http::withHeaders($headers)->get($coaurl);
         if ($partnerResponse->successful() && $coaResponse->successful()) {
@@ -100,7 +100,7 @@ class PrincipalController extends Controller
     public function store(Request $request)
     {
         try {
-            $headers = Helpers::getHeaders();
+            $headers = getHeaders();
             $apiurl = $this->buildApiUrl('/');
             $data = [
                 'name' => $request->input('nama'),
@@ -135,10 +135,10 @@ class PrincipalController extends Controller
     {
         try {
             $companyid = 2;
-            $headers = Helpers::getHeaders();
+            $headers = getHeaders();
             $apiurl = $this->buildApiUrl('/' . $id);
-            $partnerurl = Helpers::getApiUrl() . '/loccana/masterdata/partner-type/1.0.0/partner-types/list-select';
-            $coaurl = Helpers::getApiUrl() . '/loccana/masterdata/coa/1.0.0/masterdata/coa/list-select/' . $companyid;
+            $partnerurl = getApiUrl() . '/loccana/masterdata/partner-type/1.0.0/partner-types/list-select';
+            $coaurl = getApiUrl() . '/loccana/masterdata/coa/1.0.0/masterdata/coa/list-select/' . $companyid;
 
             $partnerResponse = Http::withHeaders($headers)->get($partnerurl);
             $coaResponse = Http::withHeaders($headers)->get($coaurl);
@@ -175,10 +175,10 @@ class PrincipalController extends Controller
     {
         try {
             $companyid = 2;
-            $headers = Helpers::getHeaders();
+            $headers = getHeaders();
             $apiurl = $this->buildApiUrl('/' . $id);
-            $partnerurl = Helpers::getApiUrl() . '/loccana/masterdata/partner-type/1.0.0/partner-types/list-select';
-            $coaurl = Helpers::getApiUrl() . '/loccana/masterdata/coa/1.0.0/masterdata/coa/list-select/' . $companyid;
+            $partnerurl = getApiUrl() . '/loccana/masterdata/partner-type/1.0.0/partner-types/list-select';
+            $coaurl = getApiUrl() . '/loccana/masterdata/coa/1.0.0/masterdata/coa/list-select/' . $companyid;
             $partnerResponse = Http::withHeaders($headers)->get($partnerurl);
             $coaResponse = Http::withHeaders($headers)->get($coaurl);
             $apiResponse = Http::withHeaders($headers)->get($apiurl);
@@ -213,14 +213,14 @@ class PrincipalController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            $headers = Helpers::getHeaders();
+            $headers = getHeaders();
             $apiurl = $this->buildApiUrl('/' . $id);
 
             $data = [
-                'name' => (string)$request->input('nama'),
+                'name' => (string) $request->input('nama'),
                 'partner_type_id' => $request->input('partner_type_id'),
-                'contact_info' => $request->input('contact_info',),
-                'chart_of_account_id' => $request->input('chart_of_account_id',),
+                'contact_info' => $request->input('contact_info', ),
+                'chart_of_account_id' => $request->input('chart_of_account_id', ),
                 'company_id' => 2,
                 'is_customer' => true,
                 'is_supplier' => false
@@ -243,7 +243,7 @@ class PrincipalController extends Controller
     public function destroy(string $id)
     {
         try {
-            $headers = Helpers::getHeaders();
+            $headers = getHeaders();
             $apiurl = $this->buildApiUrl('/' . $id);
             $apiResponse = Http::withHeaders($headers)->delete($apiurl);
             if ($apiResponse->successful()) {

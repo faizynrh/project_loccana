@@ -28,7 +28,7 @@ class CoaController extends Controller
                 'offset' => $start,
                 'company_id' => 2
             ];
-            $apiResponse = Helpers::storeApi($this->buildApiUrl('/lists'), $requestbody);
+            $apiResponse = storeApi($this->buildApiUrl('/lists'), $requestbody);
 
             if ($apiResponse->successful()) {
                 $data = $apiResponse->json();
@@ -75,7 +75,7 @@ class CoaController extends Controller
                 'description' => $request->input('description'),
                 'company_id' => $request->input('company_id', 2),
             ];
-            $apiResponse = Helpers::storeApi($this->buildApiUrl('/'), $data);
+            $apiResponse = storeApi($this->buildApiUrl('/'), $data);
 
             if ($apiResponse->successful()) {
                 return redirect()->route('coa.index')
@@ -96,7 +96,7 @@ class CoaController extends Controller
     public function show($id)
     {
         try {
-            $apiResponse = Helpers::fectApi($this->buildApiUrl('/' . $id));
+            $apiResponse = fectApi($this->buildApiUrl('/' . $id));
             $data = json_decode($apiResponse->getBody()->getContents());
             return view('masterdata.coa.ajax.detail', compact('data'));
         } catch (\Exception $e) {
@@ -107,7 +107,7 @@ class CoaController extends Controller
     public function edit($id)
     {
         try {
-            $apiResponse = Helpers::fectApi($this->buildApiUrl('/' . $id));
+            $apiResponse = fectApi($this->buildApiUrl('/' . $id));
             $data = json_decode($apiResponse->getBody()->getContents());
             return view('masterdata.coa.ajax.edit', data: compact('data'));
         } catch (\Exception $e) {
@@ -127,7 +127,7 @@ class CoaController extends Controller
                 'description' => $request->description,
             ];
 
-            $apiResponse = Helpers::updateApi($this->buildApiUrl('/' . $id), $data);
+            $apiResponse = updateApi($this->buildApiUrl('/' . $id), $data);
             if ($apiResponse->successful()) {
                 return redirect()->route('coa.index')->with('success', $apiResponse->json()['message']);
             } else {
@@ -141,7 +141,7 @@ class CoaController extends Controller
     public function destroy($id)
     {
         try {
-            $apiResponse = Helpers::deleteApi($this->buildApiUrl('/' . $id));
+            $apiResponse = deleteApi($this->buildApiUrl('/' . $id));
             if ($apiResponse->successful()) {
                 return redirect()->route('coa.index')
                     ->with('success', $apiResponse->json()['message']);
