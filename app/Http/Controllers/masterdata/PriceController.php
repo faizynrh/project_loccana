@@ -2,9 +2,7 @@
 
 namespace App\Http\Controllers\masterdata;
 
-use App\Helpers\Helpers;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Http;
 
@@ -14,7 +12,7 @@ class PriceController extends Controller
 {
     private function buildApiUrl($endpoint)
     {
-        return getApiUrl() . '/masterdata/price/1.0.0/price-manajement' . $endpoint;
+        return env('API_URL') . '/loccana/masterdata/coa/1.0.0/masterdata/coa' . $endpoint;
     }
     private function ajax(Request $request)
     {
