@@ -2,11 +2,8 @@
 
 namespace App\Http\Controllers\masterdata;
 
-use App\Helpers\Helpers;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Http;
 
 
 class CoaController extends Controller
@@ -29,7 +26,6 @@ class CoaController extends Controller
                 'company_id' => 2
             ];
             $apiResponse = storeApi($this->buildApiUrl('/lists'), $requestbody);
-
             if ($apiResponse->successful()) {
                 $data = $apiResponse->json();
                 return response()->json([
