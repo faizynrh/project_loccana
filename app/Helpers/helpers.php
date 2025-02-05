@@ -1,4 +1,5 @@
 <?php
+
 use Illuminate\Support\Facades\Http;
 
 function getTokenApi()
@@ -33,6 +34,7 @@ function fectApi($apiUrl)
         ->get($apiUrl);
     return $response;
 }
+
 
 function storeApi($apiUrl, $payloads)
 {
@@ -73,4 +75,3 @@ function deleteApi($apiUrl)
 
     return $response;
 }
-
