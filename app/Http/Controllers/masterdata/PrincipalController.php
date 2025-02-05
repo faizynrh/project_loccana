@@ -12,14 +12,11 @@ class PrincipalController extends Controller
 {
     private function buildApiUrl($endpoint)
     {
-        return getApiUrl() . '/loccana/masterdata/partner/1.0.0/partner' . $endpoint;
+        return env('API_URL') . '/loccana/masterdata/partner/1.0.0/partner' . $endpoint;
     }
     private function ajaxprincipal(Request $request)
     {
         try {
-            $headers = getHeaders();
-            $apiurl = $this->buildApiUrl('/lists');
-
             $length = $request->input('length', 10);
             $start = $request->input('start', 0);
             $search = $request->input('search.value', '');
@@ -32,12 +29,12 @@ class PrincipalController extends Controller
                 'is_customer' => false,
                 'is_supplier' => true
             ];
+            $apiResponse = storeApi($this->buildApiUrl('/lists'), $requestbody);
 
             if (!empty($search)) {
                 $requestbody['search'] = $search;
             }
 
-            $apiResponse = Http::withHeaders($headers)->post($apiurl, $requestbody);
 
             if ($apiResponse->successful()) {
                 $data = $apiResponse->json();
@@ -219,8 +216,8 @@ class PrincipalController extends Controller
             $data = [
                 'name' => (string) $request->input('nama'),
                 'partner_type_id' => $request->input('partner_type_id'),
-                'contact_info' => $request->input('contact_info', ),
-                'chart_of_account_id' => $request->input('chart_of_account_id', ),
+                'contact_info' => $request->input('contact_info',),
+                'chart_of_account_id' => $request->input('chart_of_account_id',),
                 'company_id' => 2,
                 'is_customer' => true,
                 'is_supplier' => false

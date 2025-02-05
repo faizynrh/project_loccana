@@ -24,6 +24,8 @@ use App\Http\Controllers\procurement\PurchaseOrderController;
 |
 */
 
+
+
 Route::get('/', function () {
     return view('home');
 })->name('home');
@@ -36,7 +38,18 @@ Route::get('/login', function () {
 Route::get('/redirect', [AuthController::class, 'redirectToIdentityServer'])->name('oauth.redirect');
 Route::get('/callback', [AuthController::class, 'handleCallback'])->name('oauth.callback');
 Route::get('/logout', [AuthController::class, 'logout'])->name('oauth.logout');
-
+Route::prefix('/uom')->name('uom.')->group(
+    function () {
+        Route::get('/', [UomController::class, 'index'])->name('index');
+        Route::get('/ajax', [UomController::class, 'ajaxuom'])->name('ajax');
+        Route::get('/add', [UomController::class, 'create'])->name('create');
+        Route::post('/add', [UomController::class, 'store'])->name('store');
+        Route::delete('/delete/{id}', [UomController::class, 'destroy'])->name('destroy');
+        Route::get('/edit/{id}', [UomController::class, 'edit'])->name('edit');
+        Route::put('/update/{id}', [UomController::class, 'update'])->name('update');
+        Route::get('/detail/{id}', [UomController::class, 'show'])->name('show');
+    }
+);
 
 //MIDDLEWARE
 Route::middleware('auth.login')->group(
@@ -82,15 +95,8 @@ Route::middleware('auth.login')->group(
         });
 
         // UOM
-        Route::prefix('/uom')->name('uom.')->group(function () {
-            Route::get('/', [UomController::class, 'index'])->name('index');
-            Route::get('/add', [UomController::class, 'create'])->name('create');
-            Route::post('/add', [UomController::class, 'store'])->name('store');
-            Route::delete('/delete/{id}', [UomController::class, 'destroy'])->name('destroy');
-            Route::get('/edit/{id}', [UomController::class, 'edit'])->name('edit');
-            Route::put('/update/{id}', [UomController::class, 'update'])->name('update');
-            Route::get('/detail/{id}', [UomController::class, 'show'])->name('show');
-        });
+
+
 
         // COA
         Route::prefix('/coa')->name('coa.')->group(function () {

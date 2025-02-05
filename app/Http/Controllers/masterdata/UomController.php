@@ -18,7 +18,7 @@ class UomController extends Controller
         return env('API_URL') . '/loccana/masterdata/1.0.0/uoms' . $endpoint;
     }
 
-    private function ajaxuom(Request $request)
+    public function ajaxuom(Request $request)
     {
         try {
             $length = $request->input('length', 10);
@@ -52,11 +52,8 @@ class UomController extends Controller
         }
     }
 
-    public function index(Request $request)
+    public function index()
     {
-        if ($request->ajax()) {
-            return $this->ajaxuom($request);
-        }
         return view('masterdata.uom.index');
     }
 
@@ -68,7 +65,7 @@ class UomController extends Controller
                 'symbol' => (string) $request->input('uom_symbol'),
                 'description' => (string) $request->input('description',)
             ];
-            $apiResponse = storeApi($this->buildApiUrl('/'), $data);
+            $apiResponse = storeApi(env('UOM_URL' . '/'), $data);
             $responseData = $apiResponse->json();
             // dd($data);
             if ($apiResponse->successful()) {
@@ -124,8 +121,6 @@ class UomController extends Controller
             return back()->withErrors($e->getMessage());
         }
     }
-
-
     public function show($id)
     {
         try {
@@ -141,8 +136,6 @@ class UomController extends Controller
             return back()->withErrors($e->getMessage());
         }
     }
-
-
     public function destroy(string $id)
     {
         try {
