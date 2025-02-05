@@ -1,19 +1,20 @@
 ////////// APPROVE //////////
 function confirmApprove(id) {
     Swal.fire({
-        title: "Apakah anda yakin?",
+        title: "Apakah Anda yakin?",
         text: "Pastikan ini data yang akan disetujui",
         icon: "warning",
         showCancelButton: true,
         confirmButtonText: "Setujui",
         cancelButtonText: "Batal",
         reverseButtons: true,
-    }).then((willApprove) => {
-        if (willApprove) {
+    }).then((result) => {
+        if (result.isConfirmed) {
             document.getElementById("approve" + id).submit();
         }
     });
 }
+
 
 //////////// DELETE //////////
 function confirmDelete(id) {
@@ -22,7 +23,7 @@ function confirmDelete(id) {
         text: "Data ini akan dihapus secara permanen!",
         icon: "warning",
         showCancelButton: true,
-        confirmButtonText: "Ya, Simpan!",
+        confirmButtonText: "Ya, Hapus!",
         cancelButtonText: "Batal",
         reverseButtons: true,
     }).then((result) => {

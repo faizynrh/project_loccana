@@ -4,16 +4,18 @@
             masukkan data dengan benar.</h6>
     </div>
     <div class="col-12">
-        <form action="{{ route('gudang.store') }}" method="POST" id="createForm" onsubmit="disableButton(event)">
+        <form id="editForm" method="POST" action="{{ route('gudang.update', $data->data->id) }}"
+            onsubmit="disableButton(event)">
             @csrf
+            @method('PUT')
             <div class="row mb-3 align-items-center">
                 <div class="col-md-3">
                     <label for="name" class="form-label fw-bold mb-0">Nama Gudang <span
                             class="text-danger">*</span></label>
                 </div>
                 <div class="col-md-9">
-                    <input type="text" class="form-control" name="name" placeholder="Nama Gudang" required
-                        minlength="3">
+                    <input type="text" class="form-control" name="name" required minlength="3"
+                        value="{{ $data->data->name }}">
                 </div>
             </div>
             <div class="row mb-3 align-items-center">
@@ -22,7 +24,8 @@
                             class="text-danger">*</span></label>
                 </div>
                 <div class="col-md-9">
-                    <input type="text" class="form-control" name="location" placeholder="Deskripsi Gudang" required>
+                    <input type="text" class="form-control" name="location" required
+                        value="{{ $data->data->description }}">
                 </div>
             </div>
             <div class="row mb-3 align-items-center">
@@ -31,7 +34,7 @@
                             class="text-danger">*</span></label>
                 </div>
                 <div class="col-md-9">
-                    <textarea class="form-control" name="description" rows="5" required></textarea>
+                    <textarea class="form-control" name="description" rows="5" required>{{ $data->data->location }}</textarea>
                 </div>
             </div>
             <div class="row mb-3 align-items-center">
@@ -40,8 +43,8 @@
                             class="text-danger">*</span></label>
                 </div>
                 <div class="col-md-9">
-                    <input type="number" class="form-control" name="capacity" placeholder="Kapasitas" required
-                        min="1">
+                    <input type="number" class="form-control" name="capacity" required min="1"
+                        value="{{ $data->data->capacity }}">
                 </div>
             </div>
             <div class="row">
@@ -51,7 +54,6 @@
                         aria-label="Close">Batal</button>
                 </div>
             </div>
-        </form>
         </form>
     </div>
 </div>

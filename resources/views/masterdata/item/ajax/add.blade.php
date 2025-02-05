@@ -69,7 +69,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="submit" class="btn btn-primary" id="submitButton">Submit</button>
+                <button type="submit" class="btn btn-primary" id="submitButton">Simpan</button>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
                     aria-label="Close">Batal</button>
             </div>

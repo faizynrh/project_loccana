@@ -31,9 +31,6 @@
             </div>
             <section class="section">
                 <div class="card">
-                    <div class="card-header">
-                        <h6 class="card-title">Data Price</h6>
-                    </div>
                     <div class="card-body">
                         @if (session('success'))
                             <div class="alert alert-success alert-dismissible fade show" role="alert">

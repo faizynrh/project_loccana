@@ -160,7 +160,7 @@
                     },
                     success: function(response) {
                         console.log(response);
-                        updateModal('#modal-item', 'Detail Item', response,
+                        updateModal('#modal-item', 'Tambah Item', response,
                             'modal-lg');
                     },
                     error: function(xhr) {

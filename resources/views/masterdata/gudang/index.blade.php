@@ -10,7 +10,7 @@
             <div class="page-title">
                 <div class="row">
                     <div class="col-12 col-md-6 order-md-1 order-last">
-                        <h3>Warehouse Management</h3>
+                        <h3>Gudang Management</h3>
                         {{-- <p class="text-subtitle text-muted">
                             Easily manage and adjust product prices.
                         </p> --}}
@@ -22,7 +22,7 @@
                                     <a href="/dashboard">Dashboard</a>
                                 </li>
                                 <li class="breadcrumb-item active" aria-current="page">
-                                    Warehouse Management
+                                    Gudang Management
                                 </li>
                             </ol>
                         </nav>
@@ -48,7 +48,7 @@
                                     aria-label="Close"></button>
                             </div>
                         @endif
-                        <button type="button" class="btn btn-primary btn-lg fw-bold mt-1 mb-2 btn-add-gudang">+</button>
+                        <button type="button" class="btn btn-primary fw-bold btn-add-gudang">+ Tambah Gudang</button>
                         <div class="table-responsive">
                             <table class="table table-striped table-bordered mt-3" id="tablegudang">
                                 <thead>
@@ -147,7 +147,7 @@
                         //
                     },
                     success: function(response) {
-                        updateModal('#modal-gudang', 'Add Gudang', response,
+                        updateModal('#modal-gudang', 'Tambah Gudang', response,
                             'modal-lg');
                     },
                     error: function(xhr) {
@@ -177,7 +177,7 @@
                         //
                     },
                     success: function(response) {
-                        updateModal('#modal-gudang', 'Edit COA', response,
+                        updateModal('#modal-gudang', 'Edit Gudang', response,
                             'modal-lg');
                     },
                     error: function(xhr) {
