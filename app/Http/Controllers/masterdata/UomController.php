@@ -108,29 +108,6 @@ class UomController extends Controller
         }
     }
 
-    // public function update(Request $request, $id)
-    // {
-    //     try {
-    //         $headers = getHeaders();
-    //         $apiurl = $this->buildApiUrl('/' . $id);
-    //         $data = [
-    //             'name' => $request->input('uom_name'),
-    //             'symbol' => $request->input('uom_symbol'),
-    //             'description' => $request->input('description')
-    //         ];
-    //         $apiResponse = Http::withHeaders($headers)->put($apiurl, $data);
-    //         if ($apiResponse->successful()) {
-    //             return redirect()->route('uom.index')
-    //                 ->with('success', $apiResponse->json()['message']);
-    //         } else {
-    //             return back()->withErrors(
-    //                 $apiResponse->json()['message']
-    //             );
-    //         }
-    //     } catch (\Exception $e) {
-    //         return back()->withErrors($e->getMessage());
-    //     }
-    // }
     public function update(Request $request, $id)
     {
         try {
