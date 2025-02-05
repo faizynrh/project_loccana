@@ -147,7 +147,7 @@
                         //
                     },
                     success: function(response) {
-
+                        console.log(response);
                         updateModal('#modal-coa', 'Detail COA', response,
                             'modal-lg');
                     },

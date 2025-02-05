@@ -16,8 +16,7 @@ function getTokenApi()
     if (!$response->successful()) {
         throw new \Exception('Failed to fetch access token');
     }
-    $data = json_decode($response->getBody()->getContents());
-    return $data;
+    return $response->json()['access_token'];
 }
 
 function fectApi($apiUrl)
@@ -37,7 +36,7 @@ function fectApi($apiUrl)
 
 function storeApi($apiUrl, $payloads)
 {
-    $access_token = session('access_token_2');
+    $access_token = getTokenApi();
     $response = Http::withOptions(['verify' => false])
         ->withHeaders([
             'Authorization' => 'Bearer ' . $access_token,
@@ -45,13 +44,12 @@ function storeApi($apiUrl, $payloads)
         ])
         ->withBody(json_encode($payloads), 'application/json')
         ->post($apiUrl);
-
     return $response;
 }
 
 function updateApi($apiUrl, $payloads)
 {
-    $access_token = session('access_token_2');
+    $access_token = getTokenApi();
     $response = Http::withOptions(['verify' => false])
         ->withHeaders([
             'Authorization' => 'Bearer ' . $access_token,
@@ -65,7 +63,7 @@ function updateApi($apiUrl, $payloads)
 
 function deleteApi($apiUrl)
 {
-    $access_token = session('access_token_2');
+    $access_token = getTokenApi();
     $response = Http::withOptions(['verify' => false])
         ->withHeaders([
             'Authorization' => 'Bearer ' . $access_token,
