@@ -134,7 +134,7 @@
 
             $(document).on('click', '.btn-add-principal', function(e) {
                 e.preventDefault();
-                const url = '{{ route('principal.store') }}'
+                const url = '{{ route('principal.create') }}'
                 const $button = $(this);
 
                 // $('#loading-overlay').fadeIn();
