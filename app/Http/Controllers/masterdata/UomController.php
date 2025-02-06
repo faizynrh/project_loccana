@@ -12,7 +12,6 @@ use Faker\Extension\Helper;
 class UomController extends Controller
 {
     //
-
     public function ajaxuom(Request $request)
     {
         try {
@@ -47,12 +46,10 @@ class UomController extends Controller
             ], 500);
         }
     }
-
     public function index()
     {
         return view('masterdata.uom.index');
     }
-
     public function store(Request $request)
     {
         try {
@@ -75,7 +72,6 @@ class UomController extends Controller
             return back()->withErrors($e->getMessage());
         }
     }
-
     public function create()
     {
         return view('masterdata.uom.ajax.add');

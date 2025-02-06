@@ -8,9 +8,9 @@
                     <select type="number" name="partner_type_id" placeholder="Type Partner" class="form-select"
                         id="partner_type_id" required>
                         <option value="" disabled selected>Pilih Type</option>
-                        @if (isset($partnerTypes['data']))
-                            @foreach ($partnerTypes['data'] as $type)
-                                <option value="{{ $type['id'] }}">{{ $type['name'] }}</option>
+                        @if (isset($partner->data))
+                            @foreach ($partner->data as $partner)
+                                <option value="{{ $partner->partner->id }}">{{ $partner->partner->name }}</option>
                             @endforeach
                         @else
                             <option value="">Data tidak tersedia</option>

@@ -14,7 +14,7 @@ class PrincipalController extends Controller
     {
         return [
             'partnerurl' => env('API_URL') . '/loccana/masterdata/partner-type/1.0.0/partner-types/list-select',
-            'coaurl' => env('API_URL') . '/loccana/masterdata/coa/1.0.0/masterdata/coa/list-select/'
+            'coaurl' => env('API_URL') . '/loccana/masterdata/coa/1.0.0/masterdata/coa/list-select'
         ];
     }
     public function ajaxprincipal(Request $request)
@@ -73,8 +73,8 @@ class PrincipalController extends Controller
     public function create()
     {
         $companyid = 2;
-        $partnerResponse = fectApi($this->urlSelect()['partnerurl'] . '/' . $companyid);
-        $coaResponse = fectApi($this->urlSelect()['coaurl'] . $companyid);
+        $partnerResponse = fectApi(env('LIST_PARTNER'));
+        $coaResponse = fectApi(env('LIST_COA') . '/' . $companyid);
         if ($partnerResponse->successful() && $coaResponse->successful()) {
             $partner
                 = json_decode($partnerResponse->body(), false);
@@ -129,8 +129,8 @@ class PrincipalController extends Controller
     {
         try {
             $companyid = 2;
-            $partnerResponse = fectApi($this->urlSelect()['partnerurl'] . '/' . $companyid);
-            $coaResponse = fectApi($this->urlSelect()['coaurl'] . $companyid);
+            $partnerResponse = fectApi(env('LIST_PARTNER'));
+            $coaResponse = fectApi(env('LIST_COA') . '/' . $companyid);
             $apiResponse = fectApi(env('PRINCIPAL_URL') . '/' . $id);
 
             if ($apiResponse->successful()) {
@@ -141,7 +141,7 @@ class PrincipalController extends Controller
                         $partnerTypes = json_decode($apiResponse->getBody()->getContents());
                         $data = $apiResponse->json()['data'];
                         $coaTypes = $coaResponse->json();
-                        return view('masterdata.principal.detail', ['principal' => $principal['data']], compact('partnerTypes', 'data', 'coaTypes'));
+                        return view('masterdata.principal.ajax.detail', ['principal' => $principal['data']], compact('partnerTypes', 'data', 'coaTypes'));
                     } else {
                         return back()->withErrors($apiResponse->json()['message']);
                     }
@@ -164,12 +164,9 @@ class PrincipalController extends Controller
     {
         try {
             $companyid = 2;
-            $headers = getHeaders();
             $apiurl = $this->buildApiUrl('/' . $id);
-            $partnerurl = getApiUrl() . '/loccana/masterdata/partner-type/1.0.0/partner-types/list-select';
-            $coaurl = getApiUrl() . '/loccana/masterdata/coa/1.0.0/masterdata/coa/list-select/' . $companyid;
-            $partnerResponse = Http::withHeaders($headers)->get($partnerurl);
-            $coaResponse = Http::withHeaders($headers)->get($coaurl);
+            $partnerResponse = fectApi(env('LIST_PARTNER'));
+            $coaResponse = fectApi(env('LIST_COA') . '/' . $companyid);
             $apiResponse = Http::withHeaders($headers)->get($apiurl);
 
             if ($apiResponse->successful()) {
