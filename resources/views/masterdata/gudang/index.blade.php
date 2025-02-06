@@ -77,7 +77,7 @@
                 serverSide: true,
                 processing: true,
                 ajax: {
-                    url: '{{ route('gudang.index') }}',
+                    url: '{{ route('gudang.ajax') }}',
                     type: 'GET',
                 },
                 columns: [{

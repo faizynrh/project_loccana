@@ -77,7 +77,6 @@ class PenerimaanBarangController extends Controller
     {
         try {
             $apiResponse = fectApi($this->url($id)['detailpo']);
-            dd($apiResponse->json());
             $items = [];
             if ($apiResponse->successful()) {
                 $data = $apiResponse->json()['data'];

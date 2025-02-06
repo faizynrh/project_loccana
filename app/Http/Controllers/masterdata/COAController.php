@@ -8,11 +8,7 @@ use App\Http\Controllers\Controller;
 
 class CoaController extends Controller
 {
-    private function buildApiUrl($endpoint)
-    {
-        return env('API_URL') . '/loccana/masterdata/coa/1.0.0/masterdata/coa' . $endpoint;
-    }
-    private function ajax(Request $request)
+    public function ajax(Request $request)
     {
         try {
             $length = $request->input('length', 10);
@@ -25,7 +21,7 @@ class CoaController extends Controller
                 'offset' => $start,
                 'company_id' => 2
             ];
-            $apiResponse = storeApi($this->buildApiUrl('/lists'), $requestbody);
+            $apiResponse = storeApi(env('COA_URL') . '/lists', $requestbody);
             if ($apiResponse->successful()) {
                 $data = $apiResponse->json();
                 return response()->json([
@@ -48,10 +44,6 @@ class CoaController extends Controller
     }
     public function index(Request $request)
     {
-        if ($request->ajax()) {
-            return $this->ajax($request);
-        }
-
         return view('masterdata.coa.index');
     }
 
@@ -71,7 +63,7 @@ class CoaController extends Controller
                 'description' => $request->input('description'),
                 'company_id' => $request->input('company_id', 2),
             ];
-            $apiResponse = storeApi($this->buildApiUrl('/'), $data);
+            $apiResponse = storeApi(env('COA_URL'), $data);
 
             if ($apiResponse->successful()) {
                 return redirect()->route('coa.index')
@@ -92,7 +84,7 @@ class CoaController extends Controller
     public function show($id)
     {
         try {
-            $apiResponse = fectApi($this->buildApiUrl('/' . $id));
+            $apiResponse = fectApi(env('COA_URL') . '/' . $id);
             $data = json_decode($apiResponse->getBody()->getContents());
             return view('masterdata.coa.ajax.detail', compact('data'));
         } catch (\Exception $e) {
@@ -103,7 +95,7 @@ class CoaController extends Controller
     public function edit($id)
     {
         try {
-            $apiResponse = fectApi($this->buildApiUrl('/' . $id));
+            $apiResponse = fectApi(env('COA_URL') . '/' . $id);
             $data = json_decode($apiResponse->getBody()->getContents());
             return view('masterdata.coa.ajax.edit', data: compact('data'));
         } catch (\Exception $e) {
@@ -123,7 +115,7 @@ class CoaController extends Controller
                 'description' => $request->description,
             ];
 
-            $apiResponse = updateApi($this->buildApiUrl('/' . $id), $data);
+            $apiResponse = updateApi(env('COA_URL') . '/' . $id, $data);
             if ($apiResponse->successful()) {
                 return redirect()->route('coa.index')->with('success', $apiResponse->json()['message']);
             } else {
@@ -137,7 +129,7 @@ class CoaController extends Controller
     public function destroy($id)
     {
         try {
-            $apiResponse = deleteApi($this->buildApiUrl('/' . $id));
+            $apiResponse = deleteApi(env('COA_URL') . '/' . $id);
             if ($apiResponse->successful()) {
                 return redirect()->route('coa.index')
                     ->with('success', $apiResponse->json()['message']);

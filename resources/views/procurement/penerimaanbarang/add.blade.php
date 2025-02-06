@@ -39,7 +39,6 @@
                                     aria-label="Close"></button>
                             </div>
                         @endif
-
                         @if ($errors->any())
                             <div class="alert alert-danger alert-dismissible fade show" role="alert">
                                 @foreach ($errors->all() as $error)
@@ -127,7 +126,7 @@
                         </table>
                         <div class="row">
                             <div class="col-md-12 text-end">
-                                <button type="button" class="btn btn-primary" id="submitButton">Submit</button>
+                                <button type="submit" class="btn btn-primary" id="submitButton">Simpan</button>
                                 <a href="" class="btn btn-danger ms-2" id="rejectButton">Reject</a>
                                 <a href="/penerimaan_barang" class="btn btn-secondary ms-2">Batal</a>
                             </div>
@@ -145,13 +144,19 @@
             $('#gudang').prop('disabled', true);
             $('#tableBody').hide();
             $('#rejectButton').hide();
+            $('#submitButton').hide();
 
             $('#satuan').on('change', function() {
-                var po_id = $(this).val();
+                const po_id = $(this).val();
+                const url = '{{ route('penerimaan_barang.getdetails', ':po_id') }}'.replace(':po_id',
+                    po_id);
+
                 if (po_id) {
                     $('#gudang').prop('disabled', false);
+                    $('#loading-overlay').fadeIn();
+
                     $.ajax({
-                        url: '/penerimaan_barang/detailpo/' + po_id,
+                        url: url,
                         type: 'GET',
                         dataType: 'json',
                         success: function(response) {
@@ -160,8 +165,8 @@
                                 return;
                             }
 
-                            var orderDate = new Date(response.order_date);
-                            var formattedDate = (orderDate.getDate()) + '-' + (orderDate
+                            const orderDate = new Date(response.order_date);
+                            const formattedDate = (orderDate.getDate()) + '-' + (orderDate
                                 .getMonth() + 1) + '-' + orderDate.getFullYear();
 
                             $('#po_id').val(response.id_po);
@@ -173,15 +178,17 @@
                             $('#fax').val(response.fax);
                             $('#gudang').val(response.warehouse_id);
 
-                            var tableBody = $('#tableBody');
+                            const tableBody = $('#tableBody');
                             tableBody.empty();
                             if (response.items && response.items.length > 0) {
                                 tableBody.show();
                                 $('#rejectButton').show();
-                                response.items.forEach(function(item) {
-                                    var qty_balance = item.qty_balance;
+                                $('#submitButton').show();
 
-                                    var row = `
+                                response.items.forEach(function(item) {
+                                    const qty_balance = item.qty_balance;
+
+                                    const row = `
                                             <tr style="border-bottom: 2px solid #000;">
                                                 <td>
                                                     <input type="hidden" id="item_id" value="${item.item_id}">
@@ -191,7 +198,7 @@
                                                 <td><input type="number" class="form-control bg-body-secondary order_qty" value="${item.base_qty}" readonly></td>
                                                 <td><input type="number" class="form-control bg-body-secondary qty_balance" value="${item.qty_balance}" readonly></td>
                                                 <td><input type="number" class="form-control bg-body-secondary diterima" value="${item.qty}" readonly></td>
-                                                <td><input type="number" class="form-control qty_received" id="qty_received" value="0" min="0" required></td>
+                                                <td><input type="number" class="form-control qty_received" id="qty_received" value="0" min="1" required></td>
                                                 <td><input type="number" class="form-control qty_reject" id="qty_reject" value="0" min="0" required></td>
                                                 <td><input type="number" class="form-control qty_bonus" id="qty_bonus" value="0" min="0" required></td>
                                                 <td><input type="number" class="form-control qty_titip" id="qty_titip" value="0" min="0" required></td>
@@ -203,7 +210,7 @@
 
                                     tableBody.find('.qty_received').last().on('input',
                                         function() {
-                                            var qty_received = $(this).val();
+                                            const qty_received = $(this).val();
 
                                             if (parseFloat(qty_received) >
                                                 parseFloat(qty_balance)) {
@@ -218,11 +225,7 @@
                                                     .qty_balance);
                                                 return;
                                             }
-                                            console.log('qty_balance:' +
-                                                qty_balance);
-                                            console.log('qty_received:' +
-                                                qty_received);
-                                            var new_balance_qty = parseFloat(
+                                            const new_balance_qty = parseFloat(
                                                 qty_balance) - parseFloat(
                                                 qty_received);
 
@@ -242,6 +245,7 @@
                             } else {
                                 tableBody.parent('table').hide();
                                 $('#rejectButton').hide();
+                                $('#submitButton').hide();
                                 Swal.fire('Peringatan', 'Tidak ada item untuk PO ini',
                                     'warning');
                             }
@@ -250,94 +254,99 @@
                             Swal.fire('Error', 'Gagal mengambil detail PO', 'error');
                             $('#tableBody').hide();
                             $('#rejectButton').hide();
+                            $('#submitButton').hide();
+
                             $('#gudang').prop('disabled', true);
+                        },
+                        complete: function() {
+                            $('#loading-overlay').fadeOut();
                         }
                     });
                 } else {
                     $('#gudang').prop('disabled', true);
                     $('#tableBody').hide();
                     $('#rejectButton').hide();
-                }
-            });
-        });
+                    $('#submitButton').hide();
 
-        $('#submitButton').on('click', function(event) {
-            event.preventDefault();
-            var isValid = true;
-            $('#tableBody tr').each(function() {
-                var qty_received = $(this).find('#qty_received').val();
-                var qty_reject = $(this).find('#qty_reject').val();
-                var qty_bonus = $(this).find('#qty_bonus').val();
-                var qty_titip = $(this).find('#qty_titip').val();
-                var discount = $(this).find('#discount').val();
-
-                if (qty_received === "" || isNaN(qty_received) || qty_received < 1) {
-                    isValid = false;
-                }
-
-                if (qty_reject === "" || isNaN(qty_reject) || qty_reject < 0) {
-                    isValid = false;
-                    $(this).find('#qty_reject').addClass('is-invalid');
-                }
-
-                if (qty_bonus === "" || isNaN(qty_bonus) || qty_bonus < 0) {
-                    isValid = false;
-                    $(this).find('#qty_bonus').addClass('is-invalid');
-                }
-
-                if (qty_titip === "" || isNaN(qty_titip) || qty_titip < 0) {
-                    isValid = false;
-                    $(this).find('#qty_titip').addClass('is-invalid');
-                }
-
-                if (discount === "" || isNaN(discount) || discount < 0) {
-                    isValid = false;
-                    $(this).find('#discount').addClass('is-invalid');
                 }
             });
 
-            if (!isValid) {
-                Swal.fire('Peringatan', 'Pastikan semua input telah diisi dengan benar!', 'warning');
-                return;
-            }
+            $('#submitButton').on('click', function(event) {
+                event.preventDefault();
+                let isValid = true;
+                const formvalid = $('#createForm')[0];
 
-            var items = [];
-            $('#tableBody tr').each(function() {
-                items.push({
-                    item_id: $(this).find('#item_id').val(),
-                    warehouse_id: $(this).find('#warehouse_id').val(),
-                    qty_reject: $(this).find('#qty_reject').val(),
-                    qty_received: $(this).find('#qty_received').val(),
-                    qty_bonus: $(this).find('#qty_bonus').val(),
-                    qty_titip: $(this).find('#qty_titip').val(),
-                    discount: $(this).find('#discount').val(),
-                    note: $(this).find('input[placeholder="Note"]').val()
+                if (!formvalid.checkValidity()) {
+                    formvalid.reportValidity();
+                    return;
+                }
+                $('#tableBody tr').each(function() {
+                    const qty_received = $(this).find('#qty_received').val();
+                    const qty_reject = $(this).find('#qty_reject').val();
+                    const qty_bonus = $(this).find('#qty_bonus').val();
+                    const qty_titip = $(this).find('#qty_titip').val();
+                    const discount = $(this).find('#discount').val();
+
+                    if (qty_received === "" || isNaN(qty_received) || qty_received < 1) {
+                        isValid = false;
+                    }
+
+                    if (qty_reject === "" || isNaN(qty_reject) || qty_reject < 0) {
+                        isValid = false;
+                        $(this).find('#qty_reject').addClass('is-invalid');
+                    }
+
+                    if (qty_bonus === "" || isNaN(qty_bonus) || qty_bonus < 0) {
+                        isValid = false;
+                        $(this).find('#qty_bonus').addClass('is-invalid');
+                    }
+
+                    if (qty_titip === "" || isNaN(qty_titip) || qty_titip < 0) {
+                        isValid = false;
+                        $(this).find('#qty_titip').addClass('is-invalid');
+                    }
+
+                    if (discount === "" || isNaN(discount) || discount < 0) {
+                        isValid = false;
+                        $(this).find('#discount').addClass('is-invalid');
+                    }
                 });
+
+                if (!isValid) {
+                    Swal.fire('Peringatan', 'Pastikan semua input telah diisi dengan benar!', 'warning');
+                    return;
+                }
+
+                const items = [];
+                $('#tableBody tr').each(function() {
+                    items.push({
+                        item_id: $(this).find('#item_id').val(),
+                        warehouse_id: $(this).find('#warehouse_id').val(),
+                        qty_reject: $(this).find('#qty_reject').val(),
+                        qty_received: $(this).find('#qty_received').val(),
+                        qty_bonus: $(this).find('#qty_bonus').val(),
+                        qty_titip: $(this).find('#qty_titip').val(),
+                        discount: $(this).find('#discount').val(),
+                        note: $(this).find('input[placeholder="Note"]').val()
+                    });
+                });
+
+                const form = $('#createForm');
+                items.forEach(function(item, index) {
+                    form.append(`
+                                <input type="hidden" name="items[${index}][item_id]" value="${item.item_id}">
+                                <input type="hidden" name="items[${index}][warehouse_id]" value="${item.warehouse_id}">
+                                <input type="hidden" name="items[${index}][qty_reject]" value="${item.qty_reject}">
+                                <input type="hidden" name="items[${index}][qty_received]" value="${item.qty_received}">
+                                <input type="hidden" name="items[${index}][qty_bonus]" value="${item.qty_bonus}">
+                                <input type="hidden" name="items[${index}][qty_titip]" value="${item.qty_titip}">
+                                <input type="hidden" name="items[${index}][discount]" value="${item.discount}">
+                                <input type="hidden" name="items[${index}][note]" value="${item.note}">
+                                `);
+                });
+
+                form.submit();
             });
-
-            var form = $('#createForm');
-            items.forEach(function(item, index) {
-                form.append(`
-            <input type="hidden" name="items[${index}][item_id]" value="${item.item_id}">
-            <input type="hidden" name="items[${index}][warehouse_id]" value="${item.warehouse_id}">
-            <input type="hidden" name="items[${index}][qty_reject]" value="${item.qty_reject}">
-            <input type="hidden" name="items[${index}][qty_received]" value="${item.qty_received}">
-            <input type="hidden" name="items[${index}][qty_bonus]" value="${item.qty_bonus}">
-            <input type="hidden" name="items[${index}][qty_titip]" value="${item.qty_titip}">
-            <input type="hidden" name="items[${index}][discount]" value="${item.discount}">
-            <input type="hidden" name="items[${index}][note]" value="${item.note}">
-        `);
-            });
-
-            confirmSubmit('submitButton', 'createForm');
-        });
-
-
-        document.addEventListener("DOMContentLoaded", function() {
-            const submitButton = document.getElementById('submitButton');
-            const rejectButton = document.getElementById('rejectButton');
-
-            rejectButton.style.display = 'none';
         });
     </script>
 @endpush

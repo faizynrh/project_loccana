@@ -54,6 +54,7 @@ Route::middleware('auth.login')->group(
         // ITEM
         Route::prefix('/item')->name('item.')->group(function () {
             Route::get('/', [ItemController::class, 'index'])->name('index');
+            Route::get('/ajax', [ItemController::class, 'ajax'])->name('ajax');
             Route::get('/add', [ItemController::class, 'create'])->name('create');
             Route::post('/add', [ItemController::class, 'store'])->name('store');
             Route::delete('/delete/{id}', [ItemController::class, 'destroy'])->name('destroy');
@@ -78,6 +79,7 @@ Route::middleware('auth.login')->group(
         // PRICE
         Route::prefix('/price')->name('price.')->group(function () {
             Route::get('/', [PriceController::class, 'index'])->name('index');
+            Route::get('/ajax', [PriceController::class, 'ajax'])->name('ajax');
             Route::get('/edit/{id}', [PriceController::class, 'edit'])->name('edit');
             Route::put('/update/{id}', [PriceController::class, 'update'])->name('update');
             Route::put('/approve/{id}', [PriceController::class, 'approve'])->name('approve');
@@ -86,15 +88,15 @@ Route::middleware('auth.login')->group(
         // UOM
         Route::prefix('/uom')->name('uom.')->group(
             function () {
-                Route::get('/', [UomController::class, 'index'])->name('index');
-                Route::get('/ajax', [UomController::class, 'ajaxuom'])->name('ajax');
-                Route::get('/add', [UomController::class, 'create'])->name('create');
-                Route::post('/add', [UomController::class, 'store'])->name('store');
-                Route::delete('/delete/{id}', [UomController::class, 'destroy'])->name('destroy');
-                Route::get('/edit/{id}', [UomController::class, 'edit'])->name('edit');
-                Route::put('/update/{id}', [UomController::class, 'update'])->name('update');
-                Route::get('/detail/{id}', [UomController::class, 'show'])->name('show');
-            }
+            Route::get('/', [UomController::class, 'index'])->name('index');
+            Route::get('/ajax', [UomController::class, 'ajaxuom'])->name('ajax');
+            Route::get('/add', [UomController::class, 'create'])->name('create');
+            Route::post('/add', [UomController::class, 'store'])->name('store');
+            Route::delete('/delete/{id}', [UomController::class, 'destroy'])->name('destroy');
+            Route::get('/edit/{id}', [UomController::class, 'edit'])->name('edit');
+            Route::put('/update/{id}', [UomController::class, 'update'])->name('update');
+            Route::get('/detail/{id}', [UomController::class, 'show'])->name('show');
+        }
         );
 
 
@@ -103,6 +105,7 @@ Route::middleware('auth.login')->group(
         // COA
         Route::prefix('/coa')->name('coa.')->group(function () {
             Route::get('/', [CoaController::class, 'index'])->name('index');
+            Route::get('/ajax', [CoaController::class, 'ajax'])->name('ajax');
             Route::get('/detail/{id}', [CoaController::class, 'show'])->name('detail');
             Route::get('/add', [CoaController::class, 'create'])->name('create');
             Route::post('/add', [CoaController::class, 'store'])->name('store');
@@ -114,6 +117,7 @@ Route::middleware('auth.login')->group(
         //GUDANG
         Route::prefix('/gudang')->name('gudang.')->group(function () {
             Route::get('/', [GudangController::class, 'index'])->name('index');
+            Route::get('/ajax', [GudangController::class, 'ajax'])->name('ajax');
             Route::get('/add', [GudangController::class, 'create'])->name('create');
             Route::get('/edit/{id}', [GudangController::class, 'edit'])->name('edit');
             Route::put('/edit/{id}', [GudangController::class, 'update'])->name('update');

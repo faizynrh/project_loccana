@@ -72,7 +72,7 @@
                 serverSide: true,
                 processing: true,
                 ajax: {
-                    url: '{{ route('coa.index') }}',
+                    url: '{{ route('coa.ajax') }}',
                     type: 'GET',
                 },
                 columns: [{

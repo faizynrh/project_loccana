@@ -2,22 +2,14 @@
 
 namespace App\Http\Controllers\masterdata;
 
-use App\Helpers\Helpers;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Http;
 
 
 
 class PriceController extends Controller
 {
-    private function buildApiUrl($endpoint)
-    {
-        return env('API_URL') . '/masterdata/price/1.0.0/price-manajement' . $endpoint;
-    }
-
-    private function ajax(Request $request)
+    public function ajax(Request $request)
     {
         try {
             $length = $request->input('length', 10);
@@ -31,7 +23,7 @@ class PriceController extends Controller
                 'company_id' => 2
             ];
 
-            $apiResponse = storeApi($this->buildApiUrl('/list'), $requestbody);
+            $apiResponse = storeApi(env('PRICE_URL') . '/list', $requestbody);
             if ($apiResponse->successful()) {
                 $data = $apiResponse->json();
                 return response()->json([
@@ -53,17 +45,13 @@ class PriceController extends Controller
     }
     public function index(Request $request)
     {
-        if ($request->ajax()) {
-            return $this->ajax($request);
-        }
-
         return view('masterdata.price.index');
     }
 
     public function edit($id)
     {
         try {
-            $apiResponse = fectApi($this->buildApiUrl('/' . $id));
+            $apiResponse = fectApi(env('PRICE_URL') . '/' . $id);
             $data = json_decode($apiResponse->getBody()->getContents());
             return view('masterdata.price.ajax.edit', data: compact('data'));
         } catch (\Exception $e) {
@@ -81,8 +69,7 @@ class PriceController extends Controller
                 'harga_beli' => $request->harga_beli,
             ];
 
-            $apiResponse = updateApi($this->buildApiUrl('/' . $id), $data);
-            dd($data);
+            $apiResponse = updateApi(env('PRICE_URL') . '/' . $id, $data);
             if ($apiResponse->successful()) {
                 return redirect()->route('price.index')->with('success', $apiResponse->json()['message']);
             } else {
@@ -99,7 +86,7 @@ class PriceController extends Controller
             $data = [
                 'status' => 'approve',
             ];
-            $apiResponse = updateApi($this->buildApiUrl('/approve/' . $id), $data);
+            $apiResponse = updateApi(env('PRICE_URL') . '/approve/' . $id, $data);
             if ($apiResponse->successful()) {
                 return redirect()->route('price.index')->with('success', $apiResponse->json()['message']);
             } else {
