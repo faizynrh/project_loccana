@@ -71,7 +71,7 @@
                     serverSide: true,
                     processing: true,
                     ajax: {
-                        url: '{{ route('uom.index') }}',
+                        url: '{{ route('uom.ajax') }}',
                         type: 'GET',
 
                     },

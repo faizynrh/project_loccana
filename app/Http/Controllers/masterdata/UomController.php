@@ -13,12 +13,7 @@ class UomController extends Controller
 {
     //
 
-    private function buildApiUrl($endpoint)
-    {
-        return env('API_URL') . '/loccana/masterdata/1.0.0/uoms' . $endpoint;
-    }
-
-    private function ajaxuom(Request $request)
+    public function ajaxuom(Request $request)
     {
         try {
             $length = $request->input('length', 10);
@@ -32,7 +27,8 @@ class UomController extends Controller
             if (!empty($search)) {
                 $requestbody['search'] = $search;
             }
-            $apiResponse = storeApi($this->buildApiUrl('/lists'), $requestbody);
+            // $apiResponse = storeApi($this->buildApiUrl('/lists'), $requestbody);
+            $apiResponse = storeApi(env('UOM_URL') . '/lists', $requestbody);
             if ($apiResponse->successful()) {
                 $data = $apiResponse->json();
                 return response()->json([
@@ -52,11 +48,8 @@ class UomController extends Controller
         }
     }
 
-    public function index(Request $request)
+    public function index()
     {
-        if ($request->ajax()) {
-            return $this->ajaxuom($request);
-        }
         return view('masterdata.uom.index');
     }
 
@@ -68,15 +61,14 @@ class UomController extends Controller
                 'symbol' => (string) $request->input('uom_symbol'),
                 'description' => (string) $request->input('description',)
             ];
-            $apiResponse = storeApi($this->buildApiUrl('/'), $data);
-            $responseData = $apiResponse->json();
+            $apiResponse = storeApi(env('UOM_URL') . '/', $data);
             // dd($data);
             if ($apiResponse->successful()) {
                 return redirect()->route('uom.index')
-                    ->with('success', $responseData['message']);
+                    ->with('success', $apiResponse->json()['message']);
             } else {
                 return back()->withErrors(
-                    ($responseData['message'])
+                    ($apiResponse->json()['message'])
                 );
             }
         } catch (\Exception $e) {
@@ -91,7 +83,7 @@ class UomController extends Controller
     public function edit($id)
     {
         try {
-            $apiResponse = fectApi($this->buildApiUrl('/' . $id));
+            $apiResponse = fectApi(env('UOM_URL') . '/' . $id);
             $data = json_decode($apiResponse->getBody()->getContents());
             // dd($data);
             return view(
@@ -107,11 +99,12 @@ class UomController extends Controller
     {
         try {
             $data = [
-                'name' => $request->input('uom_name'),
-                'symbol' => $request->input('uom_symbol'),
-                'description' => $request->input('description')
+                'name' => (string) $request->input('uom_name'),
+                'symbol' => (string) $request->input('uom_symbol'),
+                'description' => (string) $request->input('description',)
             ];
-            $apiResponse = updateApi($this->buildApiUrl('/' . $id), $data);
+            $apiResponse = updateApi(env('UOM_URL') . '/' . $id, $data);
+            // $apiResponse = updateApi($this->buildApiUrl('/' . $id), $data);
             if ($apiResponse->successful()) {
                 return redirect()->route('uom.index')
                     ->with('success', $apiResponse->json()['message']);
@@ -124,12 +117,10 @@ class UomController extends Controller
             return back()->withErrors($e->getMessage());
         }
     }
-
-
     public function show($id)
     {
         try {
-            $apiResponse = fectApi($this->buildApiUrl('/' . $id));
+            $apiResponse = fectApi(env('UOM_URL') . '/' . $id);
             $data = json_decode($apiResponse->getBody()->getContents());
             // dd($data);
             return view(
@@ -141,12 +132,11 @@ class UomController extends Controller
             return back()->withErrors($e->getMessage());
         }
     }
-
-
     public function destroy(string $id)
     {
         try {
-            $apiResponse = deleteApi($this->buildApiUrl('/' . $id));
+            $apiResponse = deleteApi(env('UOM_URL') . '/' . $id);
+            // $apiResponse = deleteApi($this->buildApiUrl('/' . $id));
             if ($apiResponse->successful()) {
                 return redirect()->route('uom.index')
                     ->with('success', $apiResponse->json()['message']);

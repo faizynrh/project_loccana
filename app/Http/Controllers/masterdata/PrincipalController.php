@@ -10,16 +10,16 @@ use Illuminate\Support\Facades\Log;
 
 class PrincipalController extends Controller
 {
-    private function buildApiUrl($endpoint)
+    private function urlSelect()
     {
-        return getApiUrl() . '/loccana/masterdata/partner/1.0.0/partner' . $endpoint;
+        return [
+            'partnerurl' => env('API_URL') . '/loccana/masterdata/partner-type/1.0.0/partner-types/list-select',
+            'coaurl' => env('API_URL') . '/loccana/masterdata/coa/1.0.0/masterdata/coa/list-select/'
+        ];
     }
-    private function ajaxprincipal(Request $request)
+    public function ajaxprincipal(Request $request)
     {
         try {
-            $headers = getHeaders();
-            $apiurl = $this->buildApiUrl('/lists');
-
             $length = $request->input('length', 10);
             $start = $request->input('start', 0);
             $search = $request->input('search.value', '');
@@ -32,12 +32,12 @@ class PrincipalController extends Controller
                 'is_customer' => false,
                 'is_supplier' => true
             ];
+            $apiResponse = storeApi(env('PRINCIPAL_URL') . '/lists', $requestbody);
 
             if (!empty($search)) {
                 $requestbody['search'] = $search;
             }
 
-            $apiResponse = Http::withHeaders($headers)->post($apiurl, $requestbody);
 
             if ($apiResponse->successful()) {
                 $data = $apiResponse->json();
@@ -60,12 +60,9 @@ class PrincipalController extends Controller
         }
     }
 
-    public function index(Request $request)
+    public function index()
     {
         //
-        if ($request->ajax()) {
-            return $this->ajaxprincipal($request);
-        }
         return view('masterdata.principal.index');
     }
 
@@ -76,15 +73,14 @@ class PrincipalController extends Controller
     public function create()
     {
         $companyid = 2;
-        $partnerurl = getApiUrl() . '/loccana/masterdata/partner-type/1.0.0/partner-types/list-select';
-        $headers = getHeaders();
-        $coaurl = getApiUrl() . '/loccana/masterdata/coa/1.0.0/masterdata/coa/list-select/' . $companyid;
-        $partnerResponse = Http::withHeaders($headers)->get($partnerurl);
-        $coaResponse = Http::withHeaders($headers)->get($coaurl);
+        $partnerResponse = fectApi($this->urlSelect()['partnerurl'] . '/' . $companyid);
+        $coaResponse = fectApi($this->urlSelect()['coaurl'] . $companyid);
         if ($partnerResponse->successful() && $coaResponse->successful()) {
-            $partnerTypes = $partnerResponse->json();
-            $coaTypes = $coaResponse->json();
-            return view('masterdata.principal.add', compact('partnerTypes', 'coaTypes'));
+            $partner
+                = json_decode($partnerResponse->body(), false);
+            $coa =
+                json_decode($coaResponse->body(), false);
+            return view('masterdata.principal.ajax.add', compact('partner', 'coa'));
         } else {
             $errors = [];
             if (!$coaResponse->successful()) {
@@ -100,8 +96,6 @@ class PrincipalController extends Controller
     public function store(Request $request)
     {
         try {
-            $headers = getHeaders();
-            $apiurl = $this->buildApiUrl('/');
             $data = [
                 'name' => $request->input('nama'),
                 'partner_type_id' => $request->input('partner_type_id'),
@@ -112,7 +106,7 @@ class PrincipalController extends Controller
                 'is_supplier' => true
             ];
 
-            $apiResponse = Http::withHeaders($headers)->post($apiurl, $data);
+            $apiResponse = storeApi(env('PRINCIPAL_URL') . '/', $data);
             $responseData = $apiResponse->json();
             if ($apiResponse->successful()) {
                 return redirect()->route('principal.index')
@@ -135,21 +129,16 @@ class PrincipalController extends Controller
     {
         try {
             $companyid = 2;
-            $headers = getHeaders();
-            $apiurl = $this->buildApiUrl('/' . $id);
-            $partnerurl = getApiUrl() . '/loccana/masterdata/partner-type/1.0.0/partner-types/list-select';
-            $coaurl = getApiUrl() . '/loccana/masterdata/coa/1.0.0/masterdata/coa/list-select/' . $companyid;
-
-            $partnerResponse = Http::withHeaders($headers)->get($partnerurl);
-            $coaResponse = Http::withHeaders($headers)->get($coaurl);
-            $apiResponse = Http::withHeaders($headers)->get($apiurl);
+            $partnerResponse = fectApi($this->urlSelect()['partnerurl'] . '/' . $companyid);
+            $coaResponse = fectApi($this->urlSelect()['coaurl'] . $companyid);
+            $apiResponse = fectApi(env('PRINCIPAL_URL') . '/' . $id);
 
             if ($apiResponse->successful()) {
                 $principal = $apiResponse->json();
 
                 if (isset($principal['data'])) {
                     if ($partnerResponse->successful() && $coaResponse->successful()) {
-                        $partnerTypes = $partnerResponse->json();
+                        $partnerTypes = json_decode($apiResponse->getBody()->getContents());
                         $data = $apiResponse->json()['data'];
                         $coaTypes = $coaResponse->json();
                         return view('masterdata.principal.detail', ['principal' => $principal['data']], compact('partnerTypes', 'data', 'coaTypes'));
@@ -213,20 +202,17 @@ class PrincipalController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            $headers = getHeaders();
-            $apiurl = $this->buildApiUrl('/' . $id);
 
             $data = [
                 'name' => (string) $request->input('nama'),
                 'partner_type_id' => $request->input('partner_type_id'),
-                'contact_info' => $request->input('contact_info', ),
-                'chart_of_account_id' => $request->input('chart_of_account_id', ),
+                'contact_info' => $request->input('contact_info',),
+                'chart_of_account_id' => $request->input('chart_of_account_id',),
                 'company_id' => 2,
                 'is_customer' => true,
                 'is_supplier' => false
             ];
-
-            $apiResponse = Http::withHeaders($headers)->put($apiurl, $data);
+            $apiResponse = updateApi(env('PRINCIPAL_URL' . '/' . $id), $data);
             if ($apiResponse->successful()) {
                 return redirect()->route('principal.index')->with('success', $apiResponse->json()['message']);
             } else {
@@ -243,9 +229,8 @@ class PrincipalController extends Controller
     public function destroy(string $id)
     {
         try {
-            $headers = getHeaders();
-            $apiurl = $this->buildApiUrl('/' . $id);
-            $apiResponse = Http::withHeaders($headers)->delete($apiurl);
+            $apiResponse = deleteApi(env('PRINCIPAL_URL') . '/' . $id);
+
             if ($apiResponse->successful()) {
                 return redirect()->route('principal.index')
                     ->with('success', $apiResponse->json()['message']);

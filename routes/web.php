@@ -24,6 +24,8 @@ use App\Http\Controllers\procurement\PurchaseOrderController;
 |
 */
 
+
+
 Route::get('/', function () {
     return view('home');
 })->name('home');
@@ -82,15 +84,21 @@ Route::middleware('auth.login')->group(
         });
 
         // UOM
-        Route::prefix('/uom')->name('uom.')->group(function () {
-            Route::get('/', [UomController::class, 'index'])->name('index');
-            Route::get('/add', [UomController::class, 'create'])->name('create');
-            Route::post('/add', [UomController::class, 'store'])->name('store');
-            Route::delete('/delete/{id}', [UomController::class, 'destroy'])->name('destroy');
-            Route::get('/edit/{id}', [UomController::class, 'edit'])->name('edit');
-            Route::put('/update/{id}', [UomController::class, 'update'])->name('update');
-            Route::get('/detail/{id}', [UomController::class, 'show'])->name('show');
-        });
+        Route::prefix('/uom')->name('uom.')->group(
+            function () {
+                Route::get('/', [UomController::class, 'index'])->name('index');
+                Route::get('/ajax', [UomController::class, 'ajaxuom'])->name('ajax');
+                Route::get('/add', [UomController::class, 'create'])->name('create');
+                Route::post('/add', [UomController::class, 'store'])->name('store');
+                Route::delete('/delete/{id}', [UomController::class, 'destroy'])->name('destroy');
+                Route::get('/edit/{id}', [UomController::class, 'edit'])->name('edit');
+                Route::put('/update/{id}', [UomController::class, 'update'])->name('update');
+                Route::get('/detail/{id}', [UomController::class, 'show'])->name('show');
+            }
+        );
+
+
+
 
         // COA
         Route::prefix('/coa')->name('coa.')->group(function () {
@@ -116,13 +124,18 @@ Route::middleware('auth.login')->group(
         // PRINCIPAL
         Route::prefix('/principal')->name('principal.')->group(function () {
             Route::get('/', [PrincipalController::class, 'index'])->name('index');
-            Route::get('/add', [PrincipalController::class, 'create'])->name('create');
+            Route::get(
+                '/add',
+                [PrincipalController::class, 'create']
+            )->name('create');
+            Route::get('/ajax', [PrincipalController::class, 'ajaxprincipal'])->name('ajax');
             Route::post('/add', [PrincipalController::class, 'store'])->name('store');
             Route::delete('/delete/{id}', [PrincipalController::class, 'destroy'])->name('destroy');
             Route::get('/edit/{id}', [PrincipalController::class, 'edit'])->name('edit');
             Route::put('/update/{id}', [PrincipalController::class, 'update'])->name('update');
             Route::get('/show/{id}', [PrincipalController::class, 'show'])->name('show');
         });
+
 
 
         // CUSTOMER
