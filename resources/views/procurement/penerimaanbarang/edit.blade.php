@@ -142,7 +142,7 @@
                                                     value="{{ $item['qty_balance'] }}" readonly>
                                             </td>
                                             <td><input type="text" class="form-control bg-body-secondary"
-                                                    name="quantity_received[{{ $index }}]" id="qty_received"
+                                                    name="quantity_received[{{ $index }}]" id="quantity_received"
                                                     value="{{ $item['qty_receipt'] }}" readonly>
                                             </td>
                                             <td><input type="number" class="form-control"
@@ -191,26 +191,19 @@
     <script>
         $(document).ready(function() {
             $('#tableBody').on('input', 'input#qty', function() {
-                var $row = $(this).closest('tr');
-                var itemOrderQty = parseFloat($row.find('#qty_order').val()) || 0;
-                var qtyInputField = $(this);
-                var qtyBalanceField = $row.find('#qty_balance');
-                var qtyReceivedField = $row.find('#quantity_received');
+                let $row = $(this).closest('tr');
+                let itemOrderQty = parseFloat($row.find('#qty_order').val()) || 0;
+                let qtyInputField = $(this);
+                let qtyBalanceField = $row.find('#qty_balance');
+                let qtyReceivedField = $row.find('#quantity_received');
 
                 qtyBalanceField.data('initial', qtyBalanceField.data('initial') || qtyBalanceField.val());
                 qtyReceivedField.data('initial', qtyReceivedField.data('initial') || qtyReceivedField
                     .val());
 
-                var initialBalance = parseFloat(qtyBalanceField.data('initial')) || 0;
-                var initialReceived = parseFloat(qtyReceivedField.data('initial')) || 0;
-                var qtyInput = parseFloat(qtyInputField.val()) || 0;
-
-                console.log({
-                    itemOrderQty,
-                    initialBalance,
-                    initialReceived,
-                    qtyInput
-                });
+                let initialBalance = parseFloat(qtyBalanceField.data('initial')) || 0;
+                let initialReceived = parseFloat(qtyReceivedField.data('initial')) || 0;
+                let qtyInput = parseFloat(qtyInputField.val()) || 0;
 
                 if (!qtyInputField.val().trim()) {
                     qtyBalanceField.val(initialBalance);
@@ -227,24 +220,29 @@
                     return;
                 }
 
-                var newBalance = itemOrderQty - qtyInput;
+                let newBalance = itemOrderQty - qtyInput;
                 qtyBalanceField.val(newBalance);
-                qtyReceivedField.val(itemOrderQty - newBalance);
+
+                // Menghitung qty_receipt berdasarkan qty_order dikurangi qty yang diinput
+                let newQtyReceived = itemOrderQty - newBalance;
+                qtyReceivedField.val(newQtyReceived); // Update qty_received field
+
+                console.log(newQtyReceived);
             });
 
             $('#submitButton').click(function(event) {
                 event.preventDefault();
 
-                var isValid = true;
-                var errorMessage = '';
+                let isValid = true;
+                let errorMessage = '';
 
                 $('#tableBody tr').each(function() {
-                    var qty = parseFloat($(this).find('input[name^="qty"]').val()) || 0;
-                    var qtyRejected = parseFloat($(this).find('input[name^="quantity_rejected"]')
+                    let qty = parseFloat($(this).find('input[name^="qty"]').val()) || 0;
+                    let qtyRejected = parseFloat($(this).find('input[name^="quantity_rejected"]')
                         .val()) || 0;
-                    var qtyBonus = parseFloat($(this).find('input[name^="qty_bonus"]').val()) || 0;
-                    var qtyTitip = parseFloat($(this).find('input[name^="qty_titip"]').val()) || 0;
-                    var qtyDiskon = parseFloat($(this).find('input[name^="qty_diskon"]').val()) ||
+                    let qtyBonus = parseFloat($(this).find('input[name^="qty_bonus"]').val()) || 0;
+                    let qtyTitip = parseFloat($(this).find('input[name^="qty_titip"]').val()) || 0;
+                    let qtyDiskon = parseFloat($(this).find('input[name^="qty_diskon"]').val()) ||
                         0;
 
 

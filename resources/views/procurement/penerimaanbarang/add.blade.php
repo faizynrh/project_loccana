@@ -198,7 +198,7 @@
                                                                                                                     <td><input type="number" class="form-control bg-body-secondary order_qty" value="${item.base_qty}" readonly></td>
                                                                                                                     <td><input type="number" class="form-control bg-body-secondary qty_balance" value="${item.qty_balance}" readonly></td>
                                                                                                                     <td><input type="number" class="form-control bg-body-secondary diterima" value="${item.qty}" readonly></td>
-                                                                                                                    <td><input type="number" class="form-control qty_received" id="qty_received"  min="1" required></td>
+                                                                                                                    <td><input type="number" class="form-control qty_received" id="qty_received" value="0" min="1" required></td>
                                                                                                                     <td><input type="number" class="form-control qty_reject" id="qty_reject" value="0" min="0" required></td>
                                                                                                                     <td><input type="number" class="form-control qty_bonus" id="qty_bonus" value="0" min="0" required></td>
                                                                                                                     <td><input type="number" class="form-control qty_titip" id="qty_titip" value="0" min="0" required></td>
@@ -213,10 +213,9 @@
                                             const qty_received = $(this).val();
 
                                             if (parseFloat(qty_received) >
-                                                parseFloat(qty_balance) ||
-                                                parseFloat(qty_received) < 1) {
+                                                parseFloat(qty_balance)) {
                                                 Swal.fire('Peringatan',
-                                                    'Input harus lebih dari 0 dan tidak boleh melebihi jumlah Sisa!',
+                                                    'Input tidak boleh melebihi jumlah Sisa!',
                                                     'warning');
                                                 $(this).val("");
                                                 $(this).closest('tr').find(
