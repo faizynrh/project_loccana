@@ -19,7 +19,7 @@
                                     <a href="index.html">Dashboard</a>
                                 </li>
                                 <li class="breadcrumb-item active" aria-current="page">
-                                    Edit Penerimaan Barang Management
+                                    Edit Penerimaan Barang
                                 </li>
                             </ol>
                         </nav>
@@ -176,7 +176,7 @@
 
                             <div class="row">
                                 <div class="col-md-12 text-end">
-                                    <button type="button" class="btn btn-primary" id="submitButton">Submit</button>
+                                    <button type="submit" class="btn btn-primary" id="submitButton">Simpan</button>
                                     <a href="/penerimaan_barang" class="btn btn-secondary ms-2">Batal</a>
                                 </div>
                             </div>
@@ -263,7 +263,7 @@
                         confirmButtonText: 'OK'
                     });
                 } else {
-                    confirmEdit('submitButton', 'editForm');
+                    $('#editForm').submit();
                 }
             });
         });

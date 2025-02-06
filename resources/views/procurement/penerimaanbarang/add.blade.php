@@ -10,7 +10,7 @@
             <div class="page-title">
                 <div class="row">
                     <div class="col-12 col-md-6 order-md-1 order-last">
-                        <h3>Add Penerimaan Barang</h3>
+                        <h3>Tambah Penerimaan Barang</h3>
                     </div>
                     <div class="col-12 col-md-6 order-md-2 order-first">
                         <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
@@ -19,7 +19,7 @@
                                     <a href="index.html">Dashboard</a>
                                 </li>
                                 <li class="breadcrumb-item active" aria-current="page">
-                                    Add Penerimaan Barang Management
+                                    Tambah Penerimaan Barang
                                 </li>
                             </ol>
                         </nav>
@@ -189,23 +189,23 @@
                                     const qty_balance = item.qty_balance;
 
                                     const row = `
-                                            <tr style="border-bottom: 2px solid #000;">
-                                                <td>
-                                                    <input type="hidden" id="item_id" value="${item.item_id}">
-                                                    <input type="hidden" id="warehouse_id" value="${item.warehouse_id}">
-                                                    <textarea type="text" class="form-control w-100" readonly rows="3">${item.item_code}</textarea>
-                                                </td>
-                                                <td><input type="number" class="form-control bg-body-secondary order_qty" value="${item.base_qty}" readonly></td>
-                                                <td><input type="number" class="form-control bg-body-secondary qty_balance" value="${item.qty_balance}" readonly></td>
-                                                <td><input type="number" class="form-control bg-body-secondary diterima" value="${item.qty}" readonly></td>
-                                                <td><input type="number" class="form-control qty_received" id="qty_received" value="0" min="1" required></td>
-                                                <td><input type="number" class="form-control qty_reject" id="qty_reject" value="0" min="0" required></td>
-                                                <td><input type="number" class="form-control qty_bonus" id="qty_bonus" value="0" min="0" required></td>
-                                                <td><input type="number" class="form-control qty_titip" id="qty_titip" value="0" min="0" required></td>
-                                                <td><input type="number" class="form-control discount" id="discount" value="0" min="0" required></td>
-                                                <td><input type="text" class="form-control" placeholder="Note" value="${item.item_description}"></td>
-                                            </tr>
-                                            `;
+                                                                                                                <tr style="border-bottom: 2px solid #000;">
+                                                                                                                    <td>
+                                                                                                                        <input type="hidden" id="item_id" value="${item.item_id}">
+                                                                                                                        <input type="hidden" id="warehouse_id" value="${item.warehouse_id}">
+                                                                                                                        <textarea type="text" class="form-control w-100" readonly rows="3">${item.item_code}</textarea>
+                                                                                                                    </td>
+                                                                                                                    <td><input type="number" class="form-control bg-body-secondary order_qty" value="${item.base_qty}" readonly></td>
+                                                                                                                    <td><input type="number" class="form-control bg-body-secondary qty_balance" value="${item.qty_balance}" readonly></td>
+                                                                                                                    <td><input type="number" class="form-control bg-body-secondary diterima" value="${item.qty}" readonly></td>
+                                                                                                                    <td><input type="number" class="form-control qty_received" id="qty_received"  min="1" required></td>
+                                                                                                                    <td><input type="number" class="form-control qty_reject" id="qty_reject" value="0" min="0" required></td>
+                                                                                                                    <td><input type="number" class="form-control qty_bonus" id="qty_bonus" value="0" min="0" required></td>
+                                                                                                                    <td><input type="number" class="form-control qty_titip" id="qty_titip" value="0" min="0" required></td>
+                                                                                                                    <td><input type="number" class="form-control discount" id="discount" value="0" min="0" required></td>
+                                                                                                                    <td><input type="text" class="form-control" placeholder="Note" value="${item.item_description}"></td>
+                                                                                                                </tr>
+                                                                                                                `;
                                     tableBody.append(row);
 
                                     tableBody.find('.qty_received').last().on('input',
@@ -213,13 +213,12 @@
                                             const qty_received = $(this).val();
 
                                             if (parseFloat(qty_received) >
-                                                parseFloat(qty_balance)) {
+                                                parseFloat(qty_balance) ||
+                                                parseFloat(qty_received) < 1) {
                                                 Swal.fire('Peringatan',
-                                                    'Receive tidak boleh lebih dari Sisa!',
+                                                    'Input harus lebih dari 0 dan tidak boleh melebihi jumlah Sisa!',
                                                     'warning');
-                                                $(this).val(
-                                                    0
-                                                );
+                                                $(this).val("");
                                                 $(this).closest('tr').find(
                                                     '.qty_balance').val(item
                                                     .qty_balance);
@@ -334,15 +333,15 @@
                 const form = $('#createForm');
                 items.forEach(function(item, index) {
                     form.append(`
-                                <input type="hidden" name="items[${index}][item_id]" value="${item.item_id}">
-                                <input type="hidden" name="items[${index}][warehouse_id]" value="${item.warehouse_id}">
-                                <input type="hidden" name="items[${index}][qty_reject]" value="${item.qty_reject}">
-                                <input type="hidden" name="items[${index}][qty_received]" value="${item.qty_received}">
-                                <input type="hidden" name="items[${index}][qty_bonus]" value="${item.qty_bonus}">
-                                <input type="hidden" name="items[${index}][qty_titip]" value="${item.qty_titip}">
-                                <input type="hidden" name="items[${index}][discount]" value="${item.discount}">
-                                <input type="hidden" name="items[${index}][note]" value="${item.note}">
-                                `);
+                            <input type="hidden" name="items[${index}][item_id]" value="${item.item_id}">
+                            <input type="hidden" name="items[${index}][warehouse_id]" value="${item.warehouse_id}">
+                            <input type="hidden" name="items[${index}][qty_reject]" value="${item.qty_reject}">
+                            <input type="hidden" name="items[${index}][qty_received]" value="${item.qty_received}">
+                            <input type="hidden" name="items[${index}][qty_bonus]" value="${item.qty_bonus}">
+                            <input type="hidden" name="items[${index}][qty_titip]" value="${item.qty_titip}">
+                            <input type="hidden" name="items[${index}][discount]" value="${item.discount}">
+                            <input type="hidden" name="items[${index}][note]" value="${item.note}">
+                            `);
                 });
 
                 form.submit();

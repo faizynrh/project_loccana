@@ -120,7 +120,7 @@
                     serverSide: true,
                     processing: true,
                     ajax: {
-                        url: '{{ route('penerimaan_barang.index') }}',
+                        url: '{{ route('penerimaan_barang.ajax') }}',
                         type: 'GET',
                         data: function(d) {
                             d.month = lastMonth;
@@ -239,22 +239,22 @@
                             data: null,
                             render: function(data, type, row) {
                                 return `
-                            <div class="d-flex">
-                                <a href="/penerimaan_barang/detail/${row.id_receipt}" class="btn btn-sm btn-info mb-2" style="margin-right:4px;" title="Detail">
-                                    <i class="bi bi-eye"></i>
-                                </a>
-                                <a href="/penerimaan_barang/edit/${row.id_receipt}" class="btn btn-sm btn-warning mb-2" style="margin-right:4px;" title="Edit">
-                                    <i class="bi bi-pencil"></i>
-                                </a>
-                                <form action="/penerimaan_barang/delete/${row.id_receipt}" method="POST" id="delete${row.id_receipt}" style="display:inline;">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="button" class="btn btn-sm btn-danger mb-2" style="margin-right:4px;" title="Hapus" onclick="confirmDelete(${row.id_receipt})">
-                                        <i class="bi bi-trash"></i>
-                                    </button>
-                                </form>
-                            </div>
-                        `;
+                                <div class="d-flex">
+                                    <a href="/penerimaan_barang/detail/${row.id_receipt}" class="btn btn-sm btn-info mb-2" style="margin-right:4px;" title="Detail">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                    <a href="/penerimaan_barang/edit/${row.id_receipt}" class="btn btn-sm btn-warning mb-2" style="margin-right:4px;" title="Edit">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <form action="/penerimaan_barang/delete/${row.id_receipt}" method="POST" id="delete${row.id_receipt}" style="display:inline;">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="button" class="btn btn-sm btn-danger mb-2" style="margin-right:4px;" title="Hapus" onclick="confirmDelete(${row.id_receipt})">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            `;
                             }
                         }
                     ]
