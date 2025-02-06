@@ -54,6 +54,7 @@ Route::middleware('auth.login')->group(
         // ITEM
         Route::prefix('/item')->name('item.')->group(function () {
             Route::get('/', [ItemController::class, 'index'])->name('index');
+            Route::get('/ajax', [ItemController::class, 'ajax'])->name('ajax');
             Route::get('/add', [ItemController::class, 'create'])->name('create');
             Route::post('/add', [ItemController::class, 'store'])->name('store');
             Route::delete('/delete/{id}', [ItemController::class, 'destroy'])->name('destroy');

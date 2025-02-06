@@ -79,7 +79,7 @@
                 serverSide: true,
                 processing: true,
                 ajax: {
-                    url: '{{ route('item.index') }}',
+                    url: '{{ route('item.ajax') }}',
                     type: 'GET',
                 },
                 columns: [{

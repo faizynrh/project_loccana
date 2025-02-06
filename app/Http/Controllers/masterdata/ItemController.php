@@ -7,20 +7,7 @@ use App\Http\Controllers\Controller;
 
 class ItemController extends Controller
 {
-    private function buildApiUrl($endpoint)
-    {
-        return env('API_URL') . '/master/items/1.0.0/items' . $endpoint;
-    }
-
-    private function urlSelect()
-    {
-        return [
-            'uom' => env('API_URL') . '/loccana/masterdata/1.0.0/uoms/list-select',
-            'item' => env('API_URL') . '/loccana/masterdata/item-types/1.0.0/item-types/list-select'
-        ];
-    }
-
-    private function ajax(Request $request)
+    public function ajax(Request $request)
     {
         try {
             $length = $request->input('length', 10);
@@ -33,7 +20,7 @@ class ItemController extends Controller
                 'offset' => $start,
                 'company_id' => 2
             ];
-            $apiResponse = storeApi($this->buildApiUrl('/lists'), $requestbody);
+            $apiResponse = storeApi(env('ITEM_URL') . '/lists', $requestbody);
 
             if ($apiResponse->successful()) {
                 $data = $apiResponse->json();
@@ -57,16 +44,13 @@ class ItemController extends Controller
     }
     public function index(Request $request)
     {
-        if ($request->ajax()) {
-            return $this->ajax($request);
-        }
         return view('masterdata.item.index');
     }
 
     public function create()
     {
-        $uomResponse = fectApi($this->urlSelect()['uom']);
-        $itemResponse = fectApi($this->urlSelect()['item']);
+        $uomResponse = fectApi(env('LIST_UOM'));
+        $itemResponse = fectApi(env('LIST_ITEMTYPES'));
 
         if ($uomResponse->successful() && $itemResponse->successful()) {
             $uom = json_decode($uomResponse->body(), false);
@@ -96,7 +80,7 @@ class ItemController extends Controller
                 'sku' => $request->input('sku'),
                 'company_id' => $request->input('company_id', 2),
             ];
-            $apiResponse = storeApi($this->buildApiUrl('/'), $data);
+            $apiResponse = storeApi(env('ITEM_URL'), $data);
 
             if ($apiResponse->successful()) {
                 return redirect()->route('item.index')
@@ -112,7 +96,7 @@ class ItemController extends Controller
     public function show($id)
     {
         try {
-            $apiResponse = fectApi($this->buildApiUrl('/' . $id));
+            $apiResponse = fectApi(env('ITEM_URL') . '/' . $id);
             $data = json_decode($apiResponse->getBody()->getContents());
             return view('masterdata.item.ajax.detail', compact('data'));
         } catch (\Exception $e) {
@@ -123,9 +107,9 @@ class ItemController extends Controller
     public function edit($id)
     {
         try {
-            $apiResponse = fectApi($this->buildApiUrl('/' . $id));
-            $uomResponse = fectApi($this->urlSelect()['uom']);
-            $itemResponse = fectApi($this->urlSelect()['item']);
+            $apiResponse = fectApi(env('ITEM_URL') . '/' . $id);
+            $uomResponse = fectApi(env('LIST_UOM'));
+            $itemResponse = fectApi(env('LIST_ITEMTYPES'));
 
             if ($uomResponse->successful() && $itemResponse->successful() && $apiResponse->successful()) {
                 $uom = json_decode($uomResponse->getBody()->getContents());
@@ -162,7 +146,7 @@ class ItemController extends Controller
                 'sku' => $request->sku,
             ];
 
-            $apiResponse = updateApi($this->buildApiUrl('/' . $id), $data);
+            $apiResponse = updateApi(env('ITEM_URL') . '/' . $id, $data);
             if ($apiResponse->successful()) {
                 return redirect()->route('item.index')->with('success', $apiResponse->json()['message']);
             } else {
@@ -176,7 +160,7 @@ class ItemController extends Controller
     public function destroy(string $id)
     {
         try {
-            $apiResponse = deleteApi($this->buildApiUrl('/' . $id));
+            $apiResponse = deleteApi(env('ITEM_URL') . '/' . $id);
 
             if ($apiResponse->successful()) {
                 return redirect()->route('item.index')->with('success', $apiResponse->json()['message']);
