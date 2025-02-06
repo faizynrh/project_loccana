@@ -10,15 +10,10 @@ use Illuminate\Support\Facades\Log;
 
 class CustomerController extends Controller
 {
-    private function buildApiUrl($endpoint)
-    {
-        return getApiUrl() . '/loccana/masterdata/partner/1.0.0/partner' . $endpoint;
-    }
-    private function ajaxcustomer(Request $request)
+
+    public function ajaxcustomer(Request $request)
     {
         try {
-            $headers = getHeaders();
-            $apiurl = $this->buildApiUrl('/lists');
             $length = $request->input('length', 10);
             $start = $request->input('start', 0);
             $search = $request->input('search.value', '');
@@ -36,7 +31,7 @@ class CustomerController extends Controller
                 $requestbody['search'] = $search;
             }
 
-            $apiResponse = Http::withHeaders($headers)->post($apiurl, $requestbody);
+            $apiResponse = storeApi(env('CUSTOMER_URL') . '/lists', $requestbody);
 
             if ($apiResponse->successful()) {
                 $data = $apiResponse->json();
@@ -59,11 +54,8 @@ class CustomerController extends Controller
         }
     }
 
-    public function index(Request $request)
+    public function index()
     {
-        if ($request->ajax()) {
-            return $this->ajaxcustomer($request);
-        }
         return view('masterdata.customer.index');
     }
 
@@ -74,16 +66,14 @@ class CustomerController extends Controller
     public function create()
     {
         $companyid = 2;
-        $headers = getHeaders();
-        $partnerurl = getApiUrl() . '/loccana/masterdata/partner-type/1.0.0/partner-types/list-select';
-        $coaurl = getApiUrl() . '/loccana/masterdata/coa/1.0.0/masterdata/coa/list-select/' . $companyid;
-
-        $partnerResponse = Http::withHeaders($headers)->get($partnerurl);
-        $coaResponse = Http::withHeaders($headers)->get($coaurl);
-        if ($partnerResponse->successful() && $coaResponse->json()) {
-            $partnerTypes = $partnerResponse->json();
-            $coaTypes = $coaResponse->json();
-            return view('masterdata.customer.add', compact('partnerTypes', 'coaTypes'));
+        $partnerResponse = fectApi(env('LIST_PARTNER'));
+        $coaResponse = fectApi(env('LIST_COA') . '/' . $companyid);
+        if ($partnerResponse->successful() && $coaResponse->successful()) {
+            $partner
+                = json_decode($partnerResponse->body(), false);
+            $coa =
+                json_decode($coaResponse->body(), false);
+            return view('masterdata.customer.ajax.add', compact('partner', 'coa'));
         } else {
             $errors = [];
             if (!$coaResponse->successful()) {
@@ -102,24 +92,22 @@ class CustomerController extends Controller
     public function store(Request $request)
     {
         try {
-            $headers = getHeaders();
-            $apiurl = $this->buildApiUrl('/');
             $data = [
-                'name' => (string) $request->input('nama'),
-                'partner_type_id' => (string) $request->input('partner_type_id'),
-                'contact_info' => (string) $request->input('contact_info'),
-                'chart_of_account_id' => (string) $request->input('chart_of_account_id'),
+                'name' => $request->input('nama'),
+                'partner_type_id' => $request->input('partner_type_id'),
+                'contact_info' => $request->input('contact_info'),
+                'chart_of_account_id' => $request->input('chart_of_account_id'),
                 'company_id' => 2,
-                'is_customer' => true,
-                'is_supplier' => false
+                'is_customer' => false,
+                'is_supplier' => true
             ];
-            $apiResponse = Http::withHeaders($headers)->post($apiurl, $data);
+
+            $apiResponse = storeApi(env('CUSTOMER_URL') . '/', $data);
             $responseData = $apiResponse->json();
-            if ($apiResponse->successful() && isset($responseData['success']) && $responseData['success'] === true) {
+            if ($apiResponse->successful()) {
                 return redirect()->route('customer.index')
                     ->with('success', $responseData['message']);
             } else {
-                Log::error($responseData['message']);
                 return back()->withErrors(
                     $responseData['message']
                 );
@@ -136,30 +124,16 @@ class CustomerController extends Controller
     {
         try {
             $companyid = 2;
-            $headers = getHeaders();
-            $apiurl = $this->buildApiUrl('/' . $id);
-            $partnerurl = getApiUrl() . '/loccana/masterdata/partner-type/1.0.0/partner-types/list-select';
-            $coaurl = getApiUrl() . '/loccana/masterdata/coa/1.0.0/masterdata/coa/list-select/' . $companyid;
+            $apiResponse = fectApi(env('CUSTOMER_URL') . '/' . $id);
+            $partnerResponse = fectApi(env('LIST_PARTNER'));
+            $coaResponse = fectApi(env('LIST_COA') . '/' . $companyid);
 
-            $partnerResponse = Http::withHeaders($headers)->get($partnerurl);
-            $coaResponse = Http::withHeaders($headers)->get($coaurl);
-            $apiResponse = Http::withHeaders($headers)->get($apiurl);
-
-            if ($apiResponse->successful()) {
-                $customer = $apiResponse->json();
-
-                if (isset($customer['data'])) {
-                    if ($partnerResponse->successful() && $coaResponse->successful()) {
-                        $partnerTypes = $partnerResponse->json();
-                        $data = $apiResponse->json()['data'];
-                        $coaTypes = $coaResponse->json();
-                        return view('masterdata.customer.detail', ['customer' => $customer['data']], compact('partnerTypes', 'data', 'coaTypes'));
-                    } else {
-                        return back()->withErrors($apiResponse->json()['message']);
-                    }
-                } else {
-                    return back()->withErrors($customer['message']);
-                }
+            if ($partnerResponse->successful() && $coaResponse->successful() && $apiResponse->successful()) {
+                // Set second parameter to false to get object instead of array
+                $partner = json_decode($partnerResponse->getBody()->getContents(), false);
+                $data = json_decode($apiResponse->getBody()->getContents(), false);
+                $coa = json_decode($coaResponse->getBody()->getContents(), false);
+                return view('masterdata.customer.ajax.detail', compact('data', 'partner', 'coa'));
             } else {
                 return back()->withErrors($apiResponse->json()['message']);
             }
@@ -174,34 +148,19 @@ class CustomerController extends Controller
     public function edit(string $id)
     {
         try {
-            $apiurl = $this->buildApiUrl('/' . $id);
             $companyid = 2;
-            $headers = getHeaders();
-            $partnerurl = getApiUrl() . '/loccana/masterdata/partner-type/1.0.0/partner-types/list-select';
-            $coaurl = getApiUrl() . '/loccana/masterdata/coa/1.0.0/masterdata/coa/list-select/' . $companyid;
+            $apiResponse = fectApi(env('CUSTOMER_URL') . '/' . $id);
+            $partnerResponse = fectApi(env('LIST_PARTNER'));
+            $coaResponse = fectApi(env('LIST_COA') . '/' . $companyid);
 
-            $partnerResponse = Http::withHeaders($headers)->get($partnerurl);
-            $coaResponse = Http::withHeaders($headers)->get($coaurl);
-            $apiResponse = Http::withHeaders($headers)->get($apiurl);
-
-            if ($apiResponse->successful()) {
-                $customer = $apiResponse->json();
-
-                if (isset($customer['data'])) {
-                    if ($partnerResponse->successful() && $coaResponse->successful()) {
-                        $partnerTypes = $partnerResponse->json();
-                        $data = $apiResponse->json()['data'];
-                        $coaTypes = $coaResponse->json();
-                        return view('masterdata.customer.edit', ['customer' => $customer['data']], compact('partnerTypes', 'data', 'coaTypes'));
-                    } else {
-                        // Jika API gagal diakses, tampilkan pesan error
-                        return back()->withErrors('Gagal mengambil data dari API: Partner Types tidak tersedia.');
-                    }
-                } else {
-                    return back()->withErrors('Data customer tidak ditemukan.');
-                }
+            if ($partnerResponse->successful() && $coaResponse->successful() && $apiResponse->successful()) {
+                // Set second parameter to false to get object instead of array
+                $partner = json_decode($partnerResponse->getBody()->getContents(), false);
+                $data = json_decode($apiResponse->getBody()->getContents(), false);
+                $coa = json_decode($coaResponse->getBody()->getContents(), false);
+                return view('masterdata.customer.ajax.edit', compact('data', 'partner', 'coa'));
             } else {
-                return back()->withErrors('Gagal mengambil data customer dari API.');
+                return back()->withErrors($apiResponse->json()['message']);
             }
         } catch (\Exception $e) {
             return back()->withErrors($e->getMessage());
@@ -214,21 +173,16 @@ class CustomerController extends Controller
     public function update(Request $request, string $id)
     {
         try {
-            $apiurl = $this->buildApiUrl('/' . $id);
-            $headers = getHeaders();
-
             $data = [
                 'name' => (string) $request->input('nama'),
                 'partner_type_id' => $request->input('partner_type_id'),
-                'contact_info' => $request->input('contact_info', ),
-                'chart_of_account_id' => $request->input('chart_of_account_id', ),
+                'contact_info' => $request->input('contact_info',),
+                'chart_of_account_id' => $request->input('chart_of_account_id',),
                 'company_id' => 2,
                 'is_customer' => true,
                 'is_supplier' => false
             ];
-
-            $apiResponse = Http::withHeaders($headers)->put($apiurl, $data);
-
+            $apiResponse = updateApi(env('CUSTOMER_URL') . '/' . $id, $data);
             if ($apiResponse->successful()) {
                 return redirect()->route('customer.index')->with('success', $apiResponse->json()['message']);
             } else {
@@ -246,10 +200,8 @@ class CustomerController extends Controller
     public function destroy(string $id)
     {
         try {
-            $apiurl = $this->buildApiUrl('/' . $id);
-            $headers = getHeaders();
-            $apiResponse = Http::withHeaders($headers)->delete($apiurl);
-            // dd($apiResponse->json());
+            $apiResponse = deleteApi(env('CUSTOMER_URL') . '/' . $id);
+
             if ($apiResponse->successful()) {
                 return redirect()->route('customer.index')
                     ->with('success', $apiResponse->json()['message']);

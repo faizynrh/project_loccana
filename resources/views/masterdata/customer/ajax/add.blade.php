@@ -1,9 +1,7 @@
 <div class="col-12">
     <div class="modal-body">
-        <form action="{{ route('principal.update', $data->data->id) }}" method="POST" id="updateForm"
-            onsubmit="disableButton(event)">
+        <form action="{{ route('customer.store') }}" method="POST" id="createForm" onsubmit="disableButton(event)">
             @csrf
-            @method('PUT')
             <div class="row">
                 <div class="col-md-6 mb-3">
                     <label for="kode" class="form-label fw-bold">Type Partner</label>
@@ -11,10 +9,8 @@
                         id="partner_type_id" required>
                         <option value="" disabled selected>Pilih Type</option>
                         @if (isset($partner->data))
-                            @foreach ($partner->data as $partnerType)
-                                <option value="{{ $partnerType->id }}"
-                                    {{ $data->data->partner_type_id == $partnerType->id ? 'selected' : '' }}>
-                                    {{ $partnerType->name }}</option>
+                            @foreach ($partner->data as $partner)
+                                <option value="{{ $partner->id }}">{{ $partner->name }}</option>
                             @endforeach
                         @else
                             <option value="">Data tidak tersedia</option>
@@ -23,30 +19,29 @@
                 </div>
                 <div class="col-md-6 mb-3">
                     <label for="nama" class="form-label fw-bold">Nama</label>
-                    <input type="text" name="nama" placeholder="name" class="form-control" id="nama" required
-                        value="{{ $data->data->name }}">
+                    <input type="text" name="nama" placeholder="name" class="form-control" id="nama"
+                        required>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-6 mb-3">
-                    <label for="contact_info" class="form-label fw-bold">COA</label>
-                    <select name="chart_of_account_id" id="chart_of_account_id" class="form-select">
+                    <label for="chart_of_account_id" class="form-label fw-bold">COA ID</label>
+                    <select type="number" name="chart_of_account_id" placeholder="chart_of_account_id"
+                        class="form-select" id="partner_type_id" required>
+                        <option value="" disabled selected>Pilih COA</option>
                         @if (isset($coa->data))
-                            @foreach ((array) $coa->data as $coaItem)
-                                <option value="{{ $coaItem->id }}"
-                                    {{ $data->data->chart_of_account_id == $coaItem->id ? 'selected' : '' }}>
-                                    {{ $coaItem->description }}
-                                </option>
+                            @foreach ($coa->data as $coa)
+                                <option value="{{ $coa->id }}">{{ $coa->description }}</option>
                             @endforeach
                         @else
-                            <option value="">Data COA tidak tersedia</option>
+                            <option value="">Data tidak tersedia</option>
                         @endif
                     </select>
                 </div>
                 <div class="col-md-6 mb-3">
                     <label for="contact_info" class="form-label fw-bold">Contact Info</label>
                     <input type="text" name="contact_info" placeholder="Contact Info" class="form-control"
-                        id="contact_info" required value="{{ $data->data->contact_info }}">
+                        id="contact_info" required>
                 </div>
             </div>
             <div class="row">
