@@ -79,6 +79,7 @@ Route::middleware('auth.login')->group(
         // PRICE
         Route::prefix('/price')->name('price.')->group(function () {
             Route::get('/', [PriceController::class, 'index'])->name('index');
+            Route::get('/ajax', [PriceController::class, 'ajax'])->name('ajax');
             Route::get('/edit/{id}', [PriceController::class, 'edit'])->name('edit');
             Route::put('/update/{id}', [PriceController::class, 'update'])->name('update');
             Route::put('/approve/{id}', [PriceController::class, 'approve'])->name('approve');
