@@ -12,22 +12,7 @@ use Illuminate\Support\Facades\Http;
 
 class PenerimaanBarangController extends Controller
 {
-    private function buildApiUrl($endpoint)
-    {
-        return env('API_URL') . '/loccana/itemreceipt/1.0.0/item_receipt/1.0.0' . $endpoint;
-    }
-
-    private function url($id)
-    {
-        return [
-            'po' => env('API_URL') . '/loccana/po/1.0.0/purchase-order/list-select/' . $id,
-            'detailpo' => env('API_URL') . '/loccana/po/1.0.0/purchase-order/' . $id,
-            'gudang' => env('API_URL') . '/masterdata/warehouse/1.0.0/warehouse/list-select/' . $id,
-            'podetail' => env('API_URL') . '/loccana/po/1.0.0/purchase-order/' . $id
-        ];
-    }
-
-    private function ajax(Request $request)
+    public function ajax(Request $request)
     {
         try {
             $month = $request->input('month');
@@ -45,8 +30,8 @@ class PenerimaanBarangController extends Controller
                 'company_id' => 0,
             ];
 
-            $apiResponse = storeApi($this->buildApiUrl('/lists'), $requestbody);
-            $mtdResponse = storeApi($this->buildApiUrl('/mtd'), $requestbody);
+            $apiResponse = storeApi(env('PENERIMAAN_BARANG_URL') . '/lists', $requestbody);
+            $mtdResponse = storeApi(env('PENERIMAAN_BARANG_URL') . '/mtd', $requestbody);
 
             if ($apiResponse->successful() && $mtdResponse->successful()) {
                 $data = $apiResponse->json();
@@ -68,15 +53,12 @@ class PenerimaanBarangController extends Controller
     }
     public function index(Request $request)
     {
-        if ($request->ajax()) {
-            return $this->ajax($request);
-        }
         return view('procurement.penerimaanbarang.index');
     }
     public function getPoDetails(Request $request, $id)
     {
         try {
-            $apiResponse = fectApi($this->url($id)['detailpo']);
+            $apiResponse = fectApi(env('PO_URL') . '/' . $id);
             $items = [];
             if ($apiResponse->successful()) {
                 $data = $apiResponse->json()['data'];
@@ -112,12 +94,8 @@ class PenerimaanBarangController extends Controller
     public function create()
     {
         $company_id = 2;
-
-        $pourl = $this->url($company_id)['po'];
-        $gudangurl = $this->url($company_id)['gudang'];
-
-        $poResponse = fectApi($this->url($company_id)['po']);
-        $gudangResponse = fectApi($this->url($company_id)['gudang']);
+        $poResponse = fectApi(env('LIST_PO') . '/' . $company_id);
+        $gudangResponse = fectApi(env('LIST_GUDANG') . '/' . $company_id);
         if ($poResponse->successful() && $gudangResponse->successful()) {
             $po = $poResponse->json()['data'];
             $gudang = $gudangResponse->json()['data'];
@@ -166,7 +144,7 @@ class PenerimaanBarangController extends Controller
                 'items' => $dataitems
             ];
 
-            $apiResponse = storeApi($this->buildApiUrl('/'), $data);
+            $apiResponse = storeApi(env('PENERIMAAN_BARANG_URL'), $data);
 
             if ($apiResponse->successful()) {
                 return redirect()->route('penerimaan_barang.index')
@@ -181,9 +159,7 @@ class PenerimaanBarangController extends Controller
     public function show($id)
     {
         try {
-            $headers = getHeaders();
-            $apiurl = $this->buildApiUrl('/' . $id);
-            $apiResponse = Http::withHeaders($headers)->get($apiurl);
+            $apiResponse = fectApi(env('PENERIMAAN_BARANG_URL') . '/' . $id);
 
             if ($apiResponse->successful()) {
                 $data = $apiResponse->json()['data'];
@@ -198,10 +174,7 @@ class PenerimaanBarangController extends Controller
     public function edit($id)
     {
         try {
-            $headers = getHeaders();
-            $apiurl = $this->buildApiUrl('/' . $id);
-
-            $apiResponse = Http::withHeaders($headers)->get($apiurl);
+            $apiResponse = fectApi(env('PENERIMAAN_BARANG_URL') . '/' . $id);
 
             if ($apiResponse->successful()) {
                 $data = $apiResponse->json()['data'];
@@ -217,9 +190,6 @@ class PenerimaanBarangController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            $headers = getHeaders();
-            $apiurl = $this->buildApiUrl('/' . $id);
-
             $items = [];
             if ($request->has('item_id')) {
                 foreach ($request->input('item_id') as $index => $itemId) {
@@ -245,8 +215,7 @@ class PenerimaanBarangController extends Controller
                 'status' => "received",
                 'items' => $items,
             ];
-
-            $apiResponse = Http::withHeaders($headers)->put($apiurl, $data);
+            $apiResponse = updateApi(env('PENERIMAAN_BARANG_URL') . '/' . $id, $data);
             if ($apiResponse->successful()) {
                 return redirect()->route('penerimaan_barang.index')->with('success', $apiResponse->json()['message']);
             } else {
@@ -259,10 +228,7 @@ class PenerimaanBarangController extends Controller
     public function destroy($id)
     {
         try {
-            $headers = getHeaders();
-            $apiurl = $this->buildApiUrl('/' . $id);
-
-            $apiResponse = Http::withHeaders($headers)->delete($apiurl);
+            $apiResponse = deleteApi(env('PENERIMAAN_BARANG_URL') . '/' . $id);
             if ($apiResponse->successful()) {
                 return redirect()->route('penerimaan_barang.index')->with('success', $apiResponse->json()['message']);
             } else {
