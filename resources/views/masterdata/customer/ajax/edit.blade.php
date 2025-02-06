@@ -1,6 +1,6 @@
 <div class="col-12">
     <div class="modal-body">
-        <form action="{{ route('principal.update', $data->data->id) }}" method="POST" id="updateForm"
+        <form action="{{ route('customer.update', $data->data->id) }}" method="POST" id="updateForm"
             onsubmit="disableButton(event)">
             @csrf
             @method('PUT')

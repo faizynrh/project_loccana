@@ -100,8 +100,6 @@ Route::middleware('auth.login')->group(
         );
 
 
-
-
         // COA
         Route::prefix('/coa')->name('coa.')->group(function () {
             Route::get('/', [CoaController::class, 'index'])->name('index');
@@ -144,6 +142,7 @@ Route::middleware('auth.login')->group(
             Route::get('/', [CustomerController::class, 'index'])->name('index');
             Route::get('/add', [CustomerController::class, 'create'])->name('create');
             Route::post('/add', [CustomerController::class, 'store'])->name('store');
+            Route::get('/ajax', [CustomerController::class, 'ajaxcustomer'])->name('ajax');
             Route::delete('/delete/{id}', [CustomerController::class, 'destroy'])->name('destroy');
             Route::get('/edit/{id}', [CustomerController::class, 'edit'])->name('edit');
             Route::put('/update/{id}', [CustomerController::class, 'update'])->name('update');
