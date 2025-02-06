@@ -10,13 +10,6 @@ use Illuminate\Support\Facades\Log;
 
 class PrincipalController extends Controller
 {
-    private function urlSelect()
-    {
-        return [
-            'partnerurl' => env('API_URL') . '/loccana/masterdata/partner-type/1.0.0/partner-types/list-select',
-            'coaurl' => env('API_URL') . '/loccana/masterdata/coa/1.0.0/masterdata/coa/list-select'
-        ];
-    }
     public function ajaxprincipal(Request $request)
     {
         try {
@@ -129,25 +122,16 @@ class PrincipalController extends Controller
     {
         try {
             $companyid = 2;
+            $apiResponse = fectApi(env('PRINCIPAL_URL') . '/' . $id);
             $partnerResponse = fectApi(env('LIST_PARTNER'));
             $coaResponse = fectApi(env('LIST_COA') . '/' . $companyid);
-            $apiResponse = fectApi(env('PRINCIPAL_URL') . '/' . $id);
 
-            if ($apiResponse->successful()) {
-                $principal = $apiResponse->json();
-
-                if (isset($principal['data'])) {
-                    if ($partnerResponse->successful() && $coaResponse->successful()) {
-                        $partnerTypes = json_decode($apiResponse->getBody()->getContents());
-                        $data = $apiResponse->json()['data'];
-                        $coaTypes = $coaResponse->json();
-                        return view('masterdata.principal.ajax.detail', ['principal' => $principal['data']], compact('partnerTypes', 'data', 'coaTypes'));
-                    } else {
-                        return back()->withErrors($apiResponse->json()['message']);
-                    }
-                } else {
-                    return back()->withErrors($apiResponse->json()['message']);
-                }
+            if ($partnerResponse->successful() && $coaResponse->successful() && $apiResponse->successful()) {
+                // Set second parameter to false to get object instead of array
+                $partner = json_decode($partnerResponse->getBody()->getContents(), false);
+                $data = json_decode($apiResponse->getBody()->getContents(), false);
+                $coa = json_decode($coaResponse->getBody()->getContents(), false);
+                return view('masterdata.principal.ajax.detail', compact('data', 'partner', 'coa'));
             } else {
                 return back()->withErrors($apiResponse->json()['message']);
             }
@@ -160,30 +144,20 @@ class PrincipalController extends Controller
      * Show the form for editing the specified resource.
      */
 
-    public function edit(string $id)
+    public function edit($id)
     {
         try {
             $companyid = 2;
-            $apiurl = $this->buildApiUrl('/' . $id);
+            $apiResponse = fectApi(env('PRINCIPAL_URL') . '/' . $id);
             $partnerResponse = fectApi(env('LIST_PARTNER'));
             $coaResponse = fectApi(env('LIST_COA') . '/' . $companyid);
-            $apiResponse = Http::withHeaders($headers)->get($apiurl);
 
-            if ($apiResponse->successful()) {
-                $principal = $apiResponse->json();
-
-                if (isset($principal['data'])) {
-                    if ($partnerResponse->successful() && $coaResponse->successful()) {
-                        $partnerTypes = $partnerResponse->json();
-                        $data = $apiResponse->json()['data'];
-                        $coaTypes = $coaResponse->json();
-                        return view('masterdata.principal.edit', ['principal' => $principal['data']], compact('partnerTypes', 'data', 'coaTypes'));
-                    } else {
-                        return back()->withErrors($apiResponse->json()['message']);
-                    }
-                } else {
-                    return back()->withErrors($apiResponse->json()['message']);
-                }
+            if ($partnerResponse->successful() && $coaResponse->successful() && $apiResponse->successful()) {
+                // Set second parameter to false to get object instead of array
+                $partner = json_decode($partnerResponse->getBody()->getContents(), false);
+                $data = json_decode($apiResponse->getBody()->getContents(), false);
+                $coa = json_decode($coaResponse->getBody()->getContents(), false);
+                return view('masterdata.principal.ajax.edit', compact('data', 'partner', 'coa'));
             } else {
                 return back()->withErrors($apiResponse->json()['message']);
             }
@@ -199,7 +173,6 @@ class PrincipalController extends Controller
     public function update(Request $request, $id)
     {
         try {
-
             $data = [
                 'name' => (string) $request->input('nama'),
                 'partner_type_id' => $request->input('partner_type_id'),
@@ -209,11 +182,11 @@ class PrincipalController extends Controller
                 'is_customer' => true,
                 'is_supplier' => false
             ];
-            $apiResponse = updateApi(env('PRINCIPAL_URL' . '/' . $id), $data);
+            $apiResponse = updateApi(env('PRINCIPAL_URL') . '/' . $id, $data);
             if ($apiResponse->successful()) {
                 return redirect()->route('principal.index')->with('success', $apiResponse->json()['message']);
             } else {
-                return back()->withErrors('Gagal memperbarui data Principal: ' . $apiResponse->status());
+                return back()->withErrors($apiResponse->json()['message']);
             }
         } catch (\Exception $e) {
             return back()->withErrors($e->getMessage());

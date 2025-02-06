@@ -1,6 +1,6 @@
 <div class="col-12">
     <div class="modal-body">
-        <form action="{{ route('principal.store') }}" method="POST" id="createForm">
+        <form action="{{ route('principal.store') }}" method="POST" id="createForm" onsubmit="disableButton(event)">
             @csrf
             <div class="row">
                 <div class="col-md-6 mb-3">
@@ -10,7 +10,7 @@
                         <option value="" disabled selected>Pilih Type</option>
                         @if (isset($partner->data))
                             @foreach ($partner->data as $partner)
-                                <option value="{{ $partner->partner->id }}">{{ $partner->partner->name }}</option>
+                                <option value="{{ $partner->id }}">{{ $partner->name }}</option>
                             @endforeach
                         @else
                             <option value="">Data tidak tersedia</option>
@@ -29,9 +29,9 @@
                     <select type="number" name="chart_of_account_id" placeholder="chart_of_account_id"
                         class="form-select" id="partner_type_id" required>
                         <option value="" disabled selected>Pilih COA</option>
-                        @if (isset($coaTypes['data']))
-                            @foreach ($coaTypes['data'] as $type)
-                                <option value="{{ $type['id'] }}">{{ $type['description'] }}</option>
+                        @if (isset($coa->data))
+                            @foreach ($coa->data as $coa)
+                                <option value="{{ $coa->id }}">{{ $coa->description }}</option>
                             @endforeach
                         @else
                             <option value="">Data tidak tersedia</option>
@@ -47,9 +47,9 @@
             <div class="row">
                 <div class="modal-footer">
                     <div class="col-md-12 text-end">
-                        <button type="button" class="btn btn-primary" id="submitButton"
-                            onclick="confirmSubmit('submitButton', 'createForm')">Submit</button>
-                        <a href="{{ route('principal.index') }}" class="btn btn-secondary ms-2">Batal</a>
+                        <button type="submit" class="btn btn-primary" id="submitButton">Simpan</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                            aria-label="Close">Batal</button>
                     </div>
                 </div>
             </div>

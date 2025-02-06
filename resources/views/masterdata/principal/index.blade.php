@@ -100,10 +100,10 @@
                             data: null,
                             render: function(data, type, row) {
                                 return `
-                    <button type="button" data-id="${row.id}" class="btn btn-sm btn-info mb-2 btn-detail-principal" title="Detail">
+                    <button type="button"  class="btn btn-sm btn-info mb-2 btn-detail-principal" data-id="${row.id}"title="Detail">
                         <i class="bi bi-eye"></i>
                     </button>
-                    <button type="button" data-id="${row.id}" class="btn btn-sm btn-warning mb-2 btn-edit-principal" title="Edit">
+                    <button type="button"  class="btn btn-sm btn-warning mb-2 btn-edit-principal" data-id="${row.id}" title="Edit">
                         <i class="bi bi-pencil"></i>
                     </button>
                     <form action="/principal/delete/${row.id}" method="POST" id="delete${row.id}" style="display:inline;">
@@ -134,7 +134,7 @@
 
             $(document).on('click', '.btn-add-principal', function(e) {
                 e.preventDefault();
-                const url = '{{ route('principal.create') }}'
+                const url = '{{ route('principal.store') }}'
                 const $button = $(this);
 
                 // $('#loading-overlay').fadeIn();
