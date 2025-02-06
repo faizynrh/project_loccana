@@ -115,6 +115,7 @@ Route::middleware('auth.login')->group(
         //GUDANG
         Route::prefix('/gudang')->name('gudang.')->group(function () {
             Route::get('/', [GudangController::class, 'index'])->name('index');
+            Route::get('/ajax', [GudangController::class, 'ajax'])->name('ajax');
             Route::get('/add', [GudangController::class, 'create'])->name('create');
             Route::get('/edit/{id}', [GudangController::class, 'edit'])->name('edit');
             Route::put('/edit/{id}', [GudangController::class, 'update'])->name('update');

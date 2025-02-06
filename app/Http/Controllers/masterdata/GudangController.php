@@ -11,11 +11,7 @@ use Illuminate\Support\Facades\Http;
 
 class GudangController extends Controller
 {
-    private function buildApiUrl($endpoint)
-    {
-        return env('API_URL') . '/masterdata/warehouse/1.0.0/warehouse' . $endpoint;
-    }
-    private function ajax(Request $request)
+    public function ajax(Request $request)
     {
         try {
             $length = $request->input('length', 10);
@@ -28,7 +24,7 @@ class GudangController extends Controller
                 'offset' => $start,
                 'company_id' => 2
             ];
-            $apiResponse = storeApi($this->buildApiUrl('/lists'), $requestbody);
+            $apiResponse = storeApi(env('GUDANG_URL') . '/lists', $requestbody);
 
             if ($apiResponse->successful()) {
                 $data = $apiResponse->json();
@@ -52,10 +48,6 @@ class GudangController extends Controller
     }
     public function index(Request $request)
     {
-        if ($request->ajax()) {
-            return $this->ajax($request);
-        }
-
         return view('masterdata.gudang.index');
     }
 
@@ -73,7 +65,7 @@ class GudangController extends Controller
                 'description' => $request->input('description'),
                 'capacity' => $request->input('capacity', 0),
             ];
-            $apiResponse = storeApi($this->buildApiUrl('/'), $data);
+            $apiResponse = storeApi(env('GUDANG_URL'), $data);
             if ($apiResponse->successful()) {
                 return redirect()->route('gudang.index')
                     ->with('success', $apiResponse->json()['message']);
@@ -87,7 +79,7 @@ class GudangController extends Controller
     public function edit($id)
     {
         try {
-            $apiResponse = fectApi($this->buildApiUrl('/' . $id));
+            $apiResponse = fectApi(env('GUDANG_URL') . '/' . $id);
             $data = json_decode($apiResponse->getBody()->getContents());
             return view('masterdata.gudang.ajax.edit', data: compact('data'));
         } catch (\Exception $e) {
@@ -104,7 +96,7 @@ class GudangController extends Controller
                 'capacity' => $request->capacity,
             ];
 
-            $apiResponse = updateApi($this->buildApiUrl('/' . $id), $data);
+            $apiResponse = updateApi(env('GUDANG_URL') . '/' . $id, $data);
 
             if ($apiResponse->successful()) {
                 return redirect()->route('gudang.index')->with('success', $apiResponse->json()['message']);
@@ -118,7 +110,7 @@ class GudangController extends Controller
     public function destroy(string $id)
     {
         try {
-            $apiResponse = deleteApi($this->buildApiUrl('/' . $id));
+            $apiResponse = deleteApi(env('GUDANG_URL') . '/' . $id);
 
             if ($apiResponse->successful()) {
                 return redirect()->route('gudang.index')
