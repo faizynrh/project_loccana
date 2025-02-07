@@ -78,11 +78,8 @@ class PurchaseOrderController extends Controller
     //         ], 500);
     //     }
     // }
-
-    public function index(Request $request)
+    public function ajaxpo(Request $request)
     {
-        //
-        $headers = getHeaders();
         $month = $request->input('month', 11);
         $year = $request->input('year', 0);
         $length = $request->input('length', 10);
@@ -101,12 +98,11 @@ class PurchaseOrderController extends Controller
             $requestbody['search'] = $search;
         }
 
-        $apiurl = getApiUrl() . '/loccana/po/1.0.0/purchase-order/list';
+        $apiResponse = storeApi(env('PO_URL') . '/list', $requestbody);
         // $mtdurl = getApiUrl() . '/loccana/itemreceipt/1.0.0/item_receipt/1.0.0/mtd';
 
         if ($request->ajax()) {
             try {
-                $apiResponse = Http::withHeaders($headers)->post($apiurl, $requestbody);
                 if ($apiResponse->successful()) {
                     $data = $apiResponse->json();
                     return response()->json([
@@ -121,14 +117,10 @@ class PurchaseOrderController extends Controller
                 return response()->json(['error' => $e->getMessage()], 500);
             }
         }
+    }
 
-        // $mtdResponse = Http::withHeaders($headers)->post($mtdurl, $requestbody);
-
-        // if ($mtdResponse->successful()) {
-        //     $data = $mtdResponse->json()['data'];
-        //     dd($data);
-        //     return view('procurement.purchaseorder.index', compact('data'));
-        // }
+    public function index()
+    {
         return view("procurement.purchaseorder.index");
     }
 
@@ -140,102 +132,46 @@ class PurchaseOrderController extends Controller
         $company_id = 2;
         $customer = 'false';
         $suplier = 'true';
-        $headers = getHeaders();
-
-        $partnerurl = getApiUrl() . '/loccana/masterdata/partner/1.0.0/partner/list-select/' . $company_id . '/' . $suplier . '/' . $customer;
-        $gudang = getApiUrl() . '/masterdata/warehouse/1.0.0/warehouse/list-select/' . $company_id;
         $data = [
             'company_id' => 2
         ];
 
-        $partnerResponse = Http::withHeaders($headers)->get($partnerurl);
-        $gudangResponse = Http::withHeaders($headers)->get($gudang);
+        $partnerResponse = fectApi(env('LIST_PARTNER') . '/' . $company_id . '/' . $suplier . '/' . $customer);
+        $gudangResponse = fectApi(env('LIST_GUDANG') . '/' . $company_id);
 
         if ($partnerResponse->successful() && $gudangResponse->successful()) {
             $partner = $partnerResponse->json()['data'];
             $gudang = $gudangResponse->json()['data'];
-
             return view('procurement.purchaseorder.add', compact('partner', 'gudang'));
         } else {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Gagal mengambil data dari API.'
-            ], 500);
+            $errors = [];
+            if (!$gudangResponse->successful()) {
+                $errors[] = $gudangResponse->json()['message'];
+            }
+            if (!$partnerResponse->successful()) {
+                $errors[] = $partnerResponse->json()['message'];
+            }
+            return back()->withErrors($errors);
         }
     }
 
-    protected function getItemsList($company_id)
+    protected function getItemsList()
     {
-        $headers = getHeaders();
-        $itemsUrl = getApiUrl() . '/master/items/1.0.0/items/lists-select';
-
-        $itemsResponse = Http::withHeaders($headers)->post($itemsUrl, [
-            'company_id' => $company_id
-        ]);
-
-        if ($itemsResponse->successful()) {
-            $items = $itemsResponse->json()['data']['items'];
+        $apiResponse = fectApi(env('LIST_ITEMS'));
+        if ($apiResponse->successful()) {
+            $items = $apiResponse->json()['data']['items'];
             return response()->json(['items' => $items]);
         }
-
         return response()->json(['items' => []]);
     }
 
 
-    public function getPurchaseOrderDetails(Request $request, $po_id)
-    {
-        $headers = getHeaders();
-        $apiurl = getApiUrl() . "/loccana/po/1.0.0/purchase-order/" . $po_id;
-
-        try {
-            $response = Http::withHeaders($headers)->get($apiurl);
-            if ($response->successful()) {
-                $data = $response->json()['data'];
-
-                $items = [];
-                foreach ($data as $item) {
-                    $items[] = [
-                        'item_code' => $item['item_code'],
-                        'price' => $item['unit_price'],
-                        'order_qty' => $item['qty'],
-                        'discount' => $item['discount'],
-                        'received_qty' => 0,
-                        'bonus_qty' => $item['total_discount'] ?? 0,
-                        'total_price' => $item['total_price'],
-                        'description' => $item['item_description'],
-                    ];
-                }
-
-                return response()->json([
-                    'id_po' => $data[0]['id_po'],
-                    'code' => $data[0]['number_po'],
-                    'order_date' => $data[0]['order_date'],
-                    'principal' => $data[0]['partner_name'],
-                    'address' => $data[0]['address'],
-                    'description' => $data[0]['description'],
-                    'fax' => $data[0]['fax'],
-                    'email' => $data[0]['email'],
-                    'ppn' => $data[0]['ppn'],
-                    'term_of_payment' => $data[0]['term_of_payment'],
-                    'phone' => $data[0]['phone'],
-                    'items' => $items
-                ]);
-            }
-            return response()->json(['error' => 'Failed to fetch PO details'], 500);
-        } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
-        }
-    }
-
     public function getprice($id)
     {
-        $headers = getHeaders();
-        $apiurl = getApiUrl() . "/loccana/po/1.0.0/purchase-order/" . $id;
         try {
-            $response = Http::withHeaders($headers)->get($apiurl);
-            if ($response->successful()) {
-                $data = $response->json()['data'];
-
+            $apiResponse = fectApi(env('PO_URL') . '/' . $id);
+            if ($apiResponse->successful()) {
+                $data = $apiResponse->json()['data'];
                 $items = [];
                 foreach ($data as $item) {
                     $items[] = [

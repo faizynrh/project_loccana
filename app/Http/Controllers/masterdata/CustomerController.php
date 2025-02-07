@@ -66,7 +66,7 @@ class CustomerController extends Controller
     public function create()
     {
         $companyid = 2;
-        $partnerResponse = fectApi(env('LIST_PARTNER'));
+        $partnerResponse = fectApi(env('LIST_PARTNERTYPES'));
         $coaResponse = fectApi(env('LIST_COA') . '/' . $companyid);
         if ($partnerResponse->successful() && $coaResponse->successful()) {
             $partner
@@ -98,8 +98,8 @@ class CustomerController extends Controller
                 'contact_info' => $request->input('contact_info'),
                 'chart_of_account_id' => $request->input('chart_of_account_id'),
                 'company_id' => 2,
-                'is_customer' => false,
-                'is_supplier' => true
+                'is_customer' => true,
+                'is_supplier' => false
             ];
 
             $apiResponse = storeApi(env('CUSTOMER_URL') . '/', $data);
@@ -125,7 +125,7 @@ class CustomerController extends Controller
         try {
             $companyid = 2;
             $apiResponse = fectApi(env('CUSTOMER_URL') . '/' . $id);
-            $partnerResponse = fectApi(env('LIST_PARTNER'));
+            $partnerResponse = fectApi(env('LIST_PARTNERTYPES'));
             $coaResponse = fectApi(env('LIST_COA') . '/' . $companyid);
 
             if ($partnerResponse->successful() && $coaResponse->successful() && $apiResponse->successful()) {
@@ -150,7 +150,7 @@ class CustomerController extends Controller
         try {
             $companyid = 2;
             $apiResponse = fectApi(env('CUSTOMER_URL') . '/' . $id);
-            $partnerResponse = fectApi(env('LIST_PARTNER'));
+            $partnerResponse = fectApi(env('LIST_PARTNERTYPES'));
             $coaResponse = fectApi(env('LIST_COA') . '/' . $companyid);
 
             if ($partnerResponse->successful() && $coaResponse->successful() && $apiResponse->successful()) {

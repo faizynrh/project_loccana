@@ -49,7 +49,7 @@
                             </div>
                         @endif
                         <div class="d-flex align-items-center mb-2">
-                            <a href="/purchase_order/add" class="btn btn-primary me-2 fw-bold">+</a>
+                            <a href="/purchase_order/add" class="btn btn-primary me-2 fw-bold">+ Tambah Purchase Order</a>
                             <select id="yearSelect" class="form-select me-2" name="year" style="width: auto;">
                                 @php
                                     $currentYear = now()->year;
@@ -139,7 +139,7 @@
                 serverSide: true,
                 processing: true,
                 ajax: {
-                    url: '{{ route('purchaseorder.index') }}',
+                    url: '{{ route('purchaseorder.ajax') }}',
                     type: 'GET',
                     data: function(d) {
                         d.month = $('#monthSelect').val();
