@@ -1,7 +1,7 @@
 <footer>
     <div class="footer clearfix mb-0 text-muted">
         <div class="float-end">
-            <p>2025 &copy; Devendira Loccana</p>
+            <p>2025 &copy; Devendira Loccana, All Rights Reserved.</p>
         </div>
         {{-- <div class="float-end">
             <p>
