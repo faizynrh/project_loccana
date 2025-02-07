@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers\procurement;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\Controller;
 
 class RekapPOController extends Controller
 {
@@ -11,8 +12,8 @@ class RekapPOController extends Controller
     {
         try {
             $partner_id = $request->input('principal', 0);
-            $start_date = $request->input('start_date', 0);
-            $end_date = $request->input('end_date', 0);
+            $year = $request->input('year', 0);
+            $month = $request->input('month', 0);
             $length = $request->input('length', 10);
             $start = $request->input('start', 0);
             $search = $request->input('search.value') ?? '';
@@ -20,13 +21,14 @@ class RekapPOController extends Controller
             $requestbody = [
                 'search' => $search,
                 'partner_id' => $partner_id,
-                'start_date' => $start_date,
-                'end_date' => $end_date,
+                'year' => $year,
+                'month' => $month,
                 'company_id' => 0,
                 'limit' => $length,
                 'offset' => $start,
             ];
-            $apiResponse = storeApi(env('DASAR_PEMBELIAN_URL'), $requestbody);
+
+            $apiResponse = storeApi(env('REKAP_PO_URL'), $requestbody);
             if ($apiResponse->successful()) {
                 $data = $apiResponse->json();
                 return response()->json([
