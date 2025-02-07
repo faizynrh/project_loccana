@@ -163,10 +163,12 @@ class PurchaseOrderController extends Controller
 
         if ($response->successful()) {
             $items = $response->json()['data']['items'] ?? [];
-            return response()->json(['items' => $items]);
+            $unit_of_measure_id = $response->json()['data']['unit_of_measure_id'] ?? [];
+            $sku = $response->json()['data']['sku'] ?? [];
+            return response()->json(['items' => $items, 'unit_of_measure_id' => $unit_of_measure_id, 'sku' => $sku]);
         }
 
-        return response()->json(['items' => []]);
+        return response()->json(['items' => [], 'unit_of_measure_id' => []]);
     }
 
 
@@ -194,16 +196,16 @@ class PurchaseOrderController extends Controller
                         'quantity'     => (int) ($itemData['quantity'] ?? 0),
                         'unit_price'   => (float) ($itemData['unit_price'] ?? 0),
                         'discount'     => (float) ($itemData['discount'] ?? 0),
-                        'uom_id'       => $itemData['uom_id'] ?? null,
+                        'unit_of_measure_id'       => $itemData['unit_of_measure_id'],
                     ];
                 }
             }
 
             // Susun data purchase order yang akan dikirim ke API
             $data = [
-                'company_id'     => 2,
+                'company_id' => (int) $request->input('company_id', 2),
                 'code'           => (string) $request->input('code'),
-                'order_date'     => $request->input('order_date'),
+                'order_date' => date('Y-m-d\TH:i:s.v\Z', strtotime($request->input('order_date'))),
                 'partner_id'     => (int) $request->input('partner_id'),
                 'term_of_payment' => (string) $request->input('term_of_payment'),
                 'currency_id'    => (int) $request->input('currency_id'),

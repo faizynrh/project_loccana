@@ -70,14 +70,15 @@
                                     </select>
 
 
-                                    <label for="gudang" class="form-label fw-bold mt-2 mb-1 small">Status</label>
+                                    <label for="status" class="form-label fw-bold mt-2 mb-1 small">Status</label>
                                     <input type="text" class="form-control " id="status" name="status">
                                     {{-- <label for="requested_by" class="form-label fw-bold mt-2 mb-1 small">Requested
                                         By</label> --}}
                                     <input type="hidden" class="form-control" id="requested_by" name="requested_by"
                                         value="1">
                                     {{-- <label for="currency_id" class="form-label fw-bold mt-2 mb-1 small">Currency</label> --}}
-                                    <input type="hidden" class="form-control" id="currency_id" name="currency_id">
+                                    <input type="hidden" class="form-control" id="currency_id" name="currency_id"
+                                        value="1">
                                 </div>
                                 <div class="col-md-6">
                                     <label for="ppn" class="form-label fw-bold mt-2 mb-1 small">VAT/PPN</label>
@@ -98,7 +99,7 @@
                                     <textarea class="form-control" rows="5" id="description" name="description"></textarea>
 
                                     <label for="gudang" class="form-label fw-bold mt-2 mb-1 small">Gudang</label>
-                                    <select class="form-select" id="gudang" name="gudang">
+                                    <select class="form-select" id="gudang" name="items[0][warehouse_id]">
                                         <option value="" selected disabled>Pilih Gudang</option>
                                         @foreach ($gudang as $items)
                                             <option value="{{ $items['id'] }}">{{ $items['name'] }}</option>
@@ -124,12 +125,13 @@
                                 </thead>
                                 <tbody id="tableBody">
                                     <tr style="border-bottom: 2px solid #000" class="item-row">
+                                    <tr style="border-bottom: 2px solid #000" class="item-row">
                                         <td colspan="2">
                                             <select class="form-select item-select" name="items[0][item_id]">
                                                 <option value="" disabled selected>Silahkan pilih principle terlebih
                                                     dahulu</option>
-                                                <!-- Pastikan option akan diisi melalui JavaScript (sama seperti row baru) -->
                                             </select>
+                                            <input type="hidden" name="items[0][uom_id]" class="uom-input">
                                         </td>
                                         <td>
                                             <input type="number" name="items[0][quantity]"
@@ -237,7 +239,8 @@
                 var options = '<option value="" disabled selected>--Pilih Item--</option>';
                 if (items && items.length > 0) {
                     items.forEach(function(item) {
-                        options += `<option value="${item.id}">${item.name}</option>`;
+                        options +=
+                            `<option value="${item.id}" data-uom="${item.unit_of_measure_id}">${item.sku} - ${item.name}</option>`;
                     });
                 } else {
                     options = '<option value="" disabled selected>Tidak ada item tersedia</option>';
@@ -250,14 +253,15 @@
                 $('.item-select').html(options);
             }
 
-            // Updated table structure with proper classes and data binding
+            // Create new row function
             function createNewRow(rowCount) {
                 const currentItems = $('#tableBody').data('current-items');
                 let itemOptions = '<option value="" disabled selected>--Pilih Item--</option>';
 
                 if (currentItems && currentItems.length > 0) {
                     currentItems.forEach(function(item) {
-                        itemOptions += `<option value="${item.id}">${item.name}</option>`;
+                        itemOptions +=
+                            `<option value="${item.id}" data-uom="${item.unit_of_measure_id}">${item.sku} - ${item.name}</option>`;
                     });
                 } else {
                     itemOptions =
@@ -270,12 +274,13 @@
                     <select class="form-select item-select" name="items[${rowCount}][item_id]">
                         ${itemOptions}
                     </select>
+                    <input type="hidden" name="items[${rowCount}][uom_id]" class="uom-input">
                 </td>
                 <td>
                     <input type="number" class="form-control qty-input" name="items[${rowCount}][quantity]" value="0" min="0">
                 </td>
                 <td>
-                    <input type="number" class="form-control price-input" name="items[${rowCount}][price]" value="0" min="0">
+                    <input type="number" class="form-control price-input" name="items[${rowCount}][unit_price]" value="0" min="0">
                 </td>
                 <td>
                     <input type="number" class="form-control discount-input" name="items[${rowCount}][discount]" value="0" min="0" max="100">
@@ -289,6 +294,12 @@
             </tr>
         `;
             }
+
+            // Event handler for item selection
+            $(document).on('change', '.item-select', function() {
+                const selectedUOM = $(this).find(':selected').data('uom');
+                $(this).siblings('.uom-input').val(selectedUOM);
+            });
 
             // Add new row handler
             $('#add-row').on('click', function(e) {
