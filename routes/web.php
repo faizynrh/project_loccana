@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\masterdata\CustomerController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\masterdata\CoaController;
 use App\Http\Controllers\masterdata\UomController;
@@ -9,9 +8,11 @@ use App\Http\Controllers\masterdata\PriceController;
 use App\Http\Controllers\masterdata\GudangController;
 use App\Http\Controllers\authentication\ShowDashboard;
 use App\Http\Controllers\authentication\AuthController;
-use App\Http\Controllers\procurement\PenerimaanBarangController;
+use App\Http\Controllers\masterdata\CustomerController;
 use App\Http\Controllers\masterdata\PrincipalController;
 use App\Http\Controllers\procurement\PurchaseOrderController;
+use App\Http\Controllers\procurement\DasarPembelianController;
+use App\Http\Controllers\procurement\PenerimaanBarangController;
 
 /*
 |--------------------------------------------------------------------------
@@ -88,15 +89,15 @@ Route::middleware('auth.login')->group(
         // UOM
         Route::prefix('/uom')->name('uom.')->group(
             function () {
-                Route::get('/', [UomController::class, 'index'])->name('index');
-                Route::get('/ajax', [UomController::class, 'ajaxuom'])->name('ajax');
-                Route::get('/add', [UomController::class, 'create'])->name('create');
-                Route::post('/add', [UomController::class, 'store'])->name('store');
-                Route::delete('/delete/{id}', [UomController::class, 'destroy'])->name('destroy');
-                Route::get('/edit/{id}', [UomController::class, 'edit'])->name('edit');
-                Route::put('/update/{id}', [UomController::class, 'update'])->name('update');
-                Route::get('/detail/{id}', [UomController::class, 'show'])->name('show');
-            }
+            Route::get('/', [UomController::class, 'index'])->name('index');
+            Route::get('/ajax', [UomController::class, 'ajaxuom'])->name('ajax');
+            Route::get('/add', [UomController::class, 'create'])->name('create');
+            Route::post('/add', [UomController::class, 'store'])->name('store');
+            Route::delete('/delete/{id}', [UomController::class, 'destroy'])->name('destroy');
+            Route::get('/edit/{id}', [UomController::class, 'edit'])->name('edit');
+            Route::put('/update/{id}', [UomController::class, 'update'])->name('update');
+            Route::get('/detail/{id}', [UomController::class, 'show'])->name('show');
+        }
         );
 
 
@@ -178,6 +179,12 @@ Route::middleware('auth.login')->group(
             Route::put('/update/{id}', [PurchaseOrderController::class, 'update'])->name('update');
             Route::get('/getItemsList/{id}', [PurchaseOrderController::class, 'getItemsList'])->name('getitem');
             Route::get('/generate-code', [PurchaseOrderController::class, 'generateCode'])->name('generate.code');
+        });
+
+        Route::prefix('/dasar_pembelian')->name('dasar_pembelian.')->group(function () {
+            Route::get('/', [DasarPembelianController::class, 'index'])->name('index');
+            Route::get('/ajax', [DasarPembelianController::class, 'ajax'])->name('ajax');
+
         });
     }
 );

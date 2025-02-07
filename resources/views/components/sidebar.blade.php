@@ -56,7 +56,7 @@
                     </ul>
                 </li>
                 <li
-                    class="sidebar-item has-sub {{ Request::is('penerimaan_barang*') || Request::is('purchase_order*') ? 'active' : '' }}">
+                    class="sidebar-item has-sub {{ Request::is('penerimaan_barang*') || Request::is('purchase_order*') || Request::is('dasar_pembelian*') ? 'active' : '' }}">
                     <a href="#" class="sidebar-link">
                         <i class="bi bi-pc-display"></i>
                         <span>Procurement</span>
@@ -68,8 +68,8 @@
                         <li class="submenu-item {{ Request::is('penerimaan_barang*') ? 'active' : '' }}">
                             <a href="/penerimaan_barang" class="submenu-link">Penerimaan Barang</a>
                         </li>
-                        <li class="submenu-item">
-                            <a href="#" class="submenu-link">Dasar Pembelian</a>
+                        <li class="submenu-item {{ Request::is('dasar_pembelian*') ? 'active' : '' }}">
+                            <a href="/dasar_pembelian" class="submenu-link">Dasar Pembelian</a>
                         </li>
                         <li class="submenu-item">
                             <a href="#" class="submenu-link">Invoice</a>
