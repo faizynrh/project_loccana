@@ -13,6 +13,7 @@ use App\Http\Controllers\masterdata\PrincipalController;
 use App\Http\Controllers\procurement\PurchaseOrderController;
 use App\Http\Controllers\procurement\DasarPembelianController;
 use App\Http\Controllers\procurement\PenerimaanBarangController;
+use App\Http\Controllers\procurement\RekapPOController;
 
 /*
 |--------------------------------------------------------------------------
@@ -184,7 +185,11 @@ Route::middleware('auth.login')->group(
         Route::prefix('/dasar_pembelian')->name('dasar_pembelian.')->group(function () {
             Route::get('/', [DasarPembelianController::class, 'index'])->name('index');
             Route::get('/ajax', [DasarPembelianController::class, 'ajax'])->name('ajax');
+        });
 
+        Route::prefix('/rekap_po')->name('rekap_po.')->group(function () {
+            Route::get('/', [RekapPOController::class, 'index'])->name('index');
+            Route::get('/ajax', [RekapPOController::class, 'ajax'])->name('ajax');
         });
     }
 );
