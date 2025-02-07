@@ -155,35 +155,20 @@ class PurchaseOrderController extends Controller
         }
     }
 
-    protected function getItemsList()
+
+    protected function getItemsList($company_id)
     {
-        $apiResponse = fectApi(env('LIST_ITEMS'));
-        if ($apiResponse->successful()) {
-            $items = $apiResponse->json()['data']['items'];
+        $apiUrl = env('LIST_ITEMS');
+        $response = storeApi($apiUrl, ['company_id' => $company_id]);
+
+        if ($response->successful()) {
+            $items = $response->json()['data']['items'] ?? [];
             return response()->json(['items' => $items]);
         }
+
         return response()->json(['items' => []]);
     }
 
-
-    public function getprice($id)
-    {
-        try {
-            $apiResponse = fectApi(env('PO_URL') . '/' . $id);
-            if ($apiResponse->successful()) {
-                $data = $apiResponse->json()['data'];
-                $items = [];
-                foreach ($data as $item) {
-                    $items[] = [
-                        'price' => $item['unit_price'],
-                    ];
-                }
-            }
-            return response()->json(['error' => 'Failed to fetch PO details'], 500);
-        } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
-        }
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -192,15 +177,9 @@ class PurchaseOrderController extends Controller
     {
         dd($request->all());
         try {
-            // Mengambil header dan URL API
-            $headers = getHeaders();
-            $apiurl = getApiUrl() . '/loccana/po/1.0.0/purchase-order';
-
             // Ambil data items dari request
             $itemsRequest = $request->input('items');
-
-            // Jika items yang dikirim hanya satu item (asosiatif) bukan array dari item,
-            // bungkus ke dalam array
+            // Jika items yang dikirim hanya satu item (asosiatif) bukan array dari item, bungkus ke dalam array
             if (is_array($itemsRequest) && isset($itemsRequest['item_id'])) {
                 $itemsRequest = [$itemsRequest];
             }
@@ -210,34 +189,35 @@ class PurchaseOrderController extends Controller
                 foreach ($itemsRequest as $itemData) {
                     // Pastikan setiap item memiliki struktur yang tepat
                     $items[] = [
-                        'item_id' => $itemData['item_id'] ?? null,
+                        'item_id'      => $itemData['item_id'] ?? null,
                         'warehouse_id' => $itemData['warehouse_id'] ?? null,
-                        'quantity' => $itemData['quantity'] ?? 0,
-                        'unit_price' => $itemData['unit_price'] ?? 0,
-                        'discount' => $itemData['discount'] ?? 0,
-                        'uom_id' => $itemData['uom_id'] ?? null,
+                        'quantity'     => (int) ($itemData['quantity'] ?? 0),
+                        'unit_price'   => (float) ($itemData['unit_price'] ?? 0),
+                        'discount'     => (float) ($itemData['discount'] ?? 0),
+                        'uom_id'       => $itemData['uom_id'] ?? null,
                     ];
                 }
             }
 
             // Susun data purchase order yang akan dikirim ke API
             $data = [
-                'company_id' => 2,
-                'code' => (string) $request->input('code'),
-                'order_date' => $request->input('order_date'),
-                'partner_id' => $request->input('partner_id'),
-                'term_of_payment' => $request->input('term_of_payment'),
-                'currency_id' => $request->input('currency_id'),
-                'total_amount' => $request->input('total_amount'),
-                'tax_amount' => $request->input('tax_amount'),
-                'description' => $request->input('description'),
-                'status' => $request->input('status'),
-                'requested_by' => $request->input('requested_by'),
-                'items' => $items,
+                'company_id'     => 2,
+                'code'           => (string) $request->input('code'),
+                'order_date'     => $request->input('order_date'),
+                'partner_id'     => (int) $request->input('partner_id'),
+                'term_of_payment' => (string) $request->input('term_of_payment'),
+                'currency_id'    => (int) $request->input('currency_id'),
+                'total_amount'   => (float) $request->input('total_amount'),
+                'tax_amount'     => (float) $request->input('tax_amount'),
+                'description'    => $request->input('description'),
+                'status'         => (string) $request->input('status'),
+                'requested_by'   => (string) $request->input('requested_by'),
+                'items'          => $items,
+
             ];
 
-            // Kirim data ke API
-            $apiResponse = Http::withHeaders($headers)->post($apiurl, $data);
+            // Kirim data ke API menggunakan fungsi storeApi() yang sudah menangani request POST
+            $apiResponse = storeApi(env('PO_URL') . '/', $data);
             $responseData = $apiResponse->json();
 
             if ($apiResponse->successful() && isset($responseData['success']) && $responseData['success'] === true) {
@@ -253,6 +233,7 @@ class PurchaseOrderController extends Controller
             return back()->withErrors($e->getMessage());
         }
     }
+
 
 
     /**

@@ -131,7 +131,7 @@
                 const url = '{{ route('uom.store') }}'
                 const $button = $(this);
 
-                // $('#loading-overlay').fadeIn();
+                $('#loading-overlay').fadeIn();
 
                 $.ajax({
                     url: url,
@@ -150,7 +150,7 @@
                         $('#content-uom').html(errorMsg);
                     },
                     complete: function() {
-                        // $('#loading-overlay').fadeOut();
+                        $('#loading-overlay').fadeOut();
                     }
                 });
             });

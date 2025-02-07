@@ -59,44 +59,40 @@
                                     <input type="text" class="form-control bg-body-secondary" id="code"
                                         name="code" placeholder="Kode">
                                     <label for="tanggal" class="form-label fw-bold mt-2 mb-1 small">Tanggal</label>
-                                    <input type="date" class="form-control" id="order_date" name="order_date">
+                                    <input type="date" class="form-control" id="order_date" name="order_date" required>
 
                                     <label for="principal" class="form-label fw-bold mt-2 mb-1 small">Partner</label>
-                                    <select class="form-select" id="partner_id" name="partner_id">
+                                    <select class="form-select" id="partner_id" name="partner_id" required>
                                         <option value="" selected disabled>Pilih Partner</option>
                                         @foreach ($partner as $item)
                                             <option value="{{ $item['id'] }}">{{ $item['name'] }}</option>
                                         @endforeach
                                     </select>
 
+
                                     <label for="gudang" class="form-label fw-bold mt-2 mb-1 small">Status</label>
                                     <input type="text" class="form-control " id="status" name="status">
-                                    <label for="requested_by" class="form-label fw-bold mt-2 mb-1 small">Requested
-                                        By</label>
-                                    <input type="text" class="form-control" id="requested_by" name="requested_by">
+                                    {{-- <label for="requested_by" class="form-label fw-bold mt-2 mb-1 small">Requested
+                                        By</label> --}}
+                                    <input type="hidden" class="form-control" id="requested_by" name="requested_by"
+                                        value="1">
+                                    {{-- <label for="currency_id" class="form-label fw-bold mt-2 mb-1 small">Currency</label> --}}
+                                    <input type="hidden" class="form-control" id="currency_id" name="currency_id">
                                 </div>
                                 <div class="col-md-6">
                                     <label for="ppn" class="form-label fw-bold mt-2 mb-1 small">VAT/PPN</label>
-                                    <input type="text" class="form-control" id="ppn" name="ppn">
+                                    <input type="number" class="form-control" id="ppn" name="ppn">
 
                                     <label for="pembayaran" class="form-label fw-bold mt-2 mb-1 small">Term
                                         Pembayaran</label>
                                     <select id="pembayaran" class="form-select" name="term_of_payment">
-                                        <option value="cash" selected>Cash</option>
+                                        <option value="1" selected>Cash</option>
                                         <option value="15">15 Hari</option>
                                         <option value="30">30 Hari</option>
                                         <option value="45">45 Hari</option>
                                         <option value="60">60 Hari</option>
                                         <option value="90">90 Hari</option>
-                                        <option value="lainnya">Lainnya</option>
                                     </select>
-
-                                    <div id="term-lainnya-container" class="hidden">
-                                        <label for="termlain" class="form-label fw-bold mt-2 mb-1 small">Term Pembayaran
-                                            Lainnya</label>
-                                        <input type="number" class="form-control" id="termlain"
-                                            name="custom_payment_term">
-                                    </div>
 
                                     <label for="description" class="form-label fw-bold mt-2 mb-1 small">Keterangan</label>
                                     <textarea class="form-control" rows="5" id="description" name="description"></textarea>
@@ -194,8 +190,7 @@
                             </table>
                             <div class="row">
                                 <div class="col-md-12 text-end">
-                                    <button type="button" class="btn btn-primary" id="submitButton"
-                                        onclick="confirmSubmit('submitButton', 'createForm')">Submit</button>
+                                    <button type="submit" class="btn btn-primary" id="submitButton">Submit</button>
                                     {{-- <button type="button" class="btn btn-danger ms-2" id="rejectButton">Reject</button> --}}
                                     <a href="/purchase_order" class="btn btn-secondary ms-2">Batal</a>
                                 </div>
