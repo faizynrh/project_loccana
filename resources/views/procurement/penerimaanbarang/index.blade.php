@@ -34,7 +34,8 @@
                     <div class="card-header">
                         <div class="d-flex justify-content-between align-items-center">
                             <div class="d-flex align-items-center">
-                                <a href="/penerimaan_barang/add" class="btn btn-primary me-2 fw-bold">+</a>
+                                <a href="/penerimaan_barang/add" class="btn btn-primary me-2 fw-bold">+ Penerimaan
+                                    Barang</a>
                                 <select id="yearSelect" class="form-select me-2" name="year" style="width: auto;">
                                     @php
                                         $currentYear = Carbon\Carbon::now()->year;
