@@ -22,7 +22,7 @@
                 <li
                     class="sidebar-item has-sub {{ Request::is('item*') || Request::is('user*') || Request::is('uom*') || Request::is('price*') || Request::is('principal*') || Request::is('customer*') || Request::is('coa*') || Request::is('gudang*') ? 'active' : '' }}">
                     <a href="#" class="sidebar-link">
-                        <i class="bi bi-pc-display"></i>
+                        <i class="bi bi bi-database"></i>
                         <span>Master Data</span>
                     </a>
                     <ul class="submenu active">
@@ -56,9 +56,9 @@
                     </ul>
                 </li>
                 <li
-                    class="sidebar-item has-sub {{ Request::is('penerimaan_barang*') || Request::is('purchase_order*') || Request::is('dasar_pembelian*') ? 'active' : '' }}">
+                    class="sidebar-item has-sub {{ Request::is('penerimaan_barang*') || Request::is('purchase_order*') || Request::is('dasar_pembelian*') || Request::is('rekap_po*') ? 'active' : '' }}">
                     <a href="#" class="sidebar-link">
-                        <i class="bi bi-pc-display"></i>
+                        <i class="bi bi-truck"></i>
                         <span>Procurement</span>
                     </a>
                     <ul class="submenu active">
@@ -74,8 +74,8 @@
                         <li class="submenu-item">
                             <a href="#" class="submenu-link">Invoice</a>
                         </li>
-                        <li class="submenu-item">
-                            <a href="#" class="submenu-link">Rekap PO</a>
+                        <li class="submenu-item {{ Request::is('rekap_*') ? 'active' : '' }}">
+                            <a href="/rekap_po" class="submenu-link">Rekap PO</a>
                         </li>
                         <li class="submenu-item">
                             <a href="#" class="submenu-link">Retur</a>
@@ -87,7 +87,7 @@
                 </li>
                 <li class="sidebar-item has-sub">
                     <a href="#" class="sidebar-link">
-                        <i class="bi bi-pc-display"></i>
+                        <i class="bi bi-box-seam"></i>
                         <span>Inventory</span>
                     </a>
                     <ul class="submenu active">
@@ -110,7 +110,7 @@
                 </li>
                 <li class="sidebar-item has-sub">
                     <a href="#" class="sidebar-link">
-                        <i class="bi bi-pc-display"></i>
+                        <i class="bi bi-cart-fill"></i>
                         <span>Penjualan</span>
                     </a>
                     <ul class="submenu active">
@@ -133,7 +133,7 @@
                 </li>
                 <li class="sidebar-item has-sub">
                     <a href="#" class="sidebar-link">
-                        <i class="bi bi-pc-display"></i>
+                        <i class="bi bi-cash-stack"></i>
                         <span>Cash Bank</span>
                     </a>
                     <ul class="submenu active">
@@ -153,7 +153,7 @@
                 </li>
                 <li class="sidebar-item has-sub">
                     <a href="#" class="sidebar-link">
-                        <i class="bi bi-pc-display"></i>
+                        <i class="bi bi-calculator"></i>
                         <span>Accounting</span>
                     </a>
                     <ul class="submenu active">

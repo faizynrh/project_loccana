@@ -13,6 +13,7 @@ use App\Http\Controllers\masterdata\PrincipalController;
 use App\Http\Controllers\procurement\PurchaseOrderController;
 use App\Http\Controllers\procurement\DasarPembelianController;
 use App\Http\Controllers\procurement\PenerimaanBarangController;
+use App\Http\Controllers\procurement\RekapPOController;
 
 /*
 |--------------------------------------------------------------------------
@@ -51,7 +52,7 @@ Route::middleware('auth.login')->group(
 
 
         // ==========================================MASTERDATA========================================
-
+    
         // ITEM
         Route::prefix('/item')->name('item.')->group(function () {
             Route::get('/', [ItemController::class, 'index'])->name('index');
@@ -151,7 +152,7 @@ Route::middleware('auth.login')->group(
         });
 
         // ===================================== PROCUREMENT =========================================
-
+    
         // PENERIMAAN BARANG
         Route::prefix('/penerimaan_barang')->name('penerimaan_barang.')->group(function () {
             Route::get('/', [PenerimaanBarangController::class, 'index'])->name('index');
@@ -166,7 +167,7 @@ Route::middleware('auth.login')->group(
         });
 
         // PURCHASE ORDER
-
+    
         Route::prefix('/purchase_order')->name('purchaseorder.')->group(function () {
             Route::get('/', [PurchaseOrderController::class, 'index'])->name('index');
             Route::get('/detailspurchase/{id_po}', [PurchaseOrderController::class, 'getPurchaseOrderDetails'])->name('getpurchasedetails');
@@ -184,7 +185,11 @@ Route::middleware('auth.login')->group(
         Route::prefix('/dasar_pembelian')->name('dasar_pembelian.')->group(function () {
             Route::get('/', [DasarPembelianController::class, 'index'])->name('index');
             Route::get('/ajax', [DasarPembelianController::class, 'ajax'])->name('ajax');
+        });
 
+        Route::prefix('/rekap_po')->name('rekap_po.')->group(function () {
+            Route::get('/', [RekapPOController::class, 'index'])->name('index');
+            Route::get('/ajax', [RekapPOController::class, 'ajax'])->name('ajax');
         });
     }
 );
