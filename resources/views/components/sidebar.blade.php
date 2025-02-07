@@ -68,8 +68,8 @@
                         <li class="submenu-item {{ Request::is('penerimaan_barang*') ? 'active' : '' }}">
                             <a href="/penerimaan_barang" class="submenu-link">Penerimaan Barang</a>
                         </li>
-                        <li class="submenu-item">
-                            <a href="#" class="submenu-link">Dasar Pembelian</a>
+                        <li class="submenu-item {{ Request::is('dasar_pembelian*') ? 'active' : '' }}">
+                            <a href="/dasar_pembelian" class="submenu-link">Dasar Pembelian</a>
                         </li>
                         <li class="submenu-item">
                             <a href="#" class="submenu-link">Invoice</a>
