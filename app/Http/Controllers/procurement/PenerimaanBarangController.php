@@ -2,13 +2,8 @@
 
 namespace App\Http\Controllers\procurement;
 
-use Carbon\Carbon;
-use App\Helpers\Helpers;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Http;
-
 
 class PenerimaanBarangController extends Controller
 {
@@ -61,28 +56,28 @@ class PenerimaanBarangController extends Controller
             $apiResponse = fectApi(env('PO_URL') . '/' . $id);
             $items = [];
             if ($apiResponse->successful()) {
-                $data = $apiResponse->json()['data'];
+                $data = json_decode($apiResponse->body());
                 $items = [];
-                foreach ($data as $item) {
+                foreach ($data->data as $item) {
                     $items[] = [
-                        'item_id' => $item['item_id'],
-                        'item_code' => $item['item_code'],
-                        'base_qty' => $item['base_qty'],
-                        'qty_balance' => $item['qty_balance'],
-                        'qty' => $item['qty'],
-                        'item_description' => $item['item_description'],
-                        'warehouse_id' => $item['warehouse_id'],
+                        'item_id' => $item->item_id,
+                        'item_code' => $item->item_code,
+                        'base_qty' => $item->base_qty,
+                        'qty_balance' => $item->qty_balance,
+                        'qty' => $item->qty,
+                        'item_description' => $item->item_description,
+                        'warehouse_id' => $item->warehouse_id,
                     ];
                 }
                 return response()->json([
-                    'id_po' => $data[0]['id_po'],
-                    'order_date' => $data[0]['order_date'],
-                    'partner_name' => $data[0]['partner_name'],
-                    'address' => $data[0]['address'],
-                    'description' => $data[0]['description'],
-                    'phone' => $data[0]['phone'],
-                    'fax' => $data[0]['fax'],
-                    'warehouse_id' => $data[0]['warehouse_id'],
+                    'id_po' => $data->data[0]->id_po,
+                    'order_date' => $data->data[0]->order_date,
+                    'partner_name' => $data->data[0]->partner_name,
+                    'address' => $data->data[0]->address,
+                    'description' => $data->data[0]->description,
+                    'phone' => $data->data[0]->phone,
+                    'fax' => $data->data[0]->fax,
+                    'warehouse_id' => $data->data[0]->warehouse_id,
                     'items' => $items
                 ]);
             }
@@ -162,7 +157,7 @@ class PenerimaanBarangController extends Controller
             $apiResponse = fectApi(env('PENERIMAAN_BARANG_URL') . '/' . $id);
 
             if ($apiResponse->successful()) {
-                $data = $apiResponse->json()['data'];
+                $data = json_decode($apiResponse->body());
                 return view('procurement.penerimaanbarang.detail', compact('data'));
             } else {
                 return back()->withErrors($apiResponse->json()['message']);
@@ -177,7 +172,8 @@ class PenerimaanBarangController extends Controller
             $apiResponse = fectApi(env('PENERIMAAN_BARANG_URL') . '/' . $id);
 
             if ($apiResponse->successful()) {
-                $data = $apiResponse->json()['data'];
+                $data = json_decode($apiResponse->body());
+                // dd($data);
                 return view('procurement.penerimaanbarang.edit', compact('data'));
             } else {
                 return back()->withErrors($apiResponse->json()['message']);

@@ -189,23 +189,23 @@
                                     const qty_balance = item.qty_balance;
 
                                     const row = `
-                                                                                                                <tr style="border-bottom: 2px solid #000;">
-                                                                                                                    <td>
-                                                                                                                        <input type="hidden" id="item_id" value="${item.item_id}">
-                                                                                                                        <input type="hidden" id="warehouse_id" value="${item.warehouse_id}">
-                                                                                                                        <textarea type="text" class="form-control w-100" readonly rows="3">${item.item_code}</textarea>
-                                                                                                                    </td>
-                                                                                                                    <td><input type="number" class="form-control bg-body-secondary order_qty" value="${item.base_qty}" readonly></td>
-                                                                                                                    <td><input type="number" class="form-control bg-body-secondary qty_balance" value="${item.qty_balance}" readonly></td>
-                                                                                                                    <td><input type="number" class="form-control bg-body-secondary diterima" value="${item.qty}" readonly></td>
-                                                                                                                    <td><input type="number" class="form-control qty_received" id="qty_received" value="0" min="1" required></td>
-                                                                                                                    <td><input type="number" class="form-control qty_reject" id="qty_reject" value="0" min="0" required></td>
-                                                                                                                    <td><input type="number" class="form-control qty_bonus" id="qty_bonus" value="0" min="0" required></td>
-                                                                                                                    <td><input type="number" class="form-control qty_titip" id="qty_titip" value="0" min="0" required></td>
-                                                                                                                    <td><input type="number" class="form-control discount" id="discount" value="0" min="0" required></td>
-                                                                                                                    <td><input type="text" class="form-control" placeholder="Note" value="${item.item_description}"></td>
-                                                                                                                </tr>
-                                                                                                                `;
+                                                <tr style="border-bottom: 2px solid #000;">
+                                                    <td>
+                                                        <input type="hidden" id="item_id" value="${item.item_id}">
+                                                        <input type="hidden" id="warehouse_id" value="${item.warehouse_id}">
+                                                        <textarea type="text" class="form-control w-100" readonly rows="3">${item.item_code}</textarea>
+                                                    </td>
+                                                    <td><input type="number" class="form-control bg-body-secondary order_qty" value="${item.base_qty}" readonly></td>
+                                                    <td><input type="number" class="form-control bg-body-secondary qty_balance" value="${item.qty_balance}" readonly></td>
+                                                    <td><input type="number" class="form-control bg-body-secondary diterima" value="${item.qty}" readonly></td>
+                                                    <td><input type="number" class="form-control qty_received" id="qty_received" value="0" min="1" required></td>
+                                                    <td><input type="number" class="form-control qty_reject" id="qty_reject" value="0" min="0" required></td>
+                                                    <td><input type="number" class="form-control qty_bonus" id="qty_bonus" value="0" min="0" required></td>
+                                                    <td><input type="number" class="form-control qty_titip" id="qty_titip" value="0" min="0" required></td>
+                                                    <td><input type="number" class="form-control discount" id="discount" value="0" min="0" required></td>
+                                                    <td><input type="text" class="form-control" placeholder="Note" value="${item.item_description}"></td>
+                                                </tr>
+                                                `;
                                     tableBody.append(row);
 
                                     tableBody.find('.qty_received').last().on('input',
