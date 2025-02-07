@@ -66,7 +66,7 @@ class PrincipalController extends Controller
     public function create()
     {
         $companyid = 2;
-        $partnerResponse = fectApi(env('LIST_PARTNER'));
+        $partnerResponse = fectApi(env('LIST_PARTNERTYPES'));
         $coaResponse = fectApi(env('LIST_COA') . '/' . $companyid);
         if ($partnerResponse->successful() && $coaResponse->successful()) {
             $partner
@@ -123,7 +123,7 @@ class PrincipalController extends Controller
         try {
             $companyid = 2;
             $apiResponse = fectApi(env('PRINCIPAL_URL') . '/' . $id);
-            $partnerResponse = fectApi(env('LIST_PARTNER'));
+            $partnerResponse = fectApi(env('LIST_PARTNERTYPES'));
             $coaResponse = fectApi(env('LIST_COA') . '/' . $companyid);
 
             if ($partnerResponse->successful() && $coaResponse->successful() && $apiResponse->successful()) {
@@ -149,7 +149,7 @@ class PrincipalController extends Controller
         try {
             $companyid = 2;
             $apiResponse = fectApi(env('PRINCIPAL_URL') . '/' . $id);
-            $partnerResponse = fectApi(env('LIST_PARTNER'));
+            $partnerResponse = fectApi(env('LIST_PARTNERTYPES'));
             $coaResponse = fectApi(env('LIST_COA') . '/' . $companyid);
 
             if ($partnerResponse->successful() && $coaResponse->successful() && $apiResponse->successful()) {

@@ -165,10 +165,12 @@ Route::middleware('auth.login')->group(
         });
 
         // PURCHASE ORDER
+
         Route::prefix('/purchase_order')->name('purchaseorder.')->group(function () {
             Route::get('/', [PurchaseOrderController::class, 'index'])->name('index');
             Route::get('/detailspurchase/{id_po}', [PurchaseOrderController::class, 'getPurchaseOrderDetails'])->name('getpurchasedetails');
             Route::get('/add', [PurchaseOrderController::class, 'create'])->name('create');
+            Route::get('/ajax', [PurchaseOrderController::class, 'ajaxpo'])->name('ajax');
             Route::post('/add', [PurchaseOrderController::class, 'store'])->name('store');
             Route::get('/detail/{id}', [PurchaseOrderController::class, 'show'])->name('detail');
             Route::delete('/delete/{id}', [PurchaseOrderController::class, 'destroy'])->name('destroy');
