@@ -19,13 +19,13 @@ class DasarPembelianController extends Controller
             $search = $request->input('search.value') ?? '';
 
             $requestbody = [
+                'search' => $search,
                 'partner_id' => $partner_id,
                 'start_date' => $start_date,
                 'end_date' => $end_date,
                 'company_id' => 0,
                 'limit' => $length,
                 'offset' => $start,
-                'search' => $search
             ];
             $apiResponse = storeApi(env('DASAR_PEMBELIAN_URL'), $requestbody);
             if ($apiResponse->successful()) {
@@ -59,53 +59,5 @@ class DasarPembelianController extends Controller
             return view('procurement.dasarpembelian.index', compact('partner'));
         }
         return view('procurement.dasarpembelian.index');
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
     }
 }

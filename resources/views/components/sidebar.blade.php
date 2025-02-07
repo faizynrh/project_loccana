@@ -56,7 +56,7 @@
                     </ul>
                 </li>
                 <li
-                    class="sidebar-item has-sub {{ Request::is('penerimaan_barang*') || Request::is('purchase_order*') ? 'active' : '' }}">
+                    class="sidebar-item has-sub {{ Request::is('penerimaan_barang*') || Request::is('purchase_order*') || Request::is('dasar_pembelian*') ? 'active' : '' }}">
                     <a href="#" class="sidebar-link">
                         <i class="bi bi-pc-display"></i>
                         <span>Procurement</span>

@@ -32,8 +32,9 @@
                             <div class="row g-3 align-items-end">
                                 <div class="col-md-3">
                                     <label for="principal" class="form-label fw-bold small">Principal</label>
-                                    <select id="principal" class="form-select" name="principal">
+                                    <select id="principal" class="form-select" name="principal" required>
                                         <option value="" selected disabled>Pilih Principal</option>
+                                        <option value="0">Semua Principal</option>
                                         @foreach ($partner->data as $item)
                                             <option value="{{ $item->id }}">{{ $item->name }}</option>
                                         @endforeach
@@ -41,11 +42,11 @@
                                 </div>
                                 <div class="col-md-3">
                                     <label for="start_date" class="form-label fw-bold small">Tanggal Awal</label>
-                                    <input type="date" id="start_date" name="start_date" class="form-control">
+                                    <input type="date" id="start_date" name="start_date" class="form-control" required>
                                 </div>
                                 <div class="col-md-3">
                                     <label for="end_date" class="form-label fw-bold small">Tanggal Akhir</label>
-                                    <input type="date" id="end_date" name="end_date" class="form-control">
+                                    <input type="date" id="end_date" name="end_date" class="form-control" required>
                                 </div>
                                 <div class="col-md-3 d-flex align-items-end">
                                     <button type="submit" class="btn btn-primary">Cari</button>
