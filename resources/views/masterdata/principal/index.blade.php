@@ -137,7 +137,7 @@
                 const url = '{{ route('principal.store') }}'
                 const $button = $(this);
 
-                // $('#loading-overlay').fadeIn();
+                $('#loading-overlay').fadeIn();
 
                 $.ajax({
                     url: url,
@@ -156,7 +156,7 @@
                         $('#content-principal').html(errorMsg);
                     },
                     complete: function() {
-                        // $('#loading-overlay').fadeOut();
+                        $('#loading-overlay').fadeOut();
                     }
                 });
             });
