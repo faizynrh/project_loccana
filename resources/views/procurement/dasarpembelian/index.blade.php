@@ -1,6 +1,7 @@
 @extends('layouts.app')
 @section('content')
     @push('styles')
+        <link rel="stylesheet" href="https://cdn.datatables.net/buttons/3.2.1/css/buttons.dataTables.css">
         <style>
         </style>
     @endpush
@@ -99,6 +100,13 @@
     </div>
 @endsection
 @push('scripts')
+    <script src="https://cdn.datatables.net/buttons/3.2.1/js/dataTables.buttons.js"></script>
+    <script src="https://cdn.datatables.net/buttons/3.2.1/js/buttons.dataTables.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/3.2.1/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/3.2.1/js/buttons.print.min.js"></script>
     <script>
         $(document).ready(function() {
             $('#btnprint').hide();
@@ -109,12 +117,25 @@
                 let $btnCari = $('button[type="submit"]');
                 $btnCari.prop('disabled', true).text('Processing...');
 
-
                 $('#tabledasarpembelian').DataTable().destroy();
                 $('#tabledasarpembelian').DataTable({
                     serverSide: true,
                     processing: true,
                     deferloading: false,
+                    layout: {
+                        topStart: {
+                            buttons: [{
+                                extend: 'excel',
+                                text: '<i class="bi bi-file-earmark-excel-fill me-1"></i>Export Excel',
+                                filename: function() {
+                                    return getFormattedFilename();
+                                },
+                                title: function() {
+                                    return getFormattedFilename();
+                                }
+                            }]
+                        }
+                    },
                     ajax: {
                         url: '{{ route('dasar_pembelian.ajax') }}',
                         type: 'GET',
@@ -124,7 +145,6 @@
                             d.end_date = $('#end_date').val();
                         },
                         complete: function() {
-                            // Aktifkan kembali tombol setelah AJAX selesai
                             $btnCari.prop('disabled', false).text('Cari');
                         }
                     },
@@ -197,6 +217,27 @@
                     }).format(angka);
                 }
                 return angka;
+            }
+
+            function getFormattedFilename() {
+                const bulan = [
+                    "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+                    "Juli", "Agustus", "September", "Oktober", "November", "Desember"
+                ];
+
+                let startDate = new Date($('#start_date').val());
+                let endDate = new Date($('#end_date').val());
+                let principal = $('#principal option:selected').text().trim();
+
+                let startTanggal = startDate.getDate();
+                let startBulan = bulan[startDate.getMonth()];
+                let startTahun = startDate.getFullYear();
+
+                let endTanggal = endDate.getDate();
+                let endBulan = bulan[endDate.getMonth()];
+                let endTahun = endDate.getFullYear();
+
+                return `Laporan Dasar Pembelian ${principal} periode ${startTanggal} ${startBulan} ${startTahun} s/d ${endTanggal} ${endBulan} ${endTahun}`;
             }
         });
     </script>
