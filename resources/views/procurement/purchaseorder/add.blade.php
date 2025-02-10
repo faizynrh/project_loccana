@@ -71,7 +71,11 @@
 
 
                                     <label for="status" class="form-label fw-bold mt-2 mb-1 small">Status</label>
-                                    <input type="text" class="form-control " id="status" name="status">
+                                    <select name="status" class="form-select" id="status">
+                                        <option value="pending">Pending</option>
+                                        <option value="approved">Approved</option>
+                                        <option value="rejected">Rejected</option>
+                                    </select>
                                     {{-- <label for="requested_by" class="form-label fw-bold mt-2 mb-1 small">Requested
                                         By</label> --}}
                                     <input type="hidden" class="form-control" id="requested_by" name="requested_by"
@@ -132,6 +136,7 @@
                                                     dahulu</option>
                                             </select>
                                             <input type="hidden" name="items[0][uom_id]" class="uom-input">
+
                                         </td>
                                         <td>
                                             <input type="number" name="items[0][quantity]"
@@ -147,7 +152,7 @@
                                                 max="100">
                                         </td>
                                         <td colspan="2">
-                                            <input type="number" name="items[0][total]"
+                                            <input type="number" name=""
                                                 class="form-control bg-body-secondary total-input" value="0"
                                                 readonly>
                                         </td>
@@ -181,7 +186,8 @@
                                 <tr class="fw-bold">
                                     <td colspan="4"></td>
                                     <td>VAT/PPN</td>
-                                    <td style="float: right">0</td>
+                                    <td style="float: right">0
+                                    </td>
                                     <td></td>
                                 </tr>
                                 <tr class="fw-bold" style="border-top: 2px solid #000">
@@ -192,6 +198,9 @@
                             </table>
                             <div class="row">
                                 <div class="col-md-12 text-end">
+                                    <input type="hidden" name="tax_amount" id="tax_amount" value="0">
+                                    <input type="hidden" name="company_id" id="company_id" value="2">
+                                    <input type="hidden" name="total_amount" id="total_amount" value="0">
                                     <button type="submit" class="btn btn-primary" id="submitButton">Submit</button>
                                     {{-- <button type="button" class="btn btn-danger ms-2" id="rejectButton">Reject</button> --}}
                                     <a href="/purchase_order" class="btn btn-secondary ms-2">Batal</a>
@@ -286,7 +295,7 @@
                     <input type="number" class="form-control discount-input" name="items[${rowCount}][discount]" value="0" min="0" max="100">
                 </td>
                 <td colspan="2">
-                    <input type="number" class="form-control bg-body-secondary total-input" name="items[${rowCount}][total]" value="0" readonly>
+                    <input type="number" class="form-control bg-body-secondary total-input" name="" value="0" readonly>
                 </td>
                 <td class="text-center">
                     <button type="button" class="btn btn-danger btn-sm remove-row">X</button>
@@ -373,6 +382,10 @@
                 updateDisplayValue('Taxable', taxableAmount);
                 updateDisplayValue('VAT/PPN', ppnAmount);
                 updateDisplayValue('Total', finalTotal);
+
+                // Update hidden inputs for API submission
+                $('#tax_amount').val(ppnAmount);
+                $('#total_amount').val(finalTotal);
             }
 
             // Helper function to update display values in the table footer
@@ -387,8 +400,8 @@
             // Format number helper
             function formatNumber(num) {
                 return parseFloat(num).toLocaleString('id-ID', {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2
+                    minimumFractionDigits: 0,
+                    maximumFractionDigits: 0
                 });
             }
 
