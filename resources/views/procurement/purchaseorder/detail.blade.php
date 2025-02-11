@@ -12,7 +12,7 @@
             <div class="page-title">
                 <div class="row">
                     <div class="col-12 col-md-6 order-md-1 order-last">
-                        <h3>Add Purchase Order</h3>
+                        <h3>Detail Purchase Order</h3>
                     </div>
                     <div class="col-12 col-md-6 order-md-2 order-first">
                         <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
@@ -34,165 +34,166 @@
                         <h4 class="card-title"> Form detail purchase order</h4>
                     </div>
                     <div class="card-body">
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                <label for="code" class="form-label fw-bold mt-2 mb-1 small">Kode</label>
-                                <input type="text" class="form-control bg-body-secondary" id="code" name="code"
-                                    placeholder="Kode" value="{{ $data[0]['number_po'] ?? '' }}" readonly>
-                                <label for="tanggal" class="form-label fw-bold mt-2 mb-1 small">Tanggal</label>
-                                <input type="text" class="form-control" id="order_date"
-                                    value="{{ \Carbon\Carbon::parse($data[0]['order_date'] ?? '')->format('Y-m-d') }}" val
-                                    name="order_date" readonly>
-
-                                <label for="principal" class="form-label fw-bold mt-2 mb-1 small">Partner</label>
-                                <select class="form-select" id="partner_id" name="partner_id">
-                                    <option value="{{ $data[0]['partner_id'] }}"
-                                        {{ $data[0]['partner_id'] == $partner_id->id ? 'selected' : '' }}>
-                                        {{ $data[0]['name'] }}
-                                    </option>
-                                </select>
-
-                                <label for="status" class="form-label fw-bold mt-2 mb-1 small">Status</label>
-                                {{-- <select name="status" class="form-select" id="status" required>
-                                    <option value="pending">Pending</option>
-                                    <option value="approved">Approved</option>
-                                    <option value="rejected">Rejected</option>
-                                </select> --}}
-                                <input type="text" class="form-control" id="status" name="status"
-                                    value="{{ $data[0]['status'] ?? '' }}" readonly>
-                                <input type="hidden" class="form-control" id="requested_by" name="requested_by"
-                                    value="1">
-                                <input type="hidden" class="form-control" id="currency_id" name="currency_id"
-                                    value="1">
+                        @if (session('success'))
+                            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                {{ session('success') }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                    aria-label="Close"></button>
                             </div>
-                            <div class="col-md-6">
-                                <label for="ppn" class="form-label fw-bold mt-2 mb-1 small">VAT/PPN</label>
-                                <input type="number" class="form-control" id="ppn"
-                                    value="{{ $data[0]['ppn'] ?? '' }}" name="ppn" readonly>
+                        @endif
 
-                                <label for="pembayaran" class="form-label fw-bold mt-2 mb-1 small">Term
-                                    Pembayaran</label>
-                                {{-- <select id="pembayaran" class="form-select" name="term_of_payment" required>
-                                    <option value="1" selected>Cash</option>
-                                    <option value="15">15 Hari</option>
-                                    <option value="30">30 Hari</option>
-                                    <option value="45">45 Hari</option>
-                                    <option value="60">60 Hari</option>
-                                    <option value="90">90 Hari</option>
-                                </select> --}}
-                                <input type="text" class="form-control" id="pembayaran" name="term_of_payment"
-                                    value="{{ $data[0]['term_of_payment'] ?? '' }}" readonly>
+                        @if ($errors->any())
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                @foreach ($errors->all() as $error)
+                                    <p>{{ $error }}</p>
+                                @endforeach
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                    aria-label="Close"></button>
+                            </div>
+                        @endif
+                        <form id="createForm" method="POST" action="{{ route('purchaseorder.store') }}">
+                            @csrf
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="code" class="form-label fw-bold mt-2 mb-1 small">Kode</label>
+                                    <input type="text" class="form-control bg-body-secondary" id="code"
+                                        name="code" placeholder="Kode" value="{{ $data->data[0]->number_po }}" readonly>
+                                    <label for="tanggal" class="form-label fw-bold mt-2 mb-1 small">Tanggal</label>
+                                    <input type="text" class="form-control"
+                                        value="{{ \Carbon\Carbon::parse($data->data[0]->order_date)->format('Y-m-d') }}"
+                                        readonly" id="order_date" name="order_date" disabled>
 
-                                <label for="description" class="form-label fw-bold mt-2 mb-1 small">Keterangan</label>
-                                <textarea class="form-control" rows="5" id="description" name="description" readonly>{{ $data[0]['description'] ?? '' }}</textarea>
+                                    <label for="principal" class="form-label fw-bold mt-2 mb-1 small">Principle</label>
+                                    {{-- <select class="form-control" id="partner_id" name="partner_id" disabled>
+                                        @if (isset($partner->data))
+                                            @foreach ($partner->data as $item)
+                                                <option value="{{ $item->id }}">
+                                                    {{ isset($data->data->id) && $data->data->id == $item->partner_id ? 'selected' : '' }}{{ $item->partner_name }}
+                                                </option>
+                                            @endforeach
+                                        @else
+                                            <option value="">Data tidak tersedia</option>
+                                        @endif
 
-                                <label for="gudang" class="form-label fw-bold mt-2 mb-1 small">Gudang</label>
-                                {{-- <select class="form-select" id="gudang" name="items[0][warehouse_id]" required>
-                                    <option value="" selected disabled>Pilih Gudang</option>
-                                    @foreach ($gudang as $items)
-                                        <option value="{{ $items['id'] }}">{{ $items['name'] }}</option>
+                                    </select> --}}
+
+                                    <input type="text" class="form-control" value="{{ $data->data[0]->partner_name }}"
+                                        id="status" name="status" disabled>
+
+                                    {{-- <label for="status" class="form-label fw-bold mt-2 mb-1 small">Status</label> --}}
+                                    <input type="hidden" class="form-control" value="" id="status" name="status"
+                                        disabled>
+                                    <input type="hidden" class="form-control" id="requested_by" name="requested_by"
+                                        value="1">
+                                    <input type="hidden" class="form-control" id="currency_id" name="currency_id"
+                                        value="1">
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="ppn" class="form-label fw-bold mt-2 mb-1 small">VAT/PPN</label>
+                                    <input type="text" class="form-control" value="" id="ppn" name="ppn"
+                                        disabled>
+
+                                    <label for="pembayaran" class="form-label fw-bold mt-2 mb-1 small">Term
+                                        Pembayaran</label>
+                                    <input type="text" class="form-control" value="{{ $data->data[0]->term_of_payment }}"
+                                        id="ppn" name="ppn" disabled>
+
+                                    <label for="description" class="form-label fw-bold mt-2 mb-1 small">Keterangan</label>
+                                    <textarea class="form-control" rows="5" id="description" name="description" disabled>{{ $data->data[0]->description ?? '' }}</textarea>
+
+                                    {{-- <label for="gudang" class="form-label fw-bold mt-2 mb-1 small">Gudang</label> --}}
+                                    <input type="hidden" class="form-control" id="gudang" name="items[0][warehouse_id]"
+                                        disabled>
+                                    </input>
+                                </div>
+                            </div>
+                            <div class="p-2">
+                                <h5 class="fw-bold ">Items</h5>
+                            </div>
+                            <table class="table mt-3" id="transaction-table">
+                                <thead>
+                                    <tr style="border-bottom: 3px solid #000;">
+                                        <th style="width: 140px">Kode</th>
+                                        <th style="width: 90px"></th>
+                                        <th style="width: 45px">Qty (Lt/Kg)</th>
+                                        <th style="width: 100px">Harga</th>
+                                        <th style="width: 30px">Diskon</th>
+                                        <th style="width: 70px">Total</th>
+                                        <th style="width: 30px"></th>
+                                        <th style="width: 30px"></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tableBody">
+                                    @foreach ($data->data as $item)
+                                        <tr style="border-bottom: 2px solid #000" class="item-row">
+                                            <td colspan="2">
+                                                <input type="text" value="{{ $item->item_code }}" disabled
+                                                    class="form-control"> <input type="hidden" name="items[0][uom_id]"
+                                                    class="uom-input">
+                                            </td>
+                                            <td>
+                                                <input type="number" name="items[0][quantity]"
+                                                    class="form-control qty-input" value="{{ $item->qty }}" disabled>
+                                            </td>
+                                            <td>
+                                                <input type="number" name="items[0][unit_price]"
+                                                    class="form-control price-input" value="{{ $item->unit_price }}"
+                                                    min="0" disabled>
+                                            </td>
+                                            <td>
+                                                <input type="number" name="items[0][discount]"
+                                                    class="form-control discount-input" value="{{ $item->discount }}"
+                                                    min="0" max="100">
+                                            </td>
+                                            <td colspan="2">
+                                                <input type="number" name=""
+                                                    class="form-control bg-body-secondary total-input" value="0"
+                                                    readonly>
+                                            </td>
+                                            <td></td>
+                                        </tr>
+                                        <td colspan="6"></td>
                                     @endforeach
-                                </select> --}}
-                                <input type="text" class="form-control" id="gudang" name="warehouse_id"
-                                    value="{{ $data[0]['warehouse_name'] ?? '' }}" readonly>
-                            </div>
-                        </div>
-                        <div class="p-2">
-                            <h5 class="fw-bold ">Items</h5>
-                        </div>
-                        <table class="table mt-3" id="transaction-table">
-                            <thead>
-                                <tr style="border-bottom: 3px solid #000;">
-                                    <th style="width: 140px">Kode</th>
-                                    <th style="width: 90px"></th>
-                                    <th style="width: 45px">Qty (Lt/Kg)</th>
-                                    <th style="width: 100px">Harga</th>
-                                    <th style="width: 30px">Diskon</th>
-                                    <th style="width: 70px">Total</th>
-                                    <th style="width: 30px"></th>
-                                    <th style="width: 30px"></th>
-                                </tr>
-                            </thead>
-                            <tbody id="tableBody">
-                                <tr style="border-bottom: 2px solid #000" class="item-row">
-                                <tr style="border-bottom: 2px solid #000" class="item-row">
-                                    <td colspan="2">
-                                        <select class="form-select item-select" name="items[0][item_id]">
-                                            <option value="" disabled selected>Silahkan pilih principle terlebih
-                                                dahulu</option>
-                                        </select>
-                                        <input type="hidden" name="items[0][uom_id]" class="uom-input">
-
-                                    </td>
-                                    <td>
-                                        <input type="number" name="items[0][quantity]" class="form-control qty-input"
-                                            value="1" min="1">
-                                    </td>
-                                    <td>
-                                        <input type="number" name="items[0][unit_price]"
-                                            class="form-control price-input" value="0" min="0">
-                                    </td>
-                                    <td>
-                                        <input type="number" name="items[0][discount]"
-                                            class="form-control discount-input" value="0" min="0"
-                                            max="100">
-                                    </td>
-                                    <td colspan="2">
-                                        <input type="number" name=""
-                                            class="form-control bg-body-secondary total-input" value="0" readonly>
-                                    </td>
+                                </tbody>
+                                <tr class="fw-bold">
+                                    <td colspan="4"></td>
+                                    <td>Sub Total</td>
+                                    <td style="float: right;">0</td>
                                     <td></td>
                                 </tr>
-                                <tr style="border-bottom: 2px solid #000;">
-                                    <td colspan="6"></td>
-                                    <td class="text-center">
-                                        <button class="btn btn-primary fw-bold" id="add-row">+</button>
-                                    </td>
+                                <tr class="fw-bold">
+                                    <td colspan="4"></td>
+                                    <td>Diskon</td>
+                                    <td style="float: right;">0</td>
+                                    <td></td>
+                                </tr class="fw-bold">
+                                <tr class="fw-bold">
+                                    <td colspan="4"></td>
+                                    <td>Taxable</td>
+                                    <td style="float: right">0</td>
+                                    <td></td>
+                                </tr class="fw-bold">
+                                <tr class="fw-bold">
+                                    <td colspan="4"></td>
+                                    <td>VAT/PPN</td>
+                                    <td style="float: right">0</td>
+                                    <td></td>
                                 </tr>
-                            </tbody>
-                            <tr class="fw-bold">
-                                <td colspan="4"></td>
-                                <td>Sub Total</td>
-                                <td style="float: right;">0</td>
-                                <td></td>
-                            </tr>
-                            <tr class="fw-bold">
-                                <td colspan="4"></td>
-                                <td>Diskon</td>
-                                <td style="float: right;">0</td>
-                                <td></td>
-                            </tr class="fw-bold">
-                            <tr class="fw-bold">
-                                <td colspan="4"></td>
-                                <td>Taxable</td>
-                                <td style="float: right">0</td>
-                                <td></td>
-                            </tr class="fw-bold">
-                            <tr class="fw-bold">
-                                <td colspan="4"></td>
-                                <td>VAT/PPN</td>
-                                <td style="float: right">0
-                                </td>
-                                <td></td>
-                            </tr>
-                            <tr class="fw-bold" style="border-top: 2px solid #000">
-                                <td colspan="4"></td>
-                                <td>Total</td>
-                                <td style="float: right">0</td>
-                            </tr>
-                        </table>
-                        <div class="row">
-                            <div class="col-md-12 text-end">
-                                <input type="hidden" name="tax_amount" id="tax_amount" value="0">
-                                <input type="hidden" name="company_id" id="company_id" value="2">
-                                <input type="hidden" name="total_amount" id="total_amount" value="0">
-                                <button type="submit" class="btn btn-primary" id="submitButton">Submit</button>
-                                {{-- <button type="button" class="btn btn-danger ms-2" id="rejectButton">Reject</button> --}}
-                                <a href="/purchase_order" class="btn btn-secondary ms-2">Batal</a>
+                                <tr class="fw-bold" style="border-top: 2px solid #000">
+                                    <td colspan="4"></td>
+                                    <td>Total</td>
+                                    <td style="float: right">0</td>
+                                </tr>
+                            </table>
+                            <div class="row">
+                                <div class="col-md-12 text-end">
+                                    <input type="hidden" name="tax_amount" id="tax_amount" value="0">
+                                    <input type="hidden" name="company_id" id="company_id" value="2">
+                                    <input type="hidden" name="total_amount" id="total_amount" value="0">
+                                    <a href="/purchase_order" class="btn btn-secondary ms-2">Back</a>
+                                </div>
                             </div>
-                        </div>
-
-
+                        </form>
                     </div>
                 </div>
             </section>
@@ -202,10 +203,6 @@
 @push('scripts')
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Jika form disubmit, kode akan disimpan otomatis di session
-            // dan kode baru akan di-generate saat membuka form baru
-
-            // Opsional: Jika Anda ingin refresh kode secara manual
             const refreshButton = document.getElementById('refresh-po-code');
             if (refreshButton) {
                 refreshButton.addEventListener('click', function() {
@@ -220,13 +217,11 @@
         });
 
         $(document).ready(function() {
-            // Handle partner selection change
             $('#partner_id').on('change', function() {
                 var poId = $(this).val();
                 console.log('Selected poId:', poId);
 
                 if (poId) {
-                    // Get items list after partner selection
                     var companyId = 2;
                     $.ajax({
                         url: '/purchase_order/getItemsList/' + companyId,
@@ -247,7 +242,6 @@
                 }
             });
 
-            // Function to update all item selects with the current items
             function updateAllItemSelects(items) {
                 var options = '<option value="" disabled selected>--Pilih Item--</option>';
                 if (items && items.length > 0) {
@@ -259,14 +253,11 @@
                     options = '<option value="" disabled selected>Tidak ada item tersedia</option>';
                 }
 
-                // Store the current items in a data attribute on the table for future use
                 $('#tableBody').data('current-items', items);
 
-                // Update all existing selects
                 $('.item-select').html(options);
             }
 
-            // Create new row function
             function createNewRow(rowCount) {
                 const currentItems = $('#tableBody').data('current-items');
                 let itemOptions = '<option value="" disabled selected>--Pilih Item--</option>';
@@ -308,13 +299,11 @@
         `;
             }
 
-            // Event handler for item selection
             $(document).on('change', '.item-select', function() {
                 const selectedUOM = $(this).find(':selected').data('uom');
                 $(this).siblings('.uom-input').val(selectedUOM);
             });
 
-            // Add new row handler
             $('#add-row').on('click', function(e) {
                 e.preventDefault();
                 const rowCount = $('.item-row').length;
@@ -323,7 +312,6 @@
                 updateTotals();
             });
 
-            // Remove row handler
             $(document).on('click', '.remove-row', function() {
                 if ($('.item-row').length > 1) {
                     $(this).closest('tr').remove();
@@ -331,20 +319,17 @@
                 }
             });
 
-            // Input change handler
             $(document).on('input', '.qty-input, .price-input, .discount-input', function() {
                 var row = $(this).closest('tr');
                 calculateRowTotal(row);
                 updateTotals();
             });
 
-            // Calculate row total
             function calculateRowTotal(row) {
                 const qty = parseFloat(row.find('.qty-input').val()) || 0;
                 const price = parseFloat(row.find('.price-input').val()) || 0;
                 let discount = parseFloat(row.find('.discount-input').val()) || 0;
 
-                // Validate inputs
                 if (discount > 100) {
                     discount = 100;
                     row.find('.discount-input').val(100);
@@ -357,12 +342,10 @@
                 row.find('.total-input').val(total.toFixed(2));
             }
 
-            // Update all totals
             function updateTotals() {
                 let subtotal = 0;
                 let totalDiscount = 0;
 
-                // Calculate totals from all rows
                 $('.item-row').each(function() {
                     const qty = parseFloat($(this).find('.qty-input').val()) || 0;
                     const price = parseFloat($(this).find('.price-input').val()) || 0;
@@ -380,19 +363,16 @@
                 const ppnAmount = taxableAmount * (ppnRate / 100);
                 const finalTotal = taxableAmount + ppnAmount;
 
-                // Update display values in the table footer
                 updateDisplayValue('Sub Total', subtotal);
                 updateDisplayValue('Diskon', totalDiscount);
                 updateDisplayValue('Taxable', taxableAmount);
                 updateDisplayValue('VAT/PPN', ppnAmount);
                 updateDisplayValue('Total', finalTotal);
 
-                // Update hidden inputs for API submission
                 $('#tax_amount').val(ppnAmount);
                 $('#total_amount').val(finalTotal);
             }
 
-            // Helper function to update display values in the table footer
             function updateDisplayValue(label, value) {
                 $('tr.fw-bold').each(function() {
                     if ($(this).find('td:eq(1)').text().trim() === label) {
@@ -401,7 +381,6 @@
                 });
             }
 
-            // Format number helper
             function formatNumber(num) {
                 return parseFloat(num).toLocaleString('id-ID', {
                     minimumFractionDigits: 0,
@@ -409,7 +388,6 @@
                 });
             }
 
-            // Initialize calculations
             updateTotals();
         });
     </script>

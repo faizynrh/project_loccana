@@ -2,9 +2,7 @@
 
 namespace App\Http\Controllers\procurement;
 
-use App\Helpers\Helpers;
 use App\Http\Controllers\Controller;
-use App\Models\PurchaseOrder;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -18,22 +16,19 @@ class PurchaseOrderController extends Controller
      * Display a listing of the resource.
      */
 
+    //  Sementara
     public function generatePOCode()
     {
         try {
             $currentYear = Carbon::now()->format('Y');
-
             $lastCode = Session::get('last_po_code');
-
             if ($lastCode && strpos($lastCode, 'PO' . $currentYear) === 0) {
                 $lastNumber = intval(substr($lastCode, -4));
                 $newNumber = str_pad($lastNumber + 1, 4, '0', STR_PAD_LEFT);
             } else {
                 $newNumber = '0001';
             }
-
             $poCode = 'PO' . $currentYear . $newNumber;
-
             return $poCode;
         } catch (\Exception $e) {
             return response()->json([
@@ -45,6 +40,7 @@ class PurchaseOrderController extends Controller
 
     public function ajaxpo(Request $request)
     {
+        $search = $request->input('search.value') ?? '';
         $month = $request->input('month', 11);
         $year = $request->input('year', 0);
         $length = $request->input('length', 10);
@@ -108,7 +104,7 @@ class PurchaseOrderController extends Controller
             $partner = $partnerResponse->json()['data'];
             $gudang = $gudangResponse->json()['data'];
             $poCode = $this->generatePOCode();
-            return view('procurement.purchaseorder.add', compact('partner', 'gudang','poCode'));
+            return view('procurement.purchaseorder.add', compact('partner', 'gudang', 'poCode'));
         } else {
             $errors = [];
             if (!$gudangResponse->successful()) {
@@ -147,32 +143,32 @@ class PurchaseOrderController extends Controller
         try {
             $itemsRequest = $request->input('items');
             $warehouseId = isset($itemsRequest[0]['warehouse_id']) ?
-            (int) $itemsRequest[0]['warehouse_id'] : 0;
+                (int) $itemsRequest[0]['warehouse_id'] : 0;
             $items = [];
             foreach ($itemsRequest as $itemData) {
                 $items[] = (object) [
-                    'item_id'      => (int) ($itemData['item_id'] ?? 0),
+                    'item_id' => (int) ($itemData['item_id'] ?? 0),
                     'warehouse_id' => $warehouseId,
                     // 'warehouse_id' => (int) ($itemData['warehouse_id'] ?? 0),
-                    'quantity'     => (int) ($itemData['quantity'] ?? 0),
-                    'unit_price'   => (float) ($itemData['unit_price'] ?? 0),
-                    'discount'     => (float) ($itemData['discount'] ?? 0),
-                    'uom_id'       => (int) ($itemData['uom_id'] ?? 0),
+                    'quantity' => (int) ($itemData['quantity'] ?? 0),
+                    'unit_price' => (float) ($itemData['unit_price'] ?? 0),
+                    'discount' => (float) ($itemData['discount'] ?? 0),
+                    'uom_id' => (int) ($itemData['uom_id'] ?? 0),
                 ];
             }
             $data = (object) [
-                'company_id'      => (int) $request->input('company_id', 2),
-                'code'            => (string) $request->input('code'),
+                'company_id' => (int) $request->input('company_id', 2),
+                'code' => (string) $request->input('code'),
                 "order_date" => now()->format('Y-m-d\TH:i:s\Z'),
-                'partner_id'      => (int) $request->input('partner_id'),
+                'partner_id' => (int) $request->input('partner_id'),
                 'term_of_payment' => (int) $request->input('term_of_payment'),
-                'currency_id'     => (int) $request->input('currency_id'),
-                'total_amount'    => (float) $request->input('total_amount'),
-                'tax_amount'      => (float) $request->input('tax_amount'),
-                'description'     => (string) $request->input('description'),
-                'status'          => (string) $request->input('status'),
-                'requested_by'    => (int) $request->input('requested_by'),
-                'items'           => $items,
+                'currency_id' => (int) $request->input('currency_id'),
+                'total_amount' => (float) $request->input('total_amount'),
+                'tax_amount' => (float) $request->input('tax_amount'),
+                'description' => (string) $request->input('description'),
+                'status' => (string) $request->input('status'),
+                'requested_by' => (int) $request->input('requested_by'),
+                'items' => $items,
             ];
 
             // dd($data);
@@ -200,13 +196,23 @@ class PurchaseOrderController extends Controller
     public function show(string $id)
     {
         //
-
         try {
-            $apiResponse = fectApi(env('PO_URL'). '/' . $id);
-            if ($apiResponse->successful()) {
-                $data = $apiResponse->json()['data'];
+            $company_id = 2;
+            $customer = 'false';
+            $suplier = 'true';
+            $data = [
+                'company_id' => 2
+            ];
+
+            $partnerResponse = fectApi(env('LIST_PARTNER') . '/' . $company_id . '/' . $suplier . '/' . $customer);
+            $gudangResponse = fectApi(env('LIST_GUDANG') . '/' . $company_id);
+            $apiResponse = fectApi(env('PO_URL') . '/' . $id);
+            if ($apiResponse->successful() && $gudangResponse->successful() && $partnerResponse->successful()) {
+                $data = json_decode($apiResponse->body());
+                $gudang = json_decode($gudangResponse->body());
+                $partner = json_decode($partnerResponse->body());
                 // dd($data);
-                return view('procurement.purchaseorder.detail', compact('data'));
+                return view('procurement.purchaseorder.detail', compact('data', 'gudang', 'partner'));
             } else {
                 return back()->withErrors('Gagal mengambil data item: ' . $apiResponse->status());
             }
@@ -256,10 +262,10 @@ class PurchaseOrderController extends Controller
 
             // $apiurl = getApiUrl() . '/loccana/po/1.0.0/purchase-order/' . $id;
             // dd($id);
-            $apiResponse = deleteApi(env('PO_URL') .'/'. $id);
+            $apiResponse = deleteApi(env('PO_URL') . '/' . $id);
             if ($apiResponse->successful()) {
                 return redirect()->route('purchaseorder.index')
-                    ->with('success', $apiResponse->json()['message'] );
+                    ->with('success', $apiResponse->json()['message']);
             } else {
                 return back()->withErrors(
                     $apiResponse->json()['message']
