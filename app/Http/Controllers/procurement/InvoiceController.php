@@ -61,22 +61,89 @@ class InvoiceController extends Controller
     {
         return view('procurement.invoice.index');
     }
+    public function getDODetails(Request $request, $id)
+    {
+        try {
+            $apiResponse = fectApi(env('PENERIMAAN_BARANG_URL') . '/' . $id);
+            $items = [];
+            if ($apiResponse->successful()) {
+                $data = json_decode($apiResponse->body());
+                $items = [];
+                foreach ($data->data as $item) {
+                    $items[] = [
+                        'item_name' => $item->item_name,
+                        'qty' => $item->jumlah_order,
+                        'diskon' => $item->qty_diskon,
+                    ];
+                }
+                return response()->json([
+                    'no_do' => $data->data[0]->code,
+                    'order_date' => $data->data[0]->order_date,
+                    'partner_name' => $data->data[0]->partner_name,
+                    'address' => $data->data[0]->shipment_info,
+                    'items' => $items
+                ]);
+            }
+            return response()->json(['error' => $apiResponse->json()['message']]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()]);
+        }
+    }
     public function create()
     {
-        //
+        $company_id = 2;
+        $apiResponse = fectApi(env('LIST_PENERIMAAN_BARANG') . '/' . $company_id);
+        if ($apiResponse->successful()) {
+            $data = json_decode($apiResponse->body());
+            return view('procurement.invoice.add', compact('data'));
+        } else {
+            return back()->withErrors($apiResponse->json()['message']);
+        }
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        dd($request->all());
+        try {
+            $dataitems = [];
+            if ($request->has('items')) {
+                foreach ($request->input('items') as $item) {
+                    $dataitems[] = [
+                        'item_id' => $item['item_id'],
+                        'quantity' => $item['qty_reject'],
+                        'unit_price' => $item['qty_received'],
+                        'discount' => $item['note'],
+                        'total_price' => $item['qty_titip'],
+                        'warehouse_id' => $item['warehouse_id'],
+                    ];
+                }
+            }
+
+            $data = [
+                'invoice_number' => $request->invoice_number,
+                'item_receipt_id' => $request->item_receipt_id,
+                'invoice_date' => $request->invoice_date,
+                'due_date' => $request->due_date,
+                'total_amount' => $request->total_amount,
+                'tax_amount' => $request->tax_amount,
+                'status' => "received",
+                'company_id' => $request->input('company_id', 2),
+                'items' => $dataitems
+            ];
+
+            $apiResponse = storeApi(env('PENERIMAAN_BARANG_URL'), $data);
+
+            if ($apiResponse->successful()) {
+                return redirect()->route('penerimaan_barang.index')
+                    ->with('success', $apiResponse->json()['message']);
+            } else {
+                return back()->withErrors($apiResponse->json()['message']);
+            }
+        } catch (\Exception $e) {
+            return back()->withErrors($e->getMessage());
+        }
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show($id)
     {
         try {
@@ -113,8 +180,17 @@ class InvoiceController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy($id)
     {
-        //
+        try {
+            $apiResponse = deleteApi(env('INVOICE_URL') . '/' . $id);
+            if ($apiResponse->successful()) {
+                return redirect()->route('invoice.index')->with('success', $apiResponse->json()['message']);
+            } else {
+                return back()->withErrors($apiResponse->json()['message']);
+            }
+        } catch (\Exception $e) {
+            return back()->withErrors($e->getMessage());
+        }
     }
 }
