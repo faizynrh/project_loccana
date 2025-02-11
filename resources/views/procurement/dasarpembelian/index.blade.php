@@ -55,7 +55,7 @@
                         </form>
                         <div class="mt-3 d-flex justify-content-end">
                             <button class="btn btn-primary" id="btnprint">
-                                <i class="bi bi-printer"></i> Print
+                                <i class="bi bi-file-earmark-excel"></i> Export Excel
                             </button>
                         </div>
                         <div class="card-body">
@@ -109,12 +109,26 @@
                 let $btnCari = $('button[type="submit"]');
                 $btnCari.prop('disabled', true).text('Processing...');
 
-
                 $('#tabledasarpembelian').DataTable().destroy();
-                $('#tabledasarpembelian').DataTable({
+                var table = $('#tabledasarpembelian').DataTable({
                     serverSide: true,
                     processing: true,
                     deferloading: false,
+                    layout: {
+                        topStart: {
+                            buttons: [{
+                                extend: 'excel',
+                                text: '<i class="bi bi-file-earmark-excel-fill me-1"></i>Export Excel',
+                                filename: function() {
+                                    return getFormattedFilename();
+                                },
+                                title: function() {
+                                    return getFormattedFilename();
+                                },
+                                className: 'd-none',
+                            }]
+                        }
+                    },
                     ajax: {
                         url: '{{ route('dasar_pembelian.ajax') }}',
                         type: 'GET',
@@ -124,7 +138,6 @@
                             d.end_date = $('#end_date').val();
                         },
                         complete: function() {
-                            // Aktifkan kembali tombol setelah AJAX selesai
                             $btnCari.prop('disabled', false).text('Cari');
                         }
                     },
@@ -185,6 +198,9 @@
                 });
 
                 $('#btnprint').show();
+                $('#btnprint').on('click', function() {
+                    table.button(0).trigger();
+                });
             });
 
             function formatRupiah(angka) {
@@ -197,6 +213,27 @@
                     }).format(angka);
                 }
                 return angka;
+            }
+
+            function getFormattedFilename() {
+                const bulan = [
+                    "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+                    "Juli", "Agustus", "September", "Oktober", "November", "Desember"
+                ];
+
+                let startDate = new Date($('#start_date').val());
+                let endDate = new Date($('#end_date').val());
+                let principal = $('#principal option:selected').text().trim();
+
+                let startTanggal = startDate.getDate();
+                let startBulan = bulan[startDate.getMonth()];
+                let startTahun = startDate.getFullYear();
+
+                let endTanggal = endDate.getDate();
+                let endBulan = bulan[endDate.getMonth()];
+                let endTahun = endDate.getFullYear();
+
+                return `Laporan Dasar Pembelian ${principal} periode ${startTanggal} ${startBulan} ${startTahun} s/d ${endTanggal} ${endBulan} ${endTahun}`;
             }
         });
     </script>
