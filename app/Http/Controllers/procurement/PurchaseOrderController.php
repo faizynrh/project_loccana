@@ -183,11 +183,6 @@ class PurchaseOrderController extends Controller
         try {
             $itemsRequest = $request->input('items');
 
-            // Jika hanya satu item, bungkus ke dalam array
-            if (is_array($itemsRequest) && isset($itemsRequest['item_id'])) {
-                $itemsRequest = [$itemsRequest];
-            }
-
             $items = [];
             foreach ($itemsRequest as $itemData) {
                 $items[] = (object) [
@@ -216,22 +211,15 @@ class PurchaseOrderController extends Controller
 
             // dd($data);
 
-            // dd(json_encode($data, JSON_PRETTY_PRINT));
-
-            // Kirim data ke API menggunakan fungsi storeApi()
-            $apiResponse = storeApi(env('PO_URL') . '/', $data);
-
-            $responseData = $apiResponse->json();
-            dd($responseData, $apiResponse);
+            $apiResponse = storeApi(env('PO_URL'), $data);
+            // $responseData = $apiResponse->json();
 
             if ($apiResponse->successful()) {
                 return redirect()->route('purchaseorder.index')
-                    ->with('success', $responseData['message'] ?? 'Data purchase order berhasil ditambahkan.');
+                    ->with('success', $apiResponse->json()['message']);
             } else {
-                Log::error('Response API:', $responseData);
-                Log::error('Error saat menambahkan purchase order: ' . $apiResponse->body());
                 return back()->withErrors(
-                    'Gagal menambahkan data: ' . ($responseData['message'] ?? $apiResponse->body())
+                    $apiResponse->json()['message']
                 );
             }
         } catch (\Exception $e) {
