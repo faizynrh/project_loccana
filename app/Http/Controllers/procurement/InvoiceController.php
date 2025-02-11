@@ -61,9 +61,44 @@ class InvoiceController extends Controller
     {
         return view('procurement.invoice.index');
     }
+    public function getDODetails(Request $request, $id)
+    {
+        try {
+            $apiResponse = fectApi(env('PENERIMAAN_BARANG_URL') . '/' . $id);
+            $items = [];
+            if ($apiResponse->successful()) {
+                $data = json_decode($apiResponse->body());
+                $items = [];
+                foreach ($data->data as $item) {
+                    $items[] = [
+                        'item_name' => $item->item_name,
+                        'qty' => $item->jumlah_order,
+                        'diskon' => $item->qty_diskon,
+                    ];
+                }
+                return response()->json([
+                    'no_do' => $data->data[0]->code,
+                    'order_date' => $data->data[0]->order_date,
+                    'principal' => $data->data[0]->partner_name,
+                    'address' => $data->data[0]->shipment_info,
+                    'items' => $items
+                ]);
+            }
+            return response()->json(['error' => $apiResponse->json()['message']]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()]);
+        }
+    }
     public function create()
     {
-        //
+        $company_id = 2;
+        $apiResponse = fectApi(env('LIST_PENERIMAAN_BARANG') . '/' . $company_id);
+        if ($apiResponse->successful()) {
+            $data = json_decode($apiResponse->body());
+            return view('procurement.invoice.add', compact('data'));
+        } else {
+            return back()->withErrors($apiResponse->json()['message']);
+        }
     }
 
     /**
@@ -113,8 +148,17 @@ class InvoiceController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy($id)
     {
-        //
+        try {
+            $apiResponse = deleteApi(env('INVOICE_URL') . '/' . $id);
+            if ($apiResponse->successful()) {
+                return redirect()->route('invoice.index')->with('success', $apiResponse->json()['message']);
+            } else {
+                return back()->withErrors($apiResponse->json()['message']);
+            }
+        } catch (\Exception $e) {
+            return back()->withErrors($e->getMessage());
+        }
     }
 }

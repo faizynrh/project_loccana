@@ -107,7 +107,6 @@ NPWP: 01.555.161.7.428.000
                                 <tr style="border-bottom: 3px solid #000;">
                                     <th style="width: 275px">Kode</th>
                                     <th>Qty (Lt/Kg)</th>
-                                    <th>Sisa (Lt/Kg)</th>
                                     <th>Harga</th>
                                     <th>Diskon</th>
                                     <th class="text-end">Total</th>

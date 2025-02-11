@@ -31,7 +31,7 @@
                     <div class="card-header">
                         <div class="d-flex justify-content-between align-items-center">
                             <div class="d-flex align-items-center">
-                                <a href="/penerimaan_barang/add" class="btn btn-primary me-2 fw-bold">+ Invoice</a>
+                                <a href="/invoice/add" class="btn btn-primary me-2 fw-bold">+ Tambah Invoice</a>
                                 <select id="statusSelect" class="form-select me-2" name="status" style="width: auto;">
                                     <option value="semua">Semua Invoice</option>
                                     <option value="lunas">Sudah Lunas</option>
