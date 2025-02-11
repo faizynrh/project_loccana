@@ -69,9 +69,8 @@
                                         @endforeach
                                     </select>
 
-
                                     <label for="status" class="form-label fw-bold mt-2 mb-1 small">Status</label>
-                                    <select name="status" class="form-select" id="status">
+                                    <select name="status" class="form-select" id="status" required>
                                         <option value="pending">Pending</option>
                                         <option value="approved">Approved</option>
                                         <option value="rejected">Rejected</option>
@@ -86,11 +85,11 @@
                                 </div>
                                 <div class="col-md-6">
                                     <label for="ppn" class="form-label fw-bold mt-2 mb-1 small">VAT/PPN</label>
-                                    <input type="number" class="form-control" id="ppn" name="ppn">
+                                    <input type="number" class="form-control" id="ppn" name="ppn" required>
 
                                     <label for="pembayaran" class="form-label fw-bold mt-2 mb-1 small">Term
                                         Pembayaran</label>
-                                    <select id="pembayaran" class="form-select" name="term_of_payment">
+                                    <select id="pembayaran" class="form-select" name="term_of_payment" required>
                                         <option value="1" selected>Cash</option>
                                         <option value="15">15 Hari</option>
                                         <option value="30">30 Hari</option>
@@ -103,7 +102,7 @@
                                     <textarea class="form-control" rows="5" id="description" name="description"></textarea>
 
                                     <label for="gudang" class="form-label fw-bold mt-2 mb-1 small">Gudang</label>
-                                    <select class="form-select" id="gudang" name="items[0][warehouse_id]">
+                                    <select class="form-select" id="gudang" name="items[0][warehouse_id]" required>
                                         <option value="" selected disabled>Pilih Gudang</option>
                                         @foreach ($gudang as $items)
                                             <option value="{{ $items['id'] }}">{{ $items['name'] }}</option>
@@ -140,7 +139,7 @@
                                         </td>
                                         <td>
                                             <input type="number" name="items[0][quantity]"
-                                                class="form-control qty-input" value="0" min="0">
+                                                class="form-control qty-input" value="1" min="1">
                                         </td>
                                         <td>
                                             <input type="number" name="items[0][unit_price]"
