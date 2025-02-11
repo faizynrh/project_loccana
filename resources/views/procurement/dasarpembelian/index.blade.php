@@ -1,7 +1,6 @@
 @extends('layouts.app')
 @section('content')
     @push('styles')
-        <link rel="stylesheet" href="https://cdn.datatables.net/buttons/3.2.1/css/buttons.dataTables.css">
         <style>
         </style>
     @endpush
@@ -56,7 +55,7 @@
                         </form>
                         <div class="mt-3 d-flex justify-content-end">
                             <button class="btn btn-primary" id="btnprint">
-                                <i class="bi bi-printer"></i> Print
+                                <i class="bi bi-file-earmark-excel"></i> Export Excel
                             </button>
                         </div>
                         <div class="card-body">
@@ -100,13 +99,6 @@
     </div>
 @endsection
 @push('scripts')
-    <script src="https://cdn.datatables.net/buttons/3.2.1/js/dataTables.buttons.js"></script>
-    <script src="https://cdn.datatables.net/buttons/3.2.1/js/buttons.dataTables.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
-    <script src="https://cdn.datatables.net/buttons/3.2.1/js/buttons.html5.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/3.2.1/js/buttons.print.min.js"></script>
     <script>
         $(document).ready(function() {
             $('#btnprint').hide();
@@ -118,7 +110,7 @@
                 $btnCari.prop('disabled', true).text('Processing...');
 
                 $('#tabledasarpembelian').DataTable().destroy();
-                $('#tabledasarpembelian').DataTable({
+                var table = $('#tabledasarpembelian').DataTable({
                     serverSide: true,
                     processing: true,
                     deferloading: false,
@@ -132,7 +124,8 @@
                                 },
                                 title: function() {
                                     return getFormattedFilename();
-                                }
+                                },
+                                className: 'd-none',
                             }]
                         }
                     },
@@ -205,6 +198,9 @@
                 });
 
                 $('#btnprint').show();
+                $('#btnprint').on('click', function() {
+                    table.button(0).trigger();
+                });
             });
 
             function formatRupiah(angka) {

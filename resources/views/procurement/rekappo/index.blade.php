@@ -1,7 +1,6 @@
     @extends('layouts.app')
     @section('content')
         @push('styles')
-            <link rel="stylesheet" href="https://cdn.datatables.net/buttons/3.2.1/css/buttons.dataTables.css">
             <style>
             </style>
         @endpush
@@ -78,7 +77,7 @@
                             </form>
                             <div class="mt-3 d-flex justify-content-end">
                                 <button class="btn btn-primary" id="btnprint">
-                                    <i class="bi bi-printer"></i> Print
+                                    <i class="bi bi-file-earmark-excel"></i> Export Excel
                                 </button>
                             </div>
                             <div class="card-body">
@@ -124,7 +123,7 @@
                                                 <th>Titipan</th>
                                                 <th>Sisa Po</th>
                                                 <th>Sisa Box</th>
-                                                <th>Keterangan</th>
+                                                <th>Status</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -138,13 +137,6 @@
         </div>
     @endsection
     @push('scripts')
-        <script src="https://cdn.datatables.net/buttons/3.2.1/js/dataTables.buttons.js"></script>
-        <script src="https://cdn.datatables.net/buttons/3.2.1/js/buttons.dataTables.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
-        <script src="https://cdn.datatables.net/buttons/3.2.1/js/buttons.html5.min.js"></script>
-        <script src="https://cdn.datatables.net/buttons/3.2.1/js/buttons.print.min.js"></script>
         <script>
             $(document).ready(function() {
                 $('#btnprint').hide();
@@ -184,7 +176,7 @@
                                             <th>Titipan</th>
                                             <th>Sisa Po</th>
                                             <th>Sisa Box</th>
-                                            <th>Keterangan</th>
+                                            <th>Status</th>
                                         </tr>
                                     `;
 
@@ -204,8 +196,9 @@
                                     },
                                     title: function() {
                                         return getFormattedFilename();
-                                    }
-                                }, ]
+                                    },
+                                    className: 'd-none',
+                                }]
                             }
                         },
                         ajax: {
@@ -307,23 +300,31 @@
 
                     $('#tablerekappo thead').html(combinedHeaderHtml);
                     $('#tablerekappo thead th').eq(20).html(
-                        '<select class="form-select"><option value="all">All</option><option value="pending">Pending</option><option value="completed">Completed</option><option value="canceled">Canceled</option></select>'
+                        '<div>Status</div>' +
+                        '<select class="form-select">' +
+                        '<option value="all">All</option>' +
+                        '<option value="pending">Pending</option>' +
+                        '<option value="completed">Completed</option>' +
+                        '<option value="canceled">Canceled</option>' +
+                        '</select>'
                     );
 
-                    // $('#tablerekappo thead').on('change', 'select', function() {
-                    //     var table = $('#tablerekappo').DataTable();
-                    //     table.ajax.reload();
-                    // });
+                    $('#btnprint').on('click', function() {
+                        table.button(0).trigger();
+                    });
 
                     $('#tablerekappo thead').on('change', 'select', function() {
                         var status = $(this).val();
                         console.log('Status yang dipilih: ', status);
+                        $('#loading-overlay').fadeIn();
                         if (status === 'all') {
                             console.log('Menghapus filter status');
-                            table.column(18).search('').draw(); // Kolom status berada di index 18
+                            table.column(18).search('').draw();
+                            $('#loading-overlay').fadeOut();
                         } else {
                             console.log('Filter berdasarkan status: ', status);
-                            table.column(18).search(status).draw(); // Filter berdasarkan nilai status
+                            table.column(18).search(status).draw();
+                            $('#loading-overlay').fadeOut();
                         }
                     });
                 });
