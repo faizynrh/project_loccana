@@ -79,7 +79,7 @@ class InvoiceController extends Controller
                 return response()->json([
                     'no_do' => $data->data[0]->code,
                     'order_date' => $data->data[0]->order_date,
-                    'principal' => $data->data[0]->partner_name,
+                    'partner_name' => $data->data[0]->partner_name,
                     'address' => $data->data[0]->shipment_info,
                     'items' => $items
                 ]);
@@ -101,17 +101,49 @@ class InvoiceController extends Controller
         }
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        dd($request->all());
+        try {
+            $dataitems = [];
+            if ($request->has('items')) {
+                foreach ($request->input('items') as $item) {
+                    $dataitems[] = [
+                        'item_id' => $item['item_id'],
+                        'quantity' => $item['qty_reject'],
+                        'unit_price' => $item['qty_received'],
+                        'discount' => $item['note'],
+                        'total_price' => $item['qty_titip'],
+                        'warehouse_id' => $item['warehouse_id'],
+                    ];
+                }
+            }
+
+            $data = [
+                'invoice_number' => $request->invoice_number,
+                'item_receipt_id' => $request->item_receipt_id,
+                'invoice_date' => $request->invoice_date,
+                'due_date' => $request->due_date,
+                'total_amount' => $request->total_amount,
+                'tax_amount' => $request->tax_amount,
+                'status' => "received",
+                'company_id' => $request->input('company_id', 2),
+                'items' => $dataitems
+            ];
+
+            $apiResponse = storeApi(env('PENERIMAAN_BARANG_URL'), $data);
+
+            if ($apiResponse->successful()) {
+                return redirect()->route('penerimaan_barang.index')
+                    ->with('success', $apiResponse->json()['message']);
+            } else {
+                return back()->withErrors($apiResponse->json()['message']);
+            }
+        } catch (\Exception $e) {
+            return back()->withErrors($e->getMessage());
+        }
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show($id)
     {
         try {

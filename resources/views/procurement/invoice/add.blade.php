@@ -47,11 +47,11 @@
                         @endif
                         <div class="row mb-3">
                             <div class="col-md-6">
-                                <form action="{{ route('penerimaan_barang.store') }}" method="POST" id="createForm">
+                                <form action="{{ route('invoice.store') }}" method="POST" id="createForm">
                                     @csrf
                                     <label class="form-label fw-bold mt-2 mb-1 small">No.
                                         DO</label>
-                                    <select class="form-control" id="nodo" name="item_category_id">
+                                    <select class="form-control" id="nodo">
                                         <option value="" selected disabled>Pilih DO</option>
                                         @foreach ($data->data as $item)
                                             <option value="{{ $item->itemreceipt_id }}">[{{ $item->do_number }}]
@@ -61,7 +61,7 @@
                                     <label class="form-label fw-bold mt-2 mb-1 small">No. Purchase
                                         Order</label>
                                     <input type="text" class="form-control bg-body-secondary"
-                                        placeholder="No. Purchase Order" id="po_id" readonly>
+                                        placeholder="No. Purchase Order" name="po_id" id="po_id" readonly>
                                     <label class="form-label fw-bold mt-2 mb-1 small">Tanggal</label>
                                     <input type="text" class="form-control bg-body-secondary"
                                         placeholder="Tanggal Purchase Order" id="order_date" readonly>
@@ -89,18 +89,18 @@ NPWP: 01.555.161.7.428.000</textarea>
                                 <input type="text" class="form-control bg-body-secondary" value="(022) 6626-946"
                                     readonly>
                                 <label class="form-label fw-bold mt-2 mb-1 small">VAT/PPN</label>
-                                <input type="text" class="form-control bg-body-secondary" value="11" readonly>
+                                <input type="text" class="form-control bg-body-secondary" readonly>
                                 <label class="form-label fw-bold mt-2 mb-1 small">Term Pembayaran</label>
                                 <input type="text" class="form-control bg-body-secondary" placeholder="Term Pembayaran"
                                     readonly>
                                 <label class="form-label fw-bold mt-2 mb-1 small">Keterangan</label>
                                 <textarea class="form-control bg-body-secondary" id="shipFrom" rows="4" placeholder="Keterangan" readonly></textarea>
                                 <label class="form-label fw-bold mt-2 mb-1 small">No Invoice</label>
-                                <input type="text" class="form-control" placeholder="No Invoice">
+                                <input type="text" class="form-control" name="invoice_number" placeholder="No Invoice">
                                 <label class="form-label fw-bold mt-2 mb-1 small">Tanggal Invoice</label>
-                                <input type="date" class="form-control">
+                                <input type="date" class="form-control" name="invoice_date">
                                 <label class="form-label fw-bold mt-2 mb-1 small">Tanggal Jatuh Tempo</label>
-                                <input type="date" class="form-control">
+                                <input type="date" class="form-control" name="due_date">
                                 <label class="form-label fw-bold mt-2 mb-1 small">Keterangan Invoice</label>
                                 <textarea class="form-control" id="shipFrom" rows="4" placeholder="Keterangan Invoice"></textarea>
                                 <label class="form-label fw-bold mt-2 mb-1 small">Faktur Pajak</label>
@@ -117,7 +117,7 @@ NPWP: 01.555.161.7.428.000</textarea>
                                     <th>Qty (Lt/Kg)</th>
                                     <th>Harga</th>
                                     <th>Diskon</th>
-                                    <th class="text-end">Total</th>
+                                    <th style="float: right">Total</th>
                                 </tr>
                             </thead>
                             <tbody id="tableBody">
@@ -139,12 +139,12 @@ NPWP: 01.555.161.7.428.000</textarea>
                                 <tr class="fw-bold">
                                     <td colspan="4"></td>
                                     <td>VAT/PPN</td>
-                                    <td style="float: right">0</td>
+                                    <td style="float: right" name="tax_amount">0</td>
                                 </tr>
                                 <tr class="fw-bold" style="border-top: 2px solid #000">
                                     <td colspan="4"></td>
                                     <td>Total</td>
-                                    <td style="float: right">0</td>
+                                    <td style="float: right" name="total_amount">0</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -166,10 +166,58 @@ NPWP: 01.555.161.7.428.000</textarea>
         $(document).ready(function() {
             $('#submitButton').hide();
 
+            const styles = `
+        <style>
+            .table-items td {
+                padding: 8px;
+                vertical-align: middle;
+            }
+            .table-items input {
+                text-align: right;
+            }
+            .item-name input {
+                text-align: left !important;
+            }
+            .total-section {
+                font-weight: bold;
+            }
+            .total-section td {
+                padding: 8px;
+            }
+            .total-label {
+                text-align: right;
+                padding-right: 15px !important;
+            }
+            .total-value {
+                text-align: right;
+                min-width: 200px;
+                padding-right: 10px;
+            }
+            .number-column {
+                width: 150px;
+            }
+            .item-column {
+                width: 300px;
+            }
+            .discount-column {
+                width: 100px;
+            }
+        </style>
+    `;
+            $('head').append(styles);
+
+            function formatRupiah(number) {
+                return new Intl.NumberFormat('id-ID', {
+                    style: 'currency',
+                    currency: 'IDR',
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                }).format(number);
+            }
+
             $('#nodo').on('change', function() {
                 const id = $(this).val();
-                const url = '{{ route('invoice.getdetails', ':id') }}'.replace(':id',
-                    id);
+                const url = '{{ route('invoice.getdetails', ':id') }}'.replace(':id', id);
 
                 if (id) {
                     $('#loading-overlay').fadeIn();
@@ -194,62 +242,76 @@ NPWP: 01.555.161.7.428.000</textarea>
                             $('#gudang').val(response.warehouse_id);
 
                             const tableBody = $('#tableBody');
+                            tableBody.empty();
                             if (response.items && response.items.length > 0) {
                                 tableBody.show();
                                 $('#submitButton').show();
 
                                 response.items.forEach(function(item) {
-                                    const qty_balance = item.qty_balance;
-
                                     const row = `
-                                                <tr style="border-bottom: 2px solid #000;">
-                                                    <td><input type="text" class="form-control bg-body-secondary item_name" value="${item.item_name}" readonly></td>
-                                                    <td><input type="number" class="form-control bg-body-secondary qty" value="${item.qty}" readonly></td>
-                                                    <td><input type="number" class="form-control harga"></td>
-                                                    <td><input type="number" class="form-control diskon" value="${item.diskon}"></td>
-                                                    <td><input type="number" class="form-control bg-body-secondary total readonly"></td>
-                                                </tr>
+                                                    <tr class="table-items" style="border-bottom: 1px solid #000;">
+                                                        <td class="item-column item-name">
+                                                            <input type="text" class="form-control bg-body-secondary item_name"
+                                                                value="${item.item_name}" readonly>
+                                                        </td>
+                                                        <td class="number-column">
+                                                            <input type="text" class="form-control bg-body-secondary qty text-end"
+                                                                value="${item.qty}" name="quantity" readonly>
+                                                        </td>
+                                                        <td class="number-column">
+                                                            <input type="number" class="form-control harga text-end"
+                                                                min="1" name="unit_price[]">
+                                                        </td>
+                                                        <td class="discount-column">
+                                                            <input type="number" class="form-control diskon text-end"
+                                                                value="${item.diskon}" min="0" max="100" name="discount">
+                                                        </td>
+                                                        <td class="number-column">
+                                                            <input type="text" class="form-control bg-body-secondary total text-end"
+                                                                readonly name="total_price">
+                                                        </td>
+                                                    </tr>
                                                 `;
                                     tableBody.prepend(row);
-
-                                    tableBody.find('.qty_received').last().on('input',
-                                        function() {
-                                            const qty_received = $(this).val();
-
-                                            if (parseFloat(qty_received) >
-                                                parseFloat(qty_balance)) {
-                                                Swal.fire('Peringatan',
-                                                    'Input tidak boleh melebihi jumlah Sisa!',
-                                                    'warning');
-                                                $(this).val("");
-                                                $(this).closest('tr').find(
-                                                    '.qty_balance').val(item
-                                                    .qty_balance);
-                                                return;
-                                            }
-                                            const new_balance_qty = parseFloat(
-                                                qty_balance) - parseFloat(
-                                                qty_received);
-
-                                            if (qty_received === 0 ||
-                                                qty_received === null ||
-                                                qty_received === '') {
-                                                $(this).closest('tr').find(
-                                                    '.qty_balance').val(item
-                                                    .qty_balance);
-                                            } else {
-                                                $(this).closest('tr').find(
-                                                    '.qty_balance').val(
-                                                    new_balance_qty);
-                                            }
-                                        });
                                 });
+
+                                const footerRow = `
+                                                    <tr class="total-section">
+                                                        <td colspan="3"></td>
+                                                        <td class="total-label">Sub Total</td>
+                                                        <td class="total-value subtotal">Rp 0,00</td>
+                                                    </tr>
+                                                    <tr class="total-section">
+                                                        <td colspan="3"></td>
+                                                        <td class="total-label">Diskon</td>
+                                                        <td class="total-value total-diskon">Rp 0,00</td>
+                                                    </tr>
+                                                    <tr class="total-section">
+                                                        <td colspan="3"></td>
+                                                        <td class="total-label">Taxable</td>
+                                                        <td class="total-value taxable">Rp 0,00</td>
+                                                    </tr>
+                                                    <tr class="total-section">
+                                                        <td colspan="3"></td>
+                                                        <td class="total-label">VAT/PPN</td>
+                                                        <td class="total-value vat">Rp 0,00</td>
+                                                    </tr>
+                                                    <tr class="total-section" style="border-top: 2px solid #000">
+                                                        <td colspan="3"></td>
+                                                        <td class="total-label">Total</td>
+                                                        <td class="total-value grand-total">Rp 0,00</td>
+                                                    </tr>
+                                                `;
+                                tableBody.append(footerRow);
+
+                                tableBody.on('input', '.harga, .diskon', function() {
+                                    updateRowCalculations($(this).closest('tr'));
+                                    updateTotalCalculations();
+                                });
+
+                                updateTotalCalculations();
                             } else {
-                                tableBody.parent('table').hide();
-                                $('#rejectButton').hide();
                                 $('#submitButton').hide();
-                                Swal.fire('Peringatan', 'Tidak ada item untuk PO ini',
-                                    'warning');
                             }
                         },
                         error: function(xhr, status, error) {
@@ -257,7 +319,6 @@ NPWP: 01.555.161.7.428.000</textarea>
                             $('#tableBody').hide();
                             $('#rejectButton').hide();
                             $('#submitButton').hide();
-
                             $('#gudang').prop('disabled', true);
                         },
                         complete: function() {
@@ -265,90 +326,59 @@ NPWP: 01.555.161.7.428.000</textarea>
                         }
                     });
                 } else {
-                    $('#gudang').prop('disabled', true);
-                    $('#tableBody').hide();
-                    $('#rejectButton').hide();
                     $('#submitButton').hide();
-
                 }
             });
 
-            $('#submitButton').on('click', function(event) {
-                event.preventDefault();
-                let isValid = true;
-                const formvalid = $('#createForm')[0];
+            function updateRowCalculations(row) {
+                const qty = parseFloat(row.find('.qty').val().replace(/[^0-9.-]+/g, '')) || 0;
+                let harga = parseFloat(row.find('.harga').val()) || 0;
+                let diskonPercent = parseFloat(row.find('.diskon').val()) || 0;
 
-                if (!formvalid.checkValidity()) {
-                    formvalid.reportValidity();
-                    return;
-                }
-                $('#tableBody tr').each(function() {
-                    const qty_received = $(this).find('#qty_received').val();
-                    const qty_reject = $(this).find('#qty_reject').val();
-                    const qty_bonus = $(this).find('#qty_bonus').val();
-                    const qty_titip = $(this).find('#qty_titip').val();
-                    const discount = $(this).find('#discount').val();
-
-                    if (qty_received === "" || isNaN(qty_received) || qty_received < 1) {
-                        isValid = false;
-                    }
-
-                    if (qty_reject === "" || isNaN(qty_reject) || qty_reject < 0) {
-                        isValid = false;
-                        $(this).find('#qty_reject').addClass('is-invalid');
-                    }
-
-                    if (qty_bonus === "" || isNaN(qty_bonus) || qty_bonus < 0) {
-                        isValid = false;
-                        $(this).find('#qty_bonus').addClass('is-invalid');
-                    }
-
-                    if (qty_titip === "" || isNaN(qty_titip) || qty_titip < 0) {
-                        isValid = false;
-                        $(this).find('#qty_titip').addClass('is-invalid');
-                    }
-
-                    if (discount === "" || isNaN(discount) || discount < 0) {
-                        isValid = false;
-                        $(this).find('#discount').addClass('is-invalid');
-                    }
-                });
-
-                if (!isValid) {
-                    Swal.fire('Peringatan', 'Pastikan semua input telah diisi dengan benar!', 'warning');
-                    return;
+                if (diskonPercent > 100 || diskonPercent < 0) {
+                    diskonPercent = 0;
+                    row.find('.diskon').val(0);
                 }
 
-                const items = [];
-                $('#tableBody tr').each(function() {
-                    items.push({
-                        item_id: $(this).find('#item_id').val(),
-                        warehouse_id: $(this).find('#warehouse_id').val(),
-                        qty_reject: $(this).find('#qty_reject').val(),
-                        qty_received: $(this).find('#qty_received').val(),
-                        qty_bonus: $(this).find('#qty_bonus').val(),
-                        qty_titip: $(this).find('#qty_titip').val(),
-                        discount: $(this).find('#discount').val(),
-                        note: $(this).find('input[placeholder="Note"]').val()
-                    });
+                if (harga < 0) {
+                    harga = 0;
+                    row.find('.harga').val(0);
+                }
+
+                const subtotal = qty * harga;
+                const diskonAmount = subtotal * (diskonPercent / 100);
+                const total = subtotal - diskonAmount;
+
+                row.find('.total').val(formatRupiah(total));
+            }
+
+            function updateTotalCalculations() {
+                let subtotal = 0;
+                let totalDiskon = 0;
+
+                $('#tableBody tr.table-items').each(function() {
+                    const qty = parseFloat($(this).find('.qty').val().replace(/[^0-9.-]+/g, '')) || 0;
+                    const harga = parseFloat($(this).find('.harga').val()) || 0;
+                    const diskonPercent = parseFloat($(this).find('.diskon').val()) || 0;
+
+                    const rowSubtotal = qty * harga;
+                    const rowDiskon = rowSubtotal * (diskonPercent / 100);
+
+                    subtotal += rowSubtotal;
+                    totalDiskon += rowDiskon;
                 });
 
-                const form = $('#createForm');
-                items.forEach(function(item, index) {
-                    form.append(`
-                            <input type="hidden" name="items[${index}][item_id]" value="${item.item_id}">
-                            <input type="hidden" name="items[${index}][warehouse_id]" value="${item.warehouse_id}">
-                            <input type="hidden" name="items[${index}][qty_reject]" value="${item.qty_reject}">
-                            <input type="hidden" name="items[${index}][qty_received]" value="${item.qty_received}">
-                            <input type="hidden" name="items[${index}][qty_bonus]" value="${item.qty_bonus}">
-                            <input type="hidden" name="items[${index}][qty_titip]" value="${item.qty_titip}">
-                            <input type="hidden" name="items[${index}][discount]" value="${item.discount}">
-                            <input type="hidden" name="items[${index}][note]" value="${item.note}">
-                            `);
-                });
+                const taxable = subtotal - totalDiskon;
+                const vatRate = parseFloat($('input[value="11"]').val()) || 11;
+                const vat = taxable * (vatRate / 100);
+                const grandTotal = taxable + vat;
 
-                form.submit();
-            });
+                $('.subtotal').text(formatRupiah(subtotal));
+                $('.total-diskon').text(formatRupiah(totalDiskon));
+                $('.taxable').text(formatRupiah(taxable));
+                $('.vat').text(formatRupiah(vat));
+                $('.grand-total').text(formatRupiah(grandTotal));
+            }
         });
     </script>
 @endpush

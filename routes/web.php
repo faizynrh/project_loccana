@@ -199,6 +199,8 @@ Route::middleware('auth.login')->group(
             Route::get('/ajax', [InvoiceController::class, 'ajax'])->name('ajax');
             Route::get('/detaildo/{id}', [InvoiceController::class, 'getDODetails'])->name('getdetails');
             Route::get('/add', [InvoiceController::class, 'create'])->name('create');
+            Route::post('/add', [InvoiceController::class, 'store'])->name('store');
+
             Route::get('/detail/{id}', [InvoiceController::class, 'show'])->name('detail');
             Route::delete('/delete/{id}', [InvoiceController::class, 'destroy'])->name('destroy');
         });
