@@ -103,11 +103,11 @@
                                 <thead>
                                     <tr>
                                         <th scope="col">No</th>
-                                        <th scope="col">No PO</th>
+                                        <th scope="col">Code PO</th>
                                         <th scope="col">Nama Principal</th>
                                         <th scope="col">Tanggal PO</th>
                                         <th scope="col">Total</th>
-                                        <th scope="col">Jatuh Tempo</th>
+                                        <th scope="col">Term Of Payment</th>
                                         <th scope="col">Status</th>
                                         <th scope="col">Action</th>
                                     </tr>
@@ -178,16 +178,7 @@
                         //     defaultContent: ''
                     },
                     {
-                        data: 'order_date',
-                        render: function(data) {
-                            if (data) {
-                                var date = new Date(data);
-                                return date.getFullYear() + '-' + (date.getMonth() + 1).toString()
-                                    .padStart(2, '0') + '-' + date.getDate().toString().padStart(2,
-                                        '0');
-                            }
-                            return data;
-                        }
+                        data: 'term_of_payment',
                     },
                     {
                         data: 'po_code'
