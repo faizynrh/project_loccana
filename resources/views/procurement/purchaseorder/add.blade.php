@@ -57,7 +57,7 @@
                                 <div class="col-md-6">
                                     <label for="code" class="form-label fw-bold mt-2 mb-1 small">Kode</label>
                                     <input type="text" class="form-control bg-body-secondary" id="code"
-                                        name="code" placeholder="Kode">
+                                        name="code" placeholder="Kode" value="{{ $poCode }}" readonly>
                                     <label for="tanggal" class="form-label fw-bold mt-2 mb-1 small">Tanggal</label>
                                     <input type="date" class="form-control" id="order_date" name="order_date" required>
 
@@ -215,6 +215,24 @@
 @endsection
 @push('scripts')
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Jika form disubmit, kode akan disimpan otomatis di session
+            // dan kode baru akan di-generate saat membuka form baru
+
+            // Opsional: Jika Anda ingin refresh kode secara manual
+            const refreshButton = document.getElementById('refresh-po-code');
+            if (refreshButton) {
+                refreshButton.addEventListener('click', function() {
+                    fetch('/generate-po-code')
+                        .then(response => response.text())
+                        .then(code => {
+                            document.getElementById('code').value = code;
+                        })
+                        .catch(error => console.error('Error:', error));
+                });
+            }
+        });
+
         $(document).ready(function() {
             // Handle partner selection change
             $('#partner_id').on('change', function() {
