@@ -23,15 +23,12 @@ class PurchaseOrderController extends Controller
         try {
             $currentYear = Carbon::now()->format('Y');
 
-            // Ambil last code dari session
             $lastCode = Session::get('last_po_code');
 
             if ($lastCode && strpos($lastCode, 'PO' . $currentYear) === 0) {
-                // Jika ada kode sebelumnya, ambil 4 digit terakhir
                 $lastNumber = intval(substr($lastCode, -4));
                 $newNumber = str_pad($lastNumber + 1, 4, '0', STR_PAD_LEFT);
             } else {
-                // Jika tidak ada kode sebelumnya, mulai dari 0001
                 $newNumber = '0001';
             }
 
@@ -199,12 +196,13 @@ class PurchaseOrderController extends Controller
     /**
      * Display the specified resource.
      */
+
     public function show(string $id)
     {
         //
+
         try {
             $apiResponse = fectApi(env('PO_URL'). '/' . $id);
-
             if ($apiResponse->successful()) {
                 $data = $apiResponse->json()['data'];
                 // dd($data);

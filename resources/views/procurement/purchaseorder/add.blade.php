@@ -57,7 +57,7 @@
                                 <div class="col-md-6">
                                     <label for="code" class="form-label fw-bold mt-2 mb-1 small">Kode</label>
                                     <input type="text" class="form-control bg-body-secondary" id="code"
-                                        name="code" placeholder="Kode" value="{{ $poCode }}" readonly>
+                                        name="code" placeholder="Kode" value="{{ $poCode }}">
                                     <label for="tanggal" class="form-label fw-bold mt-2 mb-1 small">Tanggal</label>
                                     <input type="date" class="form-control" id="order_date" name="order_date" required>
 
@@ -215,10 +215,6 @@
 @push('scripts')
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Jika form disubmit, kode akan disimpan otomatis di session
-            // dan kode baru akan di-generate saat membuka form baru
-
-            // Opsional: Jika Anda ingin refresh kode secara manual
             const refreshButton = document.getElementById('refresh-po-code');
             if (refreshButton) {
                 refreshButton.addEventListener('click', function() {
@@ -233,13 +229,11 @@
         });
 
         $(document).ready(function() {
-            // Handle partner selection change
             $('#partner_id').on('change', function() {
                 var poId = $(this).val();
                 console.log('Selected poId:', poId);
 
                 if (poId) {
-                    // Get items list after partner selection
                     var companyId = 2;
                     $.ajax({
                         url: '/purchase_order/getItemsList/' + companyId,
@@ -260,7 +254,6 @@
                 }
             });
 
-            // Function to update all item selects with the current items
             function updateAllItemSelects(items) {
                 var options = '<option value="" disabled selected>--Pilih Item--</option>';
                 if (items && items.length > 0) {
@@ -272,14 +265,11 @@
                     options = '<option value="" disabled selected>Tidak ada item tersedia</option>';
                 }
 
-                // Store the current items in a data attribute on the table for future use
                 $('#tableBody').data('current-items', items);
 
-                // Update all existing selects
                 $('.item-select').html(options);
             }
 
-            // Create new row function
             function createNewRow(rowCount) {
                 const currentItems = $('#tableBody').data('current-items');
                 let itemOptions = '<option value="" disabled selected>--Pilih Item--</option>';
@@ -321,13 +311,11 @@
         `;
             }
 
-            // Event handler for item selection
             $(document).on('change', '.item-select', function() {
                 const selectedUOM = $(this).find(':selected').data('uom');
                 $(this).siblings('.uom-input').val(selectedUOM);
             });
 
-            // Add new row handler
             $('#add-row').on('click', function(e) {
                 e.preventDefault();
                 const rowCount = $('.item-row').length;
@@ -336,7 +324,6 @@
                 updateTotals();
             });
 
-            // Remove row handler
             $(document).on('click', '.remove-row', function() {
                 if ($('.item-row').length > 1) {
                     $(this).closest('tr').remove();
@@ -344,20 +331,17 @@
                 }
             });
 
-            // Input change handler
             $(document).on('input', '.qty-input, .price-input, .discount-input', function() {
                 var row = $(this).closest('tr');
                 calculateRowTotal(row);
                 updateTotals();
             });
 
-            // Calculate row total
             function calculateRowTotal(row) {
                 const qty = parseFloat(row.find('.qty-input').val()) || 0;
                 const price = parseFloat(row.find('.price-input').val()) || 0;
                 let discount = parseFloat(row.find('.discount-input').val()) || 0;
 
-                // Validate inputs
                 if (discount > 100) {
                     discount = 100;
                     row.find('.discount-input').val(100);
@@ -370,12 +354,10 @@
                 row.find('.total-input').val(total.toFixed(2));
             }
 
-            // Update all totals
             function updateTotals() {
                 let subtotal = 0;
                 let totalDiscount = 0;
 
-                // Calculate totals from all rows
                 $('.item-row').each(function() {
                     const qty = parseFloat($(this).find('.qty-input').val()) || 0;
                     const price = parseFloat($(this).find('.price-input').val()) || 0;
@@ -393,19 +375,16 @@
                 const ppnAmount = taxableAmount * (ppnRate / 100);
                 const finalTotal = taxableAmount + ppnAmount;
 
-                // Update display values in the table footer
                 updateDisplayValue('Sub Total', subtotal);
                 updateDisplayValue('Diskon', totalDiscount);
                 updateDisplayValue('Taxable', taxableAmount);
                 updateDisplayValue('VAT/PPN', ppnAmount);
                 updateDisplayValue('Total', finalTotal);
 
-                // Update hidden inputs for API submission
                 $('#tax_amount').val(ppnAmount);
                 $('#total_amount').val(finalTotal);
             }
 
-            // Helper function to update display values in the table footer
             function updateDisplayValue(label, value) {
                 $('tr.fw-bold').each(function() {
                     if ($(this).find('td:eq(1)').text().trim() === label) {
@@ -414,7 +393,6 @@
                 });
             }
 
-            // Format number helper
             function formatNumber(num) {
                 return parseFloat(num).toLocaleString('id-ID', {
                     minimumFractionDigits: 0,
@@ -422,7 +400,6 @@
                 });
             }
 
-            // Initialize calculations
             updateTotals();
         });
     </script>
