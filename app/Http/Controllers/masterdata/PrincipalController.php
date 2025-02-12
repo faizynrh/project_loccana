@@ -127,7 +127,6 @@ class PrincipalController extends Controller
             $coaResponse = fectApi(env('LIST_COA') . '/' . $companyid);
 
             if ($partnerResponse->successful() && $coaResponse->successful() && $apiResponse->successful()) {
-                // Set second parameter to false to get object instead of array
                 $partner = json_decode($partnerResponse->getBody()->getContents(), false);
                 $data = json_decode($apiResponse->getBody()->getContents(), false);
                 $coa = json_decode($coaResponse->getBody()->getContents(), false);

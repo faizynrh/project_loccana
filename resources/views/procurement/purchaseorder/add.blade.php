@@ -61,7 +61,7 @@
                                     <label for="tanggal" class="form-label fw-bold mt-2 mb-1 small">Tanggal</label>
                                     <input type="date" class="form-control" id="order_date" name="order_date" required>
 
-                                    <label for="principal" class="form-label fw-bold mt-2 mb-1 small">Partner</label>
+                                    <label for="principal" class="form-label fw-bold mt-2 mb-1 small">Principle</label>
                                     <select class="form-select" id="partner_id" name="partner_id" required>
                                         <option value="" selected disabled>Pilih Partner</option>
                                         @foreach ($partner as $item)
