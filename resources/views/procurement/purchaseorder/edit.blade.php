@@ -7,6 +7,7 @@
             }
         </style>
     @endpush
+
     <div id="main-content">
         <div class="page-heading">
             <div class="page-title">
@@ -51,6 +52,7 @@
                                     aria-label="Close"></button>
                             </div>
                         @endif
+
                         <form id="createForm" method="POST" action="{{ route('purchaseorder.store') }}">
                             @csrf
                             <div class="row mb-3">
@@ -58,6 +60,7 @@
                                     <label for="code" class="form-label fw-bold mt-2 mb-1 small">Kode</label>
                                     <input type="text" class="form-control bg-body-secondary" id="code"
                                         name="code" placeholder="Kode" value="{{ $data->data[0]->number_po }}" readonly>
+
                                     <label for="tanggal" class="form-label fw-bold mt-2 mb-1 small">Tanggal</label>
                                     <input type="date" class="form-control" id="order_date"
                                         value="{{ \Carbon\Carbon::parse($data->data[0]->order_date)->format('Y-m-d') }}"
@@ -73,13 +76,6 @@
                                             </option>
                                         @endforeach
                                     </select>
-
-                                    <label for="status" class="form-label fw-bold mt-2 mb-1 small">Status</label>
-                                    <select name="status" class="form-select" id="status" required>
-                                        <option value="pending">Pending</option>
-                                        <option value="approved">Approved</option>
-                                        <option value="rejected">Rejected</option>
-                                    </select>
                                     <input type="hidden" class="form-control" id="requested_by" name="requested_by"
                                         value="1">
                                     <input type="hidden" class="form-control" id="currency_id" name="currency_id"
@@ -89,44 +85,49 @@
                                     <label for="ppn" class="form-label fw-bold mt-2 mb-1 small">VAT/PPN</label>
                                     <input type="text" class="form-control" id="ppn" name="ppn"
                                         value="{{ $data->data[0]->ppn }}" required>
-
                                     <label for="pembayaran" class="form-label fw-bold mt-2 mb-1 small">Term
                                         Pembayaran</label>
+                                    @php
+                                        $terms = [
+                                            1 => 'Cash',
+                                            15 => '15 Hari',
+                                            30 => '30 Hari',
+                                            45 => '45 Hari',
+                                            60 => '60 Hari',
+                                            90 => '90 Hari',
+                                        ];
+                                        $selectedTerm = $data->data[0]->term_of_payment ?? null;
+                                    @endphp
+
                                     <select id="pembayaran" class="form-select" name="term_of_payment" required>
-                                        <option value="1" {{ $data->data[0]->term_of_payment == 1 ? 'selected' : '' }}>
-                                            Cash
-                                        </option>
-                                        <option value="15"
-                                            {{ $data->data[0]->term_of_payment == 15 ? 'selected' : '' }}>15 Hari
-                                        </option>
-                                        <option value="30"
-                                            {{ $data->data[0]->term_of_payment == 30 ? 'selected' : '' }}>30 Hari
-                                        </option>
-                                        <option value="45"
-                                            {{ $data->data[0]->term_of_payment == 45 ? 'selected' : '' }}>45 Hari
-                                        </option>
-                                        <option value="60"
-                                            {{ $data->data[0]->term_of_payment == 60 ? 'selected' : '' }}>60 Hari
-                                        </option>
-                                        <option value="90"
-                                            {{ $data->data[0]->term_of_payment == 90 ? 'selected' : '' }}>90 Hari
-                                        </option>
+                                        @foreach ($terms as $value => $label)
+                                            <option value="{{ $value }}"
+                                                {{ $selectedTerm == $value ? 'selected' : '' }}>{{ $label }}
+                                            </option>
+                                        @endforeach
                                     </select>
+
+
                                     <label for="description" class="form-label fw-bold mt-2 mb-1 small">Keterangan</label>
                                     <textarea class="form-control" rows="5" id="description" name="description">{{ $data->data[0]->description ?? '' }}</textarea>
+
                                     <label for="gudang" class="form-label fw-bold mt-2 mb-1 small">Gudang</label>
                                     <select class="form-select" id="gudang" name="items[0][warehouse_id]" required>
                                         <option value="" selected disabled>Pilih Gudang</option>
-                                        @foreach ($gudang->data as $items)
-                                            <option value="{{ $data->data[0]->warehouse_id == $items->id }}">
-                                                {{ $items->name }}</option>
+                                        @foreach ($gudang->data as $item)
+                                            <option value="{{ $item->id }}"
+                                                {{ $data->data[0]->warehouse_id == $item->id ? 'selected' : '' }}>
+                                                {{ $item->name }}
+                                            </option>
                                         @endforeach
                                     </select>
                                 </div>
                             </div>
+
                             <div class="p-2">
-                                <h5 class="fw-bold ">Items</h5>
+                                <h5 class="fw-bold">Items</h5>
                             </div>
+
                             <table class="table mt-3" id="transaction-table">
                                 <thead>
                                     <tr style="border-bottom: 3px solid #000;">
@@ -141,81 +142,92 @@
                                     </tr>
                                 </thead>
                                 <tbody id="tableBody">
-                                    <tr style="border-bottom: 2px solid #000" class="item-row">
-                                    <tr style="border-bottom: 2px solid #000" class="item-row">
-                                        <td colspan="2">
-                                            <select class="form-select item-select" name="items[0][item_id]">
-                                                <option value="" disabled selected>Silahkan pilih principle terlebih
-                                                    dahulu</option>
-                                            </select>
-                                            <input type="hidden" name="items[0][uom_id]" class="uom-input">
+                                    @foreach ($data->data as $index => $item)
+                                        <tr style="border-bottom: 2px solid #000" class="item-row">
+                                            <td colspan="2">
+                                                <select class="form-select" id="partner_id"
+                                                    name="items[{{ $index }}][item_id]" required>
+                                                    <option value="" selected disabled>Pilih Item</option>
+                                                    @foreach ($items->data->items ?? [] as $option)
+                                                        <option value="{{ $option->id }}"
+                                                            {{ $item->item_id == $option->id ? 'selected' : '' }}>
+                                                            {{ $option->name }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                                <input type="hidden" name="items[{{ $index }}][uom_id]"
+                                                    class="uom-input">
+                                            </td>
+                                            <td>
+                                                <input type="number" name="items[{{ $index }}][quantity]"
+                                                    class="form-control qty-input" value="{{ $item->qty ?? 1 }}"
+                                                    min="1">
+                                            </td>
+                                            <td>
+                                                <input type="number" name="items[{{ $index }}][unit_price]"
+                                                    class="form-control price-input" value="{{ $item->unit_price ?? 0 }}"
+                                                    min="0">
+                                            </td>
+                                            <td>
+                                                <input type="number" name="items[{{ $index }}][discount]"
+                                                    class="form-control discount-input"
+                                                    value="{{ $item->discount ?? 0 }}" min="0" max="100">
+                                            </td>
+                                            <td colspan="2">
+                                                <input type="number" class="form-control bg-body-secondary total-input"
+                                                    value="{{ $item->total_price ?? 0 }}" readonly>
+                                            </td>
+                                            <td></td>
+                                        </tr>
+                                    @endforeach
 
-                                        </td>
-                                        <td>
-                                            <input type="number" name="items[0][quantity]"
-                                                class="form-control qty-input" value="1" min="1">
-                                        </td>
-                                        <td>
-                                            <input type="number" name="items[0][unit_price]"
-                                                class="form-control price-input" value="0" min="0">
-                                        </td>
-                                        <td>
-                                            <input type="number" name="items[0][discount]"
-                                                class="form-control discount-input" value="0" min="0"
-                                                max="100">
-                                        </td>
-                                        <td colspan="2">
-                                            <input type="number" name=""
-                                                class="form-control bg-body-secondary total-input" value="0"
-                                                readonly>
-                                        </td>
-                                        <td></td>
-                                    </tr>
                                     <tr style="border-bottom: 2px solid #000;">
                                         <td colspan="6"></td>
                                         <td class="text-center">
                                             <button class="btn btn-primary fw-bold" id="add-row">+</button>
                                         </td>
                                     </tr>
+
                                 </tbody>
-                                <tr class="fw-bold">
-                                    <td colspan="4"></td>
-                                    <td>Sub Total</td>
-                                    <td style="float: right;">0</td>
-                                    <td></td>
-                                </tr>
-                                <tr class="fw-bold">
-                                    <td colspan="4"></td>
-                                    <td>Diskon</td>
-                                    <td style="float: right;">0</td>
-                                    <td></td>
-                                </tr class="fw-bold">
-                                <tr class="fw-bold">
-                                    <td colspan="4"></td>
-                                    <td>Taxable</td>
-                                    <td style="float: right">0</td>
-                                    <td></td>
-                                </tr class="fw-bold">
-                                <tr class="fw-bold">
-                                    <td colspan="4"></td>
-                                    <td>VAT/PPN</td>
-                                    <td style="float: right">0
-                                    </td>
-                                    <td></td>
-                                </tr>
-                                <tr class="fw-bold" style="border-top: 2px solid #000">
-                                    <td colspan="4"></td>
-                                    <td>Total</td>
-                                    <td style="float: right">0</td>
-                                </tr>
+                                <tfoot>
+                                    <tr class="fw-bold">
+                                        <td colspan="4"></td>
+                                        <td>Sub Total</td>
+                                        <td style="float: right;">0</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr class="fw-bold">
+                                        <td colspan="4"></td>
+                                        <td>Diskon</td>
+                                        <td style="float: right;">0</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr class="fw-bold">
+                                        <td colspan="4"></td>
+                                        <td>Taxable</td>
+                                        <td style="float: right">0</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr class="fw-bold">
+                                        <td colspan="4"></td>
+                                        <td>VAT/PPN</td>
+                                        <td style="float: right">0</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr class="fw-bold" style="border-top: 2px solid #000">
+                                        <td colspan="4"></td>
+                                        <td>Total</td>
+                                        <td style="float: right">0</td>
+                                    </tr>
+                                </tfoot>
                             </table>
+
                             <div class="row">
                                 <div class="col-md-12 text-end">
                                     <input type="hidden" name="tax_amount" id="tax_amount" value="0">
                                     <input type="hidden" name="company_id" id="company_id" value="2">
                                     <input type="hidden" name="total_amount" id="total_amount" value="0">
                                     <button type="submit" class="btn btn-primary" id="submitButton">Submit</button>
-                                    {{-- <button type="button" class="btn btn-danger ms-2" id="rejectButton">Reject</button> --}}
                                     <a href="/purchase_order" class="btn btn-secondary ms-2">Batal</a>
                                 </div>
                             </div>
@@ -226,122 +238,93 @@
         </div>
     </div>
 @endsection
+
 @push('scripts')
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const refreshButton = document.getElementById('refresh-po-code');
-            if (refreshButton) {
-                refreshButton.addEventListener('click', function() {
-                    fetch('/generate-po-code')
-                        .then(response => response.text())
-                        .then(code => {
-                            document.getElementById('code').value = code;
-                        })
-                        .catch(error => console.error('Error:', error));
+        // Inisialisasi data list item.
+        // Pastikan di controller kamu sudah mengirimkan data items (misal: $itemsList)
+        // Jika tidak ada, gunakan array kosong.
+        window.itemsList = window.itemsList || [];
+
+        // Set list item yang tersedia pada elemen tableBody (digunakan pada fungsi createNewRow)
+        $('#tableBody').data('current-items', window.itemsList);
+
+        // Fungsi untuk mengupdate semua select item berdasarkan data yang tersedia
+        function updateAllItemSelects(items) {
+            var options = '<option value="" disabled selected>--Pilih Item--</option>';
+            if (items && items.length > 0) {
+                items.forEach(function(item) {
+                    options +=
+                        `<option value="${item.id}" data-uom="${item.unit_of_measure_id}">${item.sku} - ${item.name}</option>`;
                 });
+            } else {
+                options = '<option value="" disabled selected>Tidak ada item tersedia</option>';
             }
-        });
+            $('.item-select').html(options);
+        }
+
+        // Fungsi untuk membuat baris baru (row) di tabel item
+        function createNewRow(rowCount) {
+            const currentItems = $('#tableBody').data('current-items');
+            let itemOptions = '<option value="" disabled selected>--Pilih Item--</option>';
+            if (currentItems && currentItems.length > 0) {
+                currentItems.forEach(function(item) {
+                    itemOptions +=
+                        `<option value="${item.id}" data-uom="${item.unit_of_measure_id}">${item.sku} - ${item.name}</option>`;
+                });
+            } else {
+                itemOptions = '<option value="" disabled selected>Silahkan pilih partner terlebih dahulu</option>';
+            }
+            return `
+                <tr style="border-bottom: 2px solid #000" class="item-row">
+                    <td colspan="2">
+                        <select class="form-select item-select" name="items[${rowCount}][item_id]">
+                            ${itemOptions}
+                        </select>
+                        <input type="hidden" name="items[${rowCount}][uom_id]" class="uom-input">
+                    </td>
+                    <td>
+                        <input type="number" class="form-control qty-input" name="items[${rowCount}][quantity]" value="0" min="0">
+                    </td>
+                    <td>
+                        <input type="number" class="form-control price-input" name="items[${rowCount}][unit_price]" value="0" min="0">
+                    </td>
+                    <td>
+                        <input type="number" class="form-control discount-input" name="items[${rowCount}][discount]" value="0" min="0" max="100">
+                    </td>
+                    <td colspan="2">
+                        <input type="number" class="form-control bg-body-secondary total-input" name="" value="0" readonly>
+                    </td>
+                    <td class="text-center">
+                        <button type="button" class="btn btn-danger btn-sm remove-row">X</button>
+                    </td>
+                </tr>
+            `;
+        }
 
         $(document).ready(function() {
-            $('#partner_id').on('change', function() {
-                var poId = $(this).val();
-                console.log('Selected poId:', poId);
-
-                if (poId) {
-                    var companyId = 2;
-                    $.ajax({
-                        url: '/purchase_order/getItemsList/' + companyId,
-                        type: 'GET',
-                        dataType: 'json',
-                        success: function(response) {
-                            console.log('Items response:', response);
-                            updateAllItemSelects(response.data); // Changed to response.data
-                        },
-                        error: function(xhr, status, error) {
-                            console.error('Items AJAX error:', error);
-                            Swal.fire('Error', 'Gagal mengambil data item', 'error');
-                            $('.item-select').html(
-                                '<option value="" disabled selected>Tidak ada item tersedia</option>'
-                            );
-                        }
-                    });
-                }
-            });
-
-            function updateAllItemSelects(items) {
-                var options = '<option value="" disabled selected>--Pilih Item--</option>';
-                if (items && items.length > 0) {
-                    items.forEach(function(item) {
-                        options +=
-                            `<option value="${item.id}" data-uom="${item.unit_of_measure_id}">${item.sku} - ${item.name}</option>`;
-                    });
-                } else {
-                    options = '<option value="" disabled selected>Tidak ada item tersedia</option>';
-                }
-
-                $('#tableBody').data('current-items', items);
-                $('.item-select').html(options);
-            }
-
-            function createNewRow(rowCount) {
-                const currentItems = $('#tableBody').data('current-items');
-                let itemOptions = '<option value="" disabled selected>--Pilih Item--</option>';
-
-                if (currentItems && currentItems.length > 0) {
-                    currentItems.forEach(function(item) {
-                        itemOptions +=
-                            `<option value="${item.id}" data-uom="${item.unit_of_measure_id}">${item.sku} - ${item.name}</option>`;
-                    });
-                } else {
-                    itemOptions =
-                        '<option value="" disabled selected>Silahkan pilih partner terlebih dahulu</option>';
-                }
-
-                return `
-            <tr style="border-bottom: 2px solid #000" class="item-row">
-                <td colspan="2">
-                    <select class="form-select item-select" name="items[${rowCount}][item_id]">
-                        ${itemOptions}
-                    </select>
-                    <input type="hidden" name="items[${rowCount}][uom_id]" class="uom-input">
-                </td>
-                <td>
-                    <input type="number" class="form-control qty-input" name="items[${rowCount}][quantity]" value="0" min="0">
-                </td>
-                <td>
-                    <input type="number" class="form-control price-input" name="items[${rowCount}][unit_price]" value="0" min="0">
-                </td>
-                <td>
-                    <input type="number" class="form-control discount-input" name="items[${rowCount}][discount]" value="0" min="0" max="100">
-                </td>
-                <td colspan="2">
-                    <input type="number" class="form-control bg-body-secondary total-input" name="" value="0" readonly>
-                </td>
-                <td class="text-center">
-                    <button type="button" class="btn btn-danger btn-sm remove-row">X</button>
-                </td>
-            </tr>
-        `;
-            }
-
-            // Initialize existing data
-            const existingData = window.initialData?.data || []; // Assuming data is passed as initialData.data
+            const existingData = window.initialData && window.initialData.data && window.initialData.data[0].items ?
+                window.initialData.data[0].items : [];
             if (existingData.length > 0) {
                 existingData.forEach((item, index) => {
                     if (index === 0) {
-                        // Update first row
+                        // Update baris pertama dengan data existing
                         const firstRow = $('.item-row').first();
                         updateRowWithData(firstRow, item);
                     } else {
-                        // Add new rows for additional items
+                        // Tambah baris baru untuk item-item berikutnya
                         const newRow = $(createNewRow(index));
                         updateRowWithData(newRow, item);
                         newRow.insertBefore('#tableBody tr:last');
                     }
                 });
                 updateTotals();
+            } else {
+                // Jika tidak ada data existing, update select item dengan data yang tersedia
+                updateAllItemSelects(window.itemsList);
             }
 
+            // Fungsi untuk mengupdate baris dengan data yang sudah ada
             function updateRowWithData(row, item) {
                 row.find('.item-select').val(item.item_id);
                 row.find('.uom-input').val(item.uom_id);
@@ -351,11 +334,13 @@
                 calculateRowTotal(row);
             }
 
+            // Update uom saat item dipilih
             $(document).on('change', '.item-select', function() {
                 const selectedUOM = $(this).find(':selected').data('uom');
                 $(this).siblings('.uom-input').val(selectedUOM);
             });
 
+            // Tambah baris baru saat tombol "+" diklik
             $('#add-row').on('click', function(e) {
                 e.preventDefault();
                 const rowCount = $('.item-row').length;
@@ -364,6 +349,7 @@
                 updateTotals();
             });
 
+            // Hapus baris (minimal 1 baris harus tetap ada)
             $(document).on('click', '.remove-row', function() {
                 if ($('.item-row').length > 1) {
                     $(this).closest('tr').remove();
@@ -371,12 +357,14 @@
                 }
             });
 
+            // Recalculate total saat input quantity, price, atau discount berubah
             $(document).on('input', '.qty-input, .price-input, .discount-input', function() {
                 var row = $(this).closest('tr');
                 calculateRowTotal(row);
                 updateTotals();
             });
 
+            // Hitung total per baris
             function calculateRowTotal(row) {
                 const qty = parseFloat(row.find('.qty-input').val()) || 0;
                 const price = parseFloat(row.find('.price-input').val()) || 0;
@@ -394,6 +382,7 @@
                 row.find('.total-input').val(total.toFixed(2));
             }
 
+            // Hitung total keseluruhan dan update tampilan
             function updateTotals() {
                 let subtotal = 0;
                 let totalDiscount = 0;

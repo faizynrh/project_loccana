@@ -78,7 +78,7 @@
                                     </select>
                                     {{-- <label for="status" class="form-label fw-bold mt-2 mb-1 small">Status</label> --}}
                                     <input type="hidden" class="form-control" id="status" name="status"
-                                        value="pending">
+                                        value="konfirmasi">
                                     <input type="hidden" class="form-control" id="requested_by" name="requested_by"
                                         value="1">
                                     <input type="hidden" class="form-control" id="currency_id" name="currency_id"
@@ -209,20 +209,6 @@
 @endsection
 @push('scripts')
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const refreshButton = document.getElementById('refresh-po-code');
-            if (refreshButton) {
-                refreshButton.addEventListener('click', function() {
-                    fetch('/generate-po-code')
-                        .then(response => response.text())
-                        .then(code => {
-                            document.getElementById('code').value = code;
-                        })
-                        .catch(error => console.error('Error:', error));
-                });
-            }
-        });
-
         $(document).ready(function() {
             $('#partner_id').on('change', function() {
                 var poId = $(this).val();
@@ -235,11 +221,9 @@
                         type: 'GET',
                         dataType: 'json',
                         success: function(response) {
-                            console.log('Items response:', response);
                             updateAllItemSelects(response.items);
                         },
                         error: function(xhr, status, error) {
-                            console.error('Items AJAX error:', error);
                             Swal.fire('Error', 'Gagal mengambil data item', 'error');
                             $('.item-select').html(
                                 '<option value="" disabled selected>Tidak ada item tersedia</option>'

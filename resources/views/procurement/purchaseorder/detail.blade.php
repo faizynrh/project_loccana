@@ -90,8 +90,8 @@
                                 </div>
                                 <div class="col-md-6">
                                     <label for="ppn" class="form-label fw-bold mt-2 mb-1 small">VAT/PPN</label>
-                                    <input type="text" class="form-control" value="" id="ppn" name="ppn"
-                                        disabled>
+                                    <input type="text" class="form-control" value="{{ $data->data[0]->ppn }}"
+                                        id="ppn" name="ppn" disabled>
 
                                     <label for="pembayaran" class="form-label fw-bold mt-2 mb-1 small">Term
                                         Pembayaran</label>
