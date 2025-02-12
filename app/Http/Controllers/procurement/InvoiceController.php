@@ -71,16 +71,23 @@ class InvoiceController extends Controller
                 $items = [];
                 foreach ($data->data as $item) {
                     $items[] = [
+                        'item_id' => $item->item_id,
                         'item_name' => $item->item_name,
                         'qty' => $item->jumlah_order,
+                        'unit_price' => $item->unit_price,
                         'diskon' => $item->qty_diskon,
+                        'total_price' => $item->total_price,
+                        'warehouse_id' => $item->warehouse_id
                     ];
                 }
                 return response()->json([
-                    'no_do' => $data->data[0]->code,
+                    'id_item_receipt' => $data->data[0]->id_item_receipt,
+                    'no_po' => $data->data[0]->code,
                     'order_date' => $data->data[0]->order_date,
                     'partner_name' => $data->data[0]->partner_name,
                     'address' => $data->data[0]->shipment_info,
+                    'ppn' => $data->data[0]->ppn,
+                    'receipt_date' => $data->data[0]->receipt_date,
                     'items' => $items
                 ]);
             }
@@ -103,36 +110,35 @@ class InvoiceController extends Controller
 
     public function store(Request $request)
     {
-        dd($request->all());
         try {
             $dataitems = [];
             if ($request->has('items')) {
                 foreach ($request->input('items') as $item) {
                     $dataitems[] = [
-                        'item_id' => $item['item_id'],
-                        'quantity' => $item['qty_reject'],
-                        'unit_price' => $item['qty_received'],
-                        'discount' => $item['note'],
-                        'total_price' => $item['qty_titip'],
-                        'warehouse_id' => $item['warehouse_id'],
+                        'item_id' => (int) $item['item_id'],
+                        'quantity' => (int) $item['quantity'],
+                        'unit_price' => (float) $item['unit_price'],
+                        'discount' => (int) $item['discount'],
+                        'total_price' => (float) $item['total_price'],
+                        'warehouse_id' => (int) $item['warehouse_id'],
                     ];
                 }
             }
 
             $data = [
                 'invoice_number' => $request->invoice_number,
-                'item_receipt_id' => $request->item_receipt_id,
+                'item_receipt_id' => (int) $request->id_item_receipt,
                 'invoice_date' => $request->invoice_date,
                 'due_date' => $request->due_date,
-                'total_amount' => $request->total_amount,
-                'tax_amount' => $request->tax_amount,
+                'total_amount' => (float) $request->total_amount,
+                'tax_amount' => (float) $request->tax_amount,
                 'status' => "received",
-                'company_id' => $request->input('company_id', 2),
+                'company_id' => (int) $request->input('company_id', 2),
                 'items' => $dataitems
             ];
 
             $apiResponse = storeApi(env('PENERIMAAN_BARANG_URL'), $data);
-
+            dd(['data' => $data, 'apiResponse' => $apiResponse->json()]);
             if ($apiResponse->successful()) {
                 return redirect()->route('penerimaan_barang.index')
                     ->with('success', $apiResponse->json()['message']);
