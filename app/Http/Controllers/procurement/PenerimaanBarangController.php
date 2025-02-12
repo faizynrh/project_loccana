@@ -112,12 +112,12 @@ class PenerimaanBarangController extends Controller
         try {
             $dataitems = [];
             if ($request->has('items')) {
-                foreach ($request->input('items') as $item) {
+                foreach ($request->items as $item) {
                     $dataitems[] = [
                         'item_id' => $item['item_id'],
                         'quantity_rejected' => $item['qty_reject'],
                         'quantity_received' => $item['qty_received'],
-                        'notes' => $item['note'],
+                        'notes' => $item['item_description'],
                         'qty_titip' => $item['qty_titip'],
                         'qty_diskon' => $item['discount'],
                         'qty_bonus' => $item['qty_bonus'],
@@ -140,7 +140,6 @@ class PenerimaanBarangController extends Controller
             ];
 
             $apiResponse = storeApi(env('PENERIMAAN_BARANG_URL'), $data);
-
             if ($apiResponse->successful()) {
                 return redirect()->route('penerimaan_barang.index')
                     ->with('success', $apiResponse->json()['message']);
