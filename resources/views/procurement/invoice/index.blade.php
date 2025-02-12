@@ -33,9 +33,9 @@
                             <div class="d-flex align-items-center">
                                 <a href="/invoice/add" class="btn btn-primary me-2 fw-bold">+ Tambah Invoice</a>
                                 <select id="statusSelect" class="form-select me-2" name="status" style="width: auto;">
-                                    <option value="semua">Semua Invoice</option>
-                                    <option value="lunas">Sudah Lunas</option>
-                                    <option value="belumlunas">Belum Lunas</option>
+                                    <option value="all">Semua Invoice</option>
+                                    <option value="paid">Sudah Lunas</option>
+                                    <option value="unpaid">Belum Lunas</option>
                                 </select>
                                 <select id="yearSelect" class="form-select me-2" name="year" style="width: auto;">
                                     @php
@@ -215,24 +215,25 @@
                             data: null,
                             render: function(data, type, row) {
                                 return `
-                                <div class="d-flex">
-                                    <a href="/invoice/detail/${row.id}" class="btn btn-sm btn-info mb-2" style="margin-right:4px;" title="Detail">
-                                        <i class="bi bi-eye"></i>
-                                    </a>
-                                    <a href="/invoice/edit/${row.id}" class="btn btn-sm btn-warning mb-2" style="margin-right:4px;" title="Edit">
-                                        <i class="bi bi-pencil"></i>
-                                    </a>
-                                    <form action="/invoice/delete/${row.id}" method="POST" id="delete${row.id}" style="display:inline;">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="button" class="btn btn-sm btn-danger mb-2" style="margin-right:4px;" title="Hapus" onclick="confirmDelete(${row.id})">
-                                            <i class="bi bi-trash"></i>
-                                        </button>
-                                    </form>
-                                </div>
-                            `;
+                                            <div class="d-flex">
+                                                <a href="/invoice/detail/${row.id}" class="btn btn-sm btn-info mb-2" style="margin-right:4px;" title="Detail">
+                                                    <i class="bi bi-eye"></i>
+                                                </a>
+                                                <a href="/invoice/edit/${row.id}" class="btn btn-sm btn-warning mb-2" style="margin-right:4px;" title="Edit" ${row.status === 'paid' ? 'disabled' : ''}>
+                                                    <i class="bi bi-pencil"></i>
+                                                </a>
+                                                <form action="/invoice/delete/${row.id}" method="POST" id="delete${row.id}" style="display:inline;">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="button" class="btn btn-sm btn-danger mb-2" style="margin-right:4px;" title="Hapus" onclick="confirmDelete(${row.id})" ${row.status === 'paid' ? 'disabled' : ''}>
+                                                        <i class="bi bi-trash"></i>
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        `;
                             }
                         }
+
                     ]
                 });
             }
