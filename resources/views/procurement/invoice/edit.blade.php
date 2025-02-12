@@ -47,10 +47,14 @@
                         @endif
                         <div class="row mb-3">
                             <div class="col-md-6">
-                                <form action="" method="POST" id="createForm">
+                                <form action="{{ route('invoice.update', $data->data[0]->id_invoice) }}" method="POST"
+                                    id="createForm">
                                     @csrf
+                                    @method('PUT')
                                     <label class="form-label fw-bold mt-2 mb-1 small">No.
                                         DO</label>
+                                    <input type="text" class="form-control bg-body-secondary" name="item_receipt_id"
+                                        id="po_id" value="{{ $data->data[0]->id_receipt }}" readonly>
                                     <input type="text" class="form-control bg-body-secondary" name="po_id"
                                         id="po_id" value="{{ $data->data[0]->do_number }}" readonly>
                                     <label class="form-label fw-bold mt-2 mb-1 small">Tanggal</label>
@@ -79,7 +83,7 @@ NPWP: 01.555.161.7.428.000</textarea>
                                 <input type="text" class="form-control bg-body-secondary" value="(022) 6626-946"
                                     readonly>
                                 <label class="form-label fw-bold mt-2 mb-1 small">VAT/PPN</label>
-                                <input type="text" class="form-control bg-body-secondary"
+                                <input type="number" class="form-control bg-body-secondary" name="ppn" id="ppn"
                                     value="{{ $data->data[0]->ppn }}" readonly>
                                 <label class="form-label fw-bold mt-2 mb-1 small">Term Pembayaran</label>
                                 <input type="text" class="form-control bg-body-secondary" placeholder="Term Pembayaran"
@@ -99,6 +103,12 @@ NPWP: 01.555.161.7.428.000</textarea>
                                 <textarea class="form-control" id="shipFrom" rows="4">{{ $data->data[0]->status }}</textarea>
                                 <label class="form-label fw-bold mt-2 mb-1 small">Faktur Pajak</label>
                                 <input type="text" class="form-control" placeholder="Faktur Pajak">
+                                <input type="hidden" name="total_discount" id="total_discount"
+                                    value="{{ $data->data[0]->discount_invoice }}">
+                                <input type="hidden" name="tax_amount" id="tax_amount"
+                                    value="{{ $data->data[0]->total_amount }}">
+                                <input type="hidden" name="total_amount" id="total_amount"
+                                    value="{{ $data->data[0]->total_amount }}">
                             </div>
                         </div>
                         <div class="p-2">
@@ -115,55 +125,68 @@ NPWP: 01.555.161.7.428.000</textarea>
                                 </tr>
                             </thead>
                             <tbody id="tableBody">
-                                @foreach ($data->data as $item)
+                                @foreach ($data->data as $index => $item)
                                     <tr style="border-bottom: 1px solid #000;">
-                                        <td>
+                                        <td><input type="hidden" class="form-control bg-body-secondary item_name"
+                                                value="{{ $item->item_id }}" name="item_id[{{ $index }}]"
+                                                readonly>
+                                            <input type="hidden" class="form-control bg-body-secondary item_name"
+                                                value="{{ $item->warehouse_id }}"
+                                                name="warehouse_id[{{ $index }}]" readonly>
                                             <input type="text" class="form-control bg-body-secondary item_name"
-                                                value="{{ $item->item_name }}" readonly>
+                                                value="{{ $item->item_name }}" name="item_name[{{ $index }}]"
+                                                readonly>
                                         </td>
                                         <td>
                                             <input type="text" class="form-control bg-body-secondary qty text-end"
-                                                value="{{ $item->qty_on_po }}" name="quantity" readonly>
+                                                value="{{ $item->qty_on_po }}" name="qty[{{ $index }}]" readonly>
                                         </td>
                                         <td>
                                             <input type="number" class="form-control harga text-end" min="1"
-                                                name="{{ $item->unit_price }}">
+                                                name="harga[{{ $index }}]" value="{{ $item->unit_price }}">
                                         </td>
                                         <td>
                                             <input type="number" class="form-control diskon text-end"
                                                 value="{{ $item->discount }}" min="0" max="100"
-                                                name="discount">
+                                                name="discount[{{ $index }}]">
                                         </td>
                                         <td>
                                             <input type="text" class="form-control bg-body-secondary total text-end"
-                                                readonly name="total_price" value="{{ $item->total_price }}">
+                                                readonly name="total_price[{{ $index }}]"
+                                                value="{{ $item->total_price }}">
                                         </td>
                                     </tr>
                                 @endforeach
                                 <tr class="fw-bold">
                                     <td colspan="3"></td>
                                     <td>Sub Total</td>
-                                    <td style="float: right">{{ $data->data[0]->total_amount }}</td>
+                                    <td style="float: right" name="sub_total">Rp.
+                                        {{ number_format($data->data[0]->total_amount, 2, ',', '.') }}</td>
                                 </tr>
                                 <tr class="fw-bold">
                                     <td colspan="3"></td>
                                     <td>Diskon</td>
-                                    <td style="float: right">{{ $data->data[0]->discount_invoice }}</td>
+                                    <td style="float: right" name="total_discount">Rp.
+                                        {{ number_format($data->data[0]->discount_invoice, 2, ',', '.') }}
+                                    </td>
                                 </tr class="fw-bold">
                                 <tr class="fw-bold">
                                     <td colspan="3"></td>
                                     <td>Taxable</td>
-                                    <td style="float: right">{{ $data->data[0]->total_amount }}</td>
+                                    <td style="float: right" name="taxable_amount">Rp.
+                                        {{ number_format($data->data[0]->total_amount, 2, ',', '.') }}
+                                    </td>
                                 </tr class="fw-bold">
                                 <tr class="fw-bold">
                                     <td colspan="3"></td>
                                     <td>VAT/PPN</td>
-                                    <td style="float: right" name="tax_amount"></td>
+                                    <td style="float: right" name="tax_amount">Rp. 0,00</td>
                                 </tr>
                                 <tr class="fw-bold" style="border-top: 2px solid #000">
                                     <td colspan="3"></td>
                                     <td>Total</td>
-                                    <td style="float: right" name="total_amount">{{ $data->data[0]->total_amount }}</td>
+                                    <td style="float: right" name="total_amount">Rp.
+                                        {{ number_format($data->data[0]->total_amount, 2, ',', '.') }}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -183,6 +206,11 @@ NPWP: 01.555.161.7.428.000</textarea>
 @push('scripts')
     <script>
         $(document).ready(function() {
+            $(document).on('input', '.qty, .harga, .diskon', function() {
+                updateRowCalculations($(this).closest('tr'));
+                updateTotalCalculations();
+            });
+
             function updateRowCalculations(row) {
                 const qty = parseFloat(row.find('.qty').val().replace(/[^0-9.-]+/g, '')) || 0;
                 let harga = parseFloat(row.find('.harga').val()) || 0;
@@ -202,15 +230,15 @@ NPWP: 01.555.161.7.428.000</textarea>
                 const diskonAmount = subtotal * (diskonPercent / 100);
                 const total = subtotal - diskonAmount;
 
-                row.find('.total').val(formatRupiah(total));
+                row.find('.total').val((total));
             }
 
             function updateTotalCalculations() {
                 let subtotal = 0;
                 let totalDiskon = 0;
 
-                $('#tableBody tr.table-items').each(function() {
-                    const qty = parseFloat($(this).find('.qty').val().replace(/[^0-9.-]+/g, '')) || 0;
+                $('#tableBody tr').each(function() {
+                    const qty = parseFloat($(this).find('.qty').val()) || 0;
                     const harga = parseFloat($(this).find('.harga').val()) || 0;
                     const diskonPercent = parseFloat($(this).find('.diskon').val()) || 0;
 
@@ -222,16 +250,32 @@ NPWP: 01.555.161.7.428.000</textarea>
                 });
 
                 const taxable = subtotal - totalDiskon;
-                const vatRate = parseFloat($('input[value="11"]').val()) || 11;
+                let vatRate = parseFloat($('#ppn').val());
+
+                if (isNaN(vatRate) || vatRate < 0) {
+                    vatRate = 0;
+                }
+
                 const vat = taxable * (vatRate / 100);
                 const grandTotal = taxable + vat;
 
-                $('.subtotal').text(formatRupiah(subtotal));
-                $('.total-diskon').text(formatRupiah(totalDiskon));
-                $('.taxable').text(formatRupiah(taxable));
-                $('.vat').text(formatRupiah(vat));
-                $('.grand-total').text(formatRupiah(grandTotal));
+                $('[name="sub_total"]').text(formatRupiah(subtotal));
+                $('[name="total_discount"]').text(formatRupiah(totalDiskon));
+                $('[name="taxable_amount"]').text(formatRupiah(taxable));
+                $('[name="tax_amount"]').text(formatRupiah(vat));
+                $('[name="total_amount"]').text(formatRupiah(grandTotal));
+
+                $('#total_discount').val(totalDiskon);
+                $('#tax_amount').val(taxable);
+                $('#total_amount').val(grandTotal);
             }
-        })
+
+            function formatRupiah(angka) {
+                return new Intl.NumberFormat('id-ID', {
+                    style: 'currency',
+                    currency: 'IDR'
+                }).format(angka);
+            }
+        });
     </script>
 @endpush

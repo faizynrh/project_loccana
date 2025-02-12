@@ -15,6 +15,7 @@ use App\Http\Controllers\procurement\DasarPembelianController;
 use App\Http\Controllers\procurement\InvoiceController;
 use App\Http\Controllers\procurement\PenerimaanBarangController;
 use App\Http\Controllers\procurement\RekapPOController;
+use App\Http\Controllers\procurement\ReturnController;
 
 /*
 |--------------------------------------------------------------------------
@@ -53,7 +54,7 @@ Route::middleware('auth.login')->group(
 
 
         // ==========================================MASTERDATA========================================
-    
+
         // ITEM
         Route::prefix('/item')->name('item.')->group(function () {
             Route::get('/', [ItemController::class, 'index'])->name('index');
@@ -153,7 +154,7 @@ Route::middleware('auth.login')->group(
         });
 
         // ===================================== PROCUREMENT =========================================
-    
+
         // PENERIMAAN BARANG
         Route::prefix('/penerimaan_barang')->name('penerimaan_barang.')->group(function () {
             Route::get('/', [PenerimaanBarangController::class, 'index'])->name('index');
@@ -202,8 +203,14 @@ Route::middleware('auth.login')->group(
             Route::get('/add', [InvoiceController::class, 'create'])->name('create');
             Route::post('/add', [InvoiceController::class, 'store'])->name('store');
             Route::get('/edit/{id}', [InvoiceController::class, 'edit'])->name('edit');
+            Route::put('/update/{id}', [InvoiceController::class, 'update'])->name('update');
             Route::get('/detail/{id}', [InvoiceController::class, 'show'])->name('detail');
             Route::delete('/delete/{id}', [InvoiceController::class, 'destroy'])->name('destroy');
+        });
+
+        Route::prefix('/return')->name('return.')->group(function () {
+            Route::get('/', [ReturnController::class, 'index'])->name('index');
+            Route::get('/ajax', [ReturnController::class, 'ajax'])->name('ajax');
         });
     }
 );

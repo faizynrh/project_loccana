@@ -56,7 +56,7 @@
                     </ul>
                 </li>
                 <li
-                    class="sidebar-item has-sub {{ Request::is('penerimaan_barang*') || Request::is('purchase_order*') || Request::is('dasar_pembelian*') || Request::is('rekap_po*') || Request::is('invoice*') ? 'active' : '' }}">
+                    class="sidebar-item has-sub {{ Request::is('penerimaan_barang*') || Request::is('purchase_order*') || Request::is('dasar_pembelian*') || Request::is('rekap_po*') || Request::is('invoice*') || Request::is('return*') ? 'active' : '' }}">
                     <a href="#" class="sidebar-link">
                         <i class="bi bi-truck"></i>
                         <span>Procurement</span>
@@ -77,8 +77,8 @@
                         <li class="submenu-item {{ Request::is('rekap_*') ? 'active' : '' }}">
                             <a href="/rekap_po" class="submenu-link">Rekap PO</a>
                         </li>
-                        <li class="submenu-item">
-                            <a href="#" class="submenu-link">Retur</a>
+                        <li class="submenu-item {{ Request::is('return*') ? 'active' : '' }}">
+                            <a href="/return" class="submenu-link">Retur</a>
                         </li>
                         <li class="submenu-item">
                             <a href="#" class="submenu-link">Report</a>

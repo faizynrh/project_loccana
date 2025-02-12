@@ -10,7 +10,7 @@
             <div class="page-title">
                 <div class="row">
                     <div class="col-12 col-md-6 order-md-1 order-last">
-                        <h3>Invoice Management</h3>
+                        <h3>Return Management</h3>
                     </div>
                     <div class="col-12 col-md-6 order-md-2 order-first">
                         <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
@@ -19,7 +19,7 @@
                                     <a href="/dashboard">Dashboard</a>
                                 </li>
                                 <li class="breadcrumb-item active" aria-current="page">
-                                    Invoice Management
+                                    Return Management
                                 </li>
                             </ol>
                         </nav>
@@ -31,9 +31,9 @@
                     <div class="card-header">
                         <div class="d-flex justify-content-between align-items-center">
                             <div class="d-flex align-items-center">
-                                <a href="/invoice/add" class="btn btn-primary me-2 fw-bold">+ Tambah Invoice</a>
+                                <a href="/invoice/add" class="btn btn-primary me-2 fw-bold">+ Tambah Return</a>
                                 <select id="statusSelect" class="form-select me-2" name="status" style="width: auto;">
-                                    <option value="all">Semua Invoice</option>
+                                    <option value="all">Semua Return</option>
                                     <option value="paid">Sudah Lunas</option>
                                     <option value="unpaid">Belum Lunas</option>
                                 </select>
@@ -85,16 +85,13 @@
                             </div>
                         @endif
                         <div class="table-responsive">
-                            <table class="table table-striped table-bordered mt-3" id="tableinvoice">
+                            <table class="table table-striped table-bordered mt-3" id="tablereturn">
                                 <thead>
                                     <tr>
-                                        <th>No</th>
-                                        <th>No Invoice</th>
+                                        <th>Invoice</th>
                                         <th>Nama Principal</th>
-                                        <th>Tanggal Invoice</th>
-                                        <th>Total</th>
-                                        <th>Sisa</th>
-                                        <th>Jatuh Tempo</th>
+                                        <th>Tanggal</th>
+                                        <th>Pengaju</th>
                                         <th>Status</th>
                                         <th>Action</th>
                                     </tr>
@@ -114,39 +111,22 @@
             var lastYear = $('#yearSelect').val();
 
             function initializeTable() {
-                $('#tableinvoice').DataTable({
+                $('#tablereturn').DataTable({
                     serverSide: true,
                     processing: true,
                     ajax: {
-                        url: '{{ route('invoice.ajax') }}',
+                        url: '{{ route('return.ajax') }}',
                         type: 'GET',
                         data: function(d) {
-                            d.status = status;
                             d.month = lastMonth;
                             d.year = lastYear;
                         },
-                        dataSrc: function(response) {
-                            if (response.mtd !== undefined) {
-                                const formattedNumber = new Intl.NumberFormat('id-ID', {
-                                    minimumFractionDigits: 2,
-                                    maximumFractionDigits: 2
-                                }).format(response.mtd);
-                                $('#totalPerBulan').html('Rp ' + formattedNumber);
-                            }
-                            return response.data;
-                        }
                     },
                     columns: [{
-                            data: null,
-                            render: function(data, type, row, meta) {
-                                return meta.row + meta.settings._iDisplayStart + 1;
-                            }
-                        },
-                        {
                             data: 'invoice_number'
                         },
                         {
-                            data: 'name'
+                            data: 'partner_name'
                         },
                         {
                             data: 'invoice_date',
@@ -165,48 +145,7 @@
                             },
                         },
                         {
-                            data: 'total_amount',
-                            render: function(data) {
-                                if (data) {
-                                    return new Intl.NumberFormat('id-ID', {
-                                        style: 'currency',
-                                        currency: 'IDR',
-                                        minimumFractionDigits: 2,
-                                        maximumFractionDigits: 2
-                                    }).format(data);
-                                }
-                                return data;
-                            }
-                        },
-                        {
-                            data: 'sisa',
-                            render: function(data) {
-                                if (data) {
-                                    return new Intl.NumberFormat('id-ID', {
-                                        style: 'currency',
-                                        currency: 'IDR',
-                                        minimumFractionDigits: 2,
-                                        maximumFractionDigits: 2
-                                    }).format(data);
-                                }
-                                return data;
-                            }
-                        },
-                        {
-                            data: 'due_date',
-                            render: function(data) {
-                                if (data) {
-                                    var date = new Date(data);
-                                    return (
-                                        date.getDate().toString().padStart(2, '0') +
-                                        '-' +
-                                        (date.getMonth() + 1).toString().padStart(2, '0') +
-                                        '-' +
-                                        date.getFullYear()
-                                    );
-                                }
-                                return data;
-                            },
+                            data: 'partner_name'
                         },
                         {
                             data: 'status'
@@ -219,13 +158,13 @@
                                                 <a href="/invoice/detail/${row.id}" class="btn btn-sm btn-info mb-2" style="margin-right:4px;" title="Detail">
                                                     <i class="bi bi-eye"></i>
                                                 </a>
-                                                <a href="/invoice/edit/${row.id}" class="btn btn-sm btn-warning mb-2" style="margin-right:4px;" title="Edit" ${row.status === 'paid' ? 'disabled' : ''}>
+                                                <a href="/invoice/edit/${row.id}" class="btn btn-sm btn-warning mb-2" style="margin-right:4px;" title="Edit"}>
                                                     <i class="bi bi-pencil"></i>
                                                 </a>
                                                 <form action="/invoice/delete/${row.id}" method="POST" id="delete${row.id}" style="display:inline;">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="button" class="btn btn-sm btn-danger mb-2" style="margin-right:4px;" title="Hapus" onclick="confirmDelete(${row.id})" ${row.status === 'paid' ? 'disabled' : ''}>
+                                                    <button type="button" class="btn btn-sm btn-danger mb-2" style="margin-right:4px;" title="Hapus" onclick="confirmDelete(${row.id})"}>
                                                         <i class="bi bi-trash"></i>
                                                     </button>
                                                 </form>
@@ -233,28 +172,17 @@
                                         `;
                             }
                         }
-
                     ]
                 });
             }
             initializeTable();
-            var lastStatus = $('#statusSelect').val();
-
-            $('#statusSelect').change(function() {
-                var status = $(this).val();
-                if (status !== lastStatus) {
-                    lastStatus = status;
-                    $('#tableinvoice').DataTable().ajax.reload(null,
-                        false);
-                }
-            });
 
             var lastbulan = $('#monthSelect').val();
             $('#monthSelect').change(function() {
                 var month = $('#monthSelect').val();
                 if (month !== lastbulan) {
                     lastbulan = month;
-                    $('#tableinvoice').DataTable().ajax.reload();
+                    $('#tablereturn').DataTable().ajax.reload();
                 }
             });
             var lasttahun = $('#yearSelect').val();
@@ -263,7 +191,7 @@
                 var year = $('#yearSelect').val();
                 if (year !== lasttahun) {
                     lasttahun = year;
-                    $('#tableinvoice').DataTable().ajax.reload();
+                    $('#tablereturn').DataTable().ajax.reload();
                 }
             });
         });
