@@ -164,14 +164,13 @@ class InvoiceController extends Controller
             return back()->withErrors($e->getMessage());
         }
     }
-    public function edit(string $id)
+    public function edit($id)
     {
         try {
             $apiResponse = fectApi(env('INVOICE_URL') . '/' . $id);
 
             if ($apiResponse->successful()) {
                 $data = json_decode($apiResponse->body());
-                // dd($data);
                 return view('procurement.invoice.edit', compact('data'));
             } else {
                 return back()->withErrors($apiResponse->json()['message']);
@@ -181,17 +180,44 @@ class InvoiceController extends Controller
         }
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
-        //
+        try {
+            $items = [];
+            if ($request->has('item_id')) {
+                foreach ($request->input('item_id') as $index => $itemId) {
+                    $items[] = [
+                        'item_id' => $itemId,
+                        'quantity' => $request->input('qty')[$index],
+                        'unit_price' => $request->input('harga')[$index],
+                        'discount' => $request->input('discount')[$index],
+                        'total_price' => $request->input('total_price')[$index],
+                        'warehouse_id' => $request->input('warehouse_id')[$index],
+                    ];
+                }
+            }
+            $data = [
+                'invoice_number' => $request->invoice_number,
+                'item_receipt_id' => $request->item_receipt_id,
+                'invoice_date' => $request->invoice_date,
+                'due_date' => $request->due_date,
+                'total_amount' => $request->total_amount,
+                'tax_amount' => $request->tax_amount,
+                'status' => "paid",
+                'company_id' => 2,
+                'items' => $items,
+            ];
+            $apiResponse = updateApi(env('INVOICE_URL') . '/' . $id, $data);
+            if ($apiResponse->successful()) {
+                return redirect()->route('invoice.index')->with('success', $apiResponse->json()['message']);
+            } else {
+                return back()->withErrors($apiResponse->json()['message']);
+            }
+        } catch (\Exception $e) {
+            return back()->withErrors($e->getMessage());
+        }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy($id)
     {
         try {
