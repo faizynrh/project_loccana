@@ -110,7 +110,6 @@
 @push('scripts')
     <script>
         $(document).ready(function() {
-            var SelectStatus = $('#statusSelect').val();
             var lastMonth = $('#monthSelect').val();
             var lastYear = $('#yearSelect').val();
 
@@ -238,24 +237,31 @@
                 });
             }
             initializeTable();
+            var lastStatus = $('#statusSelect').val();
+
             $('#statusSelect').change(function() {
-                var status = $('#statusSelect').val();
-                if (status !== SelectStatus) {
+                var status = $(this).val();
+                if (status !== lastStatus) {
                     lastStatus = status;
-                    $('#tableinvoice').DataTable().ajax.reload();
+                    $('#tableinvoice').DataTable().ajax.reload(null,
+                        false);
                 }
             });
+
+            var lastbulan = $('#monthSelect').val();
             $('#monthSelect').change(function() {
                 var month = $('#monthSelect').val();
-                if (month !== lastMonth) {
-                    lastMonth = month;
+                if (month !== lastbulan) {
+                    lastbulan = month;
                     $('#tableinvoice').DataTable().ajax.reload();
                 }
             });
+            var lasttahun = $('#yearSelect').val();
+
             $('#yearSelect').change(function() {
                 var year = $('#yearSelect').val();
-                if (year !== lastYear) {
-                    lastYear = year;
+                if (year !== lasttahun) {
+                    lasttahun = year;
                     $('#tableinvoice').DataTable().ajax.reload();
                 }
             });
