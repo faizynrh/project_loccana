@@ -11,9 +11,6 @@
                 <div class="row">
                     <div class="col-12 col-md-6 order-md-1 order-last">
                         <h3>Purchase Order Management</h3>
-                        {{-- <p class="text-subtitle text-muted">
-                            Easily manage and adjust product prices.
-                        </p> --}}
                     </div>
                     <div class="col-12 col-md-6 order-md-2 order-first">
                         <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
@@ -153,7 +150,7 @@
                         }
                     },
                     {
-                        data: 'code'
+                        data: 'po_code',
                         // data: null,
                         // defaultContent: ''
                     },
@@ -181,7 +178,19 @@
                         data: 'term_of_payment',
                     },
                     {
-                        data: 'po_code'
+                        data: 'status',
+                        render: function(data, type, row) {
+                            let statusClass = '';
+                            if (data.toLowerCase() === 'pending') {
+                                statusClass = 'badge bg-warning';
+                            } else if (data.toLowerCase() === 'rejected') {
+                                statusClass = 'badge bg-danger';
+                            } else if (data.toLowerCase() === 'approved') {
+                                statusClass = 'badge bg-success';
+                            }
+                            return `<span class="${statusClass}">${data}</span>`;
+                        }
+
                     },
                     // {
                     //     data: 'name'
@@ -190,32 +199,33 @@
                     {
                         data: null,
                         render: function(data, type, row) {
-                            return `
-                            <div class="d-flex">
-                        <a href="/purchase_order/detail/${row.id}" class="btn btn-sm btn-info mb-2" style="margin-right:4px;" title="Detail">
-                            <i class="bi bi-eye"></i>
-                        </a>
-                        <a href="/purchase_order/edit/${row.id}" class="btn btn-sm btn-warning mb-2" style="margin-right:4px;" title="Edit">
-                            <i class="bi bi-pencil"></i>
-                        </a>
-                        <form action="/purchase_order/delete/${row.id}" method="POST" id="delete${row.id}" style="display:inline;">
-                            @csrf
-                            @method('DELETE')
-                            <button type="button" class="btn btn-sm btn-danger mb-2" style="margin-right:4px;" title="Hapus" onclick="confirmDelete(${row.id})">
-                                <i class="bi bi-trash"></i>
-                            </button>
-                        </form>
-                        <form id="approve${row.id}"
-                                action="/price/approve/${row.id}" method="POST">
-                                @csrf
-                                @method('PUT')
-                                <button type="submit" class="btn btn-sm btn-success me-2" title="Approve"
-                                    onclick="confirmApprove(${row.id})">
-                                    <i class="bi bi-check"></i>
-                                </button>
-                            </form>
-                        </div>
-                    `;
+                            // Tombol detail selalu tampil
+                            let actionButtons = `
+            <a href="/purchase_order/detail/${row.id}" class="btn btn-sm btn-info mb-2" style="margin-right:4px;" title="Detail">
+                <i class="bi bi-eye"></i>
+            </a>
+        `;
+
+                            // Jika status masih pending, tampilkan tombol edit, hapus, dan approve
+                            if (row.status.toLowerCase() === 'pending') {
+                                actionButtons += `
+                <a href="/purchase_order/edit/${row.id}" class="btn btn-sm btn-warning mb-2" style="margin-right:4px;" title="Edit">
+                    <i class="bi bi-pencil"></i>
+                </a>
+                <form action="/purchase_order/delete/${row.id}" method="POST" id="delete${row.id}" style="display:inline;">
+                    @csrf
+                    @method('DELETE')
+                    <button type="button" class="btn btn-sm btn-danger mb-2" style="margin-right:4px;" title="Hapus" onclick="confirmDelete(${row.id})">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                </form>
+                <a href="/purchase_order/approve/${row.id}" class="btn btn-sm btn-secondary mb-2" style="margin-right:4px;" title="Approve">
+                    <i class="bi bi-check"></i>
+                </a>
+            `;
+                            }
+
+                            return `<div class="d-flex">${actionButtons}</div>`;
                         }
                     }
                 ]

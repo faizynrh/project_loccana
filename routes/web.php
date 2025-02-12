@@ -168,7 +168,6 @@ Route::middleware('auth.login')->group(
         });
 
         // PURCHASE ORDER
-    
         Route::prefix('/purchase_order')->name('purchaseorder.')->group(function () {
             Route::get('/', [PurchaseOrderController::class, 'index'])->name('index');
             Route::get('/generate-po-code', [PurchaseOrderController::class, 'generatePOCode']);
@@ -181,8 +180,10 @@ Route::middleware('auth.login')->group(
             Route::get('/edit/{id}', [PurchaseOrderController::class, 'edit'])->name('edit');
             Route::put('/update/{id}', [PurchaseOrderController::class, 'update'])->name('update');
             Route::get('/getItemsList/{id}', [PurchaseOrderController::class, 'getItemsList'])->name('getitem');
-            Route::get('/generate-code', [PurchaseOrderController::class, 'generateCode'])->name('generate.code');
+            Route::get('/approve/{id}', [PurchaseOrderController::class, 'vapprove'])->name('vapprove');
+            Route::put('/approve/{id}', [PurchaseOrderController::class, 'approve'])->name('approve');
         });
+
 
         Route::prefix('/dasar_pembelian')->name('dasar_pembelian.')->group(function () {
             Route::get('/', [DasarPembelianController::class, 'index'])->name('index');

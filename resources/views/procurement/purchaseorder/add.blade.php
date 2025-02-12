@@ -69,17 +69,18 @@
                                         @endforeach
                                     </select>
 
-                                    <label for="status" class="form-label fw-bold mt-2 mb-1 small">Status</label>
-                                    <select name="status" class="form-select" id="status" required>
-                                        <option value="pending">Pending</option>
-                                        <option value="approved">Approved</option>
-                                        <option value="rejected">Rejected</option>
+                                    <label for="gudang" class="form-label fw-bold mt-2 mb-1 small">Gudang</label>
+                                    <select class="form-select" id="gudang" name="items[0][warehouse_id]" required>
+                                        <option value="" selected disabled>Pilih Gudang</option>
+                                        @foreach ($gudang as $items)
+                                            <option value="{{ $items['id'] }}">{{ $items['name'] }}</option>
+                                        @endforeach
                                     </select>
-                                    {{-- <label for="requested_by" class="form-label fw-bold mt-2 mb-1 small">Requested
-                                        By</label> --}}
+                                    {{-- <label for="status" class="form-label fw-bold mt-2 mb-1 small">Status</label> --}}
+                                    <input type="hidden" class="form-control" id="status" name="status"
+                                        value="pending">
                                     <input type="hidden" class="form-control" id="requested_by" name="requested_by"
                                         value="1">
-                                    {{-- <label for="currency_id" class="form-label fw-bold mt-2 mb-1 small">Currency</label> --}}
                                     <input type="hidden" class="form-control" id="currency_id" name="currency_id"
                                         value="1">
                                 </div>
@@ -101,13 +102,7 @@
                                     <label for="description" class="form-label fw-bold mt-2 mb-1 small">Keterangan</label>
                                     <textarea class="form-control" rows="5" id="description" name="description"></textarea>
 
-                                    <label for="gudang" class="form-label fw-bold mt-2 mb-1 small">Gudang</label>
-                                    <select class="form-select" id="gudang" name="items[0][warehouse_id]" required>
-                                        <option value="" selected disabled>Pilih Gudang</option>
-                                        @foreach ($gudang as $items)
-                                            <option value="{{ $items['id'] }}">{{ $items['name'] }}</option>
-                                        @endforeach
-                                    </select>
+
                                 </div>
                             </div>
                             <div class="p-2">
