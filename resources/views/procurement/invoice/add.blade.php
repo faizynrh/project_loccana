@@ -60,7 +60,7 @@
                                     </select>
                                     <label class="form-label fw-bold mt-2 mb-1 small">No. Purchase
                                         Order</label>
-                                    <input type="text" class="form-control bg-body-secondary" name="id_item_receipt"
+                                    <input type="hidden" class="form-control bg-body-secondary" name="id_item_receipt"
                                         id="id_item_receipt" readonly>
                                     <input type="text" class="form-control bg-body-secondary"
                                         placeholder="No. Purchase Order" name="po_id" id="po_id" readonly>

@@ -115,32 +115,31 @@ class InvoiceController extends Controller
             if ($request->has('items')) {
                 foreach ($request->input('items') as $item) {
                     $dataitems[] = [
-                        'item_id' => (int) $item['item_id'],
-                        'quantity' => (int) $item['quantity'],
-                        'unit_price' => (float) $item['unit_price'],
-                        'discount' => (int) $item['discount'],
-                        'total_price' => (float) $item['total_price'],
-                        'warehouse_id' => (int) $item['warehouse_id'],
+                        'item_id' => $item['item_id'],
+                        'quantity' => $item['quantity'],
+                        'unit_price' => $item['unit_price'],
+                        'discount' => $item['discount'],
+                        'total_price' => $item['total_price'],
+                        'warehouse_id' => $item['warehouse_id'],
                     ];
                 }
             }
 
             $data = [
                 'invoice_number' => $request->invoice_number,
-                'item_receipt_id' => (int) $request->id_item_receipt,
+                'item_receipt_id' => $request->id_item_receipt,
                 'invoice_date' => $request->invoice_date,
                 'due_date' => $request->due_date,
-                'total_amount' => (float) $request->total_amount,
-                'tax_amount' => (float) $request->tax_amount,
+                'total_amount' => $request->total_amount,
+                'tax_amount' => $request->tax_amount,
                 'status' => "received",
-                'company_id' => (int) $request->input('company_id', 2),
+                'company_id' => $request->input('company_id', 0),
                 'items' => $dataitems
             ];
 
-            $apiResponse = storeApi(env('PENERIMAAN_BARANG_URL'), $data);
-            dd(['data' => $data, 'apiResponse' => $apiResponse->json()]);
+            $apiResponse = storeApi(env('INVOICE_URL'), $data);
             if ($apiResponse->successful()) {
-                return redirect()->route('penerimaan_barang.index')
+                return redirect()->route('invoice.index')
                     ->with('success', $apiResponse->json()['message']);
             } else {
                 return back()->withErrors($apiResponse->json()['message']);
@@ -157,7 +156,6 @@ class InvoiceController extends Controller
 
             if ($apiResponse->successful()) {
                 $data = json_decode($apiResponse->body());
-                // dd($data);
                 return view('procurement.invoice.detail', compact('data'));
             } else {
                 return back()->withErrors($apiResponse->json()['message']);
