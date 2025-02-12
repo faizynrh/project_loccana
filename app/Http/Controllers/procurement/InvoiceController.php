@@ -160,13 +160,21 @@ class InvoiceController extends Controller
             return back()->withErrors($e->getMessage());
         }
     }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(string $id)
     {
-        //
+        try {
+            $apiResponse = fectApi(env('INVOICE_URL') . '/' . $id);
+
+            if ($apiResponse->successful()) {
+                $data = json_decode($apiResponse->body());
+                // dd($data);
+                return view('procurement.invoice.edit', compact('data'));
+            } else {
+                return back()->withErrors($apiResponse->json()['message']);
+            }
+        } catch (\Exception $e) {
+            return back()->withErrors($e->getMessage());
+        }
     }
 
     /**
