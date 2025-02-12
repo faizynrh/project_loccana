@@ -88,8 +88,7 @@
                             data: 'symbol'
                         },
                         {
-                            data: null,
-                            defaultContent: ''
+                            data: 'description'
                         },
                         {
                             data: null,

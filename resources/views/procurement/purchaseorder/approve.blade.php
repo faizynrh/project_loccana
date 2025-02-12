@@ -12,7 +12,7 @@
             <div class="page-title">
                 <div class="row">
                     <div class="col-12 col-md-6 order-md-1 order-last">
-                        <h3>Edit Purchase Order</h3>
+                        <h3>Detail Purchase Order</h3>
                     </div>
                     <div class="col-12 col-md-6 order-md-2 order-first">
                         <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
@@ -21,7 +21,7 @@
                                     <a href="/dashboard">Dashboard</a>
                                 </li>
                                 <li class="breadcrumb-item active" aria-current="page">
-                                    Edit Purchase Order
+                                    Detail Purchase Order
                                 </li>
                             </ol>
                         </nav>
@@ -31,7 +31,7 @@
             <section class="section">
                 <div class="card">
                     <div class="card-header">
-                        <h4 class="card-title">Form detail edit purchase order</h4>
+                        <h4 class="card-title"> Form detail purchase order</h4>
                     </div>
                     <div class="card-body">
                         @if (session('success'))
@@ -59,27 +59,30 @@
                                     <input type="text" class="form-control bg-body-secondary" id="code"
                                         name="code" placeholder="Kode" value="{{ $data->data[0]->number_po }}" readonly>
                                     <label for="tanggal" class="form-label fw-bold mt-2 mb-1 small">Tanggal</label>
-                                    <input type="date" class="form-control" id="order_date"
+                                    <input type="text" class="form-control"
                                         value="{{ \Carbon\Carbon::parse($data->data[0]->order_date)->format('Y-m-d') }}"
-                                        name="order_date" required>
+                                        readonly" id="order_date" name="order_date" disabled>
 
                                     <label for="principal" class="form-label fw-bold mt-2 mb-1 small">Principle</label>
-                                    <select class="form-select" id="partner_id" name="partner_id" required>
-                                        <option value="" selected disabled>Pilih Partner</option>
-                                        @foreach ($partner->data as $item)
-                                            <option value="{{ $item->id }}"
-                                                {{ $data->data[0]->partner_id == $item->id ? 'selected' : '' }}>
-                                                {{ $item->name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
+                                    {{-- <select class="form-control" id="partner_id" name="partner_id" disabled>
+                                        @if (isset($partner->data))
+                                            @foreach ($partner->data as $item)
+                                                <option value="{{ $item->id }}">
+                                                    {{ isset($data->data->id) && $data->data->id == $item->partner_id ? 'selected' : '' }}{{ $item->partner_name }}
+                                                </option>
+                                            @endforeach
+                                        @else
+                                            <option value="">Data tidak tersedia</option>
+                                        @endif
 
-                                    <label for="status" class="form-label fw-bold mt-2 mb-1 small">Status</label>
-                                    <select name="status" class="form-select" id="status" required>
-                                        <option value="pending">Pending</option>
-                                        <option value="approved">Approved</option>
-                                        <option value="rejected">Rejected</option>
-                                    </select>
+                                    </select> --}}
+
+                                    <input type="text" class="form-control" value="{{ $data->data[0]->partner_name }}"
+                                        id="status" name="status" disabled>
+
+                                    {{-- <label for="status" class="form-label fw-bold mt-2 mb-1 small">Status</label> --}}
+                                    <input type="hidden" class="form-control" value="" id="status" name="status"
+                                        disabled>
                                     <input type="hidden" class="form-control" id="requested_by" name="requested_by"
                                         value="1">
                                     <input type="hidden" class="form-control" id="currency_id" name="currency_id"
@@ -87,41 +90,21 @@
                                 </div>
                                 <div class="col-md-6">
                                     <label for="ppn" class="form-label fw-bold mt-2 mb-1 small">VAT/PPN</label>
-                                    <input type="text" class="form-control" id="ppn" name="ppn"
-                                        value="{{ $data->data[0]->ppn }}" required>
+                                    <input type="text" class="form-control" value="" id="ppn" name="ppn"
+                                        disabled>
 
                                     <label for="pembayaran" class="form-label fw-bold mt-2 mb-1 small">Term
                                         Pembayaran</label>
-                                    <select id="pembayaran" class="form-select" name="term_of_payment" required>
-                                        <option value="1" {{ $data->data[0]->term_of_payment == 1 ? 'selected' : '' }}>
-                                            Cash
-                                        </option>
-                                        <option value="15"
-                                            {{ $data->data[0]->term_of_payment == 15 ? 'selected' : '' }}>15 Hari
-                                        </option>
-                                        <option value="30"
-                                            {{ $data->data[0]->term_of_payment == 30 ? 'selected' : '' }}>30 Hari
-                                        </option>
-                                        <option value="45"
-                                            {{ $data->data[0]->term_of_payment == 45 ? 'selected' : '' }}>45 Hari
-                                        </option>
-                                        <option value="60"
-                                            {{ $data->data[0]->term_of_payment == 60 ? 'selected' : '' }}>60 Hari
-                                        </option>
-                                        <option value="90"
-                                            {{ $data->data[0]->term_of_payment == 90 ? 'selected' : '' }}>90 Hari
-                                        </option>
-                                    </select>
+                                    <input type="text" class="form-control" value="{{ $data->data[0]->term_of_payment }}"
+                                        id="ppn" name="ppn" disabled>
+
                                     <label for="description" class="form-label fw-bold mt-2 mb-1 small">Keterangan</label>
-                                    <textarea class="form-control" rows="5" id="description" name="description">{{ $data->data[0]->description ?? '' }}</textarea>
-                                    <label for="gudang" class="form-label fw-bold mt-2 mb-1 small">Gudang</label>
-                                    <select class="form-select" id="gudang" name="items[0][warehouse_id]" required>
-                                        <option value="" selected disabled>Pilih Gudang</option>
-                                        @foreach ($gudang->data as $items)
-                                            <option value="{{ $data->data[0]->warehouse_id == $items->id }}">
-                                                {{ $items->name }}</option>
-                                        @endforeach
-                                    </select>
+                                    <textarea class="form-control" rows="5" id="description" name="description" disabled>{{ $data->data[0]->description ?? '' }}</textarea>
+
+                                    {{-- <label for="gudang" class="form-label fw-bold mt-2 mb-1 small">Gudang</label> --}}
+                                    <input type="hidden" class="form-control" id="gudang" name="items[0][warehouse_id]"
+                                        disabled>
+                                    </input>
                                 </div>
                             </div>
                             <div class="p-2">
@@ -141,42 +124,36 @@
                                     </tr>
                                 </thead>
                                 <tbody id="tableBody">
-                                    <tr style="border-bottom: 2px solid #000" class="item-row">
-                                    <tr style="border-bottom: 2px solid #000" class="item-row">
-                                        <td colspan="2">
-                                            <select class="form-select item-select" name="items[0][item_id]">
-                                                <option value="" disabled selected>Silahkan pilih principle terlebih
-                                                    dahulu</option>
-                                            </select>
-                                            <input type="hidden" name="items[0][uom_id]" class="uom-input">
-
-                                        </td>
-                                        <td>
-                                            <input type="number" name="items[0][quantity]"
-                                                class="form-control qty-input" value="1" min="1">
-                                        </td>
-                                        <td>
-                                            <input type="number" name="items[0][unit_price]"
-                                                class="form-control price-input" value="0" min="0">
-                                        </td>
-                                        <td>
-                                            <input type="number" name="items[0][discount]"
-                                                class="form-control discount-input" value="0" min="0"
-                                                max="100">
-                                        </td>
-                                        <td colspan="2">
-                                            <input type="number" name=""
-                                                class="form-control bg-body-secondary total-input" value="0"
-                                                readonly>
-                                        </td>
-                                        <td></td>
-                                    </tr>
-                                    <tr style="border-bottom: 2px solid #000;">
+                                    @foreach ($data->data as $item)
+                                        <tr style="border-bottom: 2px solid #000" class="item-row">
+                                            <td colspan="2">
+                                                <input type="text" value="{{ $item->item_code }}" disabled
+                                                    class="form-control"> <input type="hidden" name="items[0][uom_id]"
+                                                    class="uom-input">
+                                            </td>
+                                            <td>
+                                                <input type="number" name="items[0][quantity]"
+                                                    class="form-control qty-input" value="{{ $item->qty }}" disabled>
+                                            </td>
+                                            <td>
+                                                <input type="number" name="items[0][unit_price]"
+                                                    class="form-control price-input" value="{{ $item->unit_price }}"
+                                                    min="0" disabled>
+                                            </td>
+                                            <td>
+                                                <input type="number" name="items[0][discount]"
+                                                    class="form-control discount-input" value="{{ $item->discount }}"
+                                                    min="0" max="100" disabled>
+                                            </td>
+                                            <td colspan="2">
+                                                <input type="number" name=""
+                                                    class="form-control bg-body-secondary total-input"
+                                                    value="{{ $item->total_price }}" readonly>
+                                            </td>
+                                            <td></td>
+                                        </tr>
                                         <td colspan="6"></td>
-                                        <td class="text-center">
-                                            <button class="btn btn-primary fw-bold" id="add-row">+</button>
-                                        </td>
-                                    </tr>
+                                    @endforeach
                                 </tbody>
                                 <tr class="fw-bold">
                                     <td colspan="4"></td>
@@ -199,8 +176,7 @@
                                 <tr class="fw-bold">
                                     <td colspan="4"></td>
                                     <td>VAT/PPN</td>
-                                    <td style="float: right">0
-                                    </td>
+                                    <td style="float: right">0</td>
                                     <td></td>
                                 </tr>
                                 <tr class="fw-bold" style="border-top: 2px solid #000">
@@ -214,9 +190,13 @@
                                     <input type="hidden" name="tax_amount" id="tax_amount" value="0">
                                     <input type="hidden" name="company_id" id="company_id" value="2">
                                     <input type="hidden" name="total_amount" id="total_amount" value="0">
-                                    <button type="submit" class="btn btn-primary" id="submitButton">Submit</button>
-                                    {{-- <button type="button" class="btn btn-danger ms-2" id="rejectButton">Reject</button> --}}
-                                    <a href="/purchase_order" class="btn btn-secondary ms-2">Batal</a>
+                                    <form action="">
+                                        @csrf
+                                        @method('PUT')
+                                        <a href="" class="btn btn-primary" id="submitButton">Approve</a>
+                                        <a href="" class="btn btn-danger ms-2" id="rejectButton">Reject</a>
+                                        <a href="/purchase_order" class="btn btn-secondary ms-2">Back</a>
+                                    </form>
                                 </div>
                             </div>
                         </form>
@@ -255,7 +235,7 @@
                         dataType: 'json',
                         success: function(response) {
                             console.log('Items response:', response);
-                            updateAllItemSelects(response.data); // Changed to response.data
+                            updateAllItemSelects(response.items);
                         },
                         error: function(xhr, status, error) {
                             console.error('Items AJAX error:', error);
@@ -280,6 +260,7 @@
                 }
 
                 $('#tableBody').data('current-items', items);
+
                 $('.item-select').html(options);
             }
 
@@ -322,33 +303,6 @@
                 </td>
             </tr>
         `;
-            }
-
-            // Initialize existing data
-            const existingData = window.initialData?.data || []; // Assuming data is passed as initialData.data
-            if (existingData.length > 0) {
-                existingData.forEach((item, index) => {
-                    if (index === 0) {
-                        // Update first row
-                        const firstRow = $('.item-row').first();
-                        updateRowWithData(firstRow, item);
-                    } else {
-                        // Add new rows for additional items
-                        const newRow = $(createNewRow(index));
-                        updateRowWithData(newRow, item);
-                        newRow.insertBefore('#tableBody tr:last');
-                    }
-                });
-                updateTotals();
-            }
-
-            function updateRowWithData(row, item) {
-                row.find('.item-select').val(item.item_id);
-                row.find('.uom-input').val(item.uom_id);
-                row.find('.qty-input').val(item.quantity);
-                row.find('.price-input').val(item.unit_price);
-                row.find('.discount-input').val(item.discount);
-                calculateRowTotal(row);
             }
 
             $(document).on('change', '.item-select', function() {

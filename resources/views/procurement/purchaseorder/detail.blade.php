@@ -143,12 +143,12 @@
                                             <td>
                                                 <input type="number" name="items[0][discount]"
                                                     class="form-control discount-input" value="{{ $item->discount }}"
-                                                    min="0" max="100">
+                                                    min="0" max="100" disabled>
                                             </td>
                                             <td colspan="2">
                                                 <input type="number" name=""
-                                                    class="form-control bg-body-secondary total-input" value="0"
-                                                    readonly>
+                                                    class="form-control bg-body-secondary total-input"
+                                                    value="{{ $item->total_price }}" readonly>
                                             </td>
                                             <td></td>
                                         </tr>

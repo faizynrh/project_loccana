@@ -197,28 +197,19 @@ class PurchaseOrderController extends Controller
     {
         //
         try {
-            $company_id = 2;
-            $customer = 'false';
-            $suplier = 'true';
-            $data = [
-                'company_id' => 2
-            ];
-
-            $partnerResponse = fectApi(env('LIST_PARTNER') . '/' . $company_id . '/' . $suplier . '/' . $customer);
-            $gudangResponse = fectApi(env('LIST_GUDANG') . '/' . $company_id);
             $apiResponse = fectApi(env('PO_URL') . '/' . $id);
-            if ($apiResponse->successful() && $gudangResponse->successful() && $partnerResponse->successful()) {
+            if ($apiResponse->successful()) {
                 $data = json_decode($apiResponse->body());
-                $gudang = json_decode($gudangResponse->body());
-                $partner = json_decode($partnerResponse->body());
+
                 // dd($data);
-                return view('procurement.purchaseorder.detail', compact('data', 'gudang', 'partner'));
+                return view('procurement.purchaseorder.detail', compact('data'));
             } else {
                 return back()->withErrors('Gagal mengambil data item: ' . $apiResponse->status());
             }
         } catch (\Exception $e) {
             return back()->withErrors($e->getMessage());
         }
+
     }
 
     /**
@@ -226,16 +217,23 @@ class PurchaseOrderController extends Controller
      */
     public function edit(string $id)
     {
-        //
         try {
-            $headers = getHeaders();
-            $apiurl = getApiUrl() . '/loccana/po/1.0.0/purchase-order/' . $id;
-            $apiResponse = Http::withHeaders($headers)->get($apiurl);
+            $company_id = 2;
+            $customer = 'false';
+            $suplier = 'true';
+            $data = [
+                'company_id' => 2
+            ];
+            $partnerResponse = fectApi(env('LIST_PARTNER') . '/' . $company_id . '/' . $suplier . '/' . $customer);
+            $gudangResponse = fectApi(env('LIST_GUDANG') . '/' . $company_id);
+            $apiResponse = fectApi(env('PO_URL') . '/' . $id);
 
-            if ($apiResponse->successful()) {
-                $data = $apiResponse->json()['data'];
-                // dd($data);
-                return view('procurement.purchaseorder.edit', compact('data'));
+            if ($apiResponse->successful() && $gudangResponse->successful() && $partnerResponse->successful()) {
+                $data = json_decode($apiResponse->getBody()->getContents(), false);
+                $gudang = json_decode($gudangResponse->getbody()->getContents(), false);
+                $partner = json_decode($partnerResponse->getbody()->getContents(), false);
+                // dd($gudang, $partner, $data);
+                return view('procurement.purchaseorder.edit', compact('data', 'gudang', 'partner'));
             } else {
                 return back()->withErrors('Gagal mengambil data item: ' . $apiResponse->status());
             }
@@ -270,6 +268,41 @@ class PurchaseOrderController extends Controller
                 return back()->withErrors(
                     $apiResponse->json()['message']
                 );
+            }
+        } catch (\Exception $e) {
+            return back()->withErrors($e->getMessage());
+        }
+    }
+    public function vapprove(string $id)
+    {
+        try {
+            $apiResponse = fectApi(env('PO_URL') . '/' . $id);
+            if ($apiResponse->successful()) {
+                $data = json_decode($apiResponse->body());
+
+                // dd($data);
+                return view('procurement.purchaseorder.approve', compact('data'));
+            } else {
+                return back()->withErrors('Gagal mengambil data item: ' . $apiResponse->status());
+            }
+        } catch (\Exception $e) {
+            return back()->withErrors($e->getMessage());
+        }
+    }
+    public function approve(Request $request, $id)
+    {
+        try {
+            $data = [
+                'approved_by' => 1,
+                'approved_date' => now(),
+            ];
+            // dd($data);
+            $apiResponse = updateApi(env('PO_URL') . '/approve/' . $id, $data);
+            // dd($apiResponse);
+            if ($apiResponse->successful()) {
+                return redirect()->route('purchaseorder.index')->with('success', $apiResponse->json()['message']);
+            } else {
+                return back()->withErrors($apiResponse->json()['message']);
             }
         } catch (\Exception $e) {
             return back()->withErrors($e->getMessage());
