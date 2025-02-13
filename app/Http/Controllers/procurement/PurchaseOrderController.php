@@ -149,7 +149,6 @@ class PurchaseOrderController extends Controller
                 $items[] = (object) [
                     'item_id' => (int) ($itemData['item_id'] ?? 0),
                     'warehouse_id' => $warehouseId,
-                    // 'warehouse_id' => (int) ($itemData['warehouse_id'] ?? 0),
                     'quantity' => (int) ($itemData['quantity'] ?? 0),
                     'unit_price' => (float) ($itemData['unit_price'] ?? 0),
                     'discount' => (float) ($itemData['discount'] ?? 0),
@@ -165,16 +164,16 @@ class PurchaseOrderController extends Controller
                 'currency_id' => (int) $request->input('currency_id'),
                 'total_amount' => (float) $request->input('total_amount'),
                 'tax_amount' => (float) $request->input('tax_amount'),
+                'ppn' => $request->input('ppn'),
                 'description' => (string) $request->input('description'),
                 'status' => (string) $request->input('status'),
                 'requested_by' => (int) $request->input('requested_by'),
                 'items' => $items,
             ];
 
-            // dd($data);
-
             $apiResponse = storeApi(env('PO_URL'), $data);
-            // $responseData = $apiResponse->json();
+
+
 
             if ($apiResponse->successful()) {
                 Session::put('last_po_code', $request->input('code'));
@@ -227,13 +226,17 @@ class PurchaseOrderController extends Controller
             $partnerResponse = fectApi(env('LIST_PARTNER') . '/' . $company_id . '/' . $suplier . '/' . $customer);
             $gudangResponse = fectApi(env('LIST_GUDANG') . '/' . $company_id);
             $apiResponse = fectApi(env('PO_URL') . '/' . $id);
+            $itemsResponse = storeApi(env('LIST_ITEMS'), ['company_id' => $company_id]);
 
-            if ($apiResponse->successful() && $gudangResponse->successful() && $partnerResponse->successful()) {
+
+
+            if ($apiResponse->successful() && $gudangResponse->successful() && $partnerResponse->successful() && $itemsResponse->successful()) {
                 $data = json_decode($apiResponse->getBody()->getContents(), false);
                 $gudang = json_decode($gudangResponse->getbody()->getContents(), false);
                 $partner = json_decode($partnerResponse->getbody()->getContents(), false);
+                $items = json_decode($itemsResponse->getbody()->getContents(), false);
                 // dd($gudang, $partner, $data);
-                return view('procurement.purchaseorder.edit', compact('data', 'gudang', 'partner'));
+                return view('procurement.purchaseorder.edit', compact('data', 'gudang', 'partner', 'items'));
             } else {
                 return back()->withErrors('Gagal mengambil data item: ' . $apiResponse->status());
             }

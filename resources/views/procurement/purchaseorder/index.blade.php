@@ -2,7 +2,6 @@
 @section('content')
     @push('styles')
         <style>
-            /* CSS code here */
         </style>
     @endpush
     <div id="main-content">
@@ -61,39 +60,29 @@
                                 <option value="0" {{ request('month') == 'all' ? 'selected' : '' }}>ALL</option>
                                 @php
                                     $currentMonth = now()->month;
+                                    $months = [
+                                        1 => 'Januari',
+                                        2 => 'Februari',
+                                        3 => 'Maret',
+                                        4 => 'April',
+                                        5 => 'Mei',
+                                        6 => 'Juni',
+                                        7 => 'Juli',
+                                        8 => 'Agustus',
+                                        9 => 'September',
+                                        10 => 'Oktober',
+                                        11 => 'November',
+                                        12 => 'Desember',
+                                    ];
                                 @endphp
-                                <option value="1"
-                                    {{ request('month') == '1' || $currentMonth == 1 ? 'selected' : '' }}>Januari
-                                </option>
-                                <option value="2"
-                                    {{ request('month') == '2' || $currentMonth == 2 ? 'selected' : '' }}>Februari
-                                </option>
-                                <option value="3"
-                                    {{ request('month') == '3' || $currentMonth == 3 ? 'selected' : '' }}>Maret</option>
-                                <option value="4"
-                                    {{ request('month') == '4' || $currentMonth == 4 ? 'selected' : '' }}>April</option>
-                                <option value="5"
-                                    {{ request('month') == '5' || $currentMonth == 5 ? 'selected' : '' }}>Mei</option>
-                                <option value="6"
-                                    {{ request('month') == '6' || $currentMonth == 6 ? 'selected' : '' }}>Juni</option>
-                                <option value="7"
-                                    {{ request('month') == '7' || $currentMonth == 7 ? 'selected' : '' }}>Juli</option>
-                                <option value="8"
-                                    {{ request('month') == '8' || $currentMonth == 8 ? 'selected' : '' }}>Agustus
-                                </option>
-                                <option value="9"
-                                    {{ request('month') == '9' || $currentMonth == 9 ? 'selected' : '' }}>September
-                                </option>
-                                <option value="10"
-                                    {{ request('month') == '10' || $currentMonth == 10 ? 'selected' : '' }}>Oktober
-                                </option>
-                                <option value="11"
-                                    {{ request('month') == '11' || $currentMonth == 11 ? 'selected' : '' }}>November
-                                </option>
-                                <option value="12"
-                                    {{ request('month') == '12' || $currentMonth == 12 ? 'selected' : '' }}>Desember
-                                </option>
+                                @foreach ($months as $num => $name)
+                                    <option value="{{ $num }}"
+                                        {{ request('month') == (string) $num || $currentMonth == $num ? 'selected' : '' }}>
+                                        {{ $name }}
+                                    </option>
+                                @endforeach
                             </select>
+
                         </div>
                         <div class="table-responsive">
                             <table class="table table-striped table-bordered mt-3" id="tablepurchaseorder">
@@ -181,55 +170,58 @@
                         data: 'status',
                         render: function(data, type, row) {
                             let statusClass = '';
-                            if (data.toLowerCase() === 'pending') {
+                            let statusLabel = data;
+
+                            if (data.toLowerCase() === 'konfirmasi') {
                                 statusClass = 'badge bg-warning';
+                                statusLabel = `<a href="/purchase_order/approve/${row.id}" class="text-dark text-decoration-none" title="Klik untuk Approve">
+                                <span class="${statusClass}">${data}</span>
+                           </a>`;
                             } else if (data.toLowerCase() === 'rejected') {
                                 statusClass = 'badge bg-danger';
                             } else if (data.toLowerCase() === 'approved') {
                                 statusClass = 'badge bg-success';
                             }
-                            return `<span class="${statusClass}">${data}</span>`;
+
+                            return statusLabel !== data ? statusLabel :
+                                `<span class="${statusClass}">${data}</span>`;
                         }
-
                     },
-                    // {
-                    //     data: 'name'
-                    // },
-
                     {
                         data: null,
                         render: function(data, type, row) {
-                            // Tombol detail selalu tampil
                             let actionButtons = `
-            <a href="/purchase_order/detail/${row.id}" class="btn btn-sm btn-info mb-2" style="margin-right:4px;" title="Detail">
+            <a href="/purchase_order/detail/${row.id}" class="btn btn-sm btn-info mb-2 me-2" title="Detail">
                 <i class="bi bi-eye"></i>
             </a>
         `;
-
-                            // Jika status masih pending, tampilkan tombol edit, hapus, dan approve
-                            if (row.status.toLowerCase() === 'pending') {
-                                actionButtons += `
-                <a href="/purchase_order/edit/${row.id}" class="btn btn-sm btn-warning mb-2" style="margin-right:4px;" title="Edit">
+                            actionButtons += row.status.toLowerCase() === 'konfirmasi' ? `
+            <a href="/purchase_order/edit/${row.id}" class="btn btn-sm btn-warning mb-2 me-2" title="Edit">
+                <i class="bi bi-pencil"></i>
+            </a>
+ <form action="/purchase_order/delete/${row.id}" method="POST" id="delete${row.id}" style="display:inline;">
+                @csrf
+                @method('DELETE')
+                <button type="button" class="btn btn-sm btn-danger mb-2" title="Hapus" onclick="confirmDelete(${row.id})">
+                    <i class="bi bi-trash"></i>
+                </button>
+            </form>
+        ` :
+                                `<a href="/purchase_order/edit/${row.id}" class="btn btn-sm btn-warning mb-2 me-2 disabled" title="Edit">
                     <i class="bi bi-pencil"></i>
                 </a>
-                <form action="/purchase_order/delete/${row.id}" method="POST" id="delete${row.id}" style="display:inline;">
-                    @csrf
-                    @method('DELETE')
-                    <button type="button" class="btn btn-sm btn-danger mb-2" style="margin-right:4px;" title="Hapus" onclick="confirmDelete(${row.id})">
-                        <i class="bi bi-trash"></i>
-                    </button>
-                </form>
-                <a href="/purchase_order/approve/${row.id}" class="btn btn-sm btn-secondary mb-2" style="margin-right:4px;" title="Approve">
-                    <i class="bi bi-check"></i>
+                <a href="javascript:void(0);" class="btn btn-sm btn-danger mb-2 disabled" title="Hapus" onclick="confirmDelete(${row.id})">
+                    <i class="bi bi-trash"></i>
                 </a>
-            `;
-                            }
+                `;
 
                             return `<div class="d-flex">${actionButtons}</div>`;
                         }
                     }
                 ]
             });
+
+
         });
     </script>
 @endpush
