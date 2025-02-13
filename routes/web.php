@@ -208,9 +208,13 @@ Route::middleware('auth.login')->group(
             Route::delete('/delete/{id}', [InvoiceController::class, 'destroy'])->name('destroy');
         });
 
-        Route::prefix('/return')->name('return.')->group(function () {
-            Route::get('/', [ReturnController::class, 'index'])->name('index');
-            Route::get('/ajax', [ReturnController::class, 'ajax'])->name('ajax');
-        });
+
     }
 );
+Route::prefix('/return')->name('return.')->group(function () {
+    Route::get('/', [ReturnController::class, 'index'])->name('index');
+    Route::get('/ajax', [ReturnController::class, 'ajax'])->name('ajax');
+    Route::get('/add', [ReturnController::class, 'create'])->name('create');
+    Route::get('/detail/{id}', [ReturnController::class, 'show'])->name('detail');
+    Route::delete('/delete/{id}', [ReturnController::class, 'destroy'])->name('destroy');
+});

@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\procurement;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\Controller;
 
 class ReturnController extends Controller
 {
-
     public function ajax(Request $request)
     {
         try {
@@ -26,14 +26,15 @@ class ReturnController extends Controller
                 'offset' => $start,
             ];
 
-            $apiResponse = storeApi(env('RETURN_URL' . '/lists'), $requestbody);
+            $apiResponse = storeApi(env('RETURN_URL') . '/lists', $requestbody);
+
             if ($apiResponse->successful()) {
                 $data = $apiResponse->json();
                 return response()->json([
                     'draw' => $request->input('draw'),
                     'recordsTotal' => $data['data']['jumlah_filter'] ?? 0,
                     'recordsFiltered' => $data['data']['jumlah'] ?? 0,
-                    'data' => $data['data']['table'] ?? [],
+                    'data' => $data['data'] ?? [],
                 ]);
             }
             return response()->json([
@@ -47,56 +48,155 @@ class ReturnController extends Controller
             }
         }
     }
-    public function index()
+    public function index(Request $request)
     {
         return view('procurement.return.index');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
+    public function getDODetails(Request $request, $id)
+    {
+        try {
+            $apiResponse = fectApi(env('INVOICE_URL') . '/' . $id);
+            $items = [];
+            if ($apiResponse->successful()) {
+                $data = json_decode($apiResponse->body());
+                dd($data);
+                $items = [];
+                foreach ($data->data as $item) {
+                    $items[] = [
+                        'item_id' => $item->item_id,
+                        'item_name' => $item->item_name,
+                        'qty' => $item->jumlah_order,
+                        'unit_price' => $item->unit_price,
+                        'diskon' => $item->qty_diskon,
+                        'total_price' => $item->total_price,
+                        'warehouse_id' => $item->warehouse_id
+                    ];
+                }
+                return response()->json([
+                    'id_item_receipt' => $data->data[0]->id_item_receipt,
+                    'no_po' => $data->data[0]->code,
+                    'order_date' => $data->data[0]->order_date,
+                    'partner_name' => $data->data[0]->partner_name,
+                    'address' => $data->data[0]->shipment_info,
+                    'ppn' => $data->data[0]->ppn,
+                    'receipt_date' => $data->data[0]->receipt_date,
+                    'items' => $items
+                ]);
+            }
+            return response()->json(['error' => $apiResponse->json()['message']]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()]);
+        }
+    }
+
     public function create()
     {
-        //
+        $company_id = 2;
+        $apiResponse = fectApi(env('LIST_INVOICE') . '/' . $company_id);
+        if ($apiResponse->successful()) {
+            $data = json_decode($apiResponse->getBody()->getContents());
+            return view('procurement.return.add', compact('data'));
+        } else {
+            return back()->withErrors($apiResponse->json()['message']);
+        }
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        try {
+            $dataitems = [];
+            if ($request->has('items')) {
+                foreach ($request->items as $item) {
+                    $dataitems[] = [
+                        'item_id' => $item['item_id'],
+                        'quantity' => $item['quantity'],
+                        'notes' => $item['notes'],
+                    ];
+                }
+            }
+
+            $data = [
+                'purchase_order_id' => $request->purchase_order_id,
+                'invoice_id' => $request->invoice_id,
+                'return_date' => $request->return_date,
+                'reason' => $request->reason,
+                'status' => "received",
+                'company_id' => $request->input('company_id', 2),
+                'items' => $dataitems
+            ];
+
+            $apiResponse = storeApi(env('RETURN_URL'), $data);
+            if ($apiResponse->successful()) {
+                return redirect()->route('return.index')
+                    ->with('success', $apiResponse->json()['message']);
+            } else {
+                return back()->withErrors($apiResponse->json()['message']);
+            }
+        } catch (\Exception $e) {
+            return back()->withErrors($e->getMessage());
+        }
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(string $id)
     {
-        //
+        try {
+            $apiResponse = fectApi(env('RETURN_URL') . '/' . $id);
+            $data = json_decode($apiResponse->getBody()->getContents());
+            dd($data);
+            return view('procurement.return.detail', compact('data'));
+        } catch (\Exception $e) {
+            return back()->withErrors($e->getMessage());
+        }
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(string $id)
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, string $id)
     {
-        //
+        try {
+            $items = [];
+            if ($request->has('item_id')) {
+                foreach ($request->input('item_id') as $index => $itemId) {
+                    $items[] = [
+                        'item_id' => $itemId,
+                        'quantity' => $request->input('quantity')[$index],
+                        'notes' => $request->input('notes')[$index],
+                    ];
+                }
+            }
+            $data = [
+                'return_date' => $request->return_date,
+                'reason' => $request->reason,
+                'status' => "received",
+                'company_id' => $request->input('company_id', 2),
+                'items' => $items
+            ];
+            $apiResponse = updateApi(env('RETURN_URL') . '/' . $id, $data);
+            if ($apiResponse->successful()) {
+                return redirect()->route('return.index')->with('success', $apiResponse->json()['message']);
+            } else {
+                return back()->withErrors($apiResponse->json()['message']);
+            }
+        } catch (\Exception $e) {
+            return back()->withErrors($e->getMessage());
+        }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(string $id)
     {
-        //
+        try {
+            $apiResponse = deleteApi(env('RETURN_URL') . '/' . $id);
+            if ($apiResponse->successful()) {
+                return redirect()->route('return.index')->with('success', $apiResponse->json()['message']);
+            } else {
+                return back()->withErrors($apiResponse->json()['message']);
+            }
+        } catch (\Exception $e) {
+            return back()->withErrors($e->getMessage());
+        }
     }
 }
