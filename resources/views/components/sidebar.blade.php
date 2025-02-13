@@ -78,7 +78,7 @@
                             <a href="/rekap_po" class="submenu-link">Rekap PO</a>
                         </li>
                         <li class="submenu-item {{ Request::is('return*') ? 'active' : '' }}">
-                            <a href="/return" class="submenu-link">Retur</a>
+                            <a href="/return" class="submenu-link">Return</a>
                         </li>
                         <li class="submenu-item">
                             <a href="#" class="submenu-link">Report</a>
