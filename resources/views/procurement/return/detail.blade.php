@@ -113,10 +113,10 @@
                                             <p class="fw-bold">{{ $item->item_name }}</p>
                                         </td>
                                         <td>
-                                            <p class="fw-bold">{{ $item->qty_receipt_w_return }}</p>
+                                            <p class="fw-bold">{{ $item->qty_return }}</p>
                                         </td>
                                         <td>
-                                            <p class="fw-bold">{{ $item->qty_return }}</p>
+                                            <p class="fw-bold">{{ $item->qty_receipt_w_return }}</p>
                                         </td>
                                         <td>
                                             <p class="fw-bold">{{ $item->qty_invoice }}</p>

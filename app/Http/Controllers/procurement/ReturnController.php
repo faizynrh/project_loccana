@@ -147,7 +147,13 @@ class ReturnController extends Controller
 
     public function edit(string $id)
     {
-        //
+        try {
+            $apiResponse = fectApi(env('RETURN_URL') . '/' . $id);
+            $data = json_decode($apiResponse->getBody()->getContents());
+            return view('procurement.return.edit', compact('data'));
+        } catch (\Exception $e) {
+            return back()->withErrors($e->getMessage());
+        }
     }
 
     public function update(Request $request, string $id)
@@ -158,7 +164,7 @@ class ReturnController extends Controller
                 foreach ($request->input('item_id') as $index => $itemId) {
                     $items[] = [
                         'item_id' => $itemId,
-                        'quantity' => $request->input('quantity')[$index],
+                        'quantity' => $request->input('qty_return')[$index],
                         'notes' => $request->input('notes')[$index],
                     ];
                 }
@@ -166,8 +172,8 @@ class ReturnController extends Controller
             $data = [
                 'return_date' => $request->return_date,
                 'reason' => $request->reason,
-                'status' => "received",
-                'company_id' => $request->input('company_id', 2),
+                'status' => "return",
+                'company_id' => 2,
                 'items' => $items
             ];
             $apiResponse = updateApi(env('RETURN_URL') . '/' . $id, $data);

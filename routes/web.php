@@ -214,6 +214,8 @@ Route::middleware('auth.login')->group(
             Route::get('/detailadd/{id}', [ReturnController::class, 'detailadd'])->name('detailadd');
             Route::get('/add', [ReturnController::class, 'create'])->name('create');
             Route::post('/add', [ReturnController::class, 'store'])->name('store');
+            Route::get('/edit/{id}', [ReturnController::class, 'edit'])->name('edit');
+            Route::put('/update/{id}', [ReturnController::class, 'update'])->name('update');
             Route::get('/detail/{id}', [ReturnController::class, 'show'])->name('detail');
             Route::delete('/delete/{id}', [ReturnController::class, 'destroy'])->name('destroy');
         });
