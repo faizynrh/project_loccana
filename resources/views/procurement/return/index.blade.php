@@ -2,7 +2,6 @@
 @section('content')
     @push('styles')
         <style>
-            /* CSS code here */
         </style>
     @endpush
     <div id="main-content">
@@ -31,12 +30,7 @@
                     <div class="card-header">
                         <div class="d-flex justify-content-between align-items-center">
                             <div class="d-flex align-items-center">
-                                <a href="/invoice/add" class="btn btn-primary me-2 fw-bold">+ Tambah Return</a>
-                                <select id="statusSelect" class="form-select me-2" name="status" style="width: auto;">
-                                    <option value="all">Semua Return</option>
-                                    <option value="paid">Sudah Lunas</option>
-                                    <option value="unpaid">Belum Lunas</option>
-                                </select>
+                                <a href="/return/add" class="btn btn-primary me-2 fw-bold">+ Tambah Return</a>
                                 <select id="yearSelect" class="form-select me-2" name="year" style="width: auto;">
                                     @php
                                         $currentYear = Carbon\Carbon::now()->year;
@@ -49,7 +43,7 @@
                                     @endfor
                                 </select>
                                 <select id="monthSelect" class="form-select me-2" name="month" style="width: auto;">
-                                    <option value="0">ALL</option>
+                                    <option value="0" {{ request('month') == 'all' ? 'selected' : '' }}>ALL</option>
                                     @php
                                         $currentMonth = Carbon\Carbon::now()->month;
                                     @endphp
@@ -60,10 +54,6 @@
                                         </option>
                                     @endforeach
                                 </select>
-                            </div>
-                            <div class="text-end">
-                                <h6 class="fw-bold">Total Per Bulan</h6>
-                                <h4 class="fw-bold" id="totalPerBulan">Rp 0,00</h4>
                             </div>
                         </div>
                     </div>
@@ -123,29 +113,16 @@
                         },
                     },
                     columns: [{
-                            data: 'invoice_number'
+                            data: 'invoice'
                         },
                         {
-                            data: 'partner_name'
+                            data: 'principle'
                         },
                         {
-                            data: 'invoice_date',
-                            render: function(data) {
-                                if (data) {
-                                    var date = new Date(data);
-                                    return (
-                                        date.getDate().toString().padStart(2, '0') +
-                                        '-' +
-                                        (date.getMonth() + 1).toString().padStart(2, '0') +
-                                        '-' +
-                                        date.getFullYear()
-                                    );
-                                }
-                                return data;
-                            },
+                            data: 'tgl_return',
                         },
                         {
-                            data: 'partner_name'
+                            data: 'pengaju'
                         },
                         {
                             data: 'status'
@@ -154,46 +131,47 @@
                             data: null,
                             render: function(data, type, row) {
                                 return `
-                                            <div class="d-flex">
-                                                <a href="/invoice/detail/${row.id}" class="btn btn-sm btn-info mb-2" style="margin-right:4px;" title="Detail">
-                                                    <i class="bi bi-eye"></i>
-                                                </a>
-                                                <a href="/invoice/edit/${row.id}" class="btn btn-sm btn-warning mb-2" style="margin-right:4px;" title="Edit"}>
-                                                    <i class="bi bi-pencil"></i>
-                                                </a>
-                                                <form action="/invoice/delete/${row.id}" method="POST" id="delete${row.id}" style="display:inline;">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="button" class="btn btn-sm btn-danger mb-2" style="margin-right:4px;" title="Hapus" onclick="confirmDelete(${row.id})"}>
-                                                        <i class="bi bi-trash"></i>
-                                                    </button>
-                                                </form>
-                                            </div>
-                                        `;
+                                <div class="d-flex">
+                                    <a href="/return/detail/${row.id_return}" class="btn btn-sm btn-info mb-2" style="margin-right:4px;" title="Detail">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                    <a href="/return/edit/${row.id_return}" class="btn btn-sm btn-warning mb-2" style="margin-right:4px;" title="Edit">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <form action="/return/delete/${row.id_return}" method="POST" id="delete${row.id_return}" style="display:inline;">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="button" class="btn btn-sm btn-danger mb-2" style="margin-right:4px;" title="Hapus" onclick="confirmDelete(${row.id_return})">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                                `;
                             }
-                        }
+                        },
                     ]
                 });
             }
-            initializeTable();
 
-            var lastbulan = $('#monthSelect').val();
+            initializeTable();
             $('#monthSelect').change(function() {
                 var month = $('#monthSelect').val();
-                if (month !== lastbulan) {
-                    lastbulan = month;
+                if (month !== lastMonth) {
+                    lastMonth = month;
                     $('#tablereturn').DataTable().ajax.reload();
                 }
+                console.log(month);
             });
-            var lasttahun = $('#yearSelect').val();
-
             $('#yearSelect').change(function() {
                 var year = $('#yearSelect').val();
-                if (year !== lasttahun) {
-                    lasttahun = year;
+                if (year !== lastYear) {
+                    lastYear = year;
                     $('#tablereturn').DataTable().ajax.reload();
                 }
+                console.log(year);
             });
+            console.log(lastMonth);
+            console.log(lastYear);
         });
     </script>
 @endpush
