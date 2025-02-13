@@ -139,7 +139,6 @@ class ReturnController extends Controller
         try {
             $apiResponse = fectApi(env('RETURN_URL') . '/' . $id);
             $data = json_decode($apiResponse->getBody()->getContents());
-            dd($data);
             return view('procurement.return.detail', compact('data'));
         } catch (\Exception $e) {
             return back()->withErrors($e->getMessage());
