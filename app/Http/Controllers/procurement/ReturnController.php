@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\procurement;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 
 class ReturnController extends Controller
@@ -53,34 +52,32 @@ class ReturnController extends Controller
         return view('procurement.return.index');
     }
 
-    public function getDODetails(Request $request, $id)
+    public function detailadd(Request $request, $id)
     {
         try {
             $apiResponse = fectApi(env('INVOICE_URL') . '/' . $id);
             $items = [];
             if ($apiResponse->successful()) {
                 $data = json_decode($apiResponse->body());
-                dd($data);
                 $items = [];
                 foreach ($data->data as $item) {
                     $items[] = [
                         'item_id' => $item->item_id,
-                        'item_name' => $item->item_name,
-                        'qty' => $item->jumlah_order,
+                        'item_code' => $item->item_code,
+                        'qty_on_po' => $item->qty_on_po,
                         'unit_price' => $item->unit_price,
-                        'diskon' => $item->qty_diskon,
+                        'discount' => $item->discount,
                         'total_price' => $item->total_price,
-                        'warehouse_id' => $item->warehouse_id
                     ];
                 }
                 return response()->json([
-                    'id_item_receipt' => $data->data[0]->id_item_receipt,
-                    'no_po' => $data->data[0]->code,
+                    'id_invoice' => $data->data[0]->id_invoice,
+                    'id_po' => $data->data[0]->id_po,
                     'order_date' => $data->data[0]->order_date,
-                    'partner_name' => $data->data[0]->partner_name,
                     'address' => $data->data[0]->shipment_info,
                     'ppn' => $data->data[0]->ppn,
-                    'receipt_date' => $data->data[0]->receipt_date,
+                    'term_of_payment' => $data->data[0]->term_of_payment,
+                    'status' => $data->data[0]->status,
                     'items' => $items
                 ]);
             }
@@ -110,22 +107,21 @@ class ReturnController extends Controller
                 foreach ($request->items as $item) {
                     $dataitems[] = [
                         'item_id' => $item['item_id'],
-                        'quantity' => $item['quantity'],
+                        'quantity' => $item['qty_retur'],
                         'notes' => $item['notes'],
                     ];
                 }
             }
 
             $data = [
-                'purchase_order_id' => $request->purchase_order_id,
-                'invoice_id' => $request->invoice_id,
+                'purchase_order_id' => $request->id_po,
+                'invoice_id' => $request->id_invoice,
                 'return_date' => $request->return_date,
-                'reason' => $request->reason,
-                'status' => "received",
+                'reason' => $request->keterangan_retur,
+                'status' => "return",
                 'company_id' => $request->input('company_id', 2),
                 'items' => $dataitems
             ];
-
             $apiResponse = storeApi(env('RETURN_URL'), $data);
             if ($apiResponse->successful()) {
                 return redirect()->route('return.index')
