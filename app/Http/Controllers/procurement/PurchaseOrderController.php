@@ -228,8 +228,6 @@ class PurchaseOrderController extends Controller
             $apiResponse = fectApi(env('PO_URL') . '/' . $id);
             $itemsResponse = storeApi(env('LIST_ITEMS'), ['company_id' => $company_id]);
 
-
-
             if ($apiResponse->successful() && $gudangResponse->successful() && $partnerResponse->successful() && $itemsResponse->successful()) {
                 $data = json_decode($apiResponse->getBody()->getContents(), false);
                 $gudang = json_decode($gudangResponse->getbody()->getContents(), false);
@@ -250,7 +248,57 @@ class PurchaseOrderController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        try {
+            $itemsRequest = $request->input('items');
+            $warehouseId = isset($itemsRequest[0]['warehouse_id']) ?
+                (int) $itemsRequest[0]['warehouse_id'] : 0;
+            $poDetailID = isset($itemsRequest[0]['po_detail_id']);
+            dd($itemsRequest);
+
+            $items = [];
+            foreach ($itemsRequest as $itemData) {
+                $items[] = (object) [
+                    'item_id' => (int) ($itemData['item_id'] ?? 0),
+                    'warehouse_id' => $warehouseId,
+                    'quantity' => (int) ($itemData['quantity'] ?? 0),
+                    'unit_price' => (float) ($itemData['unit_price'] ?? 0),
+                    'discount' => (float) ($itemData['discount'] ?? 0),
+                    'uom_id' => (int) ($itemData['uom_id'] ?? 0),
+                    'po_detail_id' => $poDetailID,
+                ];
+            }
+            $data = (object) [
+                // 'company_id' => (int) $request->input('company_id', 2),
+                'code' => (string) $request->input('code'),
+                "order_date" => now()->format('Y-m-d\TH:i:s\Z'),
+                'partner_id' => (int) $request->input('partner_id'),
+                'term_of_payment' => (string) $request->input('term_of_payment'),
+                'currency_id' => (int) $request->input('currency_id'),
+                'total_amount' => (float) $request->input('total_amount'),
+                'tax_amount' => (float) $request->input('tax_amount'),
+                'ppn' => $request->input('ppn'),
+                'description' => (string) $request->input('description'),
+                'status' => (string) $request->input('status'),
+                'requested_by' => (int) $request->input('requested_by'),
+                'items' => $items,
+            ];
+
+
+            $apiResponse = updateApi(env('PO_URL') . '/' . $id, $data);
+            // dd(env('PO_URL') . '/' . $id);
+            dd($apiResponse->json(), $data);
+            if ($apiResponse->successful()) {
+                Session::put('last_po_code', $request->input('code'));
+                return redirect()->route('purchaseorder.index')
+                    ->with('success', $apiResponse->json()['message']);
+            } else {
+                return back()->withErrors(
+                    $apiResponse->json()['message']
+                );
+            }
+        } catch (\Exception $e) {
+            return back()->withErrors($e->getMessage());
+        }
     }
 
     /**

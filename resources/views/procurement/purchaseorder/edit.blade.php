@@ -53,13 +53,15 @@
                             </div>
                         @endif
 
-                        <form id="createForm" method="POST" action="{{ route('purchaseorder.store') }}">
+                        <form id="createForm" method="POST"
+                            action="{{ route('purchaseorder.update', $data->data[0]->id_po) }}">
                             @csrf
+                            @method('PUT')
                             <div class="row mb-3">
                                 <div class="col-md-6">
                                     <label for="code" class="form-label fw-bold mt-2 mb-1 small">Kode</label>
                                     <input type="text" class="form-control bg-body-secondary" id="code"
-                                        name="code" placeholder="Kode" value="{{ $data->data[0]->number_po }}" readonly>
+                                        name="code" placeholder="Kode" value="{{ $data->data[0]->number_po }}">
 
                                     <label for="tanggal" class="form-label fw-bold mt-2 mb-1 small">Tanggal</label>
                                     <input type="date" class="form-control" id="order_date"
@@ -150,13 +152,14 @@
                                                     <option value="" selected disabled>Pilih Item</option>
                                                     @foreach ($items->data->items ?? [] as $option)
                                                         <option value="{{ $option->id }}"
+                                                            data-uom="{{ $option->unit_of_measure_id }}"
                                                             {{ $item->item_id == $option->id ? 'selected' : '' }}>
-                                                            {{ $option->name }}
+                                                            {{ $option->sku }} - {{ $option->name }}
                                                         </option>
                                                     @endforeach
                                                 </select>
                                                 <input type="hidden" name="items[{{ $index }}][uom_id]"
-                                                    class="uom-input">
+                                                    class="uom-input" value="{{ $option->unit_of_measure_id ?? '' }}">
                                             </td>
                                             <td>
                                                 <input type="number" name="items[{{ $index }}][quantity]"
@@ -224,6 +227,12 @@
 
                             <div class="row">
                                 <div class="col-md-12 text-end">
+                                    <input type="text" class="form-control" id="po_detail_id"
+                                        name="items[0][detail_id]" value="{{ $data->data[0]->po_detail_id ?? '' }}"
+                                        required>
+
+                                    <input type="hidden" class="form-control" id="status"
+                                        name="status"value="konfirmasi">
                                     <input type="hidden" name="tax_amount" id="tax_amount" value="0">
                                     <input type="hidden" name="company_id" id="company_id" value="2">
                                     <input type="hidden" name="total_amount" id="total_amount" value="0">
@@ -241,115 +250,53 @@
 
 @push('scripts')
     <script>
-        // Inisialisasi data list item.
-        // Pastikan di controller kamu sudah mengirimkan data items (misal: $itemsList)
-        // Jika tidak ada, gunakan array kosong.
-        window.itemsList = window.itemsList || [];
+        $(document).ready(function() {
+            // Handle item select change to update UOM
+            $(document).on('change', '.form-select', function() {
+                const uomId = $(this).find(':selected').data('uom');
+                $(this).siblings('.uom-input').val(uomId);
+                calculateRowTotal($(this).closest('tr'));
+                updateTotals();
+            });
 
-        // Set list item yang tersedia pada elemen tableBody (digunakan pada fungsi createNewRow)
-        $('#tableBody').data('current-items', window.itemsList);
-
-        // Fungsi untuk mengupdate semua select item berdasarkan data yang tersedia
-        function updateAllItemSelects(items) {
-            var options = '<option value="" disabled selected>--Pilih Item--</option>';
-            if (items && items.length > 0) {
-                items.forEach(function(item) {
-                    options +=
-                        `<option value="${item.id}" data-uom="${item.unit_of_measure_id}">${item.sku} - ${item.name}</option>`;
-                });
-            } else {
-                options = '<option value="" disabled selected>Tidak ada item tersedia</option>';
-            }
-            $('.item-select').html(options);
-        }
-
-        // Fungsi untuk membuat baris baru (row) di tabel item
-        function createNewRow(rowCount) {
-            const currentItems = $('#tableBody').data('current-items');
-            let itemOptions = '<option value="" disabled selected>--Pilih Item--</option>';
-            if (currentItems && currentItems.length > 0) {
-                currentItems.forEach(function(item) {
-                    itemOptions +=
-                        `<option value="${item.id}" data-uom="${item.unit_of_measure_id}">${item.sku} - ${item.name}</option>`;
-                });
-            } else {
-                itemOptions = '<option value="" disabled selected>Silahkan pilih partner terlebih dahulu</option>';
-            }
-            return `
+            // Add new row
+            $('#add-row').on('click', function(e) {
+                e.preventDefault();
+                const rowCount = $('.item-row').length;
+                const newRow = `
                 <tr style="border-bottom: 2px solid #000" class="item-row">
                     <td colspan="2">
-                        <select class="form-select item-select" name="items[${rowCount}][item_id]">
-                            ${itemOptions}
+                        <select class="form-select" name="items[${rowCount}][item_id]" required>
+                            <option value="" selected disabled>Pilih Item</option>
+                            @foreach ($items->data->items ?? [] as $option)
+                                <option value="{{ $option->id }}" data-uom="{{ $option->unit_of_measure_id }}">
+                                    {{ $option->sku }} - {{ $option->name }}
+                                </option>
+                            @endforeach
                         </select>
                         <input type="hidden" name="items[${rowCount}][uom_id]" class="uom-input">
                     </td>
                     <td>
-                        <input type="number" class="form-control qty-input" name="items[${rowCount}][quantity]" value="0" min="0">
+                        <input type="number" name="items[${rowCount}][quantity]" class="form-control qty-input" value="1" min="1">
                     </td>
                     <td>
-                        <input type="number" class="form-control price-input" name="items[${rowCount}][unit_price]" value="0" min="0">
+                        <input type="number" name="items[${rowCount}][unit_price]" class="form-control price-input" value="0" min="0">
                     </td>
                     <td>
-                        <input type="number" class="form-control discount-input" name="items[${rowCount}][discount]" value="0" min="0" max="100">
+                        <input type="number" name="items[${rowCount}][discount]" class="form-control discount-input" value="0" min="0" max="100">
                     </td>
                     <td colspan="2">
-                        <input type="number" class="form-control bg-body-secondary total-input" name="" value="0" readonly>
+                        <input type="number" class="form-control bg-body-secondary total-input" value="0" readonly>
                     </td>
                     <td class="text-center">
                         <button type="button" class="btn btn-danger btn-sm remove-row">X</button>
                     </td>
                 </tr>
             `;
-        }
-
-        $(document).ready(function() {
-            const existingData = window.initialData && window.initialData.data && window.initialData.data[0].items ?
-                window.initialData.data[0].items : [];
-            if (existingData.length > 0) {
-                existingData.forEach((item, index) => {
-                    if (index === 0) {
-                        // Update baris pertama dengan data existing
-                        const firstRow = $('.item-row').first();
-                        updateRowWithData(firstRow, item);
-                    } else {
-                        // Tambah baris baru untuk item-item berikutnya
-                        const newRow = $(createNewRow(index));
-                        updateRowWithData(newRow, item);
-                        newRow.insertBefore('#tableBody tr:last');
-                    }
-                });
-                updateTotals();
-            } else {
-                // Jika tidak ada data existing, update select item dengan data yang tersedia
-                updateAllItemSelects(window.itemsList);
-            }
-
-            // Fungsi untuk mengupdate baris dengan data yang sudah ada
-            function updateRowWithData(row, item) {
-                row.find('.item-select').val(item.item_id);
-                row.find('.uom-input').val(item.uom_id);
-                row.find('.qty-input').val(item.quantity);
-                row.find('.price-input').val(item.unit_price);
-                row.find('.discount-input').val(item.discount);
-                calculateRowTotal(row);
-            }
-
-            // Update uom saat item dipilih
-            $(document).on('change', '.item-select', function() {
-                const selectedUOM = $(this).find(':selected').data('uom');
-                $(this).siblings('.uom-input').val(selectedUOM);
+                $(newRow).insertBefore('#tableBody tr:last');
             });
 
-            // Tambah baris baru saat tombol "+" diklik
-            $('#add-row').on('click', function(e) {
-                e.preventDefault();
-                const rowCount = $('.item-row').length;
-                const newRowHtml = createNewRow(rowCount);
-                $(newRowHtml).insertBefore('#tableBody tr:last');
-                updateTotals();
-            });
-
-            // Hapus baris (minimal 1 baris harus tetap ada)
+            // Remove row
             $(document).on('click', '.remove-row', function() {
                 if ($('.item-row').length > 1) {
                     $(this).closest('tr').remove();
@@ -357,23 +304,17 @@
                 }
             });
 
-            // Recalculate total saat input quantity, price, atau discount berubah
+            // Calculate totals on input change
             $(document).on('input', '.qty-input, .price-input, .discount-input', function() {
-                var row = $(this).closest('tr');
-                calculateRowTotal(row);
+                calculateRowTotal($(this).closest('tr'));
                 updateTotals();
             });
 
-            // Hitung total per baris
+            // Calculate row total
             function calculateRowTotal(row) {
                 const qty = parseFloat(row.find('.qty-input').val()) || 0;
                 const price = parseFloat(row.find('.price-input').val()) || 0;
-                let discount = parseFloat(row.find('.discount-input').val()) || 0;
-
-                if (discount > 100) {
-                    discount = 100;
-                    row.find('.discount-input').val(100);
-                }
+                const discount = Math.min(parseFloat(row.find('.discount-input').val()) || 0, 100);
 
                 const subtotal = qty * price;
                 const discountAmount = subtotal * (discount / 100);
@@ -382,7 +323,6 @@
                 row.find('.total-input').val(total.toFixed(2));
             }
 
-            // Hitung total keseluruhan dan update tampilan
             function updateTotals() {
                 let subtotal = 0;
                 let totalDiscount = 0;
@@ -404,22 +344,19 @@
                 const ppnAmount = taxableAmount * (ppnRate / 100);
                 const finalTotal = taxableAmount + ppnAmount;
 
-                updateDisplayValue('Sub Total', subtotal);
-                updateDisplayValue('Diskon', totalDiscount);
-                updateDisplayValue('Taxable', taxableAmount);
-                updateDisplayValue('VAT/PPN', ppnAmount);
-                updateDisplayValue('Total', finalTotal);
+                $('tfoot tr').each(function() {
+                    const label = $(this).find('td:eq(1)').text().trim();
+                    const value = label === 'Sub Total' ? subtotal :
+                        label === 'Diskon' ? totalDiscount :
+                        label === 'Taxable' ? taxableAmount :
+                        label === 'VAT/PPN' ? ppnAmount :
+                        label === 'Total' ? finalTotal : 0;
+
+                    $(this).find('td:eq(1)').next().text(formatNumber(value));
+                });
 
                 $('#tax_amount').val(ppnAmount);
                 $('#total_amount').val(finalTotal);
-            }
-
-            function updateDisplayValue(label, value) {
-                $('tr.fw-bold').each(function() {
-                    if ($(this).find('td:eq(1)').text().trim() === label) {
-                        $(this).find('td:eq(1)').next().text(formatNumber(value));
-                    }
-                });
             }
 
             function formatNumber(num) {
@@ -429,6 +366,7 @@
                 });
             }
 
+            // Initial calculations
             updateTotals();
         });
     </script>
