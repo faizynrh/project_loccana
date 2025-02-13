@@ -15,6 +15,7 @@ use App\Http\Controllers\procurement\DasarPembelianController;
 use App\Http\Controllers\procurement\InvoiceController;
 use App\Http\Controllers\procurement\PenerimaanBarangController;
 use App\Http\Controllers\procurement\RekapPOController;
+use App\Http\Controllers\procurement\ReportController;
 use App\Http\Controllers\procurement\ReturnController;
 
 /*
@@ -218,6 +219,11 @@ Route::middleware('auth.login')->group(
             Route::put('/update/{id}', [ReturnController::class, 'update'])->name('update');
             Route::get('/detail/{id}', [ReturnController::class, 'show'])->name('detail');
             Route::delete('/delete/{id}', [ReturnController::class, 'destroy'])->name('destroy');
+        });
+
+        Route::prefix('/report')->name('report.')->group(function () {
+            Route::get('/', [ReportController::class, 'index'])->name('index');
+            Route::get('/ajax', [ReportController::class, 'ajax'])->name('ajax');
         });
 
     }
