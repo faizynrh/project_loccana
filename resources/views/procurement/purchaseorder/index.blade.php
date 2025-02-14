@@ -214,10 +214,10 @@
                 </a>
 
         ` :
-                                `<a href="/purchase_order/edit/${row.id}" class="btn btn-sm btn-warning mb-2 me-2 " title="Edit">
+                                `<a href="/purchase_order/edit/${row.id}" class="btn btn-sm btn-warning mb-2 me-2 disabled" title="Edit">
                     <i class="bi bi-pencil"></i>
                 </a>
-                <a href="javascript:void(0);" class="btn btn-sm btn-danger mb-2 disabled" title="Hapus" onclick="confirmDelete(${row.id})">
+                <a href="javascript:void(0);" class="btn btn-sm btn-danger mb-2 me-2 disabled" title="Hapus" onclick="confirmDelete(${row.id})">
                     <i class="bi bi-trash"></i>
                 </a>
 <a href="/purchase_order/edit/${row.id}" class="btn btn-sm btn-light mb-2 me-2" title="Edit">

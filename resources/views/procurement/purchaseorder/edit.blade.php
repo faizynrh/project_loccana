@@ -227,10 +227,9 @@
 
                             <div class="row">
                                 <div class="col-md-12 text-end">
-                                    <input type="text" class="form-control" id="po_detail_id"
-                                        name="items[0][detail_id]" value="{{ $data->data[0]->po_detail_id ?? '' }}"
+                                    <input type="hidden" class="form-control" id="po_detail_id"
+                                        name="items[0][po_detail_id]" value="{{ $data->data[0]->po_detail_id ?? '' }}"
                                         required>
-
                                     <input type="hidden" class="form-control" id="status"
                                         name="status"value="konfirmasi">
                                     <input type="hidden" name="tax_amount" id="tax_amount" value="0">

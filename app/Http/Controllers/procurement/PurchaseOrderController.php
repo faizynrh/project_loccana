@@ -252,8 +252,9 @@ class PurchaseOrderController extends Controller
             $itemsRequest = $request->input('items');
             $warehouseId = isset($itemsRequest[0]['warehouse_id']) ?
                 (int) $itemsRequest[0]['warehouse_id'] : 0;
-            $poDetailID = isset($itemsRequest[0]['po_detail_id']);
-            dd($itemsRequest);
+            $detailpoid = isset($itemsRequest[0]['po_detail_id']) ?
+                (int) $itemsRequest[0]['po_detail_id'] : 0;
+
 
             $items = [];
             foreach ($itemsRequest as $itemData) {
@@ -264,29 +265,29 @@ class PurchaseOrderController extends Controller
                     'unit_price' => (float) ($itemData['unit_price'] ?? 0),
                     'discount' => (float) ($itemData['discount'] ?? 0),
                     'uom_id' => (int) ($itemData['uom_id'] ?? 0),
-                    'po_detail_id' => $poDetailID,
+                    'po_detail_id' => $detailpoid
                 ];
             }
+
             $data = (object) [
-                // 'company_id' => (int) $request->input('company_id', 2),
-                'code' => (string) $request->input('code'),
-                "order_date" => now()->format('Y-m-d\TH:i:s\Z'),
-                'partner_id' => (int) $request->input('partner_id'),
-                'term_of_payment' => (string) $request->input('term_of_payment'),
+
+                "order_date" => $request->input('order_date'),
+                'partner_id' => $request->input('partner_id'),
+                'term_of_payment' => $request->input('term_of_payment'),
                 'currency_id' => (int) $request->input('currency_id'),
                 'total_amount' => (float) $request->input('total_amount'),
                 'tax_amount' => (float) $request->input('tax_amount'),
-                'ppn' => $request->input('ppn'),
+                // 'ppn' => $request->input('ppn'),
                 'description' => (string) $request->input('description'),
                 'status' => (string) $request->input('status'),
                 'requested_by' => (int) $request->input('requested_by'),
                 'items' => $items,
             ];
-
+            // dd($data);
 
             $apiResponse = updateApi(env('PO_URL') . '/' . $id, $data);
             // dd(env('PO_URL') . '/' . $id);
-            dd($apiResponse->json(), $data);
+            // dd($apiResponse->json(), $data);
             if ($apiResponse->successful()) {
                 Session::put('last_po_code', $request->input('code'));
                 return redirect()->route('purchaseorder.index')
@@ -330,7 +331,6 @@ class PurchaseOrderController extends Controller
             $apiResponse = fectApi(env('PO_URL') . '/' . $id);
             if ($apiResponse->successful()) {
                 $data = json_decode($apiResponse->body());
-
                 // dd($data);
                 return view('procurement.purchaseorder.approve', compact('data'));
             } else {
@@ -344,8 +344,7 @@ class PurchaseOrderController extends Controller
     {
         try {
             $data = [
-                'approved_by' => 1,
-                'approved_date' => now(),
+                'approved_by' => 1
             ];
             // dd($data);
             $apiResponse = updateApi(env('PO_URL') . '/approve/' . $id, $data);

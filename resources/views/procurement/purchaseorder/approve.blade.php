@@ -12,7 +12,7 @@
             <div class="page-title">
                 <div class="row">
                     <div class="col-12 col-md-6 order-md-1 order-last">
-                        <h3>Detail Purchase Order</h3>
+                        <h3>Approve Purchase Order</h3>
                     </div>
                     <div class="col-12 col-md-6 order-md-2 order-first">
                         <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
@@ -21,7 +21,7 @@
                                     <a href="/dashboard">Dashboard</a>
                                 </li>
                                 <li class="breadcrumb-item active" aria-current="page">
-                                    Detail Purchase Order
+                                    Approve Purchase Order
                                 </li>
                             </ol>
                         </nav>
@@ -51,20 +51,19 @@
                                     aria-label="Close"></button>
                             </div>
                         @endif
-                        <form id="createForm" method="POST" action="{{ route('purchaseorder.store') }}">
-                            @csrf
-                            <div class="row mb-3">
-                                <div class="col-md-6">
-                                    <label for="code" class="form-label fw-bold mt-2 mb-1 small">Kode</label>
-                                    <input type="text" class="form-control bg-body-secondary" id="code"
-                                        name="code" placeholder="Kode" value="{{ $data->data[0]->number_po }}" readonly>
-                                    <label for="tanggal" class="form-label fw-bold mt-2 mb-1 small">Tanggal</label>
-                                    <input type="text" class="form-control"
-                                        value="{{ \Carbon\Carbon::parse($data->data[0]->order_date)->format('Y-m-d') }}"
-                                        readonly" id="order_date" name="order_date" disabled>
 
-                                    <label for="principal" class="form-label fw-bold mt-2 mb-1 small">Principle</label>
-                                    {{-- <select class="form-control" id="partner_id" name="partner_id" disabled>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="code" class="form-label fw-bold mt-2 mb-1 small">Kode</label>
+                                <input type="text" class="form-control bg-body-secondary" id="code" name="code"
+                                    placeholder="Kode" value="{{ $data->data[0]->number_po }}" readonly>
+                                <label for="tanggal" class="form-label fw-bold mt-2 mb-1 small">Tanggal</label>
+                                <input type="text" class="form-control"
+                                    value="{{ \Carbon\Carbon::parse($data->data[0]->order_date)->format('Y-m-d') }}"
+                                    readonly" id="order_date" name="order_date" disabled>
+
+                                <label for="principal" class="form-label fw-bold mt-2 mb-1 small">Principle</label>
+                                {{-- <select class="form-control" id="partner_id" name="partner_id" disabled>
                                         @if (isset($partner->data))
                                             @foreach ($partner->data as $item)
                                                 <option value="{{ $item->id }}">
@@ -77,129 +76,139 @@
 
                                     </select> --}}
 
-                                    <input type="text" class="form-control" value="{{ $data->data[0]->partner_name }}"
-                                        id="status" name="status" disabled>
+                                <input type="text" class="form-control" value="{{ $data->data[0]->partner_name }}"
+                                    id="status" name="status" disabled>
 
-                                    {{-- <label for="status" class="form-label fw-bold mt-2 mb-1 small">Status</label> --}}
-                                    <input type="hidden" class="form-control" value="" id="status" name="status"
-                                        disabled>
-                                    <input type="hidden" class="form-control" id="requested_by" name="requested_by"
-                                        value="1">
-                                    <input type="hidden" class="form-control" id="currency_id" name="currency_id"
-                                        value="1">
-                                </div>
-                                <div class="col-md-6">
-                                    <label for="ppn" class="form-label fw-bold mt-2 mb-1 small">VAT/PPN</label>
-                                    <input type="text" class="form-control" value="{{ $data->data[0]->ppn }}"
-                                        id="ppn" name="ppn" disabled>
-
-                                    <label for="pembayaran" class="form-label fw-bold mt-2 mb-1 small">Term
-                                        Pembayaran</label>
-                                    <input type="text" class="form-control" value="{{ $data->data[0]->term_of_payment }}"
-                                        id="ppn" name="term_of_payment" disabled>
-
-                                    <label for="description" class="form-label fw-bold mt-2 mb-1 small">Keterangan</label>
-                                    <textarea class="form-control" rows="5" id="description" name="description" disabled>{{ $data->data[0]->description ?? '' }}</textarea>
-
-                                    {{-- <label for="gudang" class="form-label fw-bold mt-2 mb-1 small">Gudang</label> --}}
-                                    <input type="hidden" class="form-control" id="gudang" name="items[0][warehouse_id]"
-                                        disabled>
-                                    </input>
-                                </div>
+                                {{-- <label for="status" class="form-label fw-bold mt-2 mb-1 small">Status</label> --}}
+                                <input type="hidden" class="form-control" value="" id="status" name="status"
+                                    disabled>
+                                <input type="hidden" class="form-control" id="requested_by" name="requested_by"
+                                    value="1">
+                                <input type="hidden" class="form-control" id="currency_id" name="currency_id"
+                                    value="1">
                             </div>
-                            <div class="p-2">
-                                <h5 class="fw-bold ">Items</h5>
+                            <div class="col-md-6">
+                                <label for="ppn" class="form-label fw-bold mt-2 mb-1 small">VAT/PPN</label>
+                                <input type="text" class="form-control" value="{{ $data->data[0]->ppn }}" id="ppn"
+                                    name="ppn" disabled>
+
+                                <label for="pembayaran" class="form-label fw-bold mt-2 mb-1 small">Term
+                                    Pembayaran</label>
+                                <input type="text" class="form-control" value="{{ $data->data[0]->term_of_payment }}"
+                                    id="ppn" name="term_of_payment" disabled>
+
+                                <label for="description" class="form-label fw-bold mt-2 mb-1 small">Keterangan</label>
+                                <textarea class="form-control" rows="5" id="description" name="description" disabled>{{ $data->data[0]->description ?? '' }}</textarea>
+
+                                {{-- <label for="gudang" class="form-label fw-bold mt-2 mb-1 small">Gudang</label> --}}
+                                <input type="hidden" class="form-control" id="gudang" name="items[0][warehouse_id]"
+                                    disabled>
+                                </input>
                             </div>
-                            <table class="table mt-3" id="transaction-table">
-                                <thead>
-                                    <tr style="border-bottom: 3px solid #000;">
-                                        <th style="width: 140px">Kode</th>
-                                        <th style="width: 90px"></th>
-                                        <th style="width: 45px">Qty (Lt/Kg)</th>
-                                        <th style="width: 100px">Harga</th>
-                                        <th style="width: 30px">Diskon</th>
-                                        <th style="width: 70px">Total</th>
-                                        <th style="width: 30px"></th>
-                                        <th style="width: 30px"></th>
+                        </div>
+                        <div class="p-2">
+                            <h5 class="fw-bold ">Items</h5>
+                        </div>
+                        <table class="table mt-3" id="transaction-table">
+                            <thead>
+                                <tr style="border-bottom: 3px solid #000;">
+                                    <th style="width: 140px">Kode</th>
+                                    <th style="width: 90px"></th>
+                                    <th style="width: 45px">Qty (Lt/Kg)</th>
+                                    <th style="width: 100px">Harga</th>
+                                    <th style="width: 30px">Diskon</th>
+                                    <th style="width: 70px">Total</th>
+                                    <th style="width: 30px"></th>
+                                    <th style="width: 30px"></th>
+                                </tr>
+                            </thead>
+                            <tbody id="tableBody">
+                                @foreach ($data->data as $item)
+                                    <tr style="border-bottom: 2px solid #000" class="item-row">
+                                        <td colspan="2">
+                                            <input type="text" value="{{ $item->item_code }}" disabled
+                                                class="form-control"> <input type="hidden" name="items[0][uom_id]"
+                                                class="uom-input">
+                                        </td>
+                                        <td>
+                                            <input type="number" name="items[0][quantity]"
+                                                class="form-control qty-input" value="{{ $item->qty }}" disabled>
+                                        </td>
+                                        <td>
+                                            <input type="number" name="items[0][unit_price]"
+                                                class="form-control price-input" value="{{ $item->unit_price }}"
+                                                min="0" disabled>
+                                        </td>
+                                        <td>
+                                            <input type="number" name="items[0][discount]"
+                                                class="form-control discount-input" value="{{ $item->discount }}"
+                                                min="0" max="100" disabled>
+                                        </td>
+                                        <td colspan="2">
+                                            <input type="number" name=""
+                                                class="form-control bg-body-secondary total-input"
+                                                value="{{ $item->total_price }}" readonly>
+                                        </td>
+                                        <td></td>
                                     </tr>
-                                </thead>
-                                <tbody id="tableBody">
-                                    @foreach ($data->data as $item)
-                                        <tr style="border-bottom: 2px solid #000" class="item-row">
-                                            <td colspan="2">
-                                                <input type="text" value="{{ $item->item_code }}" disabled
-                                                    class="form-control"> <input type="hidden" name="items[0][uom_id]"
-                                                    class="uom-input">
-                                            </td>
-                                            <td>
-                                                <input type="number" name="items[0][quantity]"
-                                                    class="form-control qty-input" value="{{ $item->qty }}" disabled>
-                                            </td>
-                                            <td>
-                                                <input type="number" name="items[0][unit_price]"
-                                                    class="form-control price-input" value="{{ $item->unit_price }}"
-                                                    min="0" disabled>
-                                            </td>
-                                            <td>
-                                                <input type="number" name="items[0][discount]"
-                                                    class="form-control discount-input" value="{{ $item->discount }}"
-                                                    min="0" max="100" disabled>
-                                            </td>
-                                            <td colspan="2">
-                                                <input type="number" name=""
-                                                    class="form-control bg-body-secondary total-input"
-                                                    value="{{ $item->total_price }}" readonly>
-                                            </td>
-                                            <td></td>
-                                        </tr>
-                                        <td colspan="6"></td>
-                                    @endforeach
-                                </tbody>
-                                <tr class="fw-bold">
-                                    <td colspan="4"></td>
-                                    <td>Sub Total</td>
-                                    <td style="float: right;">0</td>
-                                    <td></td>
-                                </tr>
-                                <tr class="fw-bold">
-                                    <td colspan="4"></td>
-                                    <td>Diskon</td>
-                                    <td style="float: right;">0</td>
-                                    <td></td>
-                                </tr class="fw-bold">
-                                <tr class="fw-bold">
-                                    <td colspan="4"></td>
-                                    <td>Taxable</td>
-                                    <td style="float: right">0</td>
-                                    <td></td>
-                                </tr class="fw-bold">
-                                <tr class="fw-bold">
-                                    <td colspan="4"></td>
-                                    <td>VAT/PPN</td>
-                                    <td style="float: right">0</td>
-                                    <td></td>
-                                </tr>
-                                <tr class="fw-bold" style="border-top: 2px solid #000">
-                                    <td colspan="4"></td>
-                                    <td>Total</td>
-                                    <td style="float: right">0</td>
-                                </tr>
-                            </table>
-                            <div class="row">
-                                <div class="col-md-12 text-end">
-                                    <input type="hidden" name="tax_amount" id="tax_amount" value="0">
-                                    <input type="hidden" name="company_id" id="company_id" value="2">
-                                    <input type="hidden" name="total_amount" id="total_amount" value="0">
-                                    <form action="">
-                                        @csrf
-                                        @method('PUT')
-                                        <a href="" class="btn btn-primary" id="submitButton">Approve</a>
-                                        <a href="" class="btn btn-danger ms-2" id="rejectButton">Reject</a>
-                                        <a href="/purchase_order" class="btn btn-secondary ms-2">Back</a>
-                                    </form>
-                                </div>
+                                    <td colspan="6"></td>
+                                @endforeach
+                            </tbody>
+                            <tr class="fw-bold">
+                                <td colspan="4"></td>
+                                <td>Sub Total</td>
+                                <td style="float: right;">0</td>
+                                <td></td>
+                            </tr>
+                            <tr class="fw-bold">
+                                <td colspan="4"></td>
+                                <td>Diskon</td>
+                                <td style="float: right;">0</td>
+                                <td></td>
+                            </tr class="fw-bold">
+                            <tr class="fw-bold">
+                                <td colspan="4"></td>
+                                <td>Taxable</td>
+                                <td style="float: right">0</td>
+                                <td></td>
+                            </tr class="fw-bold">
+                            <tr class="fw-bold">
+                                <td colspan="4"></td>
+                                <td>VAT/PPN</td>
+                                <td style="float: right">0</td>
+                                <td></td>
+                            </tr>
+                            <tr class="fw-bold" style="border-top: 2px solid #000">
+                                <td colspan="4"></td>
+                                <td>Total</td>
+                                <td style="float: right">0</td>
+                            </tr>
+                        </table>
+                        <div class="row">
+                            <div class="col-md-12 text-end">
+                                <input type="hidden" name="tax_amount" id="tax_amount" value="0">
+                                <input type="hidden" name="company_id" id="company_id" value="2">
+                                <input type="hidden" name="total_amount" id="total_amount" value="0">
+                                <table style="float: right">
+                                    <tr>
+                                        <td>
+                                            <form id="approveForm" method="POST"
+                                                action="{{ route('purchaseorder.approve', $data->data[0]->id_po) }}">
+                                                @csrf
+                                                @method('PUT')
+                                                <button type="button" class="btn btn-primary" id="submitButton"
+                                                    onclick="confirmApprove('{{ $data->data[0]->id_po }}')">Approve</button>
+                                            </form>
+                                        </td>
+                                        <td> <button type="button" class="btn btn-danger ms-2" id="rejectButton"
+                                                onclick="confirmReject(id)">Reject</button></td>
+                                        <td> <a href="/purchase_order" class="btn btn-secondary ms-2">Back</a></td>
+
+                                    </tr>
+                                </table>
                             </div>
-                        </form>
+                        </div>
+
                     </div>
                 </div>
             </section>

@@ -115,7 +115,7 @@
                                         <th style="width: 90px"></th>
                                         <th style="width: 45px">Qty (Lt/Kg)</th>
                                         <th style="width: 100px">Harga</th>
-                                        <th style="width: 30px">Diskon</th>
+                                        <th style="width: 30px">Diskon (%)</th>
                                         <th style="width: 70px">Total</th>
                                         <th style="width: 30px"></th>
                                         <th style="width: 30px"></th>

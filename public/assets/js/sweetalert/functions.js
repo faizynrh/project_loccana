@@ -10,11 +10,27 @@ function confirmApprove(id) {
         reverseButtons: true,
     }).then((result) => {
         if (result.isConfirmed) {
-            document.getElementById("approve" + id).submit();
+            document.getElementById("approveForm").submit();
         }
     });
 }
 
+////////// Reject //////////
+function confirmReject(id) {
+    Swal.fire({
+        title: "Apakah Anda yakin?",
+        text: "Pastikan ini data yang akan ditolak",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Tolak",
+        cancelButtonText: "Batal",
+        reverseButtons: true,
+    }).then((result) => {
+        if (result.isConfirmed) {
+            document.getElementById("approve" + id).submit();
+        }
+    });
+}
 
 //////////// DELETE //////////
 function confirmDelete(id) {
@@ -35,9 +51,10 @@ function confirmDelete(id) {
 
 function disableButton(event) {
     let form = event.target;
-    if (form.checkValidity()) { // Pastikan form valid
-        let button = document.getElementById('submitButton');
+    if (form.checkValidity()) {
+        // Pastikan form valid
+        let button = document.getElementById("submitButton");
         button.disabled = true;
-        button.innerText = 'Processing...';
+        button.innerText = "Processing...";
     }
 }
