@@ -1,22 +1,23 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ExportController;
 use App\Http\Controllers\masterdata\CoaController;
 use App\Http\Controllers\masterdata\UomController;
 use App\Http\Controllers\masterdata\ItemController;
 use App\Http\Controllers\masterdata\PriceController;
 use App\Http\Controllers\masterdata\GudangController;
 use App\Http\Controllers\authentication\ShowDashboard;
+use App\Http\Controllers\procurement\ReportController;
+use App\Http\Controllers\procurement\ReturnController;
 use App\Http\Controllers\authentication\AuthController;
 use App\Http\Controllers\masterdata\CustomerController;
+use App\Http\Controllers\procurement\InvoiceController;
+use App\Http\Controllers\procurement\RekapPOController;
 use App\Http\Controllers\masterdata\PrincipalController;
 use App\Http\Controllers\procurement\PurchaseOrderController;
 use App\Http\Controllers\procurement\DasarPembelianController;
-use App\Http\Controllers\procurement\InvoiceController;
 use App\Http\Controllers\procurement\PenerimaanBarangController;
-use App\Http\Controllers\procurement\RekapPOController;
-use App\Http\Controllers\procurement\ReportController;
-use App\Http\Controllers\procurement\ReturnController;
 
 /*
 |--------------------------------------------------------------------------
@@ -55,7 +56,7 @@ Route::middleware('auth.login')->group(
 
 
         // ==========================================MASTERDATA========================================
-    
+
         // ITEM
         Route::prefix('/item')->name('item.')->group(function () {
             Route::get('/', [ItemController::class, 'index'])->name('index');
@@ -155,7 +156,7 @@ Route::middleware('auth.login')->group(
         });
 
         // ===================================== PROCUREMENT =========================================
-    
+
         // PENERIMAAN BARANG
         Route::prefix('/penerimaan_barang')->name('penerimaan_barang.')->group(function () {
             Route::get('/', [PenerimaanBarangController::class, 'index'])->name('index');
@@ -224,6 +225,7 @@ Route::middleware('auth.login')->group(
         Route::prefix('/report')->name('report.')->group(function () {
             Route::get('/', [ReportController::class, 'index'])->name('index');
             Route::get('/ajax', [ReportController::class, 'ajax'])->name('ajax');
+            Route::get('/export-excel', [ExportController::class, 'exportExcel'])->name('exportexcel');
         });
 
     }

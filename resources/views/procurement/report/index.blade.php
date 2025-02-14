@@ -30,31 +30,35 @@
                     <div class="card-header">
                         <form id="searchForm">
                             <div class="row g-3 align-items-end">
-                                <div class="col-md-3">
-                                    <label for="principal" class="form-label fw-bold small">Principal</label>
-                                    <select id="principal" class="form-select" name="principal" required>
-                                        <option value="" selected disabled>Pilih Principal</option>
-                                        <option value="0">Semua Principal</option>
-                                        @foreach ($partner->data as $item)
-                                            <option value="{{ $item->id }}">{{ $item->name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="col-md-3">
-                                    <label for="start_date" class="form-label fw-bold small">Tanggal Awal</label>
-                                    <input type="date" id="start_date" name="start_date" class="form-control" required>
-                                </div>
-                                <div class="col-md-3">
-                                    <label for="end_date" class="form-label fw-bold small">Tanggal Akhir</label>
-                                    <input type="date" id="end_date" name="end_date" class="form-control" required>
-                                </div>
-                                <div class="col-md-3 d-flex align-items-end">
-                                    <button type="submit" class="btn btn-primary">Cari</button>
-                                </div>
+                                <form id="exportForm">
+                                    @csrf
+                                    <div class="col-md-3">
+                                        <label for="principal" class="form-label fw-bold small">Principal</label>
+                                        <select id="principal" class="form-select" name="principal" required>
+                                            <option value="" selected disabled>Pilih Principal</option>
+                                            <option value="0">Semua Principal</option>
+                                            @foreach ($partner->data as $item)
+                                                <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label for="start_date" class="form-label fw-bold small">Tanggal Awal</label>
+                                        <input type="date" id="start_date" name="start_date" class="form-control"
+                                            required>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label for="end_date" class="form-label fw-bold small">Tanggal Akhir</label>
+                                        <input type="date" id="end_date" name="end_date" class="form-control" required>
+                                    </div>
+                                    <div class="col-md-3 d-flex align-items-end">
+                                        <button type="submit" class="btn btn-primary">Cari</button>
+                                    </div>
+                                </form>
                             </div>
                         </form>
                         <div class="mt-3 d-flex justify-content-end">
-                            <button class="btn btn-primary" id="btnprint">
+                            <button class="btn btn-primary" id="exportBtn">
                                 <i class="bi bi-file-earmark-excel"></i> Export Excel
                             </button>
                         </div>
@@ -108,7 +112,21 @@
 @push('scripts')
     <script>
         $(document).ready(function() {
-            // $('#btnprint').hide();
+            $('#exportBtn').hide();
+
+            $('#exportBtn').click(function() {
+                var principal = $('#principal').val();
+                var start_date = $('#start_date').val();
+                var end_date = $('#end_date').val();
+                var principalName = $('#principal option:selected').text();
+
+                var formData = 'principal=' + principal +
+                    '&start_date=' + start_date + '&end_date=' + end_date +
+                    '&principal_name=' + encodeURIComponent(principalName);
+                console.log("Form Data:" + formData);
+                window.location.href = "/report/export-excel?" + formData;
+            });
+
 
             $('#searchForm').on('submit', function(e) {
                 e.preventDefault();
@@ -198,10 +216,7 @@
                     ]
                 });
 
-                $('#btnprint').show();
-                $('#btnprint').on('click', function() {
-                    table.button(0).trigger();
-                });
+                $('#exportBtn').show();
             });
 
             function formatRupiah(angka) {

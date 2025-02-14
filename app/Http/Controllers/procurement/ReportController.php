@@ -30,6 +30,10 @@ class ReportController extends Controller
             $apiResponse = storeApi(env('REPORT_URL'), $requestbody);
             if ($apiResponse->successful()) {
                 $data = $apiResponse->json();
+
+                $tableData = $data['data']['table'] ?? [];
+
+                session(['export_data' => $tableData]);
                 return response()->json([
                     'draw' => $request->input('draw'),
                     'recordsTotal' => $data['data']['jumlah_filter'] ?? 0,
