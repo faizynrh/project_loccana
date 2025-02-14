@@ -26,6 +26,7 @@ class ReportController extends Controller
                 'limit' => $length,
                 'offset' => $start,
             ];
+
             $apiResponse = storeApi(env('REPORT_URL'), $requestbody);
             if ($apiResponse->successful()) {
                 $data = $apiResponse->json();

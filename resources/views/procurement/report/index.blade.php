@@ -76,7 +76,7 @@
                                 </div>
                             @endif
                             <div class="table-responsive">
-                                <table class="table table-striped table-bordered mt-3" id="tabledasarpembelian">
+                                <table class="table table-striped table-bordered mt-3" id="tablereport">
                                     <thead>
                                         <tr>
                                             <th>No</th>
@@ -108,7 +108,7 @@
 @push('scripts')
     <script>
         $(document).ready(function() {
-            $('#btnprint').hide();
+            // $('#btnprint').hide();
 
             $('#searchForm').on('submit', function(e) {
                 e.preventDefault();
@@ -116,26 +116,10 @@
                 let $btnCari = $('button[type="submit"]');
                 $btnCari.prop('disabled', true).text('Processing...');
 
-                $('#tabledasarpembelian').DataTable().destroy();
-                var table = $('#tabledasarpembelian').DataTable({
+                $('#tablereport').DataTable().destroy();
+                var table = $('#tablereport').DataTable({
                     serverSide: true,
                     processing: true,
-                    deferloading: false,
-                    layout: {
-                        topStart: {
-                            buttons: [{
-                                extend: 'excel',
-                                text: '<i class="bi bi-file-earmark-excel-fill me-1"></i>Export Excel',
-                                filename: function() {
-                                    return getFormattedFilename();
-                                },
-                                title: function() {
-                                    return getFormattedFilename();
-                                },
-                                className: 'd-none',
-                            }]
-                        }
-                    },
                     ajax: {
                         url: '{{ route('report.ajax') }}',
                         type: 'GET',
@@ -155,33 +139,19 @@
                             }
                         },
                         {
-                            data: 'order_date',
-                            render: function(data) {
-                                if (data) {
-                                    var date = new Date(data);
-                                    return (
-                                        date.getDate().toString().padStart(2, '0') +
-                                        '-' +
-                                        (date.getMonth() + 1).toString().padStart(2,
-                                            '0') +
-                                        '-' +
-                                        date.getFullYear()
-                                    );
-                                }
-                                return data;
-                            },
+                            data: 'tanggal'
                         },
                         {
-                            data: 'item_code'
+                            data: 'koder_produk'
                         },
                         {
-                            data: 'item_name'
+                            data: 'nama_barang'
                         },
                         {
-                            data: 'partner_name'
+                            data: 'kemasan'
                         },
                         {
-                            data: 'qty'
+                            data: 'jumlah'
                         },
                         {
                             data: 'harga',
@@ -196,7 +166,7 @@
                             }
                         },
                         {
-                            data: 'ppn',
+                            data: 'pnn',
                             render: function(data) {
                                 return formatRupiah(data);
                             }
@@ -206,7 +176,25 @@
                             render: function(data) {
                                 return formatRupiah(data);
                             }
-                        }
+                        },
+                        {
+                            data: 'no_trans'
+                        },
+                        {
+                            data: 'no_invoice'
+                        },
+                        {
+                            data: 'jatuh_tempo'
+                        },
+                        {
+                            data: 'lama_hari'
+                        },
+                        {
+                            data: 'no_faktur'
+                        },
+                        {
+                            data: 'tgl_pajak_faktur'
+                        },
                     ]
                 });
 
@@ -226,27 +214,6 @@
                     }).format(angka);
                 }
                 return angka;
-            }
-
-            function getFormattedFilename() {
-                const bulan = [
-                    "Januari", "Februari", "Maret", "April", "Mei", "Juni",
-                    "Juli", "Agustus", "September", "Oktober", "November", "Desember"
-                ];
-
-                let startDate = new Date($('#start_date').val());
-                let endDate = new Date($('#end_date').val());
-                let principal = $('#principal option:selected').text().trim();
-
-                let startTanggal = startDate.getDate();
-                let startBulan = bulan[startDate.getMonth()];
-                let startTahun = startDate.getFullYear();
-
-                let endTanggal = endDate.getDate();
-                let endBulan = bulan[endDate.getMonth()];
-                let endTahun = endDate.getFullYear();
-
-                return `Laporan Dasar Pembelian ${principal} periode ${startTanggal} ${startBulan} ${startTahun} s/d ${endTanggal} ${endBulan} ${endTahun}`;
             }
         });
     </script>
