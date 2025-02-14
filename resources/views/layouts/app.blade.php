@@ -10,7 +10,6 @@
     <link rel="shortcut icon" href="#" type="image/png">
     <link rel="stylesheet" href="{{ asset('assets/css/app.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/datatables/dataTables.dataTables.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/css/datatables/buttons.dataTables.css') }}">
     @stack('styles')
 </head>
 
@@ -31,13 +30,6 @@
     <script src="{{ asset('assets/js/perfect-scrollbar/perfect-scrollbar.min.js') }}"></script>
     <script src="{{ asset('assets/js/sweetalert/sweetalert.js') }}"></script>
     <script src="{{ asset('assets/js/sweetalert/functions.js') }}"></script>
-    <script src="https://cdn.datatables.net/buttons/3.2.1/js/dataTables.buttons.js"></script>
-    <script src="https://cdn.datatables.net/buttons/3.2.1/js/buttons.dataTables.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
-    <script src="https://cdn.datatables.net/buttons/3.2.1/js/buttons.html5.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/3.2.1/js/buttons.print.min.js"></script>
     @stack('scripts')
     <script></script>
 </body>
