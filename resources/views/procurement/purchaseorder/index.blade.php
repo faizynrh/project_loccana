@@ -46,6 +46,7 @@
                         @endif
                         <div class="d-flex align-items-center mb-2">
                             <a href="/purchase_order/add" class="btn btn-primary me-2 fw-bold">+ Tambah Purchase Order</a>
+                            <a href="#" class="btn btn-primary me-2 fw-bold">Export</a>
                             <select id="yearSelect" class="form-select me-2" name="year" style="width: auto;">
                                 @php
                                     $currentYear = now()->year;
@@ -179,7 +180,7 @@
                            </a>`;
                             } else if (data.toLowerCase() === 'rejected') {
                                 statusClass = 'badge bg-danger';
-                            } else if (data.toLowerCase() === 'approved') {
+                            } else if (data.toLowerCase() === 'approve') {
                                 statusClass = 'badge bg-success';
                             }
 
@@ -206,10 +207,10 @@
                     <i class="bi bi-trash"></i>
                 </button>
             </form>
-                           <a href="/purchase_order/edit/${row.id}" class="btn btn-sm btn-light mb-2 me-2" title="Edit">
+                           <a href="/purchase_order/edit/${row.id}" class="btn btn-sm btn-light mb-2 me-2" title="Print">
                     <i class="bi bi-printer"></i>
                 </a>
-                <a href="javascript:void(0);" class="btn btn-success mb-2 me-2" title="Hapus" onclick="confirmDelete(${row.id})">
+                <a href="javascript:void(0);" class="btn btn-success mb-2 me-2" title="Print" onclick="confirmDelete(${row.id})">
                     <i class="bi bi-file-earmark-excel"></i>
                 </a>
 
@@ -217,9 +218,9 @@
                                 `<a href="/purchase_order/edit/${row.id}" class="btn btn-sm btn-warning mb-2 me-2 disabled" title="Edit">
                     <i class="bi bi-pencil"></i>
                 </a>
-                <a href="javascript:void(0);" class="btn btn-sm btn-danger mb-2 me-2 disabled" title="Hapus" onclick="confirmDelete(${row.id})">
+                <button type="button" class="btn btn-sm btn-danger mb-2 me-2 disabled" title="Hapus" onclick="confirmDelete(${row.id})">
                     <i class="bi bi-trash"></i>
-                </a>
+                </button>
 <a href="/purchase_order/edit/${row.id}" class="btn btn-sm btn-light mb-2 me-2" title="Edit">
                     <i class="bi bi-printer"></i>
                 </a>
