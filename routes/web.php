@@ -11,6 +11,7 @@ use App\Http\Controllers\authentication\ShowDashboard;
 use App\Http\Controllers\procurement\ReportController;
 use App\Http\Controllers\procurement\ReturnController;
 use App\Http\Controllers\authentication\AuthController;
+use App\Http\Controllers\inventory\StockController;
 use App\Http\Controllers\masterdata\CustomerController;
 use App\Http\Controllers\procurement\InvoiceController;
 use App\Http\Controllers\procurement\RekapPOController;
@@ -56,7 +57,7 @@ Route::middleware('auth.login')->group(
 
 
         // ==========================================MASTERDATA========================================
-
+    
         // ITEM
         Route::prefix('/item')->name('item.')->group(function () {
             Route::get('/', [ItemController::class, 'index'])->name('index');
@@ -156,7 +157,7 @@ Route::middleware('auth.login')->group(
         });
 
         // ===================================== PROCUREMENT =========================================
-
+    
         // PENERIMAAN BARANG
         Route::prefix('/penerimaan_barang')->name('penerimaan_barang.')->group(function () {
             Route::get('/', [PenerimaanBarangController::class, 'index'])->name('index');
@@ -228,6 +229,14 @@ Route::middleware('auth.login')->group(
             Route::get('/export-excel', [ExportController::class, 'exportExcel'])->name('exportexcel');
         });
 
+
+        // ===================================== INVENTORY =========================================
+    
+        Route::prefix('/stock')->name('stock.')->group(function () {
+            Route::get('/', [StockController::class, 'index'])->name('index');
+            Route::get('/ajax', [StockController::class, 'ajax'])->name('ajax');
+            Route::get('/detail/{id}', [StockController::class, 'show'])->name('detail');
+        });
     }
 );
 
