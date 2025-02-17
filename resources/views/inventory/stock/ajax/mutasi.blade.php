@@ -4,11 +4,13 @@
             masukkan data dengan benar.</h6>
     </div>
     <div class="col-12">
-        <form action="" method="POST" id="updateForm" onsubmit="disableButton(event)">
+        <form action="{{ route('stock.store', $data->data->item_id) }}" method="POST" id="updateForm"
+            onsubmit="disableButton(event)">
             @csrf
-            @method('PUT')
             <div class="row mb-3 align-items-center">
                 <div class="col-md-3">
+                    <input type="hidden" class="form-control bg-body-secondary" id="item_id" name="item_id"
+                        value="{{ $data->data->item_id }}" readonly>
                     <label for="kodeitem" class="form-label fw-bold mb-0">Kode Item </label>
                 </div>
                 <div class="col-md-9">
@@ -71,7 +73,7 @@
                             class="text-danger">*</span></label>
                 </div>
                 <div class="col-md-9">
-                    <textarea class="form-control" rows="4" id="reason_mutation" name="reason_mutation"></textarea>
+                    <textarea class="form-control" rows="4" id="mutation_reason" name="mutation_reason"></textarea>
                 </div>
             </div>
             <div class="modal-footer">

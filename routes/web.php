@@ -237,7 +237,7 @@ Route::middleware('auth.login')->group(
             Route::get('/ajax', [StockController::class, 'ajax'])->name('ajax');
             Route::get('/detail/{id}', [StockController::class, 'show'])->name('detail');
             Route::get('/mutasi/{id}', [StockController::class, 'edit'])->name('mutasi');
-            Route::get('/update/{id}', [StockController::class, 'update'])->name('update');
+            Route::post('/addmutasi', [StockController::class, 'store'])->name('store');
             Route::get('/export-excel', [StockController::class, 'exportExcel'])->name('exportexcel');
 
         });

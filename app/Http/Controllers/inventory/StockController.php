@@ -62,7 +62,6 @@ class StockController extends Controller
 
             if ($apiResponse->successful()) {
                 $data = json_decode($apiResponse->body());
-                // dd($data);
                 return view('inventory.stock.detail', compact('data'));
             } else {
                 return back()->withErrors($apiResponse->json()['message']);
@@ -83,7 +82,7 @@ class StockController extends Controller
         }
     }
 
-    public function update(Request $request, $id)
+    public function store(Request $request)
     {
         try {
             $data = [
@@ -93,8 +92,7 @@ class StockController extends Controller
                 'mutation_reason' => $request->mutation_reason,
             ];
 
-            $apiResponse = storeApi(env('STOCK_URL') . '/' . $id, $data);
-            dd($apiResponse->json(), $data);
+            $apiResponse = storeApi(env('STOCK_URL') . '/mutasi', $data);
             if ($apiResponse->successful()) {
                 return redirect()->route('stock.index')->with('success', $apiResponse->json()['message']);
             } else {
