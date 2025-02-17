@@ -170,7 +170,7 @@
                                 data: 'kemasan'
                             },
                             {
-                                data: 'jumlah'
+                                data: 'qty'
                             },
                             {
                                 data: 'harga',

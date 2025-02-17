@@ -11,6 +11,7 @@ use App\Http\Controllers\authentication\ShowDashboard;
 use App\Http\Controllers\procurement\ReportController;
 use App\Http\Controllers\procurement\ReturnController;
 use App\Http\Controllers\authentication\AuthController;
+use App\Http\Controllers\inventory\StockController;
 use App\Http\Controllers\masterdata\CustomerController;
 use App\Http\Controllers\procurement\InvoiceController;
 use App\Http\Controllers\procurement\RekapPOController;
@@ -226,9 +227,21 @@ Route::middleware('auth.login')->group(
         Route::prefix('/report')->name('report.')->group(function () {
             Route::get('/', [ReportController::class, 'index'])->name('index');
             Route::get('/ajax', [ReportController::class, 'ajax'])->name('ajax');
-            Route::get('/export-excel', [ExportController::class, 'exportExcel'])->name('exportexcel');
+            Route::get('/export-excel', [ReportController::class, 'exportExcel'])->name('exportexcel');
         });
 
+
+        // ===================================== INVENTORY =========================================
+    
+        Route::prefix('/stock')->name('stock.')->group(function () {
+            Route::get('/', [StockController::class, 'index'])->name('index');
+            Route::get('/ajax', [StockController::class, 'ajax'])->name('ajax');
+            Route::get('/detail/{id}', [StockController::class, 'show'])->name('detail');
+            Route::get('/mutasi/{id}', [StockController::class, 'edit'])->name('mutasi');
+            Route::post('/addmutasi', [StockController::class, 'store'])->name('store');
+            Route::get('/export-excel', [StockController::class, 'exportExcel'])->name('exportexcel');
+
+        });
     }
 );
 
