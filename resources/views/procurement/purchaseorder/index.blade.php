@@ -207,9 +207,9 @@
                     <i class="bi bi-trash"></i>
                 </button>
             </form>
-                           <a href="/purchase_order/edit/${row.id}" class="btn btn-sm btn-light mb-2 me-2" title="Print">
-                    <i class="bi bi-printer"></i>
-                </a>
+                           <a href="/purchase_order/print/${row.id}" class="btn btn-sm btn-light mb-2 me-2" title="Print">
+    <i class="bi bi-printer"></i>
+</a>
                 <a href="javascript:void(0);" class="btn btn-success mb-2 me-2" title="Print" onclick="confirmDelete(${row.id})">
                     <i class="bi bi-file-earmark-excel"></i>
                 </a>
@@ -221,10 +221,10 @@
                 <button type="button" class="btn btn-sm btn-danger mb-2 me-2 disabled" title="Hapus" onclick="confirmDelete(${row.id})">
                     <i class="bi bi-trash"></i>
                 </button>
-<a href="/purchase_order/edit/${row.id}" class="btn btn-sm btn-light mb-2 me-2" title="Edit">
+                <a href="/purchase_order/print/${row.id}" class="btn btn-sm btn-light mb-2 me-2" title="Print">
                     <i class="bi bi-printer"></i>
                 </a>
-                <a href="javascript:void(0);" class="btn btn-success mb-2 me-2" title="Hapus" onclick="confirmDelete(${row.id})">
+                <a href="javascript:void(0);" class="btn btn-success mb-2 me-2" title="Print" onclick="confirmDelete(${row.id})">
                     <i class="bi bi-file-earmark-excel"></i>
                 </a>
 

@@ -56,7 +56,7 @@ Route::middleware('auth.login')->group(
 
 
         // ==========================================MASTERDATA========================================
-
+    
         // ITEM
         Route::prefix('/item')->name('item.')->group(function () {
             Route::get('/', [ItemController::class, 'index'])->name('index');
@@ -156,7 +156,7 @@ Route::middleware('auth.login')->group(
         });
 
         // ===================================== PROCUREMENT =========================================
-
+    
         // PENERIMAAN BARANG
         Route::prefix('/penerimaan_barang')->name('penerimaan_barang.')->group(function () {
             Route::get('/', [PenerimaanBarangController::class, 'index'])->name('index');
@@ -185,6 +185,7 @@ Route::middleware('auth.login')->group(
             Route::get('/getItemsList/{id}', [PurchaseOrderController::class, 'getItemsList'])->name('getitem');
             Route::get('/approve/{id}', [PurchaseOrderController::class, 'vapprove'])->name('vapprove');
             Route::put('/approve/{id}', [PurchaseOrderController::class, 'approve'])->name('approve');
+            Route::get('/print/{id}', [PurchaseOrderController::class, 'print'])->name('print');
         });
 
 
