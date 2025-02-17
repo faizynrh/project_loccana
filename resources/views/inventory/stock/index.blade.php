@@ -49,6 +49,7 @@
                             </div>
                         </form>
                         <div class="card-body">
+                            <hr class="my-4 border-2 border-dark">
                             @if (session('success'))
                                 <div class="alert alert-success alert-dismissible fade show" role="alert">
                                     {{ session('success') }}
@@ -65,7 +66,6 @@
                                         aria-label="Close"></button>
                                 </div>
                             @endif
-                            <hr class="my-4 border-2 border-dark">
                             <div class="mt-3 d-flex justify-content-end mb-3">
                                 <button class="btn btn-primary" id="exportBtn">
                                     <i class="bi bi-download"></i> Export Excel
