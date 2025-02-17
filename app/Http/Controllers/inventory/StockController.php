@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers\inventory;
 
+use App\Exports\ExportInventoryStock;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
+
 
 class StockController extends Controller
 {
@@ -24,7 +27,6 @@ class StockController extends Controller
                 'limit' => $length,
                 'offset' => $start,
             ];
-
             $apiResponse = storeApi(env('STOCK_URL') . '/lists', $requestbody);
             if ($apiResponse->successful()) {
                 $data = $apiResponse->json();
@@ -73,27 +75,66 @@ class StockController extends Controller
         }
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function edit($id)
     {
-        //
+        try {
+            $apiResponse = fectApi(env('STOCK_URL') . '/' . $id);
+            $data = json_decode($apiResponse->getBody()->getContents());
+            return view('inventory.stock.ajax.mutasi', data: compact('data'));
+        } catch (\Exception $e) {
+            return back()->withErrors($e->getMessage());
+        }
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
-        //
+        try {
+            $data = [
+                'item_id' => $request->item_id,
+                'quantity' => $request->qty,
+                'date_mutation' => $request->date_mutation,
+                'mutation_reason' => $request->mutation_reason,
+            ];
+
+            $apiResponse = updateApi(env('STOCK_URL') . '/' . $id, $data);
+            dd($apiResponse->json(), $data);
+            if ($apiResponse->successful()) {
+                return redirect()->route('stock.index')->with('success', $apiResponse->json()['message']);
+            } else {
+                return back()->withErrors($apiResponse->json()['message']);
+            }
+        } catch (\Exception $e) {
+            return back()->withErrors($e->getMessage());
+        }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function exportExcel(Request $request)
     {
-        //
+        try {
+            $start_date = $request->input('start_date', 0);
+            $end_date = $request->input('end_date', 0);
+
+            $requestbody = [
+                'start_date' => $start_date,
+                'end_date' => $end_date,
+                'company_id' => 0,
+            ];
+
+            $apiResponse = storeApi(env('STOCK_URL') . '/lists', $requestbody);
+            if ($apiResponse->successful()) {
+                $data = $apiResponse->json()['data']['table'] ?? [];
+
+                if (empty($data)) {
+                    return back()->with('error', 'Tidak ada data untuk diexport.');
+                }
+
+                // Passing the extra data as arguments to the ExportProcurementReport class
+                return Excel::download(new ExportInventoryStock($data, $start_date, $end_date), 'Inventory Stock.xlsx');
+            }
+
+            return response()->json(['error' => $apiResponse->json()['message']]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()]);
+        }
     }
 }

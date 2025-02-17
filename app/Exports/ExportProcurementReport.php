@@ -129,6 +129,4 @@ class ExportProcurementReport implements FromCollection, WithHeadings, WithTitle
             ->setVertical('center')
             ->setHorizontal('center');
     }
-
-
 }

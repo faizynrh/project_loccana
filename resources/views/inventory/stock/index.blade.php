@@ -42,7 +42,6 @@
                                         <input type="date" id="end_date" name="end_date" class="form-control"
                                             value="{{ \Carbon\Carbon::now()->toDateString() }}" required>
                                     </div>
-
                                     <div class="col-md-3 d-flex align-items-end">
                                         <button type="submit" class="btn btn-primary">Cari</button>
                                     </div>
@@ -109,84 +108,151 @@
                 </div>
             </section>
         </div>
+        @include('inventory.stock.ajax.modal')
     @endsection
     @push('scripts')
         <script>
             $(document).ready(function() {
-                $('#tablestock').DataTable({
+                $('#exportBtn').click(function() {
+                    var start_date = $('#start_date').val();
+                    var end_date = $('#end_date').val();
+
+                    var formData = '&start_date=' + start_date + '&end_date=' + end_date;
+                    console.log("Form Data:" + formData);
+                    window.location.href = "/stock/export-excel?" + formData;
+                });
+                let table = $('#tablestock').DataTable({
                     serverSide: true,
                     processing: true,
                     ajax: {
                         url: '{{ route('stock.ajax') }}',
                         type: 'GET',
+                        data: function(d) {
+                            let start_date = $('#start_date').val();
+                            let end_date = $('#end_date').val();
+
+                            d.start_date = start_date;
+                            d.end_date = end_date;
+
+                            // console.log('Start Date:', start_date);
+                            // console.log('End Date:', end_date);
+                        }
                     },
                     columns: [{
-                            data: 'kode',
+                            data: 'kode'
                         },
                         {
-                            data: 'produk',
+                            data: 'produk'
                         },
                         {
-                            data: 'kemasan',
+                            data: 'kemasan'
                         },
                         {
-                            data: 'principal',
+                            data: 'principal'
                         },
                         {
-                            data: 'box_per_lt',
+                            data: 'box_per_lt'
                         },
                         {
-                            data: 'lt_stock_awal',
+                            data: 'lt_stock_awal'
                         },
                         {
-                            data: 'box_stock_awal',
+                            data: 'box_stock_awal'
                         },
                         {
-                            data: 'lt_penerimaan',
+                            data: 'lt_penerimaan'
                         },
                         {
-                            data: 'box_penerimaan',
+                            data: 'box_penerimaan'
                         },
                         {
-                            data: 'return_lt_penerimaan',
+                            data: 'return_lt_penerimaan'
                         },
                         {
-                            data: 'return_box_penerimaan',
+                            data: 'return_box_penerimaan'
                         },
                         {
-                            data: 'lt_do',
+                            data: 'lt_do'
                         },
                         {
-                            data: 'box_do',
+                            data: 'box_do'
                         },
                         {
-                            data: 'return_lt_do',
+                            data: 'return_lt_do'
                         },
                         {
-                            data: 'return_box_do',
+                            data: 'return_box_do'
                         },
                         {
-                            data: 'lt_stock_akhir',
+                            data: 'lt_stock_akhir'
                         },
                         {
-                            data: 'box_stock_akhir',
+                            data: 'box_stock_akhir'
                         },
                         {
                             data: null,
                             render: function(data, type, row) {
                                 return `
-                                <div class="d-flex">
-                                    <a href="/stock/detail/${row.item_id}" class="btn btn-sm btn-info mb-2" style="margin-right:4px;" title="Detail">
-                                        <i class="bi bi-eye"></i>
-                                    </a>
-                                    <a href="/stock/mutasi/${row.item_id}" class="btn btn-sm btn-warning mb-2" style="margin-right:4px;" title="Edit">
-                                        <i class="bi bi-arrow-repeat"></i>
-                                    </a>
-                                </div>
-                                        `;
+                        <div class="d-flex">
+                            <a href="/stock/detail/${row.item_id}" class="btn btn-sm btn-info me-2" title="Detail">
+                                <i class="bi bi-eye"></i>
+                            </a>
+                            <button type="button" class="btn btn-sm btn-warning btn-mutasi"
+                                data-id="${row.item_id}" title="Edit">
+                                <i class="bi bi-arrow-repeat"></i>
+                            </button>
+                        </div>
+                    `;
                             }
                         }
-                    ],
+                    ]
+                });
+
+                $('#searchForm').submit(function(e) {
+                    e.preventDefault();
+                    table.ajax.reload();
+                });
+
+
+                function updateModal(modalId, title, content, sizeClass) {
+                    let modalDialog = $(`${modalId} .modal-dialog`);
+                    modalDialog.removeClass('modal-full modal-xl modal-lg modal-md').addClass(sizeClass);
+
+                    $(`${modalId} .modal-title`).text(title);
+                    $(`${modalId} .modal-body`).html(content);
+
+                    let myModal = new bootstrap.Modal(document.getElementById(modalId.substring(1)));
+                    myModal.show();
+                }
+
+                $(document).on('click', '.btn-mutasi', function(e) {
+                    e.preventDefault();
+                    const id = $(this).data('id');
+                    const url = '{{ route('stock.mutasi', ':id') }}'.replace(':id', id);
+                    const $button = $(this);
+
+                    $('#loading-overlay').fadeIn();
+
+                    $.ajax({
+                        url: url,
+                        type: 'GET',
+                        dataType: 'html',
+                        beforeSend: function() {
+                            //
+                        },
+                        success: function(response) {
+                            updateModal('#modal-stock', 'Tambah Mutasi', response,
+                                'modal-lg');
+                        },
+                        error: function(xhr) {
+                            let errorMsg = xhr.responseText ||
+                                '<p>An error occurred while loading the content.</p>';
+                            $('#content-stock').html(errorMsg);
+                        },
+                        complete: function() {
+                            $('#loading-overlay').fadeOut();
+                        }
+                    });
                 });
             })
         </script>
