@@ -63,8 +63,8 @@ class StockController extends Controller
 
             if ($apiResponse->successful()) {
                 $data = json_decode($apiResponse->body());
-                dd($data);
-                return view('procurement.penerimaanbarang.detail', compact('data'));
+                // dd($data);
+                return view('inventory.stock.detail', compact('data'));
             } else {
                 return back()->withErrors($apiResponse->json()['message']);
             }
