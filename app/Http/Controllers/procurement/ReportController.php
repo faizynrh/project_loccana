@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\procurement;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\ExportProcurementReport;
 
 class ReportController extends Controller
 {
@@ -63,6 +65,41 @@ class ReportController extends Controller
             return view('procurement.report.index', compact('partner'));
         }
         return view('procurement.report.index');
+    }
+
+
+    public function exportExcel(Request $request)
+    {
+        try {
+            $partner_id = $request->input('principal', 0);
+            $start_date = $request->input('start_date', 0);
+            $end_date = $request->input('end_date', 0);
+            $principalname = $request->input('principal_name');
+
+            $requestbody = [
+                'partner_id' => $partner_id,
+                'start_date' => $start_date,
+                'end_date' => $end_date,
+                'company_id' => 0,
+            ];
+
+            $apiResponse = storeApi(env('REPORT_URL'), $requestbody);
+            if ($apiResponse->successful()) {
+                $data = $apiResponse->json();
+                $tableData = $data['data']['table'] ?? [];
+
+                if (empty($tableData)) {
+                    return back()->with('error', 'Tidak ada data untuk diexport.');
+                }
+
+                // Passing the extra data as arguments to the ExportProcurementReport class
+                return Excel::download(new ExportProcurementReport($tableData, $principalname, $start_date, $end_date), 'Procurement Report.xlsx');
+            }
+
+            return response()->json(['error' => $apiResponse->json()['message']]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()]);
+        }
     }
 
 }
