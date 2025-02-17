@@ -50,7 +50,7 @@
                             class="text-danger">*</span></label>
                 </div>
                 <div class="col-md-9">
-                    <select class="form-select" name="jenis_mutasi">
+                    <select class="form-select" name="jenis_mutasi" required>
                         <option value="" selected disabled>Pilih Jenis Mutasi</option>
                         <option value="0">Mutasi Masuk</option>
                         <option value="1">Mutasi Keluar</option>
@@ -64,7 +64,7 @@
                 </div>
                 <div class="col-md-9">
                     <input type="text" class="form-control" id="qty_mutasi" name="qty_mutasi"
-                        placeholder="Jumlah Mutasi">
+                        placeholder="Jumlah Mutasi" required>
                 </div>
             </div>
             <div class="row mb-3 align-items-center">
@@ -73,7 +73,7 @@
                             class="text-danger">*</span></label>
                 </div>
                 <div class="col-md-9">
-                    <textarea class="form-control" rows="4" id="mutation_reason" name="mutation_reason"></textarea>
+                    <textarea class="form-control" rows="4" id="mutation_reason" name="mutation_reason" required></textarea>
                 </div>
             </div>
             <div class="modal-footer">
