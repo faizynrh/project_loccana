@@ -31,9 +31,6 @@ class StockController extends Controller
             if ($apiResponse->successful()) {
                 $data = $apiResponse->json();
 
-                $tableData = $data['data']['table'] ?? [];
-
-                session(['export_data' => $tableData]);
                 return response()->json([
                     'draw' => $request->input('draw'),
                     'recordsTotal' => $data['data']['jumlah_filter'] ?? 0,
@@ -96,7 +93,7 @@ class StockController extends Controller
                 'mutation_reason' => $request->mutation_reason,
             ];
 
-            $apiResponse = updateApi(env('STOCK_URL') . '/' . $id, $data);
+            $apiResponse = storeApi(env('STOCK_URL') . '/' . $id, $data);
             dd($apiResponse->json(), $data);
             if ($apiResponse->successful()) {
                 return redirect()->route('stock.index')->with('success', $apiResponse->json()['message']);
