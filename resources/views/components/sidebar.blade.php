@@ -86,7 +86,7 @@
                     </ul>
                 </li>
                 <li
-                    class="sidebar-item has-sub {{ Request::is('stock*') || Request::is('stock_gudang*') ? 'active' : '' }}}}">
+                    class="sidebar-item has-sub {{ Request::is('stock*') || Request::is('stock_gudang*') ? 'active' : '' }}">
                     <a href="#" class="sidebar-link">
                         <i class="bi bi-box-seam"></i>
                         <span>Inventory</span>
