@@ -137,7 +137,7 @@
                                         <th style="width: 90px"></th>
                                         <th style="width: 45px">Qty (Lt/Kg)</th>
                                         <th style="width: 100px">Harga</th>
-                                        <th style="width: 30px">Diskon</th>
+                                        <th style="width: 30px">Diskon (%)</th>
                                         <th style="width: 70px">Total</th>
                                         <th style="width: 30px"></th>
                                         <th style="width: 30px"></th>
@@ -263,35 +263,35 @@
                 e.preventDefault();
                 const rowCount = $('.item-row').length;
                 const newRow = `
-                <tr style="border-bottom: 2px solid #000" class="item-row">
-                    <td colspan="2">
-                        <select class="form-select" name="items[${rowCount}][item_id]" required>
-                            <option value="" selected disabled>Pilih Item</option>
-                            @foreach ($items->data->items ?? [] as $option)
-                                <option value="{{ $option->id }}" data-uom="{{ $option->unit_of_measure_id }}">
-                                    {{ $option->sku }} - {{ $option->name }}
-                                </option>
-                            @endforeach
-                        </select>
-                        <input type="hidden" name="items[${rowCount}][uom_id]" class="uom-input">
-                    </td>
-                    <td>
-                        <input type="number" name="items[${rowCount}][quantity]" class="form-control qty-input" value="1" min="1">
-                    </td>
-                    <td>
-                        <input type="number" name="items[${rowCount}][unit_price]" class="form-control price-input" value="0" min="0">
-                    </td>
-                    <td>
-                        <input type="number" name="items[${rowCount}][discount]" class="form-control discount-input" value="0" min="0" max="100">
-                    </td>
-                    <td colspan="2">
-                        <input type="number" class="form-control bg-body-secondary total-input" value="0" readonly>
-                    </td>
-                    <td class="text-center">
-                        <button type="button" class="btn btn-danger btn-sm remove-row">X</button>
-                    </td>
-                </tr>
-            `;
+        <tr style="border-bottom: 2px solid #000" class="item-row">
+            <td colspan="2">
+                <select class="form-select" name="items[${rowCount}][item_id]" required>
+                    <option value="" selected disabled>Pilih Item</option>
+                    @foreach ($items->data->items ?? [] as $option)
+                        <option value="{{ $option->id }}" data-uom="{{ $option->unit_of_measure_id }}">
+                            {{ $option->sku }} - {{ $option->name }}
+                        </option>
+                    @endforeach
+                </select>
+                <input type="hidden" name="items[${rowCount}][uom_id]" class="uom-input">
+            </td>
+            <td>
+                <input type="number" name="items[${rowCount}][quantity]" class="form-control qty-input" value="1" min="1">
+            </td>
+            <td>
+                <input type="number" name="items[${rowCount}][unit_price]" class="form-control price-input" value="0" min="0">
+            </td>
+            <td>
+                <input type="number" name="items[${rowCount}][discount]" class="form-control discount-input" value="0" min="0" max="100">
+            </td>
+            <td colspan="2">
+                <input type="number" class="form-control bg-body-secondary total-input" value="0" readonly>
+            </td>
+            <td class="text-center">
+                <button type="button" class="btn btn-danger btn-sm remove-row">X</button>
+            </td>
+        </tr>
+    `;
                 $(newRow).insertBefore('#tableBody tr:last');
             });
 
@@ -305,6 +305,15 @@
 
             // Calculate totals on input change
             $(document).on('input', '.qty-input, .price-input, .discount-input', function() {
+                const discountInput = $(this).closest('tr').find('.discount-input');
+                let discountValue = parseFloat(discountInput.val()) || 0;
+
+                // Validate discount input to not exceed 100
+                if (discountValue > 100) {
+                    discountInput.val(100); // Set discount to 100 if greater
+                    discountValue = 100;
+                }
+
                 calculateRowTotal($(this).closest('tr'));
                 updateTotals();
             });
@@ -365,8 +374,16 @@
                 });
             }
 
-            // Initial calculations
-            updateTotals();
+            // Calculate totals on page load
+            function initialCalculations() {
+                $('.item-row').each(function() {
+                    calculateRowTotal($(this));
+                });
+                updateTotals();
+            }
+
+            // Initial calculations when the page loads
+            initialCalculations();
         });
     </script>
 @endpush

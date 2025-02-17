@@ -187,6 +187,7 @@ Route::middleware('auth.login')->group(
             Route::get('/getItemsList/{id}', [PurchaseOrderController::class, 'getItemsList'])->name('getitem');
             Route::get('/approve/{id}', [PurchaseOrderController::class, 'vapprove'])->name('vapprove');
             Route::put('/approve/{id}', [PurchaseOrderController::class, 'approve'])->name('approve');
+            Route::get('/print/{id}', [PurchaseOrderController::class, 'print'])->name('print');
         });
 
 

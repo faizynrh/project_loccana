@@ -117,7 +117,7 @@
                                         <th style="width: 90px"></th>
                                         <th style="width: 45px">Qty (Lt/Kg)</th>
                                         <th style="width: 100px">Harga</th>
-                                        <th style="width: 30px">Diskon</th>
+                                        <th style="width: 30px">Diskon (%)</th>
                                         <th style="width: 70px">Total</th>
                                         <th style="width: 30px"></th>
                                         <th style="width: 30px"></th>
@@ -254,7 +254,6 @@
                 }
 
                 $('#tableBody').data('current-items', items);
-
                 $('.item-select').html(options);
             }
 
@@ -296,9 +295,10 @@
                     <button type="button" class="btn btn-danger btn-sm remove-row">X</button>
                 </td>
             </tr>
-        `;
+            `;
             }
 
+            // Set nilai UOM ketika item dipilih
             $(document).on('change', '.item-select', function() {
                 const selectedUOM = $(this).find(':selected').data('uom');
                 $(this).siblings('.uom-input').val(selectedUOM);
@@ -319,12 +319,14 @@
                 }
             });
 
+            // Setiap kali terjadi perubahan (meski pada form detail inputnya disabled, perhitungan manual tetap bekerja bila diaktifkan)
             $(document).on('input', '.qty-input, .price-input, .discount-input', function() {
                 var row = $(this).closest('tr');
                 calculateRowTotal(row);
                 updateTotals();
             });
 
+            // Fungsi untuk menghitung total per baris
             function calculateRowTotal(row) {
                 const qty = parseFloat(row.find('.qty-input').val()) || 0;
                 const price = parseFloat(row.find('.price-input').val()) || 0;
@@ -342,11 +344,16 @@
                 row.find('.total-input').val(total.toFixed(2));
             }
 
+            // Fungsi untuk mengupdate total keseluruhan
             function updateTotals() {
                 let subtotal = 0;
                 let totalDiscount = 0;
 
+                // Pastikan setiap baris dihitung ulang (meskipun input disabled, .val() akan mengembalikan nilainya)
                 $('.item-row').each(function() {
+                    // Hitung ulang total per baris terlebih dahulu
+                    calculateRowTotal($(this));
+
                     const qty = parseFloat($(this).find('.qty-input').val()) || 0;
                     const price = parseFloat($(this).find('.price-input').val()) || 0;
                     const discount = parseFloat($(this).find('.discount-input').val()) || 0;
@@ -373,6 +380,7 @@
                 $('#total_amount').val(finalTotal);
             }
 
+            // Fungsi untuk menampilkan nilai di footer tabel
             function updateDisplayValue(label, value) {
                 $('tr.fw-bold').each(function() {
                     if ($(this).find('td:eq(1)').text().trim() === label) {
@@ -388,6 +396,7 @@
                 });
             }
 
+            // Panggil updateTotals() saat load agar semua perhitungan langsung tampil benar
             updateTotals();
         });
     </script>

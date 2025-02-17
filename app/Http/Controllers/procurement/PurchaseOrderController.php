@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\procurement;
 
 use App\Http\Controllers\Controller;
+// use Barryvdh\DomPDF\PDF;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -35,6 +37,39 @@ class PurchaseOrderController extends Controller
                 'success' => false,
                 'message' => 'Error generating PO code: ' . $e->getMessage()
             ], 500);
+        }
+    }
+
+    public function print($id)
+    {
+        try {
+            $apiResponse = fectApi(env('PO_URL') . '/' . $id);
+
+            if ($apiResponse->successful()) {
+                $responseData = json_decode($apiResponse->body(), true); // Convert to associative array
+
+                // Prepare the data for the view
+                $viewData = [
+                    'data' => $responseData,
+                    'sub_total' => $responseData['sub_total'] ?? 0,
+                    'discount' => $responseData['discount'] ?? 0,
+                    'taxable' => $responseData['taxable'] ?? 0,
+                    'vat' => $responseData['vat'] ?? 0,
+                    'total' => $responseData['total'] ?? 0,
+                    'notes' => $responseData['notes'] ?? '',
+                    'purchase_date' => $responseData['purchase_date'] ?? date('Y-m-d'),
+                    'approved_by' => $responseData['approved_by'] ?? '',
+                    'checked_by' => $responseData['checked_by'] ?? '',
+                    'ordered_by' => $responseData['ordered_by'] ?? ''
+                ];
+
+                $pdf = Pdf::loadView('procurement.purchaseorder.print', $viewData);
+                return $pdf->stream('procurement.purchase_order_' . $id . '.pdf');
+            } else {
+                return back()->withErrors('Gagal mengambil data item: ' . $apiResponse->status());
+            }
+        } catch (\Exception $e) {
+            return back()->withErrors($e->getMessage());
         }
     }
 
@@ -170,6 +205,8 @@ class PurchaseOrderController extends Controller
                 'requested_by' => (int) $request->input('requested_by'),
                 'items' => $items,
             ];
+
+            dd($data);
 
             $apiResponse = storeApi(env('PO_URL'), $data);
 
