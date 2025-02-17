@@ -128,7 +128,6 @@ class StockController extends Controller
                     return back()->with('error', 'Tidak ada data untuk diexport.');
                 }
 
-                // Passing the extra data as arguments to the ExportProcurementReport class
                 return Excel::download(new ExportInventoryStock($data, $start_date, $end_date), 'Inventory Stock.xlsx');
             }
 
