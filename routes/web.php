@@ -12,6 +12,7 @@ use App\Http\Controllers\procurement\ReportController;
 use App\Http\Controllers\procurement\ReturnController;
 use App\Http\Controllers\authentication\AuthController;
 use App\Http\Controllers\inventory\StockController;
+use App\Http\Controllers\inventory\StockGudangController;
 use App\Http\Controllers\masterdata\CustomerController;
 use App\Http\Controllers\procurement\InvoiceController;
 use App\Http\Controllers\procurement\RekapPOController;
@@ -239,7 +240,12 @@ Route::middleware('auth.login')->group(
             Route::get('/mutasi/{id}', [StockController::class, 'edit'])->name('mutasi');
             Route::post('/addmutasi', [StockController::class, 'store'])->name('store');
             Route::get('/export-excel', [StockController::class, 'exportExcel'])->name('exportexcel');
+        });
 
+        Route::prefix('/stock_gudang')->name('stock_gudang.')->group(function () {
+            Route::get('/', [StockGudangController::class, 'index'])->name('index');
+            Route::get('/ajax', [StockGudangController::class, 'ajax'])->name('ajax');
+            Route::get('/detail/{id}', [StockGudangController::class, 'show'])->name('detail');
         });
     }
 );
