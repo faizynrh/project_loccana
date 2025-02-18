@@ -58,22 +58,7 @@
                             </div>
                         </form>
                         <div class="card-body">
-                            @if (session('success'))
-                                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                    {{ session('success') }}
-                                    <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                        aria-label="Close"></button>
-                                </div>
-                            @endif
-                            @if ($errors->any())
-                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                    @foreach ($errors->all() as $error)
-                                        <p>{{ $error }}</p>
-                                    @endforeach
-                                    <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                        aria-label="Close"></button>
-                                </div>
-                            @endif
+                            @include('alert.alert')
                             <hr class="my-4 border-2 border-dark">
                             <div class="mt-3 d-flex justify-content-end mb-3">
                                 <button class="btn btn-primary" id="exportBtn">

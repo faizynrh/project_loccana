@@ -32,22 +32,7 @@
             <section class="section">
                 <div class="card">
                     <div class="card-body">
-                        @if (session('success'))
-                            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                {{ session('success') }}
-                                <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                    aria-label="Close"></button>
-                            </div>
-                        @endif
-                        @if ($errors->any())
-                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                @foreach ($errors->all() as $error)
-                                    <p>{{ $error }}</p>
-                                @endforeach
-                                <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                    aria-label="Close"></button>
-                            </div>
-                        @endif
+                        @include('alert.alert')
                         <button type="button" class="btn btn-primary fw-bold btn-add-gudang">+ Tambah Gudang</button>
                         <div class="table-responsive">
                             <table class="table table-striped table-bordered mt-3" id="tablegudang">
@@ -72,7 +57,7 @@
 @endsection
 @push('scripts')
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             $('#tablegudang').DataTable({
                 serverSide: true,
                 processing: true,
@@ -81,43 +66,43 @@
                     type: 'GET',
                 },
                 columns: [{
-                        data: null,
-                        render: function(data, type, row, meta) {
-                            return meta.row + meta.settings._iDisplayStart + 1;
-                        }
-                    },
-                    {
-                        data: 'name'
-                    },
-                    {
-                        data: 'description',
-                    },
-                    {
-                        data: 'location'
-                    },
-                    {
-                        data: 'capacity'
-                    },
-                    {
-                        data: null,
-                        render: function(data, type, row) {
-                            return `
-                                <button type="button" class="btn btn-sm btn-warning me-2 btn-edit-gudang"
-                                                    data-id="${row.id}"
-                                                    title="Edit">
-                                                    <i class="bi bi-pencil"></i>
-                                </button>
-                                <form action="/gudang/delete/${row.id}" method="POST" id="delete${row.id}" style="display:inline;">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="button" class="btn btn-sm btn-danger" title="Hapus"
-                                        onclick="confirmDelete(${row.id})">
-                                        <i class="bi bi-trash"></i>
-                                    </button>
-                                </form>
-                    `;
-                        }
+                    data: null,
+                    render: function (data, type, row, meta) {
+                        return meta.row + meta.settings._iDisplayStart + 1;
                     }
+                },
+                {
+                    data: 'name'
+                },
+                {
+                    data: 'description',
+                },
+                {
+                    data: 'location'
+                },
+                {
+                    data: 'capacity'
+                },
+                {
+                    data: null,
+                    render: function (data, type, row) {
+                        return `
+                                    <button type="button" class="btn btn-sm btn-warning me-2 btn-edit-gudang"
+                                                        data-id="${row.id}"
+                                                        title="Edit">
+                                                        <i class="bi bi-pencil"></i>
+                                    </button>
+                                    <form action="/gudang/delete/${row.id}" method="POST" id="delete${row.id}" style="display:inline;">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="button" class="btn btn-sm btn-danger" title="Hapus"
+                                            onclick="confirmDelete(${row.id})">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </form>
+                        `;
+                    }
+                }
                 ]
             });
 
@@ -132,7 +117,7 @@
                 myModal.show();
             }
 
-            $(document).on('click', '.btn-add-gudang', function(e) {
+            $(document).on('click', '.btn-add-gudang', function (e) {
                 e.preventDefault();
                 const url = '{{ route('gudang.store') }}'
                 const $button = $(this);
@@ -143,25 +128,25 @@
                     url: url,
                     type: 'GET',
                     dataType: 'html',
-                    beforeSend: function() {
+                    beforeSend: function () {
                         //
                     },
-                    success: function(response) {
+                    success: function (response) {
                         updateModal('#modal-gudang', 'Tambah Gudang', response,
                             'modal-lg');
                     },
-                    error: function(xhr) {
+                    error: function (xhr) {
                         let errorMsg = xhr.responseText ||
                             '<p>An error occurred while loading the content.</p>';
                         $('#content-gudang').html(errorMsg);
                     },
-                    complete: function() {
+                    complete: function () {
                         $('#loading-overlay').fadeOut();
                     }
                 });
             });
 
-            $(document).on('click', '.btn-edit-gudang', function(e) {
+            $(document).on('click', '.btn-edit-gudang', function (e) {
                 e.preventDefault();
                 const gudangid = $(this).data('id');
                 const url = '{{ route('gudang.edit', ':gudangid') }}'.replace(':gudangid', gudangid);
@@ -173,19 +158,19 @@
                     url: url,
                     type: 'GET',
                     dataType: 'html',
-                    beforeSend: function() {
+                    beforeSend: function () {
                         //
                     },
-                    success: function(response) {
+                    success: function (response) {
                         updateModal('#modal-gudang', 'Edit Gudang', response,
                             'modal-lg');
                     },
-                    error: function(xhr) {
+                    error: function (xhr) {
                         let errorMsg = xhr.responseText ||
                             '<p>An error occurred while loading the content.</p>';
                         $('#content-gudang').html(errorMsg);
                     },
-                    complete: function() {
+                    complete: function () {
                         $('#loading-overlay').fadeOut();
                     }
                 });

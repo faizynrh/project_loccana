@@ -32,22 +32,7 @@
             <section class="section">
                 <div class="card">
                     <div class="card-body">
-                        @if (session('success'))
-                            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                {{ session('success') }}
-                                <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                    aria-label="Close"></button>
-                            </div>
-                        @endif
-                        @if ($errors->any())
-                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                @foreach ($errors->all() as $error)
-                                    <p>{{ $error }}</p>
-                                @endforeach
-                                <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                    aria-label="Close"></button>
-                            </div>
-                        @endif
+                        @include('alert.alert')
                         <button type="button" class="btn btn-primary fw-bold btn-add-item">+ Tambah Item</button>
                         <div class="table-responsive">
                             <table class="table table-striped table-bordered mt-1" id="tableitem">
@@ -74,7 +59,7 @@
 @endsection
 @push('scripts')
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             $('#tableitem').DataTable({
                 serverSide: true,
                 processing: true,
@@ -83,53 +68,53 @@
                     type: 'GET',
                 },
                 columns: [{
-                        data: null,
-                        render: function(data, type, row, meta) {
-                            return meta.row + meta.settings._iDisplayStart + 1;
-                        }
-                    },
-                    {
-                        data: 'item_code'
-                    },
-                    {
-                        data: 'item_name'
-                    },
-                    {
-                        data: 'item_description'
-                    },
-                    {
-                        data: 'uom_name'
-                    },
-                    {
-                        data: 'partner_name'
-                    },
-                    {
-                        data: 'status'
-                    },
-                    {
-                        data: null,
-                        render: function(data, type, row) {
-                            return `
-                        <button type="button" class="btn btn-sm btn-info btn-detail-item"
-                            data-id="${row.id}"
-                            title="Detail">
-                            <i class="bi bi-eye"></i>
-                        </button>
-                        <button type="button" class="btn btn-sm btn-warning btn-edit-item"
-                            data-id="${row.id}"
-                            title="Edit">
-                            <i class="bi bi-pencil"></i>
-                        </button>
-                        <form action="/item/delete/${row.id}" method="POST" id="delete${row.id}" style="display:inline;">
-                            @csrf
-                            @method('DELETE')
-                            <button type="button" class="btn btn-sm btn-danger" title="Hapus" onclick="confirmDelete(${row.id})">
-                                <i class="bi bi-trash"></i>
-                            </button>
-                        </form>
-                    `;
-                        }
+                    data: null,
+                    render: function (data, type, row, meta) {
+                        return meta.row + meta.settings._iDisplayStart + 1;
                     }
+                },
+                {
+                    data: 'item_code'
+                },
+                {
+                    data: 'item_name'
+                },
+                {
+                    data: 'item_description'
+                },
+                {
+                    data: 'uom_name'
+                },
+                {
+                    data: 'partner_name'
+                },
+                {
+                    data: 'status'
+                },
+                {
+                    data: null,
+                    render: function (data, type, row) {
+                        return `
+                            <button type="button" class="btn btn-sm btn-info btn-detail-item"
+                                data-id="${row.id}"
+                                title="Detail">
+                                <i class="bi bi-eye"></i>
+                            </button>
+                            <button type="button" class="btn btn-sm btn-warning btn-edit-item"
+                                data-id="${row.id}"
+                                title="Edit">
+                                <i class="bi bi-pencil"></i>
+                            </button>
+                            <form action="/item/delete/${row.id}" method="POST" id="delete${row.id}" style="display:inline;">
+                                @csrf
+                                @method('DELETE')
+                                <button type="button" class="btn btn-sm btn-danger" title="Hapus" onclick="confirmDelete(${row.id})">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </form>
+                        `;
+                    }
+                }
                 ]
             });
 
@@ -144,7 +129,7 @@
                 myModal.show();
             }
 
-            $(document).on('click', '.btn-add-item', function(e) {
+            $(document).on('click', '.btn-add-item', function (e) {
                 e.preventDefault();
                 const url = '{{ route('item.create') }}'
                 const $button = $(this);
@@ -155,26 +140,26 @@
                     url: url,
                     type: 'GET',
                     dataType: 'html',
-                    beforeSend: function() {
+                    beforeSend: function () {
                         //
                     },
-                    success: function(response) {
+                    success: function (response) {
                         console.log(response);
                         updateModal('#modal-item', 'Tambah Item', response,
                             'modal-lg');
                     },
-                    error: function(xhr) {
+                    error: function (xhr) {
                         let errorMsg = xhr.responseText ||
                             '<p>An error occurred while loading the content.</p>';
                         $('#content-item').html(errorMsg);
                     },
-                    complete: function() {
+                    complete: function () {
                         $('#loading-overlay').fadeOut();
                     }
                 });
             });
 
-            $(document).on('click', '.btn-detail-item', function(e) {
+            $(document).on('click', '.btn-detail-item', function (e) {
                 e.preventDefault();
                 const itemid = $(this).data('id');
                 const url = '{{ route('item.detail', ':itemid') }}'.replace(':itemid', itemid);
@@ -186,25 +171,25 @@
                     url: url,
                     type: 'GET',
                     dataType: 'html',
-                    beforeSend: function() {
+                    beforeSend: function () {
                         //
                     },
-                    success: function(response) {
+                    success: function (response) {
                         updateModal('#modal-item', 'Detail Item', response,
                             'modal-lg');
                     },
-                    error: function(xhr) {
+                    error: function (xhr) {
                         let errorMsg = xhr.responseText ||
                             '<p>An error occurred while loading the content.</p>';
                         $('#content-item').html(errorMsg);
                     },
-                    complete: function() {
+                    complete: function () {
                         $('#loading-overlay').fadeOut();
                     }
                 });
             });
 
-            $(document).on('click', '.btn-edit-item', function(e) {
+            $(document).on('click', '.btn-edit-item', function (e) {
                 e.preventDefault();
                 const itemid = $(this).data('id');
                 const url = '{{ route('item.edit', ':itemid') }}'.replace(':itemid', itemid);
@@ -216,19 +201,19 @@
                     url: url,
                     type: 'GET',
                     dataType: 'html',
-                    beforeSend: function() {
+                    beforeSend: function () {
                         //
                     },
-                    success: function(response) {
+                    success: function (response) {
                         updateModal('#modal-item', 'Edit Item', response,
                             'modal-lg');
                     },
-                    error: function(xhr) {
+                    error: function (xhr) {
                         let errorMsg = xhr.responseText ||
                             '<p>An error occurred while loading the content.</p>';
                         $('#content-item').html(errorMsg);
                     },
-                    complete: function() {
+                    complete: function () {
                         $('#loading-overlay').fadeOut();
                     }
                 });

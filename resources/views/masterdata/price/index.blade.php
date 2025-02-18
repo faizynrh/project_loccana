@@ -32,23 +32,7 @@
             <section class="section">
                 <div class="card">
                     <div class="card-body">
-                        @if (session('success'))
-                            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                {{ session('success') }}
-                                <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                    aria-label="Close"></button>
-                            </div>
-                        @endif
-
-                        @if ($errors->any())
-                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                @foreach ($errors->all() as $error)
-                                    <p>{{ $error }}</p>
-                                @endforeach
-                                <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                    aria-label="Close"></button>
-                            </div>
-                        @endif
+                        @include('alert.alert')
                         <table class="table table-striped table-bordered mt-3" id="tableprice">
                             <thead>
                                 <tr>
@@ -71,7 +55,7 @@
 @endsection
 @push('scripts')
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             $('#tableprice').DataTable({
                 serverSide: true,
                 processing: true,
@@ -80,49 +64,49 @@
                     type: 'GET',
                 },
                 columns: [{
-                        data: null,
-                        render: function(data, type, row, meta) {
-                            return meta.row + meta.settings._iDisplayStart + 1;
-                        }
-                    },
-                    {
-                        data: 'kode_item'
-                    },
-                    {
-                        data: 'nama_item'
-                    },
-                    {
-                        data: 'nama_principal'
-                    },
-                    {
-                        data: 'harga_pokok'
-                    },
-                    {
-                        data: 'harga_beli'
-                    },
-                    {
-                        data: null,
-                        render: function(data, type, row) {
-                            return `
-                                <div class="d-flex">
-                                <button type="button" class="btn btn-sm btn-warning me-2 btn-edit-price"
-                                    data-id="${row.id}"
-                                    title="Edit">
-                                    <i class="bi bi-pencil"></i>
-                                </button>
-                                <form id="approve${row.id}"
-                                action="/price/approve/${row.id}" method="POST">
-                                @csrf
-                                @method('PUT')
-                                <button type="button" class="btn btn-sm btn-success me-2" title="Approve"
-                                    onclick="confirmApprove(${row.id})">
-                                    <i class="bi bi-check"></i>
-                                </button>
-                                </form>
-                                </div>
-                            `;
-                        }
+                    data: null,
+                    render: function (data, type, row, meta) {
+                        return meta.row + meta.settings._iDisplayStart + 1;
                     }
+                },
+                {
+                    data: 'kode_item'
+                },
+                {
+                    data: 'nama_item'
+                },
+                {
+                    data: 'nama_principal'
+                },
+                {
+                    data: 'harga_pokok'
+                },
+                {
+                    data: 'harga_beli'
+                },
+                {
+                    data: null,
+                    render: function (data, type, row) {
+                        return `
+                                    <div class="d-flex">
+                                    <button type="button" class="btn btn-sm btn-warning me-2 btn-edit-price"
+                                        data-id="${row.id}"
+                                        title="Edit">
+                                        <i class="bi bi-pencil"></i>
+                                    </button>
+                                    <form id="approve${row.id}"
+                                    action="/price/approve/${row.id}" method="POST">
+                                    @csrf
+                                    @method('PUT')
+                                    <button type="button" class="btn btn-sm btn-success me-2" title="Approve"
+                                        onclick="confirmApprove(${row.id})">
+                                        <i class="bi bi-check"></i>
+                                    </button>
+                                    </form>
+                                    </div>
+                                `;
+                    }
+                }
                 ]
             });
 
@@ -137,7 +121,7 @@
                 myModal.show();
             }
 
-            $(document).on('click', '.btn-edit-price', function(e) {
+            $(document).on('click', '.btn-edit-price', function (e) {
                 e.preventDefault();
                 const priceId = $(this).data('id');
                 const url = '{{ route('price.edit', ':priceId') }}'.replace(':priceId', priceId);
@@ -149,19 +133,19 @@
                     url: url,
                     type: 'GET',
                     dataType: 'html',
-                    beforeSend: function() {
+                    beforeSend: function () {
                         //
                     },
-                    success: function(response) {
+                    success: function (response) {
                         updateModal('#modal-price', 'Edit COA', response,
                             'modal-lg');
                     },
-                    error: function(xhr) {
+                    error: function (xhr) {
                         let errorMsg = xhr.responseText ||
                             '<p>An error occurred while loading the content.</p>';
                         $('#content-price').html(errorMsg);
                     },
-                    complete: function() {
+                    complete: function () {
                         $('#loading-overlay').fadeOut();
                     }
                 });

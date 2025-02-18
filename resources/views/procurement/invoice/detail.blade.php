@@ -29,23 +29,6 @@
             <section class="section">
                 <div class="card">
                     <div class="card-body">
-                        @if (session('success'))
-                            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                {{ session('success') }}
-                                <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                    aria-label="Close"></button>
-                            </div>
-                        @endif
-
-                        @if ($errors->any())
-                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                @foreach ($errors->all() as $error)
-                                    <p>{{ $error }}</p>
-                                @endforeach
-                                <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                    aria-label="Close"></button>
-                            </div>
-                        @endif
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <label for="nomorInvoice" class="form-label fw-bold mt-2 mb-1 small">Kode</label>
@@ -58,7 +41,8 @@
                                 <label class="form-label fw-bold mt-2 mb-1 small">Principal</label>
                                 <input type="text" class="form-control" id="partner_name" readonly>
                                 <label class="form-label fw-bold mt-2 mb-1 small">Alamat</label>
-                                <textarea class="form-control" rows="4" readonly>{{ $data->data[0]->shipment_info }}</textarea>
+                                <textarea class="form-control" rows="4"
+                                    readonly>{{ $data->data[0]->shipment_info }}</textarea>
                                 <label class="form-label fw-bold mt-2 mb-1 small">Att</label>
                                 <input type="text" class="form-control" readonly>
                                 <label class="form-label fw-bold mt-2 mb-1 small">No. Telp</label>
@@ -70,9 +54,9 @@
                             <div class="col-md-6">
                                 <label class="form-label fw-bold mt-2 mb-1 small">Ship To</label>
                                 <textarea class="form-control" rows="4" readonly>
-JL. Sangkuriang NO.38-A
-NPWP: 01.555.161.7.428.000
-        </textarea>
+    JL. Sangkuriang NO.38-A
+    NPWP: 01.555.161.7.428.000
+            </textarea>
                                 <label class="form-label fw-bold mt-2 mb-1 small">Email</label>
                                 <input type="text" class="form-control" readonly>
                                 <label class="form-label fw-bold mt-2 mb-1 small">Telp/Fax</label>
@@ -147,7 +131,8 @@ NPWP: 01.555.161.7.428.000
                                 <tr class="fw-bold">
                                     <td colspan="4" class="text-end">Diskon</td>
                                     <td class="text-end">Rp.
-                                        {{ number_format($data->data[0]->discount_invoice, 2, ',', '.') }}</td>
+                                        {{ number_format($data->data[0]->discount_invoice, 2, ',', '.') }}
+                                    </td>
                                 </tr>
                                 <tr class="fw-bold">
                                     <td colspan="4" class="text-end">Taxable</td>
@@ -163,7 +148,8 @@ NPWP: 01.555.161.7.428.000
                                 <tr class="fw-bold" style="border-top: 2px solid #000">
                                     <td colspan="4" class="text-end">Total</td>
                                     <td class="text-end">Rp.
-                                        {{ number_format($data->data[0]->total_amount, 2, ',', '.') }}</td>
+                                        {{ number_format($data->data[0]->total_amount, 2, ',', '.') }}
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>

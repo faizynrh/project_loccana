@@ -28,49 +28,23 @@
             </div>
             <section class="section">
                 <div class="card">
-                    {{-- <div class="card-header">
-                        <h6 class="card-title">Harap isi data yang telah ditandai dengan <span
-                                class="text-danger bg-light px-1">*</span>, dan
-                            masukkan data
-                            dengan benar.</h6>
-                    </div> --}}
                     <div class="card-body">
-                        @if (session('success'))
-                            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                {{ session('success') }}
-                                <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                    aria-label="Close"></button>
-                            </div>
-                        @endif
-
-                        @if ($errors->any())
-                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                @foreach ($errors->all() as $error)
-                                    <p>{{ $error }}</p>
-                                @endforeach
-                                <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                    aria-label="Close"></button>
-                            </div>
-                        @endif
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <label for="nomorInvoice" class="form-label fw-bold mt-2 mb-1 small">No.
                                     PO</label>
                                 <input type="text" class="form-control" value="{{ $data->data[0]->number_po }}" readonly>
-                                {{-- <label  class="form-label fw-bold mt-2 mb-1 small">Kode</label>
-                    <input type="text" class="form-control"  placeholder="Kode Purchase Order" readonly> --}}
                                 <label class="form-label fw-bold mt-2 mb-1 small">Tanggal</label>
                                 <input type="text" class="form-control"
                                     value="{{ \Carbon\Carbon::parse($data->data[0]->order_date)->format('Y-m-d') }}"
                                     readonly>
                                 <label class="form-label fw-bold mt-2 mb-1 small">Principal</label>
-                                <input type="text" class="form-control" value="{{ $data->data[0]->partner_name }}"
-                                    readonly>
+                                <input type="text" class="form-control" value="{{ $data->data[0]->partner_name }}" readonly>
                                 <label for="shipFrom" class="form-label fw-bold mt-2 mb-1 small">Alamat</label>
-                                <textarea class="form-control" id="shipFrom" rows="4" readonly>{{ $data->data[0]->address }}</textarea>
+                                <textarea class="form-control" id="shipFrom" rows="4"
+                                    readonly>{{ $data->data[0]->address }}</textarea>
                                 <label class="form-label fw-bold mt-2 mb-1 small">Att</label>
-                                <input type="text" class="form-control" value="{{ $data->data[0]->description }}"
-                                    readonly>
+                                <input type="text" class="form-control" value="{{ $data->data[0]->description }}" readonly>
                                 <label class="form-label fw-bold mt-2 mb-1 small">No. Telp</label>
                                 <input type="text" class="form-control" value="{{ $data->data[0]->phone }}" readonly>
                                 <label class="form-label fw-bold mt-2 mb-1 small">Fax</label>
@@ -86,8 +60,7 @@
                                 <label class="form-label fw-bold mt-2 mb-1 small">Angkutan</label>
                                 <input type="text" class="form-control" value="{{ $data->data[0]->shipment }}" readonly>
                                 <label class="form-label fw-bold mt-2 mb-1 small">No Polisi</label>
-                                <input type="text" class="form-control" value="{{ $data->data[0]->plate_number }}"
-                                    readonly>
+                                <input type="text" class="form-control" value="{{ $data->data[0]->plate_number }}" readonly>
                             </div>
                         </div>
                         <div class="p-2">

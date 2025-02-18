@@ -29,22 +29,7 @@
             <section class="section">
                 <div class="card">
                     <div class="card-body">
-                        @if (session('success'))
-                            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                {{ session('success') }}
-                                <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                    aria-label="Close"></button>
-                            </div>
-                        @endif
-                        @if ($errors->any())
-                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                @foreach ($errors->all() as $error)
-                                    <p>{{ $error }}</p>
-                                @endforeach
-                                <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                    aria-label="Close"></button>
-                            </div>
-                        @endif
+                        @include('alert.alert')
                         <button type="button" class="btn btn-primary fw-bold btn-add-coa">+ Tambah COA</button>
                         <div class="table-responsive">
                             <table class="table table-striped table-bordered mt-3" id="tablecoa">
@@ -67,7 +52,7 @@
 @endsection
 @push('scripts')
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             $('#tablecoa').DataTable({
                 serverSide: true,
                 processing: true,
@@ -76,48 +61,48 @@
                     type: 'GET',
                 },
                 columns: [{
-                        data: null,
-                        render: function(data, type, row, meta) {
-                            return meta.row + meta.settings._iDisplayStart + 1;
-                        }
-                    },
-                    {
-                        data: 'parent'
-                    },
-                    {
-                        data: 'coa'
-                    },
-                    {
-                        data: 'description'
-                    },
-                    {
-                        data: null,
-                        render: function(data, type, row) {
-                            return `
-                                    <div class="d-flex mb-2">
-                                                <button type="button" class="btn btn-sm btn-info me-2 btn-detail-coa"
-                                                    data-id="${row.id}"
-                                                    title="Detail">
-                                                    <i class="bi bi-eye"></i>
-                                                </button>
-                                                <button type="button" class="btn btn-sm btn-warning me-2 btn-edit-coa"
-                                                    data-id="${row.id}"
-                                                    title="Edit">
-                                                    <i class="bi bi-pencil"></i>
-                                                </button>
-                                                <form action="/coa/delete/${row.id}" method="POST"
-                                                    id="delete${row.id}" style="display:inline;">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="button" class="btn btn-sm btn-danger" title="Hapus"
-                                                        onclick="confirmDelete(${row.id})">
-                                                        <i class="bi bi-trash"></i>
-                                                    </button>
-                                                </form>
-                                    </div>
-                                `;
-                        }
+                    data: null,
+                    render: function (data, type, row, meta) {
+                        return meta.row + meta.settings._iDisplayStart + 1;
                     }
+                },
+                {
+                    data: 'parent'
+                },
+                {
+                    data: 'coa'
+                },
+                {
+                    data: 'description'
+                },
+                {
+                    data: null,
+                    render: function (data, type, row) {
+                        return `
+                                            <div class="d-flex mb-2">
+                                                        <button type="button" class="btn btn-sm btn-info me-2 btn-detail-coa"
+                                                            data-id="${row.id}"
+                                                            title="Detail">
+                                                            <i class="bi bi-eye"></i>
+                                                        </button>
+                                                        <button type="button" class="btn btn-sm btn-warning me-2 btn-edit-coa"
+                                                            data-id="${row.id}"
+                                                            title="Edit">
+                                                            <i class="bi bi-pencil"></i>
+                                                        </button>
+                                                        <form action="/coa/delete/${row.id}" method="POST"
+                                                            id="delete${row.id}" style="display:inline;">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="button" class="btn btn-sm btn-danger" title="Hapus"
+                                                                onclick="confirmDelete(${row.id})">
+                                                                <i class="bi bi-trash"></i>
+                                                            </button>
+                                                        </form>
+                                            </div>
+                                        `;
+                    }
+                }
                 ]
             });
 
@@ -132,7 +117,7 @@
                 myModal.show();
             }
 
-            $(document).on('click', '.btn-add-coa', function(e) {
+            $(document).on('click', '.btn-add-coa', function (e) {
                 e.preventDefault();
                 const url = '{{ route('coa.store') }}'
                 const $button = $(this);
@@ -143,26 +128,26 @@
                     url: url,
                     type: 'GET',
                     dataType: 'html',
-                    beforeSend: function() {
+                    beforeSend: function () {
                         //
                     },
-                    success: function(response) {
+                    success: function (response) {
                         console.log(response);
                         updateModal('#modal-coa', 'Tambah COA', response,
                             'modal-lg');
                     },
-                    error: function(xhr) {
+                    error: function (xhr) {
                         let errorMsg = xhr.responseText ||
                             '<p>An error occurred while loading the content.</p>';
                         $('#content-coa').html(errorMsg);
                     },
-                    complete: function() {
+                    complete: function () {
                         $('#loading-overlay').fadeOut();
                     }
                 });
             });
 
-            $(document).on('click', '.btn-detail-coa', function(e) {
+            $(document).on('click', '.btn-detail-coa', function (e) {
                 e.preventDefault();
                 const coaId = $(this).data('id');
                 const url = '{{ route('coa.detail', ':coaId') }}'.replace(':coaId', coaId);
@@ -174,25 +159,25 @@
                     url: url,
                     type: 'GET',
                     dataType: 'html',
-                    beforeSend: function() {
+                    beforeSend: function () {
                         //
                     },
-                    success: function(response) {
+                    success: function (response) {
                         updateModal('#modal-coa', 'Detail COA', response,
                             'modal-lg');
                     },
-                    error: function(xhr) {
+                    error: function (xhr) {
                         let errorMsg = xhr.responseText ||
                             '<p>An error occurred while loading the content.</p>';
                         $('#content-coa').html(errorMsg);
                     },
-                    complete: function() {
+                    complete: function () {
                         $('#loading-overlay').fadeOut();
                     }
                 });
             });
 
-            $(document).on('click', '.btn-edit-coa', function(e) {
+            $(document).on('click', '.btn-edit-coa', function (e) {
                 e.preventDefault();
                 const coaId = $(this).data('id');
                 const url = '{{ route('coa.edit', ':coaId') }}'.replace(':coaId', coaId);
@@ -204,19 +189,19 @@
                     url: url,
                     type: 'GET',
                     dataType: 'html',
-                    beforeSend: function() {
+                    beforeSend: function () {
                         //
                     },
-                    success: function(response) {
+                    success: function (response) {
                         updateModal('#modal-coa', 'Edit COA', response,
                             'modal-lg');
                     },
-                    error: function(xhr) {
+                    error: function (xhr) {
                         let errorMsg = xhr.responseText ||
                             '<p>An error occurred while loading the content.</p>';
                         $('#content-coa').html(errorMsg);
                     },
-                    complete: function() {
+                    complete: function () {
                         $('#loading-overlay').fadeOut();
                     }
                 });

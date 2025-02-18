@@ -31,22 +31,7 @@
                         <h4 class="card-title"> Form detail isian penerimaan barang</h4>
                     </div>
                     <div class="card-body">
-                        @if (session('success'))
-                            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                {{ session('success') }}
-                                <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                    aria-label="Close"></button>
-                            </div>
-                        @endif
-                        @if ($errors->any())
-                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                @foreach ($errors->all() as $error)
-                                    <p>{{ $error }}</p>
-                                @endforeach
-                                <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                    aria-label="Close"></button>
-                            </div>
-                        @endif
+                        @include('alert.alert')
                         <form action="{{ route('penerimaan_barang.store') }}" method="POST" id="createForm">
                             <div class="row mb-3">
                                 <div class="col-md-6">
@@ -70,7 +55,8 @@
                                     <input type="text" class="form-control bg-body-secondary" id="partner_name"
                                         placeholder="Principal" readonly>
                                     <label for="shipFrom" class="form-label fw-bold mt-2 mb-1 small">Alamat</label>
-                                    <textarea class="form-control bg-body-secondary" id="address" placeholder="Alamat Principal" rows="4" readonly></textarea>
+                                    <textarea class="form-control bg-body-secondary" id="address"
+                                        placeholder="Alamat Principal" rows="4" readonly></textarea>
                                     <label class="form-label fw-bold mt-2 mb-1 small">Att</label>
                                     <input type="text" class="form-control bg-body-secondary" id="description"
                                         placeholder="Att" readonly>
@@ -78,16 +64,15 @@
                                     <input type="text" class="form-control bg-body-secondary" id="phone"
                                         placeholder="Telephone" readonly>
                                     <label class="form-label fw-bold mt-2 mb-1 small">Fax</label>
-                                    <input type="text" class="form-control bg-body-secondary" id="fax"
-                                        placeholder="Fax" readonly>
+                                    <input type="text" class="form-control bg-body-secondary" id="fax" placeholder="Fax"
+                                        readonly>
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label fw-bold mt-2 mb-1 small">No DO</label>
                                     <input type="text" class="form-control" id="do_number" name="do_number"
                                         placeholder="No DO" required>
                                     <label class="form-label fw-bold mt-2 mb-1 small">Tanggal DO</label>
-                                    <input type="date" class="form-control" id="receive_date" name="receipt_date"
-                                        required>
+                                    <input type="date" class="form-control" id="receive_date" name="receipt_date" required>
                                     <label class="form-label fw-bold mt-2 mb-1 small">Angkutan</label>
                                     <input type="text" class="form-control" id="shipment" name="shipment_info"
                                         placeholder="Angkutan" required>
@@ -140,13 +125,13 @@
 @endsection
 @push('scripts')
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             $('#gudang').prop('disabled', true);
             $('#tableBody').hide();
             $('#rejectButton').hide();
             $('#submitButton').hide();
 
-            $('#satuan').on('change', function() {
+            $('#satuan').on('change', function () {
                 const po_id = $(this).val();
                 const url = '{{ route('penerimaan_barang.getdetails', ':po_id') }}'.replace(':po_id',
                     po_id);
@@ -159,7 +144,7 @@
                         url: url,
                         type: 'GET',
                         dataType: 'json',
-                        success: function(response) {
+                        success: function (response) {
                             if (response.error) {
                                 Swal.fire('Error', response.error, 'error');
                                 return;
@@ -185,31 +170,31 @@
                                 $('#rejectButton').show();
                                 $('#submitButton').show();
 
-                                response.items.forEach(function(item, index) {
+                                response.items.forEach(function (item, index) {
                                     const qty_balance = item.qty_balance;
 
                                     const row = `
-                                                    <tr style="border-bottom: 2px solid #000;">
-                                                        <td>
-                                                            <input type="hidden" id="item_id" name="items[${index}][item_id]" value="${item.item_id}">
-                                                            <input type="hidden" id="warehouse_id" name="items[${index}][warehouse_id]" value="${item.warehouse_id}">
-                                                            <textarea type="text" class="form-control w-100" name="items[${index}][item_code]" readonly rows="3">${item.item_code}</textarea>
-                                                        </td>
-                                                        <td><input type="number" class="form-control bg-body-secondary order_qty" name="items[${index}][base_qty]" value="${item.base_qty}" readonly></td>
-                                                        <td><input type="number" class="form-control bg-body-secondary qty_balance" name="items[${index}][qty_balance]" value="${item.qty_balance}" readonly></td>
-                                                        <td><input type="number" class="form-control bg-body-secondary diterima" name="items[${index}][qty]" value="${item.qty}" readonly></td>
-                                                        <td><input type="number" class="form-control qty_received" id="qty_received" name="items[${index}][qty_received]" value="0" min="1" required></td>
-                                                        <td><input type="number" class="form-control qty_reject" id="qty_reject" name="items[${index}][qty_reject]" value="0" min="0" required></td>
-                                                        <td><input type="number" class="form-control qty_bonus" id="qty_bonus" name="items[${index}][qty_bonus]" value="0" min="0" required></td>
-                                                        <td><input type="number" class="form-control qty_titip" id="qty_titip" name="items[${index}][qty_titip]" value="0" min="0" required></td>
-                                                        <td><input type="number" class="form-control discount" id="discount" name="items[${index}][discount]" value="0" min="0" required></td>
-                                                        <td><input type="text" class="form-control" placeholder="Note" name="items[${index}][item_description]" value="${item.item_description}"></td>
-                                                    </tr>
-                                                    `;
+                                                        <tr style="border-bottom: 2px solid #000;">
+                                                            <td>
+                                                                <input type="hidden" id="item_id" name="items[${index}][item_id]" value="${item.item_id}">
+                                                                <input type="hidden" id="warehouse_id" name="items[${index}][warehouse_id]" value="${item.warehouse_id}">
+                                                                <textarea type="text" class="form-control w-100" name="items[${index}][item_code]" readonly rows="3">${item.item_code}</textarea>
+                                                            </td>
+                                                            <td><input type="number" class="form-control bg-body-secondary order_qty" name="items[${index}][base_qty]" value="${item.base_qty}" readonly></td>
+                                                            <td><input type="number" class="form-control bg-body-secondary qty_balance" name="items[${index}][qty_balance]" value="${item.qty_balance}" readonly></td>
+                                                            <td><input type="number" class="form-control bg-body-secondary diterima" name="items[${index}][qty]" value="${item.qty}" readonly></td>
+                                                            <td><input type="number" class="form-control qty_received" id="qty_received" name="items[${index}][qty_received]" value="0" min="1" required></td>
+                                                            <td><input type="number" class="form-control qty_reject" id="qty_reject" name="items[${index}][qty_reject]" value="0" min="0" required></td>
+                                                            <td><input type="number" class="form-control qty_bonus" id="qty_bonus" name="items[${index}][qty_bonus]" value="0" min="0" required></td>
+                                                            <td><input type="number" class="form-control qty_titip" id="qty_titip" name="items[${index}][qty_titip]" value="0" min="0" required></td>
+                                                            <td><input type="number" class="form-control discount" id="discount" name="items[${index}][discount]" value="0" min="0" required></td>
+                                                            <td><input type="text" class="form-control" placeholder="Note" name="items[${index}][item_description]" value="${item.item_description}"></td>
+                                                        </tr>
+                                                        `;
                                     tableBody.append(row);
 
                                     tableBody.find('.qty_received').last().on('input',
-                                        function() {
+                                        function () {
                                             const qty_received = $(this).val();
 
                                             if (parseFloat(qty_received) >
@@ -220,23 +205,23 @@
                                                 $(this).val("");
                                                 $(this).closest('tr').find(
                                                     '.qty_balance').val(item
-                                                    .qty_balance);
+                                                        .qty_balance);
                                                 return;
                                             }
                                             const new_balance_qty = parseFloat(
                                                 qty_balance) - parseFloat(
-                                                qty_received);
+                                                    qty_received);
 
                                             if (qty_received === 0 ||
                                                 qty_received === null ||
                                                 qty_received === '') {
                                                 $(this).closest('tr').find(
                                                     '.qty_balance').val(item
-                                                    .qty_balance);
+                                                        .qty_balance);
                                             } else {
                                                 $(this).closest('tr').find(
                                                     '.qty_balance').val(
-                                                    new_balance_qty);
+                                                        new_balance_qty);
                                             }
                                         });
                                 });
@@ -248,14 +233,14 @@
                                     'warning');
                             }
                         },
-                        error: function(xhr, status, error) {
+                        error: function (xhr, status, error) {
                             Swal.fire('Error', 'Gagal mengambil detail PO', 'error');
                             $('#tableBody').hide();
                             $('#rejectButton').hide();
                             $('#submitButton').hide();
                             $('#gudang').prop('disabled', true);
                         },
-                        complete: function() {
+                        complete: function () {
                             $('#loading-overlay').fadeOut();
                         }
                     });

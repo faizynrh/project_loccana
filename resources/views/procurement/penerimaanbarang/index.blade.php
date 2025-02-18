@@ -41,8 +41,7 @@
                                         $currentYear = Carbon\Carbon::now()->year;
                                     @endphp
                                     @for ($year = $currentYear; $year >= 2019; $year--)
-                                        <option value="{{ $year }}"
-                                            {{ $year == request('year') ? 'selected' : '' }}>
+                                        <option value="{{ $year }}" {{ $year == request('year') ? 'selected' : '' }}>
                                             {{ $year }}
                                         </option>
                                     @endfor
@@ -53,8 +52,7 @@
                                         $currentMonth = Carbon\Carbon::now()->month;
                                     @endphp
                                     @foreach (['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'] as $index => $monthName)
-                                        <option value="{{ $index + 1 }}"
-                                            {{ request('month') == strval($index + 1) || $currentMonth == $index + 1 ? 'selected' : '' }}>
+                                        <option value="{{ $index + 1 }}" {{ request('month') == strval($index + 1) || $currentMonth == $index + 1 ? 'selected' : '' }}>
                                             {{ $monthName }}
                                         </option>
                                     @endforeach
@@ -67,22 +65,7 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        @if (session('success'))
-                            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                {{ session('success') }}
-                                <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                    aria-label="Close"></button>
-                            </div>
-                        @endif
-                        @if ($errors->any())
-                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                @foreach ($errors->all() as $error)
-                                    <p>{{ $error }}</p>
-                                @endforeach
-                                <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                    aria-label="Close"></button>
-                            </div>
-                        @endif
+                        @include('alert.alert')
                         <div class="table-responsive">
                             <table class="table table-striped table-bordered mt-3" id="tabelpenerimaan">
                                 <thead>
@@ -112,7 +95,7 @@
 @endsection
 @push('scripts')
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             var lastMonth = $('#monthSelect').val();
             var lastYear = $('#yearSelect').val();
 
@@ -123,11 +106,11 @@
                     ajax: {
                         url: '{{ route('penerimaan_barang.ajax') }}',
                         type: 'GET',
-                        data: function(d) {
+                        data: function (d) {
                             d.month = lastMonth;
                             d.year = lastYear;
                         },
-                        dataSrc: function(response) {
+                        dataSrc: function (response) {
                             if (response.mtd && response.mtd.mtd_item_receive !== undefined) {
                                 const formattedNumber = new Intl.NumberFormat('id-ID', {
                                     minimumFractionDigits: 2,
@@ -139,130 +122,130 @@
                         }
                     },
                     columns: [{
-                            data: null,
-                            render: function(data, type, row, meta) {
-                                return meta.row + meta.settings._iDisplayStart + 1;
-                            }
-                        },
-                        {
-                            data: 'do_number'
-                        },
-                        {
-                            data: 'order_date',
-                            render: function(data) {
-                                if (data) {
-                                    var date = new Date(data);
-                                    return (
-                                        date.getDate().toString().padStart(2, '0') +
-                                        '-' +
-                                        (date.getMonth() + 1).toString().padStart(2, '0') +
-                                        '-' +
-                                        date.getFullYear()
-                                    );
-                                }
-                                return data;
-                            },
-                        },
-                        {
-                            data: 'number_po'
-                        },
-                        {
-                            data: 'receipt_date',
-                            render: function(data) {
-                                if (data) {
-                                    var date = new Date(data);
-                                    return (
-                                        date.getDate().toString().padStart(2, '0') +
-                                        '-' +
-                                        (date.getMonth() + 1).toString().padStart(2, '0') +
-                                        '-' +
-                                        date.getFullYear()
-                                    );
-                                }
-                                return data;
-                            },
-                        },
-                        {
-                            data: 'name'
-                        },
-                        {
-                            data: 'total_receive_price',
-                            render: function(data) {
-                                if (data) {
-                                    return new Intl.NumberFormat('id-ID', {
-                                        style: 'currency',
-                                        currency: 'IDR',
-                                        minimumFractionDigits: 2,
-                                        maximumFractionDigits: 2
-                                    }).format(data);
-                                }
-                                return data;
-                            }
-                        },
-                        {
-                            data: 'qty_bonus',
-                            render: function(data) {
-                                if (data) {
-                                    return new Intl.NumberFormat('id-ID', {
-                                        style: 'currency',
-                                        currency: 'IDR',
-                                        minimumFractionDigits: 2,
-                                        maximumFractionDigits: 2
-                                    }).format(data);
-                                }
-                                return data;
-                            }
-                        },
-                        {
-                            data: 'total_po',
-                            render: function(data) {
-                                if (data) {
-                                    return new Intl.NumberFormat('id-ID', {
-                                        style: 'currency',
-                                        currency: 'IDR',
-                                        minimumFractionDigits: 2,
-                                        maximumFractionDigits: 2
-                                    }).format(data);
-                                }
-                                return data;
-                            }
-                        },
-                        {
-                            data: 'qty_receipt'
-                        },
-                        {
-                            data: 'status'
-                        },
-                        {
-                            data: 'description'
-                        },
-                        {
-                            data: null,
-                            render: function(data, type, row) {
-                                return `
-                                <div class="d-flex">
-                                    <a href="/penerimaan_barang/detail/${row.id_receipt}" class="btn btn-sm btn-info mb-2" style="margin-right:4px;" title="Detail">
-                                        <i class="bi bi-eye"></i>
-                                    </a>
-                                    <a href="/penerimaan_barang/edit/${row.id_receipt}" class="btn btn-sm btn-warning mb-2" style="margin-right:4px;" title="Edit">
-                                        <i class="bi bi-pencil"></i>
-                                    </a>
-                                    <form action="/penerimaan_barang/delete/${row.id_receipt}" method="POST" id="delete${row.id_receipt}" style="display:inline;">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="button" class="btn btn-sm btn-danger mb-2" style="margin-right:4px;" title="Hapus" onclick="confirmDelete(${row.id_receipt})">
-                                            <i class="bi bi-trash"></i>
-                                        </button>
-                                    </form>
-                                </div>
-                            `;
-                            }
+                        data: null,
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
                         }
+                    },
+                    {
+                        data: 'do_number'
+                    },
+                    {
+                        data: 'order_date',
+                        render: function (data) {
+                            if (data) {
+                                var date = new Date(data);
+                                return (
+                                    date.getDate().toString().padStart(2, '0') +
+                                    '-' +
+                                    (date.getMonth() + 1).toString().padStart(2, '0') +
+                                    '-' +
+                                    date.getFullYear()
+                                );
+                            }
+                            return data;
+                        },
+                    },
+                    {
+                        data: 'number_po'
+                    },
+                    {
+                        data: 'receipt_date',
+                        render: function (data) {
+                            if (data) {
+                                var date = new Date(data);
+                                return (
+                                    date.getDate().toString().padStart(2, '0') +
+                                    '-' +
+                                    (date.getMonth() + 1).toString().padStart(2, '0') +
+                                    '-' +
+                                    date.getFullYear()
+                                );
+                            }
+                            return data;
+                        },
+                    },
+                    {
+                        data: 'name'
+                    },
+                    {
+                        data: 'total_receive_price',
+                        render: function (data) {
+                            if (data) {
+                                return new Intl.NumberFormat('id-ID', {
+                                    style: 'currency',
+                                    currency: 'IDR',
+                                    minimumFractionDigits: 2,
+                                    maximumFractionDigits: 2
+                                }).format(data);
+                            }
+                            return data;
+                        }
+                    },
+                    {
+                        data: 'qty_bonus',
+                        render: function (data) {
+                            if (data) {
+                                return new Intl.NumberFormat('id-ID', {
+                                    style: 'currency',
+                                    currency: 'IDR',
+                                    minimumFractionDigits: 2,
+                                    maximumFractionDigits: 2
+                                }).format(data);
+                            }
+                            return data;
+                        }
+                    },
+                    {
+                        data: 'total_po',
+                        render: function (data) {
+                            if (data) {
+                                return new Intl.NumberFormat('id-ID', {
+                                    style: 'currency',
+                                    currency: 'IDR',
+                                    minimumFractionDigits: 2,
+                                    maximumFractionDigits: 2
+                                }).format(data);
+                            }
+                            return data;
+                        }
+                    },
+                    {
+                        data: 'qty_receipt'
+                    },
+                    {
+                        data: 'status'
+                    },
+                    {
+                        data: 'description'
+                    },
+                    {
+                        data: null,
+                        render: function (data, type, row) {
+                            return `
+                                                                <div class="d-flex">
+                                                                    <a href="/penerimaan_barang/detail/${row.id_receipt}" class="btn btn-sm btn-info mb-2" style="margin-right:4px;" title="Detail">
+                                                                        <i class="bi bi-eye"></i>
+                                                                    </a>
+                                                                    <a href="/penerimaan_barang/edit/${row.id_receipt}" class="btn btn-sm btn-warning mb-2" style="margin-right:4px;" title="Edit">
+                                                                        <i class="bi bi-pencil"></i>
+                                                                    </a>
+                                                                    <form action="/penerimaan_barang/delete/${row.id_receipt}" method="POST" id="delete${row.id_receipt}" style="display:inline;">
+                                                                        @csrf
+                                                                        @method('DELETE')
+                                                                        <button type="button" class="btn btn-sm btn-danger mb-2" style="margin-right:4px;" title="Hapus" onclick="confirmDelete(${row.id_receipt})">
+                                                                            <i class="bi bi-trash"></i>
+                                                                        </button>
+                                                                    </form>
+                                                                </div>
+                                                            `;
+                        }
+                    }
                     ]
                 });
             }
             initializeTable();
-            $('#monthSelect').change(function() {
+            $('#monthSelect').change(function () {
                 var month = $('#monthSelect').val();
                 if (month !== lastMonth) {
                     lastMonth = month;
@@ -270,7 +253,7 @@
                 }
                 console.log(month);
             });
-            $('#yearSelect').change(function() {
+            $('#yearSelect').change(function () {
                 var year = $('#yearSelect').val();
                 if (year !== lastYear) {
                     lastYear = year;

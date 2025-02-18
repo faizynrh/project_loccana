@@ -29,22 +29,7 @@
             <section class="section">
                 <div class="card">
                     <div class="card-body">
-                        @if (session('success'))
-                            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                {{ session('success') }}
-                                <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                    aria-label="Close"></button>
-                            </div>
-                        @endif
-                        @if ($errors->any())
-                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                @foreach ($errors->all() as $error)
-                                    <p>{{ $error }}</p>
-                                @endforeach
-                                <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                    aria-label="Close"></button>
-                            </div>
-                        @endif
+                        @include('alert.alert')
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <form action="{{ route('invoice.update', $data->data[0]->id_invoice) }}" method="POST"
@@ -55,8 +40,8 @@
                                         DO</label>
                                     <input type="text" class="form-control bg-body-secondary" name="item_receipt_id"
                                         id="po_id" value="{{ $data->data[0]->id_receipt }}" readonly>
-                                    <input type="text" class="form-control bg-body-secondary" name="po_id"
-                                        id="po_id" value="{{ $data->data[0]->do_number }}" readonly>
+                                    <input type="text" class="form-control bg-body-secondary" name="po_id" id="po_id"
+                                        value="{{ $data->data[0]->do_number }}" readonly>
                                     <label class="form-label fw-bold mt-2 mb-1 small">Tanggal</label>
                                     <input type="text" class="form-control bg-body-secondary" id="order_date"
                                         value="{{ \Carbon\Carbon::parse($data->data[0]->order_date)->format('d-m-Y') }}"
@@ -64,7 +49,8 @@
                                     <label class="form-label fw-bold mt-2 mb-1 small">Principal</label>
                                     <input type="text" class="form-control bg-body-secondary" id="partner_name" readonly>
                                     <label for="shipFrom" class="form-label fw-bold mt-2 mb-1 small">Alamat</label>
-                                    <textarea class="form-control bg-body-secondary" rows="4" id="address" readonly></textarea>
+                                    <textarea class="form-control bg-body-secondary" rows="4" id="address"
+                                        readonly></textarea>
                                     <label class="form-label fw-bold mt-2 mb-1 small">Att</label>
                                     <input type="text" class="form-control bg-body-secondary" placeholder="Att" readonly>
                                     <label class="form-label fw-bold mt-2 mb-1 small">No. Telp</label>
@@ -75,13 +61,12 @@
                             <div class="col-md-6">
                                 <label class="form-label fw-bold mt-2 mb-1 small">Ship To</label>
                                 <textarea class="form-control bg-body-secondary" id="shipFrom" rows="4" readonly>
-JL. Sangkuriang NO.38-A
-NPWP: 01.555.161.7.428.000</textarea>
+    JL. Sangkuriang NO.38-A
+    NPWP: 01.555.161.7.428.000</textarea>
                                 <label class="form-label fw-bold mt-2 mb-1 small">Email</label>
                                 <input type="text" class="form-control bg-body-secondary" readonly>
                                 <label class="form-label fw-bold mt-2 mb-1 small">Telp/Fax</label>
-                                <input type="text" class="form-control bg-body-secondary" value="(022) 6626-946"
-                                    readonly>
+                                <input type="text" class="form-control bg-body-secondary" value="(022) 6626-946" readonly>
                                 <label class="form-label fw-bold mt-2 mb-1 small">VAT/PPN</label>
                                 <input type="number" class="form-control bg-body-secondary" name="ppn" id="ppn"
                                     value="{{ $data->data[0]->ppn }}" readonly>
@@ -89,7 +74,8 @@ NPWP: 01.555.161.7.428.000</textarea>
                                 <input type="text" class="form-control bg-body-secondary" placeholder="Term Pembayaran"
                                     value="{{ $data->data[0]->term_of_payment }}" readonly>
                                 <label class="form-label fw-bold mt-2 mb-1 small">Keterangan</label>
-                                <textarea class="form-control bg-body-secondary" id="shipFrom" rows="4" placeholder="Keterangan" readonly></textarea>
+                                <textarea class="form-control bg-body-secondary" id="shipFrom" rows="4"
+                                    placeholder="Keterangan" readonly></textarea>
                                 <label class="form-label fw-bold mt-2 mb-1 small">No Invoice</label>
                                 <input type="text" class="form-control" name="invoice_number"
                                     value="{{ $data->data[0]->invoice_number }}">
@@ -100,7 +86,8 @@ NPWP: 01.555.161.7.428.000</textarea>
                                 <input type="date" class="form-control" name="due_date"
                                     value="{{ \Carbon\Carbon::parse($data->data[0]->due_date)->format('Y-m-d') }}">
                                 <label class="form-label fw-bold mt-2 mb-1 small">Keterangan Invoice</label>
-                                <textarea class="form-control" id="shipFrom" rows="4">{{ $data->data[0]->status }}</textarea>
+                                <textarea class="form-control" id="shipFrom"
+                                    rows="4">{{ $data->data[0]->status }}</textarea>
                                 <label class="form-label fw-bold mt-2 mb-1 small">Faktur Pajak</label>
                                 <input type="text" class="form-control" placeholder="Faktur Pajak">
                                 <input type="hidden" name="total_discount" id="total_discount"
@@ -128,14 +115,11 @@ NPWP: 01.555.161.7.428.000</textarea>
                                 @foreach ($data->data as $index => $item)
                                     <tr style="border-bottom: 1px solid #000;">
                                         <td><input type="hidden" class="form-control bg-body-secondary item_name"
-                                                value="{{ $item->item_id }}" name="item_id[{{ $index }}]"
-                                                readonly>
+                                                value="{{ $item->item_id }}" name="item_id[{{ $index }}]" readonly>
                                             <input type="hidden" class="form-control bg-body-secondary item_name"
-                                                value="{{ $item->warehouse_id }}"
-                                                name="warehouse_id[{{ $index }}]" readonly>
+                                                value="{{ $item->warehouse_id }}" name="warehouse_id[{{ $index }}]" readonly>
                                             <input type="text" class="form-control bg-body-secondary item_name"
-                                                value="{{ $item->item_name }}" name="item_name[{{ $index }}]"
-                                                readonly>
+                                                value="{{ $item->item_name }}" name="item_name[{{ $index }}]" readonly>
                                         </td>
                                         <td>
                                             <input type="text" class="form-control bg-body-secondary qty text-end"
@@ -147,13 +131,11 @@ NPWP: 01.555.161.7.428.000</textarea>
                                         </td>
                                         <td>
                                             <input type="number" class="form-control diskon text-end"
-                                                value="{{ $item->discount }}" min="0" max="100"
-                                                name="discount[{{ $index }}]">
+                                                value="{{ $item->discount }}" min="0" max="100" name="discount[{{ $index }}]">
                                         </td>
                                         <td>
-                                            <input type="text" class="form-control bg-body-secondary total text-end"
-                                                readonly name="total_price[{{ $index }}]"
-                                                value="{{ $item->total_price }}">
+                                            <input type="text" class="form-control bg-body-secondary total text-end" readonly
+                                                name="total_price[{{ $index }}]" value="{{ $item->total_price }}">
                                         </td>
                                     </tr>
                                 @endforeach
@@ -161,7 +143,8 @@ NPWP: 01.555.161.7.428.000</textarea>
                                     <td colspan="3"></td>
                                     <td>Sub Total</td>
                                     <td style="float: right" name="sub_total">Rp.
-                                        {{ number_format($data->data[0]->total_amount, 2, ',', '.') }}</td>
+                                        {{ number_format($data->data[0]->total_amount, 2, ',', '.') }}
+                                    </td>
                                 </tr>
                                 <tr class="fw-bold">
                                     <td colspan="3"></td>
@@ -186,7 +169,8 @@ NPWP: 01.555.161.7.428.000</textarea>
                                     <td colspan="3"></td>
                                     <td>Total</td>
                                     <td style="float: right" name="total_amount">Rp.
-                                        {{ number_format($data->data[0]->total_amount, 2, ',', '.') }}</td>
+                                        {{ number_format($data->data[0]->total_amount, 2, ',', '.') }}
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
@@ -205,8 +189,8 @@ NPWP: 01.555.161.7.428.000</textarea>
 @endsection
 @push('scripts')
     <script>
-        $(document).ready(function() {
-            $(document).on('input', '.qty, .harga, .diskon', function() {
+        $(document).ready(function () {
+            $(document).on('input', '.qty, .harga, .diskon', function () {
                 updateRowCalculations($(this).closest('tr'));
                 updateTotalCalculations();
             });
@@ -237,7 +221,7 @@ NPWP: 01.555.161.7.428.000</textarea>
                 let subtotal = 0;
                 let totalDiskon = 0;
 
-                $('#tableBody tr').each(function() {
+                $('#tableBody tr').each(function () {
                     const qty = parseFloat($(this).find('.qty').val()) || 0;
                     const harga = parseFloat($(this).find('.harga').val()) || 0;
                     const diskonPercent = parseFloat($(this).find('.diskon').val()) || 0;
