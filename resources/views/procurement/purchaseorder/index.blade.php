@@ -38,7 +38,6 @@
                             <form action="{{ route('purchaseorder.printexcel') }}" method="GET" id="filterForm">
                                 <div class="d-flex align-items-center">
                                     <button type="submit" class="btn btn-primary me-2 fw-bold">Export</button>
-
                                     <select id="yearSelect" class="form-select me-2" name="year" style="width: auto;">
                                         @php
                                             $currentYear = now()->year;
@@ -205,13 +204,9 @@
                     <i class="bi bi-trash"></i>
                 </button>
             </form>
-<form action="/purchase_order/delete/${row.id}" method="POST" id="delete${row.id}" style="display:inline;">
-                @csrf
-                @method('DELETE')
-                <button type="button" class="btn btn-sm btn-danger mb-2 me-2" title="Hapus" onclick="confirmDelete(${row.id})">
-                    <i class="bi bi-trash"></i>
-                </button>
-            </form>
+            <a href="/purchase_order/print/${row.id}" class="btn btn-sm btn-light mb-2 me-2" title="Print">
+                    <i class="bi bi-printer"></i>
+                </a>
                 <a href="javascript:void(0);" class="btn btn-success mb-2 me-2" title="Print" onclick="confirmDelete(${row.id})">
                     <i class="bi bi-file-earmark-excel"></i>
                 </a>

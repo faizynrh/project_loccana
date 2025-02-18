@@ -387,7 +387,7 @@ class PurchaseOrderController extends Controller
             $start = $request->input('start', 0);
 
             $requestbody = [
-                'search' => $search,
+                'search' => '',
                 'month' => $month,
                 'year' => $year,
                 'limit' => $length,
@@ -395,10 +395,12 @@ class PurchaseOrderController extends Controller
                 'company_id' => 2,
             ];
 
-            $apiResponse = storeApi(env('PO_URL'), $requestbody);
+            $apiResponse = storeApi(env('PO_URL') . '/' . 'list', $requestbody);
+
+            // dd($apiResponse->json(), $requestbody);
             if ($apiResponse->successful()) {
                 $data = $apiResponse->json();
-                $tableData = $data['data']['table'] ?? [];
+                $tableData = $data['data']['table'];
 
                 if (empty($tableData)) {
                     return back()->with('error', 'Tidak ada data untuk diexport.');
