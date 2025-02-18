@@ -86,13 +86,13 @@
                     </ul>
                 </li>
                 <li
-                    class="sidebar-item has-sub {{ Request::is('stock*') || Request::is('stock_gudang*') ? 'active' : '' }}}}">
+                    class="sidebar-item has-sub {{ Request::is('stock*') || Request::is('stock_gudang*') ? 'active' : '' }}">
                     <a href="#" class="sidebar-link">
                         <i class="bi bi-box-seam"></i>
                         <span>Inventory</span>
                     </a>
                     <ul class="submenu active">
-                        <li class="submenu-item {{ Request::is('stock*') ? 'active' : '' }}">
+                        <li class="submenu-item {{ Request::is('stock') || Request::is('stock/*') ? 'active' : '' }}">
                             <a href="/stock" class="submenu-link">Stock</a>
                         </li>
                         <li class="submenu-item {{ Request::is('stock_gudang*') ? 'active' : '' }}">

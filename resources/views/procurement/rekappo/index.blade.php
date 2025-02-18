@@ -186,21 +186,6 @@
                         serverSide: false,
                         processing: true,
                         deferloading: false,
-                        layout: {
-                            topStart: {
-                                buttons: [{
-                                    extend: 'excel',
-                                    text: '<i class="bi bi-file-earmark-excel-fill me-1"></i>Export Excel',
-                                    filename: function() {
-                                        return getFormattedFilename();
-                                    },
-                                    title: function() {
-                                        return getFormattedFilename();
-                                    },
-                                    className: 'd-none',
-                                }]
-                            }
-                        },
                         ajax: {
                             url: '{{ route('rekap_po.ajax') }}',
                             type: 'GET',
