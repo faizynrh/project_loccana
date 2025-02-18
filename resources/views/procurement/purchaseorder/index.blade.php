@@ -170,7 +170,7 @@
                             } else if (data.toLowerCase() === 'reject') {
                                 statusClass = 'badge bg-danger cursor-not-allowed';
                             } else if (data.toLowerCase() === 'approve') {
-                                statusClass = 'badge bg-success cursor-not-allowe';
+                                statusClass = 'badge bg-success cursor-not-allowed';
                             }
                             return statusLabel !== data ? statusLabel :
                                 `<span class="${statusClass}">${data}</span>`;
