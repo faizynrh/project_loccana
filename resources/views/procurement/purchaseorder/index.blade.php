@@ -34,43 +34,53 @@
                         @include('alert.alert')
                         <div class="d-flex align-items-center mb-2">
                             <a href="/purchase_order/add" class="btn btn-primary me-2 fw-bold">+ Tambah Purchase Order</a>
-                            <a href="#" class="btn btn-primary me-2 fw-bold">Export</a>
-                            <select id="yearSelect" class="form-select me-2" name="year" style="width: auto;">
-                                @php
-                                    $currentYear = now()->year;
-                                @endphp
-                                @for ($year = $currentYear; $year >= 2019; $year--)
-                                    <option value="{{ $year }}" {{ $year == request('year') ? 'selected' : '' }}>
-                                        {{ $year }}
-                                    </option>
-                                @endfor
-                            </select>
-                            <select id="monthSelect" class="form-select me-2" name="month" style="width: auto;">
-                                <option value="0" {{ request('month') == 'all' ? 'selected' : '' }}>ALL</option>
-                                @php
-                                    $currentMonth = now()->month;
-                                    $months = [
-                                        1 => 'Januari',
-                                        2 => 'Februari',
-                                        3 => 'Maret',
-                                        4 => 'April',
-                                        5 => 'Mei',
-                                        6 => 'Juni',
-                                        7 => 'Juli',
-                                        8 => 'Agustus',
-                                        9 => 'September',
-                                        10 => 'Oktober',
-                                        11 => 'November',
-                                        12 => 'Desember',
-                                    ];
-                                @endphp
-                                @foreach ($months as $num => $name)
-                                    <option value="{{ $num }}"
-                                        {{ request('month') == (string) $num || $currentMonth == $num ? 'selected' : '' }}>
-                                        {{ $name }}
-                                    </option>
-                                @endforeach
-                            </select>
+
+                            <form action="{{ route('purchaseorder.printexcel') }}" method="GET" id="filterForm">
+                                <div class="d-flex align-items-center">
+                                    <button type="submit" class="btn btn-primary me-2 fw-bold">Export</button>
+
+                                    <select id="yearSelect" class="form-select me-2" name="year" style="width: auto;">
+                                        @php
+                                            $currentYear = now()->year;
+                                        @endphp
+                                        @for ($year = $currentYear; $year >= 2019; $year--)
+                                            <option value="{{ $year }}"
+                                                {{ $year == request('year') ? 'selected' : '' }}>
+                                                {{ $year }}
+                                            </option>
+                                        @endfor
+                                    </select>
+
+                                    <select id="monthSelect" class="form-select me-2" name="month" style="width: auto;">
+                                        <option value="0" {{ request('month') == 'all' ? 'selected' : '' }}>ALL
+                                        </option>
+                                        @php
+                                            $currentMonth = now()->month;
+                                            $months = [
+                                                1 => 'Januari',
+                                                2 => 'Februari',
+                                                3 => 'Maret',
+                                                4 => 'April',
+                                                5 => 'Mei',
+                                                6 => 'Juni',
+                                                7 => 'Juli',
+                                                8 => 'Agustus',
+                                                9 => 'September',
+                                                10 => 'Oktober',
+                                                11 => 'November',
+                                                12 => 'Desember',
+                                            ];
+                                        @endphp
+                                        @foreach ($months as $num => $name)
+                                            <option value="{{ $num }}"
+                                                {{ request('month') == (string) $num ? 'selected' : '' }}>
+                                                {{ $name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </form>
+
 
                         </div>
                         <div class="table-responsive">
@@ -195,9 +205,13 @@
                     <i class="bi bi-trash"></i>
                 </button>
             </form>
-                           <a href="/purchase_order/print/${row.id}" class="btn btn-sm btn-light mb-2 me-2" title="Print">
-    <i class="bi bi-printer"></i>
-</a>
+<form action="/purchase_order/delete/${row.id}" method="POST" id="delete${row.id}" style="display:inline;">
+                @csrf
+                @method('DELETE')
+                <button type="button" class="btn btn-sm btn-danger mb-2 me-2" title="Hapus" onclick="confirmDelete(${row.id})">
+                    <i class="bi bi-trash"></i>
+                </button>
+            </form>
                 <a href="javascript:void(0);" class="btn btn-success mb-2 me-2" title="Print" onclick="confirmDelete(${row.id})">
                     <i class="bi bi-file-earmark-excel"></i>
                 </a>
