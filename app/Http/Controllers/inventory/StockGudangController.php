@@ -22,6 +22,7 @@ class StockGudangController extends Controller
                 'search' => $search,
                 'start_date' => $start_date,
                 'end_date' => $end_date,
+                'warehouse_id' => $warehouse,
                 'company_id' => 0,
                 'limit' => $length,
                 'offset' => $start,

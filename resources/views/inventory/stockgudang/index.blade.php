@@ -43,8 +43,9 @@
                                             value="{{ \Carbon\Carbon::now()->toDateString() }}" required>
                                     </div>
                                     <div class="col-md-3">
+                                        <label class="form-label fw-bold small">Gudang</label>
                                         <select class="form-select" name="warehouse" id="warehouse">
-                                            <option value="0">All</option>
+                                            <option value="0" selected>Semua</option>
                                             @foreach ($data->data as $item)
                                                 <option value="{{ $item->id }}">{{ $item->name }}</option>
                                             @endforeach
@@ -154,11 +155,12 @@
                     {
                         data: null,
                         render: function (data, type, row) {
-                            return `
-                                                                    <a href="/stock_gudang/detail/${row.item_id}" class="btn btn-sm btn-info me-2" title="Detail">
-                                                                        <i class="bi bi-eye"></i>
-                                                                    </a>
-                                                                `;
+                            return `<div class="text-center">
+                                            <a href="/stock_gudang/detail/${row.item_id}" class="btn btn-sm btn-info me-2" title="Detail">
+                                                <i class="bi bi-eye"></i>
+                                            </a>
+                                        </div>
+                                        `;
                         }
                     }
                     ]
