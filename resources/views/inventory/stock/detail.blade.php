@@ -58,8 +58,7 @@
                                         <label class="form-label fw-bold mb-0">Deskripsi Stok</label>
                                     </div>
                                     <div class="col-md-9">
-                                        <textarea class="form-control" name="description" rows="5"
-                                            readonly>{{ $data->data->deskripsi_stock }}</textarea>
+                                        <textarea class="form-control" name="description" rows="5" readonly>{{ $data->data->deskripsi_stock }}</textarea>
                                     </div>
                                 </div>
                                 <div class="row mb-3 align-items-center">
@@ -191,7 +190,7 @@
 @endsection
 @push('scripts')
     <script>
-        $(document).ready(function () {
+        $(document).ready(function() {
             if ($('#tablehistorymutasi tbody tr').length > 0) {
                 $('#tablehistorymutasi').DataTable({
                     paging: true,
@@ -203,7 +202,6 @@
             } else {
                 $('#tablehistorymutasi').html('<tr><td colspan="8" class="text-center">Tidak Ada Data</td></tr>');
             }
-
         });
     </script>
 @endpush

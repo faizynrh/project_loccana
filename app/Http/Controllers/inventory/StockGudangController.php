@@ -66,17 +66,17 @@ class StockGudangController extends Controller
 
     public function show($id)
     {
-        return view('inventory.stockgudang.detail');
-        // try {
-        //     $apiResponse = fectApi(env('STOCK_URL') . '/' . $id);
-        //     if ($apiResponse->successful()) {
-        //         $data = json_decode($apiResponse->body());
-        //         return view('inventory.stockgudang.detail', compact('data'));
-        //     } else {
-        //         return back()->withErrors($apiResponse->json()['message']);
-        //     }
-        // } catch (\Exception $e) {
-        //     return back()->withErrors($e->getMessage());
-        // }
+        try {
+            $apiResponse = fectApi(env('STOCK_GUDANG_URL') . '/' . $id);
+
+            if ($apiResponse->successful()) {
+                $data = json_decode($apiResponse->body());
+                return view('inventory.stockgudang.detail', compact('data'));
+            } else {
+                return back()->withErrors($apiResponse->json()['message']);
+            }
+        } catch (\Exception $e) {
+            return back()->withErrors($e->getMessage());
+        }
     }
 }
