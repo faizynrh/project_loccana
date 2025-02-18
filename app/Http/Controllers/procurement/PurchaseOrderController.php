@@ -186,8 +186,10 @@ class PurchaseOrderController extends Controller
                     'warehouse_id' => $warehouseId,
                     'quantity' => (int) ($itemData['quantity'] ?? 0),
                     'unit_price' => (float) ($itemData['unit_price'] ?? 0),
+                    // 'total_price' => (float) ($itemData['total_price'] ?? 0),
                     'discount' => (float) ($itemData['discount'] ?? 0),
                     'uom_id' => (int) ($itemData['uom_id'] ?? 0),
+
                 ];
             }
             $data = (object) [
@@ -195,7 +197,7 @@ class PurchaseOrderController extends Controller
                 'code' => (string) $request->input('code'),
                 "order_date" => now()->format('Y-m-d\TH:i:s\Z'),
                 'partner_id' => (int) $request->input('partner_id'),
-                'term_of_payment' => (int) $request->input('term_of_payment'),
+                'term_of_payment' => $request->input('term_of_payment'),
                 'currency_id' => (int) $request->input('currency_id'),
                 'total_amount' => (float) $request->input('total_amount'),
                 'tax_amount' => (float) $request->input('tax_amount'),
@@ -206,12 +208,9 @@ class PurchaseOrderController extends Controller
                 'items' => $items,
             ];
 
-            dd($data);
+            // dd($data);
 
             $apiResponse = storeApi(env('PO_URL'), $data);
-
-
-
             if ($apiResponse->successful()) {
                 Session::put('last_po_code', $request->input('code'));
                 return redirect()->route('purchaseorder.index')
@@ -279,36 +278,32 @@ class PurchaseOrderController extends Controller
             return back()->withErrors($e->getMessage());
         }
     }
+
+    /**
+     * Update the specified resource in storage.
+     */
     public function update(Request $request, string $id)
     {
         try {
             $itemsRequest = $request->input('items');
-            // Ambil nilai warehouse_id dari input global (misal dari row pertama)
-            $warehouseId = isset($itemsRequest[0]['warehouse_id'])
-                ? (int) $itemsRequest[0]['warehouse_id']
-                : 0;
+            $warehouseId = isset($itemsRequest[0]['warehouse_id']) ? (int) $itemsRequest[0]['warehouse_id'] : 0;
 
             $items = [];
             foreach ($itemsRequest as $itemData) {
-                // Buat array entry untuk setiap item
                 $entry = [
                     'item_id' => (int) ($itemData['item_id'] ?? 0),
-                    'warehouse_id' => $warehouseId, // gunakan nilai global
+                    'warehouse_id' => $warehouseId,
                     'quantity' => (int) ($itemData['quantity'] ?? 0),
                     'unit_price' => (float) ($itemData['unit_price'] ?? 0),
                     'discount' => (float) ($itemData['discount'] ?? 0),
-                    'uom_id' => (int) ($itemData['uom_id'] ?? 0),
+                    'uom_id' => (int) ($itemData['uom_id']),
+                    'po_detail_id' => isset($itemData['po_detail_id']) ? (int) $itemData['po_detail_id'] : 0
                 ];
 
-                // Hanya sertakan po_detail_id jika sudah ada (bernilai tidak kosong)
-                if (isset($itemData['po_detail_id']) && !empty($itemData['po_detail_id'])) {
-                    $entry['po_detail_id'] = (int) $itemData['po_detail_id'];
-                }
-
-                $items[] = (object) $entry;
+                $items[] = $entry;
             }
 
-            $data = (object) [
+            $data = [
                 "order_date" => $request->input('order_date'),
                 'partner_id' => $request->input('partner_id'),
                 'term_of_payment' => $request->input('term_of_payment'),
@@ -320,11 +315,9 @@ class PurchaseOrderController extends Controller
                 'requested_by' => (int) $request->input('requested_by'),
                 'items' => $items,
             ];
-
+            // dd($data);
             $apiResponse = updateApi(env('PO_URL') . '/' . $id, $data);
-            // dd() hanya untuk debugging; hapus baris ini jika sudah yakin
-            dd($apiResponse->json(), $data);
-
+            // dd($data);
             if ($apiResponse->successful()) {
                 Session::put('last_po_code', $request->input('code'));
                 return redirect()->route('purchaseorder.index')
@@ -336,68 +329,6 @@ class PurchaseOrderController extends Controller
             return back()->withErrors($e->getMessage());
         }
     }
-
-
-    /**
-     * Update the specified resource in storage.
-     */
-    // public function update(Request $request, string $id)
-    // {
-    //     try {
-    //         $itemsRequest = $request->input('items');
-    //         $warehouseId = isset($itemsRequest[0]['warehouse_id']) ?
-    //             (int) $itemsRequest[0]['warehouse_id'] : 0;
-    //         $detailpoid = isset($itemsRequest[0]['po_detail_id']) ?
-    //             (int) $itemsRequest[0]['po_detail_id'] : 0;
-
-
-    //         $items = [];
-    //         foreach ($itemsRequest as $itemData) {
-    //             $items[] = (object) [
-    //                 'item_id' => (int) ($itemData['item_id'] ?? 0),
-    //                 'warehouse_id' => $warehouseId,
-    //                 'quantity' => (int) ($itemData['quantity'] ?? 0),
-    //                 'unit_price' => (float) ($itemData['unit_price'] ?? 0),
-    //                 'discount' => (float) ($itemData['discount'] ?? 0),
-    //                 'uom_id' => (int) ($itemData['uom_id'] ?? 0),
-    //                 'po_detail_id' => $detailpoid
-    //             ];
-    //         }
-
-    //         $data = (object) [
-
-    //             "order_date" => $request->input('order_date'),
-    //             'partner_id' => $request->input('partner_id'),
-    //             'term_of_payment' => $request->input('term_of_payment'),
-    //             'currency_id' => (int) $request->input('currency_id'),
-    //             'total_amount' => (float) $request->input('total_amount'),
-    //             'tax_amount' => (float) $request->input('tax_amount'),
-    //             // 'ppn' => $request->input('ppn'),
-    //             'description' => (string) $request->input('description'),
-    //             'status' => (string) $request->input('status'),
-    //             'requested_by' => (int) $request->input('requested_by'),
-    //             'items' => $items,
-    //         ];
-    //         // dd($data);
-
-    //         $apiResponse = updateApi(env('PO_URL') . '/' . $id, $data);
-    //         // dd(env('PO_URL') . '/' . $id);
-    //         // dd($apiResponse->json(), $data);
-    //         if ($apiResponse->successful()) {
-    //             Session::put('last_po_code', $request->input('code'));
-    //             return redirect()->route('purchaseorder.index')
-    //                 ->with('success', $apiResponse->json()['message']);
-    //         } else {
-    //             return back()->withErrors(
-    //                 $apiResponse->json()['message']
-    //             );
-    //         }
-    //     } catch (\Exception $e) {
-    //         return back()->withErrors($e->getMessage());
-    //     }
-    // }
-
-
 
     /**
      * Remove the specified resource from storage.
@@ -441,7 +372,27 @@ class PurchaseOrderController extends Controller
     {
         try {
             $data = [
-                'approved_by' => 1
+                'approved_by' => 1,
+                'status' => 'Approve'
+            ];
+            // dd($data);
+            $apiResponse = updateApi(env('PO_URL') . '/approve/' . $id, $data);
+            // dd($apiResponse);
+            if ($apiResponse->successful()) {
+                return redirect()->route('purchaseorder.index')->with('success', $apiResponse->json()['message']);
+            } else {
+                return back()->withErrors($apiResponse->json()['message']);
+            }
+        } catch (\Exception $e) {
+            return back()->withErrors($e->getMessage());
+        }
+    }
+    public function reject(Request $request, $id)
+    {
+        try {
+            $data = [
+                'approved_by' => 1,
+                'status' => 'Reject'
             ];
             // dd($data);
             $apiResponse = updateApi(env('PO_URL') . '/approve/' . $id, $data);
