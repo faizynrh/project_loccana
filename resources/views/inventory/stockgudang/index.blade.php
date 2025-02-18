@@ -102,7 +102,6 @@
         </div>
 @endsection
     @push('scripts')
-
         <script>
             $(document).ready(function () {
                 let table = $('#tablestockgudang').DataTable({
@@ -156,11 +155,11 @@
                         data: null,
                         render: function (data, type, row) {
                             return `<div class="text-center">
-                                            <a href="/stock_gudang/detail/${row.item_id}" class="btn btn-sm btn-info me-2" title="Detail">
-                                                <i class="bi bi-eye"></i>
-                                            </a>
-                                        </div>
-                                        `;
+                                                    <a href="/stock_gudang/detail/${row.item_id}" class="btn btn-sm btn-info me-2" title="Detail">
+                                                        <i class="bi bi-eye"></i>
+                                                    </a>
+                                                </div>
+                                                `;
                         }
                     }
                     ]
