@@ -13,6 +13,7 @@ use App\Http\Controllers\procurement\ReturnController;
 use App\Http\Controllers\authentication\AuthController;
 use App\Http\Controllers\inventory\StockController;
 use App\Http\Controllers\inventory\StockGudangController;
+use App\Http\Controllers\inventory\StockInTransitController;
 use App\Http\Controllers\masterdata\CustomerController;
 use App\Http\Controllers\procurement\InvoiceController;
 use App\Http\Controllers\procurement\RekapPOController;
@@ -58,7 +59,7 @@ Route::middleware('auth.login')->group(
 
 
         // ==========================================MASTERDATA========================================
-    
+
         // ITEM
         Route::prefix('/item')->name('item.')->group(function () {
             Route::get('/', [ItemController::class, 'index'])->name('index');
@@ -158,7 +159,7 @@ Route::middleware('auth.login')->group(
         });
 
         // ===================================== PROCUREMENT =========================================
-    
+
         // PENERIMAAN BARANG
         Route::prefix('/penerimaan_barang')->name('penerimaan_barang.')->group(function () {
             Route::get('/', [PenerimaanBarangController::class, 'index'])->name('index');
@@ -234,7 +235,7 @@ Route::middleware('auth.login')->group(
 
 
         // ===================================== INVENTORY =========================================
-    
+
         Route::prefix('/stock')->name('stock.')->group(function () {
             Route::get('/', [StockController::class, 'index'])->name('index');
             Route::get('/ajax', [StockController::class, 'ajax'])->name('ajax');
@@ -248,6 +249,12 @@ Route::middleware('auth.login')->group(
             Route::get('/', [StockGudangController::class, 'index'])->name('index');
             Route::get('/ajax', [StockGudangController::class, 'ajax'])->name('ajax');
             Route::get('/detail/{id}', [StockGudangController::class, 'show'])->name('detail');
+        });
+
+        Route::prefix('/stock_in_transit')->name('stock_in_transit.')->group(function () {
+            Route::get('/', [StockInTransitController::class, 'index'])->name('index');
+            Route::get('/ajax', [StockInTransitController::class, 'ajax'])->name('ajax');
+            Route::get('/add', [StockInTransitController::class, 'create'])->name('create');
         });
     }
 );
