@@ -29,22 +29,6 @@
             <section class="section">
                 <div class="card">
                     <div class="card-body">
-                        @if (session('success'))
-                            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                {{ session('success') }}
-                                <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                    aria-label="Close"></button>
-                            </div>
-                        @endif
-                        @if ($errors->any())
-                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                @foreach ($errors->all() as $error)
-                                    <p>{{ $error }}</p>
-                                @endforeach
-                                <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                    aria-label="Close"></button>
-                            </div>
-                        @endif
                         <div class="mb-3 p-1">
                             <h5 class="fw-bold d-inline-block border-bottom pb-2 border-3">{{ $data->data->nama_stock }}
                             </h5>
@@ -74,7 +58,8 @@
                                         <label class="form-label fw-bold mb-0">Deskripsi Stok</label>
                                     </div>
                                     <div class="col-md-9">
-                                        <textarea class="form-control" name="description" rows="5" readonly>{{ $data->data->deskripsi_stock }}</textarea>
+                                        <textarea class="form-control" name="description" rows="5"
+                                            readonly>{{ $data->data->deskripsi_stock }}</textarea>
                                     </div>
                                 </div>
                                 <div class="row mb-3 align-items-center">
@@ -181,18 +166,20 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($data->data->history_mutasi as $index => $item)
-                                        <tr>
-                                            <td>{{ $index + 1 }}</td>
-                                            <td>{{ $item->kode_item }}</td>
-                                            <td>{{ $item->nama_item }}</td>
-                                            <td>{{ $item->tgl_mutasi }}</td>
-                                            <td>{{ $item->type_mytasi }}</td>
-                                            <td>{{ $item->jumlah_mutasi }}</td>
-                                            <td>{{ $item->nama_principle }}</td>
-                                            <td>{{ $item->keterangan }}</td>
-                                        </tr>
-                                    @endforeach
+                                    @if (!empty($data->data->history_mutasi) && count($data->data->history_mutasi) > 0)
+                                        @foreach ($data->data->history_mutasi as $index => $item)
+                                            <tr>
+                                                <td>{{ $index + 1 }}</td>
+                                                <td>{{ $item->kode_item }}</td>
+                                                <td>{{ $item->nama_item }}</td>
+                                                <td>{{ $item->tgl_mutasi }}</td>
+                                                <td>{{ $item->type_mytasi }}</td>
+                                                <td>{{ $item->jumlah_mutasi }}</td>
+                                                <td>{{ $item->nama_principle }}</td>
+                                                <td>{{ $item->keterangan }}</td>
+                                            </tr>
+                                        @endforeach
+                                    @endif
                                 </tbody>
                             </table>
                         </div>
@@ -204,14 +191,19 @@
 @endsection
 @push('scripts')
     <script>
-        $(document).ready(function() {
-            $('#tablehistorymutasi').DataTable({
-                paging: true,
-                pageLength: 10,
-                lengthChange: false,
-                searching: true,
-                ordering: true,
-            });
+        $(document).ready(function () {
+            if ($('#tablehistorymutasi tbody tr').length > 0) {
+                $('#tablehistorymutasi').DataTable({
+                    paging: true,
+                    pageLength: 10,
+                    lengthChange: false,
+                    searching: true,
+                    ordering: true,
+                });
+            } else {
+                $('#tablehistorymutasi').html('<tr><td colspan="8" class="text-center">Tidak Ada Data</td></tr>');
+            }
+
         });
     </script>
 @endpush
