@@ -92,7 +92,7 @@
                         <span>Inventory</span>
                     </a>
                     <ul class="submenu active">
-                        <li class="submenu-item {{ Request::is('stock*') ? 'active' : '' }}">
+                        <li class="submenu-item {{ Request::is('stock') || Request::is('stock/*') ? 'active' : '' }}">
                             <a href="/stock" class="submenu-link">Stock</a>
                         </li>
                         <li class="submenu-item {{ Request::is('stock_gudang*') ? 'active' : '' }}">

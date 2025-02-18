@@ -56,8 +56,11 @@ class StockGudangController extends Controller
         if ($apiResponse->successful()) {
             $data = json_decode($apiResponse->body());
             return view('inventory.stockgudang.index', compact('data'));
+        } else {
+            return redirect()->route('stock_gudang.index')->withErrors(
+                $apiResponse->json()['message'] ?? 'Terjadi kesalahan, silakan coba lagi.'
+            );
         }
-        return view('inventory.stockgudang.index');
     }
 
     public function show($id)
@@ -65,7 +68,6 @@ class StockGudangController extends Controller
         return view('inventory.stockgudang.detail');
         // try {
         //     $apiResponse = fectApi(env('STOCK_URL') . '/' . $id);
-
         //     if ($apiResponse->successful()) {
         //         $data = json_decode($apiResponse->body());
         //         return view('inventory.stockgudang.detail', compact('data'));

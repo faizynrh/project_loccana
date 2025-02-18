@@ -155,10 +155,10 @@
                         data: null,
                         render: function (data, type, row) {
                             return `
-                                                            <a href="/stock_gudang/detail/${row.item_id}" class="btn btn-sm btn-info me-2" title="Detail">
-                                                                <i class="bi bi-eye"></i>
-                                                            </a>
-                                                        `;
+                                                                    <a href="/stock_gudang/detail/${row.item_id}" class="btn btn-sm btn-info me-2" title="Detail">
+                                                                        <i class="bi bi-eye"></i>
+                                                                    </a>
+                                                                `;
                         }
                     }
                     ]
