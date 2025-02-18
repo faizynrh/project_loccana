@@ -8,6 +8,7 @@
     <title>Distributor & Sales System</title>
     <link rel="shortcut icon" href="#" type="image/x-icon">
     <link rel="shortcut icon" href="#" type="image/png">
+    <link rel="icon" href="{{ asset('assets/img/icon/icon.png') }}" type="image/png">
     <link rel="stylesheet" href="{{ asset('assets/css/app.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/datatables/dataTables.dataTables.min.css') }}">
     @stack('styles')
