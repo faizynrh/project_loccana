@@ -178,16 +178,16 @@
                         data: null,
                         render: function (data, type, row) {
                             return `
-                                                <div class="d-flex">
-                                                    <a href="/stock/detail/${row.item_id}" class="btn btn-sm btn-info me-2" title="Detail">
-                                                        <i class="bi bi-eye"></i>
-                                                    </a>
-                                                    <button type="button" class="btn btn-sm btn-warning btn-mutasi"
-                                                        data-id="${row.item_id}" title="Edit">
-                                                        <i class="bi bi-arrow-repeat"></i>
-                                                    </button>
-                                                </div>
-                                            `;
+                                                                                    <div class="d-flex">
+                                                                                        <a href="/stock/detail/${row.item_id}" class="btn btn-sm btn-info me-2" title="Detail">
+                                                                                            <i class="bi bi-eye"></i>
+                                                                                        </a>
+                                                                                        <button type="button" class="btn btn-sm btn-warning btn-mutasi"
+                                                                                            data-id="${row.item_id}" title="Edit">
+                                                                                            <i class="bi bi-arrow-repeat"></i>
+                                                                                        </button>
+                                                                                    </div>
+                                                                                `;
                         }
                     }
                     ]
