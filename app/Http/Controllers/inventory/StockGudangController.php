@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers\inventory;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\Controller;
 
 class StockGudangController extends Controller
 {
@@ -15,6 +16,7 @@ class StockGudangController extends Controller
             $length = $request->input('length', 10);
             $start = $request->input('start', 0);
             $search = $request->input('search.value') ?? '';
+            $warehouse = $request->input('warehouseid') ?? '';
 
             $requestbody = [
                 'search' => $search,
@@ -24,6 +26,7 @@ class StockGudangController extends Controller
                 'limit' => $length,
                 'offset' => $start,
             ];
+
             $apiResponse = storeApi(env('STOCK_GUDANG_URL') . '/lists', $requestbody);
             if ($apiResponse->successful()) {
                 $data = $apiResponse->json();
@@ -59,17 +62,18 @@ class StockGudangController extends Controller
 
     public function show($id)
     {
-        try {
-            $apiResponse = fectApi(env('STOCK_URL') . '/' . $id);
+        return view('inventory.stockgudang.detail');
+        // try {
+        //     $apiResponse = fectApi(env('STOCK_URL') . '/' . $id);
 
-            if ($apiResponse->successful()) {
-                $data = json_decode($apiResponse->body());
-                return view('inventory.stockgudang.detail', compact('data'));
-            } else {
-                return back()->withErrors($apiResponse->json()['message']);
-            }
-        } catch (\Exception $e) {
-            return back()->withErrors($e->getMessage());
-        }
+        //     if ($apiResponse->successful()) {
+        //         $data = json_decode($apiResponse->body());
+        //         return view('inventory.stockgudang.detail', compact('data'));
+        //     } else {
+        //         return back()->withErrors($apiResponse->json()['message']);
+        //     }
+        // } catch (\Exception $e) {
+        //     return back()->withErrors($e->getMessage());
+        // }
     }
 }

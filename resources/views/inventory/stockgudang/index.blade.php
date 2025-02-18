@@ -44,7 +44,7 @@
                                     </div>
                                     <div class="col-md-3">
                                         <select class="form-select" name="warehouse" id="warehouse">
-                                            <option value="" selected disabled>Pilih Gudang</option>
+                                            <option value="0">All</option>
                                             @foreach ($data->data as $item)
                                                 <option value="{{ $item->id }}">{{ $item->name }}</option>
                                             @endforeach
@@ -119,8 +119,9 @@
                             d.end_date = end_date;
                             d.warehouseid = warehouseid;
 
-                            // console.log('Start Date:', start_date);
-                            // console.log('End Date:', end_date);
+                            console.log('Start Date:', start_date);
+                            console.log('End Date:', end_date);
+                            console.log('Gudang:', warehouseid);
                         }
                     },
                     columns: [{
@@ -154,10 +155,10 @@
                         data: null,
                         render: function (data, type, row) {
                             return `
-                                        <a href="/stock_gudang/detail/${row.item_id}" class="btn btn-sm btn-info me-2" title="Detail">
-                                            <i class="bi bi-eye"></i>
-                                        </a>
-                                    `;
+                                                            <a href="/stock_gudang/detail/${row.item_id}" class="btn btn-sm btn-info me-2" title="Detail">
+                                                                <i class="bi bi-eye"></i>
+                                                            </a>
+                                                        `;
                         }
                     }
                     ]
