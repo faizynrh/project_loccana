@@ -9,7 +9,7 @@
             <div class="page-title">
                 <div class="row">
                     <div class="col-12 col-md-6 order-md-1 order-last">
-                        <h3>Stock</h3>
+                        <h3>Stok</h3>
                     </div>
                     <div class="col-12 col-md-6 order-md-2 order-first">
                         <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
@@ -18,7 +18,7 @@
                                     <a href="/dashboard">Dashboard</a>
                                 </li>
                                 <li class="breadcrumb-item active" aria-current="page">
-                                    Stock
+                                    Stok
                                 </li>
                             </ol>
                         </nav>
@@ -65,7 +65,7 @@
                                             <th rowspan=2>Kemasan</th>
                                             <th rowspan=2>Principal</th>
                                             <th rowspan=2>Box per LT/KG</th>
-                                            <th colspan=2 class="text-center">Stock Awal </th>
+                                            <th colspan=2 class="text-center">Stok Awal </th>
                                             <th colspan=4 class="text-center">Penerimaan </th>
                                             <th colspan=4 class="text-center">DO</th>
                                             <th colspan=2 class="text-center">Stok Akhir </th>
@@ -94,11 +94,11 @@
             </section>
         </div>
         @include('inventory.stock.ajax.modal')
-@endsection
+    @endsection
     @push('scripts')
         <script>
-            $(document).ready(function () {
-                $('#exportBtn').click(function () {
+            $(document).ready(function() {
+                $('#exportBtn').click(function() {
                     var start_date = $('#start_date').val();
                     var end_date = $('#end_date').val();
 
@@ -112,7 +112,7 @@
                     ajax: {
                         url: '{{ route('stock.ajax') }}',
                         type: 'GET',
-                        data: function (d) {
+                        data: function(d) {
                             let start_date = $('#start_date').val();
                             let end_date = $('#end_date').val();
 
@@ -124,60 +124,60 @@
                         }
                     },
                     columns: [{
-                        data: 'kode'
-                    },
-                    {
-                        data: 'produk'
-                    },
-                    {
-                        data: 'kemasan'
-                    },
-                    {
-                        data: 'principal'
-                    },
-                    {
-                        data: 'box_per_lt'
-                    },
-                    {
-                        data: 'lt_stock_awal'
-                    },
-                    {
-                        data: 'box_stock_awal'
-                    },
-                    {
-                        data: 'lt_penerimaan'
-                    },
-                    {
-                        data: 'box_penerimaan'
-                    },
-                    {
-                        data: 'return_lt_penerimaan'
-                    },
-                    {
-                        data: 'return_box_penerimaan'
-                    },
-                    {
-                        data: 'lt_do'
-                    },
-                    {
-                        data: 'box_do'
-                    },
-                    {
-                        data: 'return_lt_do'
-                    },
-                    {
-                        data: 'return_box_do'
-                    },
-                    {
-                        data: 'lt_stock_akhir'
-                    },
-                    {
-                        data: 'box_stock_akhir'
-                    },
-                    {
-                        data: null,
-                        render: function (data, type, row) {
-                            return `
+                            data: 'kode'
+                        },
+                        {
+                            data: 'produk'
+                        },
+                        {
+                            data: 'kemasan'
+                        },
+                        {
+                            data: 'principal'
+                        },
+                        {
+                            data: 'box_per_lt'
+                        },
+                        {
+                            data: 'lt_stock_awal'
+                        },
+                        {
+                            data: 'box_stock_awal'
+                        },
+                        {
+                            data: 'lt_penerimaan'
+                        },
+                        {
+                            data: 'box_penerimaan'
+                        },
+                        {
+                            data: 'return_lt_penerimaan'
+                        },
+                        {
+                            data: 'return_box_penerimaan'
+                        },
+                        {
+                            data: 'lt_do'
+                        },
+                        {
+                            data: 'box_do'
+                        },
+                        {
+                            data: 'return_lt_do'
+                        },
+                        {
+                            data: 'return_box_do'
+                        },
+                        {
+                            data: 'lt_stock_akhir'
+                        },
+                        {
+                            data: 'box_stock_akhir'
+                        },
+                        {
+                            data: null,
+                            render: function(data, type, row) {
+                                return `
                                                                                     <div class="d-flex">
                                                                                         <a href="/stock/detail/${row.item_id}" class="btn btn-sm btn-info me-2" title="Detail">
                                                                                             <i class="bi bi-eye"></i>
@@ -188,12 +188,12 @@
                                                                                         </button>
                                                                                     </div>
                                                                                 `;
+                            }
                         }
-                    }
                     ]
                 });
 
-                $('#searchForm').submit(function (e) {
+                $('#searchForm').submit(function(e) {
                     e.preventDefault();
                     table.ajax.reload();
                 });
@@ -210,7 +210,7 @@
                     myModal.show();
                 }
 
-                $(document).on('click', '.btn-mutasi', function (e) {
+                $(document).on('click', '.btn-mutasi', function(e) {
                     e.preventDefault();
                     const id = $(this).data('id');
                     const url = '{{ route('stock.mutasi', ':id') }}'.replace(':id', id);
@@ -222,19 +222,19 @@
                         url: url,
                         type: 'GET',
                         dataType: 'html',
-                        beforeSend: function () {
+                        beforeSend: function() {
                             //
                         },
-                        success: function (response) {
+                        success: function(response) {
                             updateModal('#modal-stock', 'Tambah Mutasi', response,
                                 'modal-lg');
                         },
-                        error: function (xhr) {
+                        error: function(xhr) {
                             let errorMsg = xhr.responseText ||
                                 '<p>An error occurred while loading the content.</p>';
                             $('#content-stock').html(errorMsg);
                         },
-                        complete: function () {
+                        complete: function() {
                             $('#loading-overlay').fadeOut();
                         }
                     });

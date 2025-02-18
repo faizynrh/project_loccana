@@ -29,9 +29,11 @@
             <section class="section">
                 <div class="card">
                     <div class="card-body">
-                        <div class="mb-3 p-1">
-                            <h5 class="fw-bold d-inline-block border-bottom pb-2 border-3">{{ $data->data->nama_stock }}
+                        <div class="mb-3 p-1 d-flex justify-content-between align-items-center">
+                            <h5 class="fw-bold d-inline-block border-bottom pb-2 border-3">
+                                {{ $data->data->nama_stock }}
                             </h5>
+                            <a href="{{ route('stock.index') }}" class="btn btn-secondary ms-auto text-end">Back</a>
                         </div>
                         <div class="row mb-3">
                             <div class="col-12">
@@ -58,8 +60,7 @@
                                         <label class="form-label fw-bold mb-0">Deskripsi Stok</label>
                                     </div>
                                     <div class="col-md-9">
-                                        <textarea class="form-control" name="description" rows="5"
-                                            readonly>{{ $data->data->deskripsi_stock }}</textarea>
+                                        <textarea class="form-control" name="description" rows="5" readonly>{{ $data->data->deskripsi_stock }}</textarea>
                                     </div>
                                 </div>
                                 <div class="row mb-3 align-items-center">
@@ -82,6 +83,7 @@
                                 </div>
                             </div>
                         </div>
+                        <hr class="my-4 border-2 border-dark">
                         <div class="mt-2 mb-3 p-1">
                             <h5 class="fw-bold d-inline-block border-bottom pb-2 border-3">Qty Sisa</h5>
                         </div>
@@ -191,7 +193,7 @@
 @endsection
 @push('scripts')
     <script>
-        $(document).ready(function () {
+        $(document).ready(function() {
             if ($('#tablehistorymutasi tbody tr').length > 0) {
                 $('#tablehistorymutasi').DataTable({
                     paging: true,
@@ -203,7 +205,6 @@
             } else {
                 $('#tablehistorymutasi').html('<tr><td colspan="8" class="text-center">Tidak Ada Data</td></tr>');
             }
-
         });
     </script>
 @endpush
