@@ -10,7 +10,7 @@ function confirmApprove(id) {
         reverseButtons: true,
     }).then((result) => {
         if (result.isConfirmed) {
-            document.getElementById("approveForm").submit();
+            document.getElementById("approve" + id).submit();
         }
     });
 }
