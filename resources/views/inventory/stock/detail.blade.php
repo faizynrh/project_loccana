@@ -83,6 +83,7 @@
                                 </div>
                             </div>
                         </div>
+                        <hr class="my-4 border-2 border-dark">
                         <div class="mt-2 mb-3 p-1">
                             <h5 class="fw-bold d-inline-block border-bottom pb-2 border-3">Qty Sisa</h5>
                         </div>
