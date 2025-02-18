@@ -200,8 +200,14 @@
                                                     onclick="confirmApprove('{{ $data->data[0]->id_po }}')">Approve</button>
                                             </form>
                                         </td>
-                                        <td> <button type="button" class="btn btn-danger ms-2" id="rejectButton"
-                                                onclick="confirmReject(id)">Reject</button></td>
+                                        <td>
+                                            <form id="rejectForm" method="POST"
+                                                action="{{ route('purchaseorder.reject', $data->data[0]->id_po) }}">
+                                                @csrf
+                                                @method('PUT')<button type="button" class="btn btn-danger ms-2"
+                                                    id="rejectButton" onclick="confirmReject(id)">Reject</button>
+                                            </form>
+                                        </td>
                                         <td> <a href="/purchase_order" class="btn btn-secondary ms-2">Back</a></td>
 
                                     </tr>

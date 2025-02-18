@@ -91,18 +91,16 @@
                                     <label for="pembayaran" class="form-label fw-bold mt-2 mb-1 small">Term
                                         Pembayaran</label>
                                     <select id="pembayaran" class="form-select" name="term_of_payment" required>
-                                        <option value="1" selected>Cash</option>
-                                        <option value="15">15 Hari</option>
-                                        <option value="30">30 Hari</option>
-                                        <option value="45">45 Hari</option>
-                                        <option value="60">60 Hari</option>
-                                        <option value="90">90 Hari</option>
+                                        <option value="Cash" selected>Cash</option>
+                                        <option value="15 Hari">15 Hari</option>
+                                        <option value="30 Hari">30 Hari</option>
+                                        <option value="45 Hari">45 Hari</option>
+                                        <option value="60 Hari">60 Hari</option>
+                                        <option value="90 Hari">90 Hari</option>
                                     </select>
 
                                     <label for="description" class="form-label fw-bold mt-2 mb-1 small">Keterangan</label>
                                     <textarea class="form-control" rows="5" id="description" name="description"></textarea>
-
-
                                 </div>
                             </div>
                             <div class="p-2">
@@ -130,7 +128,6 @@
                                                     dahulu</option>
                                             </select>
                                             <input type="hidden" name="items[0][uom_id]" class="uom-input">
-
                                         </td>
                                         <td>
                                             <input type="number" name="items[0][quantity]"
@@ -146,9 +143,8 @@
                                                 max="100">
                                         </td>
                                         <td colspan="2">
-                                            <input type="number" name=""
-                                                class="form-control bg-body-secondary total-input" value="0"
-                                                readonly>
+                                            <input type="number" name="items[0][total_price]"
+                                                class="form-control bg-body-secondary total-input" readonly>
                                         </td>
                                         <td></td>
                                     </tr>
@@ -281,7 +277,7 @@
                     <input type="number" class="form-control discount-input" name="items[${rowCount}][discount]" value="0" min="0" max="100">
                 </td>
                 <td colspan="2">
-                    <input type="number" class="form-control bg-body-secondary total-input" name="" value="0" readonly>
+                    <input type="number" class="form-control bg-body-secondary total-input" name="items[${rowCount}][total_price]" readonly>
                 </td>
                 <td class="text-center">
                     <button type="button" class="btn btn-danger btn-sm remove-row">X</button>

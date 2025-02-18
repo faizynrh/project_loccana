@@ -27,7 +27,7 @@ function confirmReject(id) {
         reverseButtons: true,
     }).then((result) => {
         if (result.isConfirmed) {
-            document.getElementById("approve" + id).submit();
+            document.getElementById("rejectForm").submit();
         }
     });
 }

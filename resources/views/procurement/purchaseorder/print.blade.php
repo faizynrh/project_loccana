@@ -101,6 +101,7 @@
 
     <div class="section">
         <strong>Kepada :</strong> {{ $data['data'][0]['partner_name'] ?? '' }}<br>
+        <strong>Term Of Payment :</strong> {{ $data['data'][0]['term_of_payment'] ?? '' }}<br>
     </div>
 
     <table>
@@ -143,7 +144,7 @@
         </div>
         <div class="amount-row">
             <strong>Vat/PPN :</strong>
-            <span>{{ number_format($vat ?? 0, 2, ',', '.') }}</span>
+            <span>{{ $item['tax_amount'] ?? '' }}</span>
         </div>
         <div class="amount-row">
             <strong>Total :</strong>

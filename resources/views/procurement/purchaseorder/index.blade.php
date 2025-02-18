@@ -169,6 +169,7 @@
                     },
                     {
                         data: 'status',
+                        className: 'text-center',
                         render: function(data, type, row) {
                             let statusClass = '';
                             let statusLabel = data;
@@ -178,7 +179,7 @@
                                 statusLabel = `<a href="/purchase_order/approve/${row.id}" class="text-dark text-decoration-none" title="Klik untuk Approve">
                                 <span class="${statusClass}">${data}</span>
                            </a>`;
-                            } else if (data.toLowerCase() === 'rejected') {
+                            } else if (data.toLowerCase() === 'reject') {
                                 statusClass = 'badge bg-danger';
                             } else if (data.toLowerCase() === 'approve') {
                                 statusClass = 'badge bg-success';

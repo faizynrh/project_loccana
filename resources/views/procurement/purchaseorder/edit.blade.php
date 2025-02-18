@@ -91,12 +91,12 @@
                                         Pembayaran</label>
                                     @php
                                         $terms = [
-                                            1 => 'Cash',
-                                            15 => '15 Hari',
-                                            30 => '30 Hari',
-                                            45 => '45 Hari',
-                                            60 => '60 Hari',
-                                            90 => '90 Hari',
+                                            'Cash' => 'Cash',
+                                            '15 Hari' => '15 Hari',
+                                            '30 Hari' => '30 Hari',
+                                            '45 Hari' => '45 Hari',
+                                            '60 Hari' => '60 Hari',
+                                            '90 Hari' => '90 Hari',
                                         ];
                                         $selectedTerm = $data->data[0]->term_of_payment ?? null;
                                     @endphp
@@ -145,9 +145,17 @@
                                 </thead>
                                 <tbody id="tableBody">
                                     @foreach ($data->data as $index => $item)
+                                        @php
+                                            // Ambil data option yang sesuai dengan item_id pada $item
+                                            $selectedOption = collect($items->data->items ?? [])->firstWhere(
+                                                'id',
+                                                $item->item_id,
+                                            );
+                                            $selectedUom = $selectedOption ? $selectedOption->unit_of_measure_id : '';
+                                        @endphp
                                         <tr style="border-bottom: 2px solid #000" class="item-row">
                                             <td colspan="2">
-                                                <select class="form-select" id="partner_id"
+                                                <select class="form-select" id="item_id_{{ $index }}"
                                                     name="items[{{ $index }}][item_id]" required>
                                                     <option value="" selected disabled>Pilih Item</option>
                                                     @foreach ($items->data->items ?? [] as $option)
@@ -158,8 +166,11 @@
                                                         </option>
                                                     @endforeach
                                                 </select>
+                                                <!-- Hidden input untuk menyimpan unit_of_measure_id dari item yang dipilih -->
                                                 <input type="hidden" name="items[{{ $index }}][uom_id]"
-                                                    class="uom-input" value="{{ $option->unit_of_measure_id ?? '' }}">
+                                                    class="uom-input" value="{{ $selectedUom }}">
+                                                <input type="hidden" name="items[{{ $index }}][po_detail_id]"
+                                                    value="{{ $item->po_detail_id }}">
                                             </td>
                                             <td>
                                                 <input type="number" name="items[{{ $index }}][quantity]"
@@ -183,6 +194,7 @@
                                             <td></td>
                                         </tr>
                                     @endforeach
+
 
                                     <tr style="border-bottom: 2px solid #000;">
                                         <td colspan="6"></td>
@@ -274,6 +286,7 @@
                     @endforeach
                 </select>
                 <input type="hidden" name="items[${rowCount}][uom_id]" class="uom-input">
+                <input type="hidden" name="items[${rowCount}][po_detail_id]" class="po-detail-id">
             </td>
             <td>
                 <input type="number" name="items[${rowCount}][quantity]" class="form-control qty-input" value="1" min="1">
