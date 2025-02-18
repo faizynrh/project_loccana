@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Session;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\ExportProcurementPurchaseOrder;
 
 class PurchaseOrderController extends Controller
 {
@@ -39,7 +41,6 @@ class PurchaseOrderController extends Controller
             ], 500);
         }
     }
-
     public function print($id)
     {
         try {
@@ -72,7 +73,6 @@ class PurchaseOrderController extends Controller
             return back()->withErrors($e->getMessage());
         }
     }
-
     public function ajaxpo(Request $request)
     {
         $search = $request->input('search.value') ?? '';
@@ -114,15 +114,10 @@ class PurchaseOrderController extends Controller
             }
         }
     }
-
     public function index()
     {
         return view("procurement.purchaseorder.index");
     }
-
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         $company_id = 2;
@@ -151,8 +146,6 @@ class PurchaseOrderController extends Controller
             return back()->withErrors($errors);
         }
     }
-
-
     protected function getItemsList($company_id)
     {
         $apiUrl = env('LIST_ITEMS');
@@ -167,12 +160,6 @@ class PurchaseOrderController extends Controller
 
         return response()->json(['items' => [], 'unit_of_measure_id' => []]);
     }
-
-
-    /**
-     * Store a newly created resource in storage.
-     */
-
     public function store(Request $request)
     {
         try {
@@ -224,10 +211,6 @@ class PurchaseOrderController extends Controller
             return back()->withErrors($e->getMessage());
         }
     }
-    /**
-     * Display the specified resource.
-     */
-
     public function show(string $id)
     {
         //
@@ -246,10 +229,6 @@ class PurchaseOrderController extends Controller
         }
 
     }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(string $id)
     {
         try {
@@ -278,10 +257,6 @@ class PurchaseOrderController extends Controller
             return back()->withErrors($e->getMessage());
         }
     }
-
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, string $id)
     {
         try {
@@ -329,10 +304,6 @@ class PurchaseOrderController extends Controller
             return back()->withErrors($e->getMessage());
         }
     }
-
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(string $id)
     {
         //
@@ -404,6 +375,44 @@ class PurchaseOrderController extends Controller
             }
         } catch (\Exception $e) {
             return back()->withErrors($e->getMessage());
+        }
+    }
+    public function exportExcel(Request $request)
+    {
+        try {
+            $search = $request->input('search.value') ?? '';
+            $month = $request->input('month', 11);
+            $year = $request->input('year', 0);
+            $length = $request->input('length', 10);
+            $start = $request->input('start', 0);
+
+            $requestbody = [
+                'search' => '',
+                'month' => $month,
+                'year' => $year,
+                'limit' => $length,
+                'offset' => $start,
+                'company_id' => 2,
+            ];
+
+            $apiResponse = storeApi(env('PO_URL') . '/' . 'list', $requestbody);
+
+            // dd($apiResponse->json(), $requestbody);
+            if ($apiResponse->successful()) {
+                $data = $apiResponse->json();
+                $tableData = $data['data']['table'];
+
+                if (empty($tableData)) {
+                    return back()->with('error', 'Tidak ada data untuk diexport.');
+                }
+
+                // Passing the extra data as arguments to the ExportProcurementReport class
+                return Excel::download(new ExportProcurementPurchaseOrder($tableData, $month, $year), 'Procurement Purchase Order.xlsx');
+            }
+
+            return response()->json(['error' => $apiResponse->json()['message']]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()]);
         }
     }
 }
