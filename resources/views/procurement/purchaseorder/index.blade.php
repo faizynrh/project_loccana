@@ -2,6 +2,9 @@
 @section('content')
     @push('styles')
         <style>
+            .cursor-not-allowed {
+                cursor: not-allowed;
+            }
         </style>
     @endpush
     <div id="main-content">
@@ -28,22 +31,7 @@
             <section class="section">
                 <div class="card">
                     <div class="card-body">
-                        @if (session('success'))
-                            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                {{ session('success') }}
-                                <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                    aria-label="Close"></button>
-                            </div>
-                        @endif
-                        @if ($errors->any())
-                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                @foreach ($errors->all() as $error)
-                                    <p>{{ $error }}</p>
-                                @endforeach
-                                <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                    aria-label="Close"></button>
-                            </div>
-                        @endif
+                        @include('alert.alert')
                         <div class="d-flex align-items-center mb-2">
                             <a href="/purchase_order/add" class="btn btn-primary me-2 fw-bold">+ Tambah Purchase Order</a>
                             <a href="#" class="btn btn-primary me-2 fw-bold">Export</a>
@@ -180,11 +168,10 @@
                                 <span class="${statusClass}">${data}</span>
                            </a>`;
                             } else if (data.toLowerCase() === 'reject') {
-                                statusClass = 'badge bg-danger';
+                                statusClass = 'badge bg-danger cursor-not-allowed';
                             } else if (data.toLowerCase() === 'approve') {
-                                statusClass = 'badge bg-success';
+                                statusClass = 'badge bg-success cursor-not-allowe';
                             }
-
                             return statusLabel !== data ? statusLabel :
                                 `<span class="${statusClass}">${data}</span>`;
                         }
