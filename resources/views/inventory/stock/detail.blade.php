@@ -29,9 +29,11 @@
             <section class="section">
                 <div class="card">
                     <div class="card-body">
-                        <div class="mb-3 p-1">
-                            <h5 class="fw-bold d-inline-block border-bottom pb-2 border-3">{{ $data->data->nama_stock }}
+                        <div class="mb-3 p-1 d-flex justify-content-between align-items-center">
+                            <h5 class="fw-bold d-inline-block border-bottom pb-2 border-3">
+                                {{ $data->data->nama_stock }}
                             </h5>
+                            <a href="{{ route('stock.index') }}" class="btn btn-secondary ms-auto text-end">Back</a>
                         </div>
                         <div class="row mb-3">
                             <div class="col-12">
