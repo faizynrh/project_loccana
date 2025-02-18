@@ -65,10 +65,10 @@
                                             <th rowspan=2>Kemasan</th>
                                             <th rowspan=2>Principal</th>
                                             <th rowspan=2>Box per LT/KG</th>
-                                            <th colspan=2>Stock Awal </th>
-                                            <th colspan=4>Penerimaan </th>
-                                            <th colspan=4>DO</th>
-                                            <th colspan=2>Stok Akhir </th>
+                                            <th colspan=2 class="text-center">Stock Awal </th>
+                                            <th colspan=4 class="text-center">Penerimaan </th>
+                                            <th colspan=4 class="text-center">DO</th>
+                                            <th colspan=2 class="text-center">Stok Akhir </th>
                                             <th rowspan=2>Option</th>
                                         </tr>
                                         <tr>
@@ -178,16 +178,16 @@
                         data: null,
                         render: function (data, type, row) {
                             return `
-                                        <div class="d-flex">
-                                            <a href="/stock/detail/${row.item_id}" class="btn btn-sm btn-info me-2" title="Detail">
-                                                <i class="bi bi-eye"></i>
-                                            </a>
-                                            <button type="button" class="btn btn-sm btn-warning btn-mutasi"
-                                                data-id="${row.item_id}" title="Edit">
-                                                <i class="bi bi-arrow-repeat"></i>
-                                            </button>
-                                        </div>
-                                    `;
+                                                <div class="d-flex">
+                                                    <a href="/stock/detail/${row.item_id}" class="btn btn-sm btn-info me-2" title="Detail">
+                                                        <i class="bi bi-eye"></i>
+                                                    </a>
+                                                    <button type="button" class="btn btn-sm btn-warning btn-mutasi"
+                                                        data-id="${row.item_id}" title="Edit">
+                                                        <i class="bi bi-arrow-repeat"></i>
+                                                    </button>
+                                                </div>
+                                            `;
                         }
                     }
                     ]
