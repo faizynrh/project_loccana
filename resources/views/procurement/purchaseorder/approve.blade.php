@@ -174,7 +174,7 @@
                                 <table style="float: right">
                                     <tr>
                                         <td>
-                                            <form id="approveForm" method="POST"
+                                            <form id="approve{{ $data->data[0]->id_po }}" method="POST"
                                                 action="{{ route('purchaseorder.approve', $data->data[0]->id_po) }}">
                                                 @csrf
                                                 @method('PUT')
@@ -183,11 +183,12 @@
                                             </form>
                                         </td>
                                         <td>
-                                            <form id="rejectForm" method="POST"
+                                            <form id="reject{{ $data->data[0]->id_po }}" method="POST"
                                                 action="{{ route('purchaseorder.reject', $data->data[0]->id_po) }}">
                                                 @csrf
                                                 @method('PUT')<button type="button" class="btn btn-danger ms-2"
-                                                    id="rejectButton" onclick="confirmReject(id)">Reject</button>
+                                                    id="rejectButton"
+                                                    onclick="confirmReject('{{ $data->data[0]->id_po }}')">Reject</button>
                                             </form>
                                         </td>
                                         <td> <a href="/purchase_order" class="btn btn-secondary ms-2">Back</a></td>
