@@ -62,8 +62,7 @@
                             @if (session('success'))
                                 <div class="alert alert-success alert-dismissible fade show" role="alert">
                                     {{ session('success') }}
-                                    <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                        aria-label="Close"></button>
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                                 </div>
                             @endif
                             @if ($errors->any())
@@ -71,8 +70,7 @@
                                     @foreach ($errors->all() as $error)
                                         <p>{{ $error }}</p>
                                     @endforeach
-                                    <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                        aria-label="Close"></button>
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                                 </div>
                             @endif
                             <div class="table-responsive">
@@ -100,10 +98,10 @@
 @endsection
 @push('scripts')
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             $('#btnprint').hide();
 
-            $('#searchForm').on('submit', function(e) {
+            $('#searchForm').on('submit', function (e) {
                 e.preventDefault();
 
                 let $btnCari = $('button[type="submit"]');
@@ -114,91 +112,76 @@
                     serverSide: true,
                     processing: true,
                     deferloading: false,
-                    layout: {
-                        topStart: {
-                            buttons: [{
-                                extend: 'excel',
-                                text: '<i class="bi bi-file-earmark-excel-fill me-1"></i>Export Excel',
-                                filename: function() {
-                                    return getFormattedFilename();
-                                },
-                                title: function() {
-                                    return getFormattedFilename();
-                                },
-                                className: 'd-none',
-                            }]
-                        }
-                    },
                     ajax: {
                         url: '{{ route('dasar_pembelian.ajax') }}',
                         type: 'GET',
-                        data: function(d) {
+                        data: function (d) {
                             d.principal = $('#principal').val();
                             d.start_date = $('#start_date').val();
                             d.end_date = $('#end_date').val();
                         },
-                        complete: function() {
+                        complete: function () {
                             $btnCari.prop('disabled', false).text('Cari');
                         }
                     },
                     columns: [{
-                            data: 'order_date',
-                            render: function(data) {
-                                if (data) {
-                                    var date = new Date(data);
-                                    return (
-                                        date.getDate().toString().padStart(2, '0') +
-                                        '-' +
-                                        (date.getMonth() + 1).toString().padStart(2,
-                                            '0') +
-                                        '-' +
-                                        date.getFullYear()
-                                    );
-                                }
-                                return data;
-                            },
-                        },
-                        {
-                            data: 'item_code'
-                        },
-                        {
-                            data: 'item_name'
-                        },
-                        {
-                            data: 'partner_name'
-                        },
-                        {
-                            data: 'qty'
-                        },
-                        {
-                            data: 'harga',
-                            render: function(data) {
-                                return formatRupiah(data);
+                        data: 'order_date',
+                        render: function (data) {
+                            if (data) {
+                                var date = new Date(data);
+                                return (
+                                    date.getDate().toString().padStart(2, '0') +
+                                    '-' +
+                                    (date.getMonth() + 1).toString().padStart(2,
+                                        '0') +
+                                    '-' +
+                                    date.getFullYear()
+                                );
                             }
+                            return data;
                         },
-                        {
-                            data: 'jumlah',
-                            render: function(data) {
-                                return formatRupiah(data);
-                            }
-                        },
-                        {
-                            data: 'ppn',
-                            render: function(data) {
-                                return formatRupiah(data);
-                            }
-                        },
-                        {
-                            data: 'jumlah_plus_ppn',
-                            render: function(data) {
-                                return formatRupiah(data);
-                            }
+                    },
+                    {
+                        data: 'item_code'
+                    },
+                    {
+                        data: 'item_name'
+                    },
+                    {
+                        data: 'partner_name'
+                    },
+                    {
+                        data: 'qty'
+                    },
+                    {
+                        data: 'harga',
+                        render: function (data) {
+                            return formatRupiah(data);
                         }
+                    },
+                    {
+                        data: 'jumlah',
+                        render: function (data) {
+                            return formatRupiah(data);
+                        }
+                    },
+                    {
+                        data: 'ppn',
+                        render: function (data) {
+                            return formatRupiah(data);
+                        }
+                    },
+                    {
+                        data: 'jumlah_plus_ppn',
+                        render: function (data) {
+                            return formatRupiah(data);
+                        }
+                    }
                     ]
                 });
 
                 $('#btnprint').show();
-                $('#btnprint').on('click', function() {
+                $('#btnprint').on('click', function () {
                     table.button(0).trigger();
                 });
             });
