@@ -50,20 +50,7 @@
                         </form>
                         <div class="card-body">
                             <hr class="my-4 border-2 border-dark">
-                            @if (session('success'))
-                                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                    {{ session('success') }}
-                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                                </div>
-                            @endif
-                            @if ($errors->any())
-                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                    @foreach ($errors->all() as $error)
-                                        <p>{{ $error }}</p>
-                                    @endforeach
-                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                                </div>
-                            @endif
+                            @include('alert.alert')
                             <div class="mt-3 d-flex justify-content-end mb-3">
                                 <button class="btn btn-primary" id="exportBtn">
                                     <i class="bi bi-download"></i> Export Excel
@@ -191,16 +178,16 @@
                         data: null,
                         render: function (data, type, row) {
                             return `
-                            <div class="d-flex">
-                                <a href="/stock/detail/${row.item_id}" class="btn btn-sm btn-info me-2" title="Detail">
-                                    <i class="bi bi-eye"></i>
-                                </a>
-                                <button type="button" class="btn btn-sm btn-warning btn-mutasi"
-                                    data-id="${row.item_id}" title="Edit">
-                                    <i class="bi bi-arrow-repeat"></i>
-                                </button>
-                            </div>
-                        `;
+                                        <div class="d-flex">
+                                            <a href="/stock/detail/${row.item_id}" class="btn btn-sm btn-info me-2" title="Detail">
+                                                <i class="bi bi-eye"></i>
+                                            </a>
+                                            <button type="button" class="btn btn-sm btn-warning btn-mutasi"
+                                                data-id="${row.item_id}" title="Edit">
+                                                <i class="bi bi-arrow-repeat"></i>
+                                            </button>
+                                        </div>
+                                    `;
                         }
                     }
                     ]
