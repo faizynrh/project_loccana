@@ -62,7 +62,8 @@
                             @if (session('success'))
                                 <div class="alert alert-success alert-dismissible fade show" role="alert">
                                     {{ session('success') }}
-                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                        aria-label="Close"></button>
                                 </div>
                             @endif
                             @if ($errors->any())
@@ -70,7 +71,8 @@
                                     @foreach ($errors->all() as $error)
                                         <p>{{ $error }}</p>
                                     @endforeach
-                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                        aria-label="Close"></button>
                                 </div>
                             @endif
                             <div class="table-responsive">
@@ -82,8 +84,8 @@
                                             <th rowspan="2">Kemasan</th>
                                             <th rowspan="2">Principal</th>
                                             <th rowspan="2">Nama Gudang</th>
-                                            <th colspan="2">Stock Gudang</th>
-                                            <th colspan="2">Stock Akhir (All)</th>
+                                            <th colspan="2">Stok Gudang</th>
+                                            <th colspan="2">Stok Akhir (Semua)</th>
                                             <th rowspan="2">Action</th>
                                         </tr>
                                         <tr>
@@ -100,17 +102,17 @@
                 </div>
             </section>
         </div>
-@endsection
+    @endsection
     @push('scripts')
         <script>
-            $(document).ready(function () {
+            $(document).ready(function() {
                 let table = $('#tablestockgudang').DataTable({
                     serverSide: true,
                     processing: true,
                     ajax: {
                         url: '{{ route('stock_gudang.ajax') }}',
                         type: 'GET',
-                        data: function (d) {
+                        data: function(d) {
                             let start_date = $('#start_date').val();
                             let end_date = $('#end_date').val();
                             let warehouseid = $('#warehouse').val();
@@ -125,47 +127,47 @@
                         }
                     },
                     columns: [{
-                        data: 'item_code'
-                    },
-                    {
-                        data: 'item_name'
-                    },
-                    {
-                        data: 'kemasan'
-                    },
-                    {
-                        data: 'partner_name'
-                    },
-                    {
-                        data: 'warehouse_name'
-                    },
-                    {
-                        data: 'stock_gudang_lt'
-                    },
-                    {
-                        data: 'stock_gudang_box'
-                    },
-                    {
-                        data: 'stock_akhir_lt'
-                    },
-                    {
-                        data: 'stock_akhir_gudang'
-                    },
-                    {
-                        data: null,
-                        render: function (data, type, row) {
-                            return `<div class="text-center">
+                            data: 'item_code'
+                        },
+                        {
+                            data: 'item_name'
+                        },
+                        {
+                            data: 'kemasan'
+                        },
+                        {
+                            data: 'partner_name'
+                        },
+                        {
+                            data: 'warehouse_name'
+                        },
+                        {
+                            data: 'stock_gudang_lt'
+                        },
+                        {
+                            data: 'stock_gudang_box'
+                        },
+                        {
+                            data: 'stock_akhir_lt'
+                        },
+                        {
+                            data: 'stock_akhir_gudang'
+                        },
+                        {
+                            data: null,
+                            render: function(data, type, row) {
+                                return `<div class="text-center">
                                                     <a href="/stock_gudang/detail/${row.item_id}" class="btn btn-sm btn-info me-2" title="Detail">
                                                         <i class="bi bi-eye"></i>
                                                     </a>
                                                 </div>
                                                 `;
+                            }
                         }
-                    }
                     ]
                 });
 
-                $('#searchForm').submit(function (e) {
+                $('#searchForm').submit(function(e) {
                     e.preventDefault();
                     table.ajax.reload();
                 });

@@ -93,13 +93,13 @@
                     </a>
                     <ul class="submenu active">
                         <li class="submenu-item {{ Request::is('stock') || Request::is('stock/*') ? 'active' : '' }}">
-                            <a href="/stock" class="submenu-link">Stock</a>
+                            <a href="/stock" class="submenu-link">Stok</a>
                         </li>
                         <li class="submenu-item {{ Request::is('stock_gudang*') ? 'active' : '' }}">
-                            <a href="/stock_gudang" class="submenu-link">Stock Gudang</a>
+                            <a href="/stock_gudang" class="submenu-link">Stok Gudang</a>
                         </li>
                         <li class="submenu-item">
-                            <a href="#" class="submenu-link">Stock In Transit</a>
+                            <a href="#" class="submenu-link">Stok In Transit</a>
                         </li>
                         <li class="submenu-item">
                             <a href="#" class="submenu-link">Transfer Stok</a>
