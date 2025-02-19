@@ -9,16 +9,16 @@
             <div class="page-title">
                 <div class="row">
                     <div class="col-12 col-md-6 order-md-1 order-last">
-                        <h3>Tambah Penerimaan Barang</h3>
+                        <h3>Tambah Stock In Transit</h3>
                     </div>
                     <div class="col-12 col-md-6 order-md-2 order-first">
                         <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item">
-                                    <a href="index.html">Dashboard</a>
+                                    <a href="/stock_in_transit">Dashboard</a>
                                 </li>
                                 <li class="breadcrumb-item active" aria-current="page">
-                                    Tambah Penerimaan Barang
+                                    Tambah Stock In Transit
                                 </li>
                             </ol>
                         </nav>
@@ -28,7 +28,9 @@
             <section class="section">
                 <div class="card">
                     <div class="card-header">
-                        <h4 class="card-title"> Form detail isian penerimaan barang</h4>
+                        <h6 class="mb-3">Harap isi data yang telah ditandai dengan <span
+                                class="text-danger bg-light px-1">*</span>, dan
+                            masukkan data dengan benar.</h6>
                     </div>
                     <div class="card-body">
                         @include('alert.alert')
@@ -53,10 +55,15 @@
                                         </div>
                                         <div class="col-md-9">
                                             <select class="form-select" name="partner">
-                                                <option value="" selected disabled>Pilih Sales</option>
-                                                @foreach ($partner->data as $item)
-                                                    <option value="{{ $item->id }}">{{ $item->name }}</option>
-                                                @endforeach
+                                                @if (!empty($partner->data) && count($partner->data) > 0)
+                                                    <option value="" selected disabled>Pilih Sales</option>
+                                                    @foreach ($partner->data as $item)
+                                                        <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                                    @endforeach
+                                                @else
+                                                    <option value="" selected disabled>Data Sales Tidak Tersedia
+                                                    </option>
+                                                @endif
                                             </select>
                                         </div>
                                     </div>
@@ -65,7 +72,7 @@
                                             <label class="form-label fw-bold mb-0"> Keterangan Transit</label>
                                         </div>
                                         <div class="col-md-9">
-                                            <textarea class="form-control" name="description" rows="4" placeholder="Keterangan" readonly></textarea>
+                                            <textarea class="form-control" name="description" rows="4" placeholder="Keterangan"></textarea>
                                         </div>
                                     </div>
                                 </div>
@@ -85,23 +92,30 @@
                                     <tr>
                                     <tr style="border-bottom: 2px solid #000;">
                                         <td>
-                                            <select class="form-select item-select" name="items[0][item_id]">
-                                                <option value="" disabled selected>Pilih Item</option>
-                                                @foreach ($item->data->items as $item)
-                                                    <option value="{{ $item->id }}">{{ $item->name }}</option>
-                                                @endforeach
+                                            <select class="form-select item-select" name="items[0][item_id]" required>
+                                                @if (!empty($items) && count($items) > 0)
+                                                    <option value="" disabled selected>Pilih Item</option>
+                                                    @foreach ($items as $data)
+                                                        <option value="{{ $data->id }}">{{ $data->name }}</option>
+                                                    @endforeach
+                                                @else
+                                                    <option value="" selected disabled>Data Item Tidak Tersedia
+                                                    </option>
+                                                @endif
                                             </select>
                                         </td>
                                         <td>
-                                            <input type="number" name="items[0][quantity]" class="form-control qty-input">
+                                            <input type="number" class="form-control" min="1" required>
                                         </td>
                                         <td>
-                                            <input type="number" name="items[0][unit_price]"
-                                                class="form-control price-input">
+                                            <input type="number" class="form-control bg-body-secondary" readonly>
+                                        </td>
+                                        <td class="text-end"><button class="btn btn-danger fw-bold"
+                                                id="remove-row">-</button>
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td colspan="3" class="text-end"><button class="btn btn-primary fw-bold"
+                                        <td colspan="4" class="text-end"><button class="btn btn-primary fw-bold"
                                                 id="add-row">+</button>
                                         </td>
                                     </tr>
@@ -110,7 +124,7 @@
                             <div class="row">
                                 <div class="col-md-12 text-end">
                                     <button type="submit" class="btn btn-primary" id="submitButton">Simpan</button>
-                                    <a href="/penerimaan_barang" class="btn btn-secondary ms-2">Batal</a>
+                                    <a href="/stock_in_transit" class="btn btn-secondary ms-2">Batal</a>
                                 </div>
                             </div>
                         </form>
@@ -121,5 +135,62 @@
     </div>
 @endsection
 @push('scripts')
-    <script></script>
+    <script>
+        $(document).ready(function() {
+            let itemIndex = 1;
+
+            $(document).on('click', '#add-row', function(e) {
+                $('#loading-overlay').fadeIn();
+
+                e.preventDefault();
+
+                $('#add-row').closest('tr').remove();
+
+                const newRow = `
+                        <tr style="border-bottom: 2px solid #000;">
+                            <td>
+                                <select class="form-select item-select" name="items[0][item_id]" required>
+                                    @if (!empty($items) && count($items) > 0)
+                                        <option value="" disabled selected>Pilih Item</option>
+                                        @foreach ($items as $data)
+                                            <option value="{{ $data->id }}">{{ $data->name }}</option>
+                                        @endforeach
+                                    @else
+                                        <option value="" selected disabled>Data Item Tidak Tersedia</option>
+                                    @endif
+                                </select>
+                            </td>
+                            <td>
+                                <input type="number" class="form-control" name="items[${itemIndex}][qty_box]" min="1" required>
+                            </td>
+                            <td>
+                                <input type="number" class="form-control bg-body-secondary" readonly>
+                            </td>
+                            <td class="text-end"><button class="btn btn-danger fw-bold"
+                                                id="remove-row">-</button>
+                                        </td>
+                        </tr>
+                    `;
+
+                $('#tableBody').append(newRow);
+
+                const addButtonRow = `
+                        <tr id="add-button-row">
+                            <td colspan="4" class="text-end">
+                                <button type="button" class="btn btn-primary fw-bold" id="add-row">+</button>
+                            </td>
+                        </tr>
+                    `;
+                $('#tableBody').append(addButtonRow);
+
+                itemIndex++;
+                $('#loading-overlay').fadeOut();
+            });
+
+            $(document).on('click', '#remove-row', function(e) {
+                e.preventDefault();
+                $(this).closest('tr').remove();
+            });
+        });
+    </script>
 @endpush

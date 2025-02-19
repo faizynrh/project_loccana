@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\inventory;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\ExportInventoryStockInTransit;
 
 class StockInTransitController extends Controller
 {
@@ -32,7 +34,7 @@ class StockInTransitController extends Controller
                     'draw' => $request->input('draw'),
                     'recordsTotal' => $data['data']['jumlah_filter'] ?? 0,
                     'recordsFiltered' => $data['data']['jumlah'] ?? 0,
-                    'data' => $data['data']['table'] ?? [],
+                    'data' => $data['data']['table'][0] ?? [],
                 ]);
             }
             return response()->json([
@@ -65,50 +67,61 @@ class StockInTransitController extends Controller
         if ($partnerResponse->successful()) {
             $partner = json_decode($partnerResponse->body());
             $item = json_decode($itemResponse->body());
-            dd($item);
-            return view('inventory.stockintransit.add', compact('partner', ));
+            $items = $item->data->items;
+            // dd($items);
+            return view('inventory.stockintransit.add', compact('partner', 'items'));
         } else {
             return back()->withErrors($partnerResponse->json()['message']);
         }
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         //
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(string $id)
     {
-        //
+        try {
+            $apiResponse = fectApi(env('STOCK_IN_TRANSIT_URL') . '/' . $id);
+
+            if ($apiResponse->successful()) {
+                $data = json_decode($apiResponse->body());
+                return view('inventory.stockintransit.detail', compact('data'));
+            } else {
+                return back()->withErrors($apiResponse->json()['message']);
+            }
+        } catch (\Exception $e) {
+            return back()->withErrors($e->getMessage());
+        }
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function exportExcel(Request $request)
     {
-        //
-    }
+        try {
+            $start_date = $request->input('start_date', 0);
+            $end_date = $request->input('end_date', 0);
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
+            $requestbody = [
+                'start_date' => $start_date,
+                'end_date' => $end_date,
+                'company_id' => 0,
+            ];
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+            $apiResponse = storeApi(env('STOCK_IN_TRANSIT_URL') . '/lists', $requestbody);
+            if ($apiResponse->successful()) {
+                $data = $apiResponse->json()['data']['table'][0] ?? [];
+                // dd($data);
+                if (empty($data)) {
+                    return back()->with('error', 'Tidak ada data untuk diexport.');
+                }
+
+                return Excel::download(new ExportInventoryStockInTransit($data, $start_date, $end_date), 'Laporan Stock In Transit.xlsx');
+            }
+
+            return response()->json(['error' => $apiResponse->json()['message']]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()]);
+        }
     }
 }
