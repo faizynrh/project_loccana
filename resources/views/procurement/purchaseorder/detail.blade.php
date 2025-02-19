@@ -125,9 +125,9 @@
                                 @foreach ($data->data as $item)
                                     <tr style="border-bottom: 2px solid #000" class="item-row">
                                         <td colspan="2">
-                                            <input type="text" value="{{ $item->item_code }}" disabled
-                                                class="form-control"> <input type="hidden" name="items[0][uom_id]"
-                                                class="uom-input">
+                                            <input type="text" value="{{ $item->item_code }} - {{ $item->item_name }}"
+                                                disabled class="form-control"> <input type="hidden"
+                                                name="items[0][uom_id]" class="uom-input">
                                         </td>
                                         <td>
                                             <input type="number" name="items[0][quantity]"
@@ -341,14 +341,11 @@
                 row.find('.total-input').val(total.toFixed(2));
             }
 
-            // Fungsi untuk mengupdate total keseluruhan
             function updateTotals() {
                 let subtotal = 0;
                 let totalDiscount = 0;
 
-                // Pastikan setiap baris dihitung ulang (meskipun input disabled, .val() akan mengembalikan nilainya)
                 $('.item-row').each(function() {
-                    // Hitung ulang total per baris terlebih dahulu
                     calculateRowTotal($(this));
 
                     const qty = parseFloat($(this).find('.qty-input').val()) || 0;
@@ -393,7 +390,6 @@
                 });
             }
 
-            // Panggil updateTotals() saat load agar semua perhitungan langsung tampil benar
             updateTotals();
         });
     </script>

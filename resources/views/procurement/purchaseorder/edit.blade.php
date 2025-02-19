@@ -173,7 +173,8 @@
                                                 <input type="number" class="form-control bg-body-secondary total-input"
                                                     value="{{ $item->total_price ?? 0 }}" readonly>
                                             </td>
-                                            <td></td>
+                                            <td>
+                                            </td>
                                         </tr>
                                     @endforeach
 
