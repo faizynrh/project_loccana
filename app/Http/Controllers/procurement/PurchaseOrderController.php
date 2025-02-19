@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\procurement;
 
+use App\Exports\ExportProcurementPurchaseOrderDetail;
 use App\Http\Controllers\Controller;
 // use Barryvdh\DomPDF\PDF;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -408,6 +409,27 @@ class PurchaseOrderController extends Controller
 
                 // Passing the extra data as arguments to the ExportProcurementReport class
                 return Excel::download(new ExportProcurementPurchaseOrder($tableData, $month, $year), 'Procurement Purchase Order.xlsx');
+            }
+
+            return response()->json(['error' => $apiResponse->json()['message']]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()]);
+        }
+    }
+    public function exportExcelDetail(string $id)
+    {
+        try {
+            $apiResponse = fectApi(env('PO_URL') . '/' . $id);
+
+            if ($apiResponse->successful()) {
+                $response = $apiResponse->json();
+                $data = $response['data'];
+                if (empty($data)) {
+                    return back()->with('error', 'Tidak ada data untuk diexport.');
+                }
+                // dd($data);
+                return Excel::download(new ExportProcurementPurchaseOrderDetail($data), 'Procurement Purchase Order.xlsx');
+                // return Excel::download(new ExportProcurementPurchaseOrderDetail($data), "{$data['partner_name']}.xlsx");
             }
 
             return response()->json(['error' => $apiResponse->json()['message']]);
