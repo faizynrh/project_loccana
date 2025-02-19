@@ -109,6 +109,7 @@
                 let table = $('#tablestock').DataTable({
                     serverSide: true,
                     processing: true,
+                    searching: false,
                     ajax: {
                         url: '{{ route('stock.ajax') }}',
                         type: 'GET',

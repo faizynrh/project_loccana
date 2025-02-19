@@ -13,6 +13,7 @@ use App\Http\Controllers\procurement\ReturnController;
 use App\Http\Controllers\authentication\AuthController;
 use App\Http\Controllers\inventory\StockController;
 use App\Http\Controllers\inventory\StockGudangController;
+use App\Http\Controllers\inventory\StockInTransitController;
 use App\Http\Controllers\masterdata\CustomerController;
 use App\Http\Controllers\procurement\InvoiceController;
 use App\Http\Controllers\procurement\RekapPOController;
@@ -58,7 +59,7 @@ Route::middleware('auth.login')->group(
 
 
         // ==========================================MASTERDATA========================================
-    
+
         // ITEM
         Route::prefix('/item')->name('item.')->group(function () {
             Route::get('/', [ItemController::class, 'index'])->name('index');
@@ -96,15 +97,15 @@ Route::middleware('auth.login')->group(
         // UOM
         Route::prefix('/uom')->name('uom.')->group(
             function () {
-            Route::get('/', [UomController::class, 'index'])->name('index');
-            Route::get('/ajax', [UomController::class, 'ajaxuom'])->name('ajax');
-            Route::get('/add', [UomController::class, 'create'])->name('create');
-            Route::post('/add', [UomController::class, 'store'])->name('store');
-            Route::delete('/delete/{id}', [UomController::class, 'destroy'])->name('destroy');
-            Route::get('/edit/{id}', [UomController::class, 'edit'])->name('edit');
-            Route::put('/update/{id}', [UomController::class, 'update'])->name('update');
-            Route::get('/detail/{id}', [UomController::class, 'show'])->name('show');
-        }
+                Route::get('/', [UomController::class, 'index'])->name('index');
+                Route::get('/ajax', [UomController::class, 'ajaxuom'])->name('ajax');
+                Route::get('/add', [UomController::class, 'create'])->name('create');
+                Route::post('/add', [UomController::class, 'store'])->name('store');
+                Route::delete('/delete/{id}', [UomController::class, 'destroy'])->name('destroy');
+                Route::get('/edit/{id}', [UomController::class, 'edit'])->name('edit');
+                Route::put('/update/{id}', [UomController::class, 'update'])->name('update');
+                Route::get('/detail/{id}', [UomController::class, 'show'])->name('show');
+            }
         );
 
 
@@ -158,7 +159,7 @@ Route::middleware('auth.login')->group(
         });
 
         // ===================================== PROCUREMENT =========================================
-    
+
         // PENERIMAAN BARANG
         Route::prefix('/penerimaan_barang')->name('penerimaan_barang.')->group(function () {
             Route::get('/', [PenerimaanBarangController::class, 'index'])->name('index');
@@ -236,7 +237,7 @@ Route::middleware('auth.login')->group(
 
 
         // ===================================== INVENTORY =========================================
-    
+
         Route::prefix('/stock')->name('stock.')->group(function () {
             Route::get('/', [StockController::class, 'index'])->name('index');
             Route::get('/ajax', [StockController::class, 'ajax'])->name('ajax');
@@ -251,6 +252,14 @@ Route::middleware('auth.login')->group(
             Route::get('/ajax', [StockGudangController::class, 'ajax'])->name('ajax');
             Route::get('/detail/{id}', [StockGudangController::class, 'show'])->name('detail');
         });
+
+        Route::prefix('/stock_in_transit')->name('stock_in_transit.')->group(function () {
+            Route::get('/', [StockInTransitController::class, 'index'])->name('index');
+            Route::get('/ajax', [StockInTransitController::class, 'ajax'])->name('ajax');
+            Route::get('/add', [StockInTransitController::class, 'create'])->name('create');
+            Route::post('/store', [StockInTransitController::class, 'store'])->name('store');
+            Route::get('/detail/{id}', [StockInTransitController::class, 'show'])->name('detail');
+            Route::get('/export-excel', [StockInTransitController::class, 'exportExcel'])->name('exportexcel');
+        });
     }
 );
-
