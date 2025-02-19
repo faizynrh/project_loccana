@@ -175,7 +175,7 @@
                                                 <td>{{ $item->kode_item }}</td>
                                                 <td>{{ $item->nama_item }}</td>
                                                 <td>{{ $item->tgl_mutasi }}</td>
-                                                <td>{{ $item->type_mytasi }}</td>
+                                                <td>{{ $item->type_mutasi }}</td>
                                                 <td>{{ $item->jumlah_mutasi }}</td>
                                                 <td>{{ $item->nama_principle }}</td>
                                                 <td>{{ $item->keterangan }}</td>

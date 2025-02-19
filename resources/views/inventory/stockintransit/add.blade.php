@@ -113,7 +113,7 @@
                                         </td>
                                         <td>
                                             <input type="number" class="form-control total-qty-box bg-body-secondary"
-                                                name="items[0][total_qty_box]">
+                                                name="items[0][total_qty_box]" required>
                                         </td>
                                         <td class="text-end">
                                             <button type="button" class="btn btn-danger fw-bold remove-row">-</button>
