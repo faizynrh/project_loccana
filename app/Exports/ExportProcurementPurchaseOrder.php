@@ -6,7 +6,7 @@ use Maatwebsite\Excel\Concerns\WithTitle;
 use Maatwebsite\Excel\Concerns\WithStyles;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class ExportProcurementPurchaseOrder implements WithTitle, WithStyles
+class ExportProcurementPurchaseOrder implements WithStyles
 {
     protected $data;
     protected $year;
@@ -14,29 +14,23 @@ class ExportProcurementPurchaseOrder implements WithTitle, WithStyles
 
     public function __construct($data, $month = null, $year = null)
     {
-        // Ensure data is an array
         $this->data = is_array($data) ? $data : [];
-        // Convert month and year to integers or null
         $this->year = $year ? (int) $year : null;
         $this->month = $month ? (int) $month : null;
     }
 
     public function styles(Worksheet $sheet)
     {
-        // Company header information
-        $sheet->setCellValue('A1', 'PT Endira Alda');
-        $sheet->setCellValue('A2', 'Laporan Purchase Order');
+        $sheet->setCellValue('A1', 'PT. ENDIRA ALDA');
+        $sheet->setCellValue('A2', 'LAPORAN PURCHASE ORDER');
 
-        // Merge cells for company information
         $sheet->mergeCells('A1:F1');
         $sheet->mergeCells('A2:F2');
         $sheet->mergeCells('A3:F3');
 
-        // Style company header
-        $sheet->getStyle('A1')->getFont()->setBold(true)->setSize(16);
-        $sheet->getStyle('A2:A3')->getFont()->setBold(true);
+        $sheet->getStyle('A1')->getFont()->setBold(true)->setSize(13);
+        $sheet->getStyle('A2:A3')->getFont()->setBold(true)->setSize(16);
 
-        // Column headers (Maju ke atas 3 baris)
         $headers = [
             'A4' => 'No',
             'B4' => 'Nomor Po',
@@ -64,8 +58,7 @@ class ExportProcurementPurchaseOrder implements WithTitle, WithStyles
             ],
         ]);
 
-        // Add data (Maju 3 baris ke atas)
-        $row = 5; // Sebelumnya 8
+        $row = 5;
         foreach ($this->data as $index => $item) {
             $dataRow = [
                 'A' => $index + 1,
@@ -82,8 +75,7 @@ class ExportProcurementPurchaseOrder implements WithTitle, WithStyles
             $row++;
         }
 
-        // Style data rows (Hitung ulang baris terakhir)
-        $lastRow = count($this->data) + 4; // Sebelumnya +7
+        $lastRow = count($this->data) + 4;
         $sheet->getStyle("A5:F{$lastRow}")->applyFromArray([
             'alignment' => [
                 'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
@@ -96,18 +88,11 @@ class ExportProcurementPurchaseOrder implements WithTitle, WithStyles
             ],
         ]);
 
-        // Auto-size columns
         foreach (range('A', 'F') as $column) {
             $sheet->getColumnDimension($column)->setAutoSize(true);
         }
 
         return $sheet;
-    }
-
-
-    public function title(): string
-    {
-        return 'Purchase Order';
     }
 }
 

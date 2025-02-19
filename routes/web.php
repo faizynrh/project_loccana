@@ -191,6 +191,7 @@ Route::middleware('auth.login')->group(
             Route::put('/reject/{id}', [PurchaseOrderController::class, 'reject'])->name('reject');
             Route::get('/print/{id}', [PurchaseOrderController::class, 'print'])->name('print');
             Route::get('/excel', [PurchaseOrderController::class, 'exportExcel'])->name('printexcel');
+            Route::get('/excel/detail/{id}', [PurchaseOrderController::class, 'exportExcelDetail'])->name('printexceldetail');
         });
 
 

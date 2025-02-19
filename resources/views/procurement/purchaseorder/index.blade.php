@@ -210,7 +210,6 @@
                 <a href="javascript:void(0);" class="btn btn-success mb-2 me-2" title="Print" onclick="confirmDelete(${row.id})">
                     <i class="bi bi-file-earmark-excel"></i>
                 </a>
-
         ` :
                                 `<a href="/purchase_order/edit/${row.id}" class="btn btn-sm btn-warning mb-2 me-2 disabled" title="Edit">
                     <i class="bi bi-pencil"></i>
@@ -221,10 +220,9 @@
                 <a href="/purchase_order/print/${row.id}" class="btn btn-sm btn-light mb-2 me-2" title="Print">
                     <i class="bi bi-printer"></i>
                 </a>
-                <a href="javascript:void(0);" class="btn btn-success mb-2 me-2" title="Print" onclick="confirmDelete(${row.id})">
+                <a href="/purchase_order/excel/detail/${row.id}" class="btn btn-sm btn-success mb-2 me-2" title="Print">
                     <i class="bi bi-file-earmark-excel"></i>
                 </a>
-
                 `;
                             return `<div class="d-flex">${actionButtons}</div>`;
                         }
