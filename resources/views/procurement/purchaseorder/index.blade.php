@@ -207,16 +207,20 @@
             <a href="/purchase_order/print/${row.id}" class="btn btn-sm btn-light mb-2 me-2" title="Print">
                     <i class="bi bi-printer"></i>
                 </a>
-                <a href="javascript:void(0);" class="btn btn-success mb-2 me-2" title="Print" onclick="confirmDelete(${row.id})">
+                <a href="/purchase_order/excel/detail/${row.id}" class="btn btn-sm btn-success mb-2 me-2" title="Print">
                     <i class="bi bi-file-earmark-excel"></i>
                 </a>
         ` :
                                 `<a href="/purchase_order/edit/${row.id}" class="btn btn-sm btn-warning mb-2 me-2 disabled" title="Edit">
                     <i class="bi bi-pencil"></i>
                 </a>
-                <button type="button" class="btn btn-sm btn-danger mb-2 me-2 disabled" title="Hapus" onclick="confirmDelete(${row.id})">
+                 <form action="/purchase_order/delete/${row.id}" method="POST" id="delete${row.id}" style="display:inline;">
+                @csrf
+                @method('DELETE')
+                <button type="button" class="btn btn-sm btn-danger mb-2 me-2" title="Hapus" onclick="confirmDelete(${row.id})">
                     <i class="bi bi-trash"></i>
                 </button>
+            </form>
                 <a href="/purchase_order/print/${row.id}" class="btn btn-sm btn-light mb-2 me-2" title="Print">
                     <i class="bi bi-printer"></i>
                 </a>
