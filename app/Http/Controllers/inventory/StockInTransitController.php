@@ -34,7 +34,7 @@ class StockInTransitController extends Controller
                     'draw' => $request->input('draw'),
                     'recordsTotal' => $data['data']['jumlah_filter'] ?? 0,
                     'recordsFiltered' => $data['data']['jumlah'] ?? 0,
-                    'data' => $data['data']['table'][0] ?? [],
+                    'data' => $data['data']['table'] ?? [],
                 ]);
             }
             return response()->json([
@@ -57,27 +57,62 @@ class StockInTransitController extends Controller
     public function create()
     {
         $company_id = 2;
-        $supplier = "false";
-        $customer = "true";
         $requestbody = [
             'company_id' => $company_id,
         ];
-        $partnerResponse = fectApi(env('LIST_PARTNER') . '/' . $company_id . '/' . $supplier . '/' . $customer);
         $itemResponse = storeApi(env('LIST_ITEMS'), $requestbody);
-        if ($partnerResponse->successful()) {
-            $partner = json_decode($partnerResponse->body());
+        if ($itemResponse->successful()) {
             $item = json_decode($itemResponse->body());
             $items = $item->data->items;
-            // dd($items);
-            return view('inventory.stockintransit.add', compact('partner', 'items'));
+            return view('inventory.stockintransit.add', compact('items'));
         } else {
-            return back()->withErrors($partnerResponse->json()['message']);
+            return back()->withErrors($itemResponse->json()['message']);
         }
     }
 
     public function store(Request $request)
     {
-        //
+        // dd($request->all());
+        try {
+            $dataitems = [];
+            if ($request->has('items')) {
+                foreach ($request->items as $item) {
+                    $dataitems[] = [
+                        'item_id' => $item['item_id'],
+                        'quantity_rejected' => $item['qty_reject'],
+                        'quantity_received' => $item['qty_received'],
+                        'notes' => $item['item_description'],
+                        'qty_titip' => $item['qty_titip'],
+                        'qty_diskon' => $item['discount'],
+                        'qty_bonus' => $item['qty_bonus'],
+                        'warehouse_id' => $item['warehouse_id'],
+                    ];
+                }
+            }
+
+            $data = [
+                'purchase_order_id' => $request->purchase_order_id,
+                'do_number' => $request->do_number,
+                'receipt_date' => $request->receipt_date,
+                'shipment_info' => $request->shipment_info,
+                'plate_number' => $request->plate_number,
+                'received_by' => $request->input('received_by', 0),
+                'status' => "received",
+                'company_id' => $request->input('company_id', 2),
+                'is_deleted' => 'true',
+                'items' => $dataitems
+            ];
+
+            $apiResponse = storeApi(env('PENERIMAAN_BARANG_URL'), $data);
+            if ($apiResponse->successful()) {
+                return redirect()->route('penerimaan_barang.index')
+                    ->with('success', $apiResponse->json()['message']);
+            } else {
+                return back()->withErrors($apiResponse->json()['message']);
+            }
+        } catch (\Exception $e) {
+            return back()->withErrors($e->getMessage());
+        }
     }
 
     public function show(string $id)
@@ -110,7 +145,7 @@ class StockInTransitController extends Controller
 
             $apiResponse = storeApi(env('STOCK_IN_TRANSIT_URL') . '/lists', $requestbody);
             if ($apiResponse->successful()) {
-                $data = $apiResponse->json()['data']['table'][0] ?? [];
+                $data = $apiResponse->json()['data']['table'] ?? [];
                 // dd($data);
                 if (empty($data)) {
                     return back()->with('error', 'Tidak ada data untuk diexport.');

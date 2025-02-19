@@ -161,6 +161,7 @@
                                         <th>No</th>
                                         <th>Kode Item</th>
                                         <th>Nama Item</th>
+                                        <th>Tipe Transit</th>
                                         <th>Tanggal Transit</th>
                                         <th>Jumlah Transit</th>
                                         <th>Nama Principle</th>
@@ -175,11 +176,16 @@
                                                 <td>{{ $index + 1 }}</td>
                                                 <td>{{ $item->kode_item }}</td>
                                                 <td>{{ $item->nama_item }}</td>
+                                                <td>{{ $item->type_transit }}</td>
                                                 <td>{{ $item->tgl_transit }}</td>
                                                 <td>{{ $item->jumlah_transit }}</td>
                                                 <td>{{ $item->nama_principle }}</td>
-                                                <td>{{ $item->type_transit }}</td>
-                                                <td></td>
+                                                <td>{{ $item->keterangan }}</td>
+                                                <td class="text-center"><a href=""
+                                                        class="btn btn-sm btn-info me-2" title="">
+                                                        <i class="bi bi-arrow-left"></i>
+                                                    </a>
+                                                </td>
                                             </tr>
                                         @endforeach
                                     @endif
@@ -194,18 +200,18 @@
 @endsection
 @push('scripts')
     <script>
-        // $(document).ready(function() {
-        //     if ($('#tablehistorymutasi tbody tr').length > 0) {
-        //         $('#tablehistorymutasi').DataTable({
-        //             paging: true,
-        //             pageLength: 10,
-        //             lengthChange: false,
-        //             searching: true,
-        //             ordering: true,
-        //         });
-        //     } else {
-        //         $('#tablehistorymutasi').html('<tr><td colspan="8" class="text-center">Tidak Ada Data</td></tr>');
-        //     }
-        // });
+        $(document).ready(function() {
+            if ($('#tablehistorymutasi tbody tr').length > 0) {
+                $('#tablehistorymutasi').DataTable({
+                    paging: true,
+                    pageLength: 10,
+                    lengthChange: false,
+                    searching: true,
+                    ordering: true,
+                });
+            } else {
+                $('#tablehistorymutasi').html('<tr><td colspan="8" class="text-center">Tidak Ada Data</td></tr>');
+            }
+        });
     </script>
 @endpush

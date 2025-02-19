@@ -34,7 +34,7 @@
                     </div>
                     <div class="card-body">
                         @include('alert.alert')
-                        <form action="{{ route('penerimaan_barang.store') }}" method="POST" id="createForm">
+                        <form action="{{ route('stock_in_transit.store') }}" method="POST" id="createForm">
                             <div class="row mb-3">
                                 <div class="col-12">
                                     <div class="row mb-3 align-items-center">
@@ -55,7 +55,10 @@
                                         </div>
                                         <div class="col-md-9">
                                             <select class="form-select" name="partner">
-                                                @if (!empty($partner->data) && count($partner->data) > 0)
+                                                <option value="" disabled selected>Pilih Sales</option>
+                                                <option value="0">Lorem</option>
+                                                <option value="1">Ipsum</option>
+                                                {{-- @if (!empty($partner->data) && count($partner->data) > 0)
                                                     <option value="" selected disabled>Pilih Sales</option>
                                                     @foreach ($partner->data as $item)
                                                         <option value="{{ $item->id }}">{{ $item->name }}</option>
@@ -63,7 +66,7 @@
                                                 @else
                                                     <option value="" selected disabled>Data Sales Tidak Tersedia
                                                     </option>
-                                                @endif
+                                                @endif --}}
                                             </select>
                                         </div>
                                     </div>
@@ -89,7 +92,6 @@
                                     </tr>
                                 </thead>
                                 <tbody id="tableBody">
-                                    <tr>
                                     <tr style="border-bottom: 2px solid #000;">
                                         <td>
                                             <select class="form-select item-select" name="items[0][item_id]" required>
@@ -105,18 +107,20 @@
                                             </select>
                                         </td>
                                         <td>
-                                            <input type="number" class="form-control" min="1" required>
+                                            <input type="number" class="form-control qty-box" name="items[0][qty_box]"
+                                                min="1" required>
                                         </td>
                                         <td>
-                                            <input type="number" class="form-control bg-body-secondary" readonly>
+                                            <input type="number" class="form-control total-qty-box bg-body-secondary"
+                                                name="items[0][total_qty_box]">
                                         </td>
-                                        <td class="text-end"><button class="btn btn-danger fw-bold"
-                                                id="remove-row">-</button>
+                                        <td class="text-end">
+                                            <button type="button" class="btn btn-danger fw-bold remove-row">-</button>
                                         </td>
                                     </tr>
-                                    <tr>
-                                        <td colspan="4" class="text-end"><button class="btn btn-primary fw-bold"
-                                                id="add-row">+</button>
+                                    <tr id="add-button-row">
+                                        <td colspan="4" class="text-end">
+                                            <button type="button" class="btn btn-primary fw-bold" id="add-row">+</button>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -140,54 +144,52 @@
             let itemIndex = 1;
 
             $(document).on('click', '#add-row', function(e) {
-                $('#loading-overlay').fadeIn();
-
                 e.preventDefault();
 
-                $('#add-row').closest('tr').remove();
+                $('#add-button-row').remove();
 
                 const newRow = `
-                        <tr style="border-bottom: 2px solid #000;">
-                            <td>
-                                <select class="form-select item-select" name="items[0][item_id]" required>
-                                    @if (!empty($items) && count($items) > 0)
-                                        <option value="" disabled selected>Pilih Item</option>
-                                        @foreach ($items as $data)
-                                            <option value="{{ $data->id }}">{{ $data->name }}</option>
-                                        @endforeach
-                                    @else
-                                        <option value="" selected disabled>Data Item Tidak Tersedia</option>
-                                    @endif
-                                </select>
-                            </td>
-                            <td>
-                                <input type="number" class="form-control" name="items[${itemIndex}][qty_box]" min="1" required>
-                            </td>
-                            <td>
-                                <input type="number" class="form-control bg-body-secondary" readonly>
-                            </td>
-                            <td class="text-end"><button class="btn btn-danger fw-bold"
-                                                id="remove-row">-</button>
-                                        </td>
-                        </tr>
-                    `;
+            <tr style="border-bottom: 2px solid #000;">
+                <td>
+                    <select class="form-select item-select" name="items[${itemIndex}][item_id]" required>
+                        @if (!empty($items) && count($items) > 0)
+                            <option value="" disabled selected>Pilih Item</option>
+                            @foreach ($items as $data)
+                                <option value="{{ $data->id }}">{{ $data->name }}</option>
+                            @endforeach
+                        @else
+                            <option value="" selected disabled>Data Item Tidak Tersedia</option>
+                        @endif
+                    </select>
+                </td>
+                <td>
+                    <input type="number" class="form-control qty-box" name="items[${itemIndex}][qty_box]" min="1" required>
+                </td>
+                <td>
+                    <input type="number" class="form-control total-qty-box bg-body-secondary" name="items[${itemIndex}][total_qty_box]" >
+                </td>
+                <td class="text-end">
+                    <button type="button" class="btn btn-danger fw-bold remove-row">-</button>
+                </td>
+            </tr>
+        `;
 
                 $('#tableBody').append(newRow);
 
                 const addButtonRow = `
-                        <tr id="add-button-row">
-                            <td colspan="4" class="text-end">
-                                <button type="button" class="btn btn-primary fw-bold" id="add-row">+</button>
-                            </td>
-                        </tr>
-                    `;
+            <tr id="add-button-row">
+                <td colspan="4" class="text-end">
+                    <button type="button" class="btn btn-primary fw-bold" id="add-row">+</button>
+                </td>
+            </tr>
+        `;
                 $('#tableBody').append(addButtonRow);
 
                 itemIndex++;
-                $('#loading-overlay').fadeOut();
             });
 
-            $(document).on('click', '#remove-row', function(e) {
+            // Event untuk menghapus baris
+            $(document).on('click', '.remove-row', function(e) {
                 e.preventDefault();
                 $(this).closest('tr').remove();
             });

@@ -256,6 +256,7 @@ Route::middleware('auth.login')->group(
             Route::get('/', [StockInTransitController::class, 'index'])->name('index');
             Route::get('/ajax', [StockInTransitController::class, 'ajax'])->name('ajax');
             Route::get('/add', [StockInTransitController::class, 'create'])->name('create');
+            Route::post('/store', [StockInTransitController::class, 'store'])->name('store');
             Route::get('/detail/{id}', [StockInTransitController::class, 'show'])->name('detail');
             Route::get('/export-excel', [StockInTransitController::class, 'exportExcel'])->name('exportexcel');
         });
