@@ -144,6 +144,6 @@ class ExportInventoryStockInTransit implements WithTitle, WithStyles
 
     public function title(): string
     {
-        return 'Laporan Inventory Stock';
+        return 'Laporan Inventory Stock In Transit';
     }
 }
