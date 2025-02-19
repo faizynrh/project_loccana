@@ -35,6 +35,7 @@
                     <div class="card-body">
                         @include('alert.alert')
                         <form action="{{ route('stock_in_transit.store') }}" method="POST" id="createForm">
+                            @csrf
                             <div class="row mb-3">
                                 <div class="col-12">
                                     <div class="row mb-3 align-items-center">
@@ -44,7 +45,7 @@
                                             </label>
                                         </div>
                                         <div class="col-md-9">
-                                            <input type="date" class="form-control" name="sku"
+                                            <input type="date" class="form-control" name="transit_date"
                                                 value="{{ \Carbon\Carbon::now()->toDateString() }}">
                                         </div>
                                     </div>
@@ -54,7 +55,7 @@
                                             </label>
                                         </div>
                                         <div class="col-md-9">
-                                            <select class="form-select" name="partner">
+                                            <select class="form-select" name="sales">
                                                 <option value="" disabled selected>Pilih Sales</option>
                                                 <option value="0">Lorem</option>
                                                 <option value="1">Ipsum</option>
@@ -146,46 +147,50 @@
             $(document).on('click', '#add-row', function(e) {
                 e.preventDefault();
 
+                $('#loading-overlay').fadeIn();
+
                 $('#add-button-row').remove();
 
                 const newRow = `
-            <tr style="border-bottom: 2px solid #000;">
-                <td>
-                    <select class="form-select item-select" name="items[${itemIndex}][item_id]" required>
-                        @if (!empty($items) && count($items) > 0)
-                            <option value="" disabled selected>Pilih Item</option>
-                            @foreach ($items as $data)
-                                <option value="{{ $data->id }}">{{ $data->name }}</option>
-                            @endforeach
-                        @else
-                            <option value="" selected disabled>Data Item Tidak Tersedia</option>
-                        @endif
-                    </select>
-                </td>
-                <td>
-                    <input type="number" class="form-control qty-box" name="items[${itemIndex}][qty_box]" min="1" required>
-                </td>
-                <td>
-                    <input type="number" class="form-control total-qty-box bg-body-secondary" name="items[${itemIndex}][total_qty_box]" >
-                </td>
-                <td class="text-end">
-                    <button type="button" class="btn btn-danger fw-bold remove-row">-</button>
-                </td>
-            </tr>
-        `;
+                                <tr style="border-bottom: 2px solid #000;">
+                                    <td>
+                                        <select class="form-select item-select" name="items[${itemIndex}][item_id]" required>
+                                            @if (!empty($items) && count($items) > 0)
+                                                <option value="" disabled selected>Pilih Item</option>
+                                                @foreach ($items as $data)
+                                                    <option value="{{ $data->id }}">{{ $data->name }}</option>
+                                                @endforeach
+                                            @else
+                                                <option value="" selected disabled>Data Item Tidak Tersedia</option>
+                                            @endif
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <input type="number" class="form-control qty-box" name="items[${itemIndex}][qty_box]" min="1" required>
+                                    </td>
+                                    <td>
+                                        <input type="number" class="form-control total-qty-box bg-body-secondary" name="items[${itemIndex}][total_qty_box]" >
+                                    </td>
+                                    <td class="text-end">
+                                        <button type="button" class="btn btn-danger fw-bold remove-row">-</button>
+                                    </td>
+                                </tr>
+                            `;
 
                 $('#tableBody').append(newRow);
 
                 const addButtonRow = `
-            <tr id="add-button-row">
-                <td colspan="4" class="text-end">
-                    <button type="button" class="btn btn-primary fw-bold" id="add-row">+</button>
-                </td>
-            </tr>
-        `;
+                                        <tr id="add-button-row">
+                                            <td colspan="4" class="text-end">
+                                                <button type="button" class="btn btn-primary fw-bold" id="add-row">+</button>
+                                            </td>
+                                        </tr>
+                                    `;
                 $('#tableBody').append(addButtonRow);
 
                 itemIndex++;
+                $('#loading-overlay').fadeOut();
+
             });
 
             // Event untuk menghapus baris

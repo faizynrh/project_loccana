@@ -72,40 +72,27 @@ class StockInTransitController extends Controller
 
     public function store(Request $request)
     {
-        // dd($request->all());
         try {
-            $dataitems = [];
+            $items = [];
             if ($request->has('items')) {
-                foreach ($request->items as $item) {
-                    $dataitems[] = [
+                foreach ($request->input('items') as $item) {
+                    $items[] = [
                         'item_id' => $item['item_id'],
-                        'quantity_rejected' => $item['qty_reject'],
-                        'quantity_received' => $item['qty_received'],
-                        'notes' => $item['item_description'],
-                        'qty_titip' => $item['qty_titip'],
-                        'qty_diskon' => $item['discount'],
-                        'qty_bonus' => $item['qty_bonus'],
-                        'warehouse_id' => $item['warehouse_id'],
+                        'qty_box' => $item['qty_box'],
+                        'total_qty_box' => $item['total_qty_box'],
                     ];
                 }
             }
 
             $data = [
-                'purchase_order_id' => $request->purchase_order_id,
-                'do_number' => $request->do_number,
-                'receipt_date' => $request->receipt_date,
-                'shipment_info' => $request->shipment_info,
-                'plate_number' => $request->plate_number,
-                'received_by' => $request->input('received_by', 0),
-                'status' => "received",
-                'company_id' => $request->input('company_id', 2),
-                'is_deleted' => 'true',
-                'items' => $dataitems
+                'transit_date' => $request->transit_date,
+                'sales' => $request->sales,
+                'keretangan_transit' => $request->description,
+                'items' => $items
             ];
-
-            $apiResponse = storeApi(env('PENERIMAAN_BARANG_URL'), $data);
+            $apiResponse = storeApi(env('STOCK_IN_TRANSIT_URL'), $data);
             if ($apiResponse->successful()) {
-                return redirect()->route('penerimaan_barang.index')
+                return redirect()->route('stock_in_transit.index')
                     ->with('success', $apiResponse->json()['message']);
             } else {
                 return back()->withErrors($apiResponse->json()['message']);
