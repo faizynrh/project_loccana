@@ -14,6 +14,7 @@ use App\Http\Controllers\authentication\AuthController;
 use App\Http\Controllers\inventory\StockController;
 use App\Http\Controllers\inventory\StockGudangController;
 use App\Http\Controllers\inventory\StockInTransitController;
+use App\Http\Controllers\inventory\TransferStockController;
 use App\Http\Controllers\masterdata\CustomerController;
 use App\Http\Controllers\procurement\InvoiceController;
 use App\Http\Controllers\procurement\RekapPOController;
@@ -260,6 +261,12 @@ Route::middleware('auth.login')->group(
             Route::post('/store', [StockInTransitController::class, 'store'])->name('store');
             Route::get('/detail/{id}', [StockInTransitController::class, 'show'])->name('detail');
             Route::get('/export-excel', [StockInTransitController::class, 'exportExcel'])->name('exportexcel');
+        });
+
+        Route::prefix('/transfer_stock')->name('transfer_stock.')->group(function () {
+            Route::get('/', [TransferStockController::class, 'index'])->name('index');
+            Route::get('/ajax', [TransferStockController::class, 'ajax'])->name('ajax');
+            Route::get('/add', [TransferStockController::class, 'create'])->name('create');
         });
     }
 );

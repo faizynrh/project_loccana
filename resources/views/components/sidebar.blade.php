@@ -86,7 +86,7 @@
                     </ul>
                 </li>
                 <li
-                    class="sidebar-item has-sub {{ Request::is('stock*') || Request::is('stock_gudang*') || Request::is('stock_in_transit*') ? 'active' : '' }}">
+                    class="sidebar-item has-sub {{ Request::is('stock*') || Request::is('stock_gudang*') || Request::is('stock_in_transit*') || Request::is('transfer_stock*') ? 'active' : '' }}">
                     <a href="#" class="sidebar-link">
                         <i class="bi bi-box-seam"></i>
                         <span>Inventory</span>
@@ -98,11 +98,11 @@
                         <li class="submenu-item {{ Request::is('stock_gudang*') ? 'active' : '' }}">
                             <a href="/stock_gudang" class="submenu-link">Stock Gudang</a>
                         </li>
-                        <li class="submenu-item {{ Request::is('stock_in_transit*') ? 'active' : '' }}"">
+                        <li class="submenu-item {{ Request::is('stock_in_transit*') ? 'active' : '' }}">
                             <a href="/stock_in_transit" class="submenu-link">Stock In Transit</a>
                         </li>
-                        <li class="submenu-item">
-                            <a href="#" class="submenu-link">Transfer Stok</a>
+                        <li class="submenu-item {{ Request::is('transfer_stock*') ? 'active' : '' }}">
+                            <a href="/transfer_stock" class="submenu-link">Transfer Stok</a>
                         </li>
                         <li class="submenu-item">
                             <a href="#" class="submenu-link">Report</a>
