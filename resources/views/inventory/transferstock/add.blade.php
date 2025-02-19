@@ -38,8 +38,6 @@
                             <h5 class="fw-bold d-inline-block border-bottom pb-2 border-3">
                                 1. Form Detail Transfer Stock
                             </h5>
-                            <a href="{{ route('stock_in_transit.index') }}"
-                                class="btn btn-secondary ms-auto text-end">Back</a>
                         </div>
                         <div class="row mb-3">
                             <div class="col-12">
@@ -58,7 +56,8 @@
                                         <label class="form-label fw-bold mb-0">Keterangan</label>
                                     </div>
                                     <div class="col-md-9">
-                                        <textarea class="form-control" name="description" rows="5" readonly></textarea>
+                                        <textarea class="form-control" name="description" rows="5"
+                                            placeholder="Masukan keterangan transfer stock apabila diperlukan"></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -72,54 +71,93 @@
                             <div class="col-12">
                                 <div class="row mb-3 align-items-center">
                                     <div class="col-md-3">
-                                        <label class="form-label fw-bold mb-0">Qty</label>
+                                        <label class="form-label fw-bold mb-0">Pilih Sumber Gudang<span
+                                                class="text-danger bg-light px-1">*</span></label>
                                     </div>
                                     <div class="col-md-9">
-                                        <div class="d-flex gap-2">
-                                            <input type="text" class="form-control" name="sku" value=" Box"
-                                                readonly>
-                                            <input type="text" class="form-control" name="sku" value=" Lt/Kg"
-                                                readonly>
-                                        </div>
+                                        <select class="form-select item-select" name="items[0][item_id]" required>
+                                            @if (!empty($gudangs) && count($gudangs) > 0)
+                                                <option value="" disabled selected>Pilih Gudang</option>
+                                                <option value="0">Semua Gudang</option>
+                                                @foreach ($gudangs as $data)
+                                                    <option value="{{ $data->id }}">{{ $data->name }}</option>
+                                                @endforeach
+                                            @else
+                                                <option value="" selected disabled>Data Gudang Tidak Tersedia
+                                                </option>
+                                            @endif
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="row mb-3 align-items-center">
                                     <div class="col-md-3">
-                                        <label class="form-label fw-bold mb-0">Qty Normal</label>
+                                        <label class="form-label fw-bold mb-0">Pilih Target Gudang<span
+                                                class="text-danger bg-light px-1">*</span></label>
                                     </div>
                                     <div class="col-md-9">
-                                        <div class="d-flex gap-2">
-                                            <input type="text" class="form-control" name="sku" value=" Box"
-                                                readonly>
-                                            <input type="text" class="form-control" name="sku" value=" Lt/Kg"
-                                                readonly>
-                                        </div>
+                                        <select class="form-select item-select" name="items[0][item_id]" required>
+                                            @if (!empty($gudangs) && count($gudangs) > 0)
+                                                <option value="" disabled selected>Pilih Gudang</option>
+                                                <option value="0">Semua Gudang</option>
+                                                @foreach ($gudangs as $data)
+                                                    <option value="{{ $data->id }}">{{ $data->name }}</option>
+                                                @endforeach
+                                            @else
+                                                <option value="" selected disabled>Data Gudang Tidak Tersedia
+                                                </option>
+                                            @endif
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="row mb-3 align-items-center">
                                     <div class="col-md-3">
-                                        <label class="form-label fw-bold mb-0">Qty Titipan</label>
+                                        <label class="form-label fw-bold mb-0">Pilih Item<span
+                                                class="text-danger bg-light px-1">*</span></label>
                                     </div>
                                     <div class="col-md-9">
-                                        <div class="d-flex gap-2">
-                                            <input type="text" class="form-control" name="sku" value=" Box"
-                                                readonly>
-                                            <input type="text" class="form-control" name="sku" value=" Lt/Kg"
-                                                readonly>
-                                        </div>
+                                        <select class="form-select item-select" name="items[0][item_id]" required>
+                                            @if (!empty($items) && count($items) > 0)
+                                                <option value="" disabled selected>Pilih Item</option>
+                                                @foreach ($items as $data)
+                                                    <option value="{{ $data->id }}">{{ $data->name }}</option>
+                                                @endforeach
+                                            @else
+                                                <option value="" selected disabled>Data Item Tidak Tersedia
+                                                </option>
+                                            @endif
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="row mb-3 align-items-center">
                                     <div class="col-md-3">
-                                        <label class="form-label fw-bold mb-0">Qty Bonus</label>
+                                        <label class="form-label fw-bold mb-0">Qty<span
+                                                class="text-danger bg-light px-1">*</span></label>
                                     </div>
                                     <div class="col-md-9">
-                                        <div class="d-flex gap-2">
-                                            <input type="text" class="form-control" name="sku" value=" Box"
-                                                readonly>
-                                            <input type="text" class="form-control" name="sku" value=" Lt/Kg"
-                                                readonly>
-                                        </div>
+                                        <input type="number" name="qty" id="qty" class="form-control w-auto"
+                                            value="0">
+                                    </div>
+                                </div>
+                                {{-- <div class="row g-3 mt-3 mb-3 justify-content-end">
+                                    <div class="col-md-3 ">
+                                        <label for="start_date" class="form-label fw-bold small">Qty Box:</label>
+                                        <input type="text" name="qty_box" id="qty_box"
+                                            class="form-control bg-body-secondary" value="0" readonly>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label for="start_date" class="form-label fw-bold small">Qty Satuan:</label>
+                                        <input type="text" name="qty_satuan" id="qty_satuan"
+                                            class="form-control bg-body-secondary" value="0" readonly>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label for="start_date" class="form-label fw-bold small">Total Qty:</label>
+                                        <input type="text" name="total_qty" id="total_qty"
+                                            class="form-control bg-body-secondary" value="0" readonly>
+                                    </div>
+                                </div> --}}
+                                <div class="row g-3">
+                                    <div class="col-md-12 text-end">
+                                        <button class="btn btn-success">Tambah Item Ke List</button>
                                     </div>
                                 </div>
                             </div>
@@ -168,6 +206,12 @@
                                     @endif --}}
                                 </tbody>
                             </table>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-md-12 text-end">
+                                <button type="submit" class="btn btn-primary" id="submitButton">Simpan</button>
+                                <a href="/transfer_stock" class="btn btn-secondary ms-2">Batal</a>
+                            </div>
                         </div>
                     </div>
                 </div>

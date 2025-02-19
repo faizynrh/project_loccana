@@ -48,6 +48,7 @@ class TransferStockController extends Controller
     }
     public function index()
     {
+
         return view('inventory.transferstock.index');
     }
 
@@ -56,7 +57,24 @@ class TransferStockController extends Controller
      */
     public function create()
     {
-        return view('inventory.transferstock.add');
+        $company_id = 2;
+        $requestbody = [
+            'company_id' => $company_id,
+        ];
+        $gudangResponse = fectApi(env('LIST_GUDANG') . '/' . $company_id);
+        $itemResponse = storeApi(env('LIST_ITEMS'), $requestbody);
+        if ($gudangResponse->successful() && $itemResponse->successful()) {
+            $gudang = json_decode($gudangResponse->body());
+            $item = json_decode($itemResponse->body());
+            $gudangs = $gudang->data;
+            $items = $item->data->items;
+            // dd($gudangs, $items);
+            return view('inventory.transferstock.add', compact('gudangs', 'items'));
+        } else {
+            return redirect()->route('stock_gudang.index')->withErrors(
+                $gudangResponse->json()['message'] ?? 'Terjadi kesalahan, silakan coba lagi.'
+            );
+        }
     }
 
     /**
