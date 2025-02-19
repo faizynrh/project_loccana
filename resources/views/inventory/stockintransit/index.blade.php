@@ -28,26 +28,27 @@
             <section class="section">
                 <div class="card">
                     <div class="card-header">
-                        <div class="row g-3 align-items-center">
-                            <div class="col-auto">
-                                <a href="/stock_in_transit/add" class="btn btn-primary fw-bold">+ Tambah Stock In
-                                    Transit</a>
+                        <form id="searchForm">
+                            <div class="row g-3 align-items-center">
+                                <div class="col-auto">
+                                    <a href="/stock_in_transit/add" class="btn btn-primary fw-bold">+ Tambah Stock In
+                                        Transit</a>
+                                </div>
+                                <div class="col-auto">
+                                    <input type="date" id="start_date" name="start_date" class="form-control"
+                                        value="{{ \Carbon\Carbon::now()->toDateString() }}" required>
+                                </div>
+                                <div class="col-auto">
+                                    <label for="end_date" class="form-label fw-bold small">s/d</label>
+                                </div>
+                                <div class="col-auto">
+                                    <input type="date" id="end_date" name="end_date" class="form-control"
+                                        value="{{ \Carbon\Carbon::now()->toDateString() }}" required>
+                                </div>
+                                <div class="col-auto">
+                                    <button type="submit" class="btn btn-primary">Cari</button>
+                                </div>
                             </div>
-                            <div class="col-auto">
-                                <input type="date" id="start_date" name="start_date" class="form-control"
-                                    value="{{ \Carbon\Carbon::now()->toDateString() }}" required>
-                            </div>
-                            <div class="col-auto">
-                                <label for="end_date" class="form-label fw-bold small">s/d</label>
-                            </div>
-                            <div class="col-auto">
-                                <input type="date" id="end_date" name="end_date" class="form-control"
-                                    value="{{ \Carbon\Carbon::now()->toDateString() }}" required>
-                            </div>
-                            <div class="col-auto">
-                                <button type="submit" class="btn btn-primary">Cari</button>
-                            </div>
-                        </div>
                         </form>
                         <div class="card-body">
                             <hr class="my-4 border-2 border-dark">
