@@ -246,12 +246,12 @@
     <script>
         $(document).ready(function() {
             // Handle item select change to update UOM
-            $(document).on('change', '.form-select', function() {
-                const uomId = $(this).find(':selected').data('uom');
-                $(this).siblings('.uom-input').val(uomId);
-                calculateRowTotal($(this).closest('tr'));
-                updateTotals();
-            });
+            // $(document).on('change', '.form-select', function() {
+            //     const uomId = $(this).find(':selected').data('uom');
+            //     $(this).siblings('.uom-input').val(uomId);
+            //     calculateRowTotal($(this).closest('tr'));
+            //     updateTotals();
+            // });
 
             // Add new row
             $('#add-row').on('click', function(e) {
@@ -306,7 +306,7 @@
 
                 // Validate discount input to not exceed 100
                 if (discountValue > 100) {
-                    discountInput.val(100); // Set discount to 100 if greater
+                    discountInput.val(100);
                     discountValue = 100;
                 }
 
@@ -314,7 +314,7 @@
                 updateTotals();
             });
 
-            // Calculate row total
+
             function calculateRowTotal(row) {
                 const qty = parseFloat(row.find('.qty-input').val()) || 0;
                 const price = parseFloat(row.find('.price-input').val()) || 0;
@@ -324,20 +324,34 @@
                 const discountAmount = subtotal * (discount / 100);
                 const total = subtotal - discountAmount;
 
-                row.find('.total-input').val(total.toFixed(2));
+                row.find('.total-input').val(total.toFixed());
             }
 
             function updateTotals() {
+                let items = []
                 let subtotal = 0;
                 let totalDiscount = 0;
 
+
                 $('.item-row').each(function() {
-                    const qty = parseFloat($(this).find('.qty-input').val()) || 0;
-                    const price = parseFloat($(this).find('.price-input').val()) || 0;
-                    const discount = parseFloat($(this).find('.discount-input').val()) || 0;
+                    const $row = $(this);
+                    const qty = parseFloat($row.find('.qty-input').val()) || 0;
+                    const price = parseFloat($row.find('.price-input').val()) || 0;
+                    const discount = parseFloat($row.find('.discount-input').val()) || 0;
+                    const itemCode = $row.find('.item-code').val() || '';
+                    const itemName = $row.find('.item-name').val() || '';
 
                     const rowSubtotal = qty * price;
                     const rowDiscount = rowSubtotal * (discount / 100);
+
+                    items.push({
+                        item_code: itemCode,
+                        item_name: itemName,
+                        qty: qty,
+                        unit_price: price,
+                        discount: discount,
+                        total_price: rowSubtotal - rowDiscount
+                    });
 
                     subtotal += rowSubtotal;
                     totalDiscount += rowDiscount;
@@ -348,19 +362,55 @@
                 const ppnAmount = taxableAmount * (ppnRate / 100);
                 const finalTotal = taxableAmount + ppnAmount;
 
-                $('tfoot tr').each(function() {
-                    const label = $(this).find('td:eq(1)').text().trim();
-                    const value = label === 'Sub Total' ? subtotal :
-                        label === 'Diskon' ? totalDiscount :
-                        label === 'Taxable' ? taxableAmount :
-                        label === 'VAT/PPN' ? ppnAmount :
-                        label === 'Total' ? finalTotal : 0;
+                // Update display
+                updateDisplayValue('Sub Total', subtotal);
+                updateDisplayValue('Diskon', totalDiscount);
+                updateDisplayValue('Taxable', taxableAmount);
+                updateDisplayValue('VAT/PPN', ppnAmount);
+                updateDisplayValue('Total', finalTotal);
 
-                    $(this).find('td:eq(1)').next().text(formatNumber(value));
-                });
-
+                // Store values in hidden inputs
                 $('#tax_amount').val(ppnAmount);
                 $('#total_amount').val(finalTotal);
+
+                // Save to session via AJAX
+                const sessionData = {
+                    items: items,
+                    sub_total: subtotal,
+                    total_discount: totalDiscount,
+                    taxable: taxableAmount,
+                    tax_amount: ppnAmount,
+                    total_po: finalTotal,
+                    description: $('#description').val() || '',
+                    partner_name: $('#partner_name').val() || '',
+                    term_of_payment: $('#term_of_payment').val() || '',
+                    number_po: $('#number_po').val() || '',
+                    order_date: $('#order_date').val() || ''
+                };
+
+                $.ajax({
+                    url: '/purchase_order/store-session',
+                    method: 'POST',
+                    data: {
+                        _token: $('meta[name="csrf-token"]').attr('content'),
+                        po_data: sessionData
+                    },
+                    success: function(response) {
+                        console.log('Session data saved successfully');
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error saving session data:', error);
+                    }
+                });
+            }
+
+            // Update display functions remain the same
+            function updateDisplayValue(label, value) {
+                $('tr.fw-bold').each(function() {
+                    if ($(this).find('td:eq(1)').text().trim() === label) {
+                        $(this).find('td:eq(1)').next().text(formatNumber(value));
+                    }
+                });
             }
 
             function formatNumber(num) {
@@ -370,13 +420,10 @@
                 });
             }
 
-            // Calculate totals on page load
-            function initialCalculations() {
-                $('.item-row').each(function() {
-                    calculateRowTotal($(this));
-                });
+            // Initialize calculations
+            $(document).ready(function() {
                 updateTotals();
-            }
+            });
 
             // Initial calculations when the page loads
             initialCalculations();

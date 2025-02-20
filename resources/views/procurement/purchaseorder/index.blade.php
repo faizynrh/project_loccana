@@ -34,7 +34,6 @@
                         @include('alert.alert')
                         <div class="d-flex align-items-center mb-2">
                             <a href="/purchase_order/add" class="btn btn-primary me-2 fw-bold">+ Tambah Purchase Order</a>
-
                             <form action="{{ route('purchaseorder.printexcel') }}" method="GET" id="filterForm">
                                 <div class="d-flex align-items-center">
                                     <button type="submit" class="btn btn-primary me-2 fw-bold">Export</button>
@@ -49,7 +48,6 @@
                                             </option>
                                         @endfor
                                     </select>
-
                                     <select id="monthSelect" class="form-select me-2" name="month" style="width: auto;">
                                         <option value="0" {{ request('month') == 'all' ? 'selected' : '' }}>ALL
                                         </option>
@@ -204,7 +202,7 @@
                     <i class="bi bi-trash"></i>
                 </button>
             </form>
-            <a href="/purchase_order/print/${row.id}" class="btn btn-sm btn-light mb-2 me-2" title="Print">
+            <a href="/purchase_order/print/${row.id}" class="btn btn-sm btn-light mb-2 me-2" target="_blank" title="Print">
                     <i class="bi bi-printer"></i>
                 </a>
                 <a href="/purchase_order/excel/detail/${row.id}" class="btn btn-sm btn-success mb-2 me-2" title="Print">
@@ -221,7 +219,7 @@
                     <i class="bi bi-trash"></i>
                 </button>
             </form>
-                <a href="/purchase_order/print/${row.id}" class="btn btn-sm btn-light mb-2 me-2" title="Print">
+                <a href="/purchase_order/print/${row.id}" class="btn btn-sm btn-light mb-2 me-2" target="_blank" title="Print">
                     <i class="bi bi-printer"></i>
                 </a>
                 <a href="/purchase_order/excel/detail/${row.id}" class="btn btn-sm btn-success mb-2 me-2" title="Print">

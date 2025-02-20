@@ -338,7 +338,7 @@
                 const discountAmount = subtotal * (discount / 100);
                 const total = subtotal - discountAmount;
 
-                row.find('.total-input').val(total.toFixed(2));
+                row.find('.total-input').val(total.toFixed(0));
             }
 
             function updateTotals() {

@@ -100,8 +100,8 @@
     </div>
 
     <div class="section">
-        <strong>Kepada :</strong> {{ $data['data'][0]['partner_name'] ?? '' }}<br>
-        <strong>Term Of Payment :</strong> {{ $data['data'][0]['term_of_payment'] ?? '' }}<br>
+        Kepada :{{ $data['data'][0]['partner_name'] ?? '' }} <br>
+        Term Of Payment : {{ $data['data'][0]['term_of_payment'] ?? '' }}
     </div>
 
     <table>
@@ -131,29 +131,29 @@
 
     <div class="amount-section">
         <div class="amount-row">
-            <strong>Sub Total :</strong>
-            <span>{{ number_format($sub_total ?? 0, 2, ',', '.') }}</span>
+            Sub Total :
+            {{ number_format(session('sub_total', 0), 2, ',', '.') }}
         </div>
         <div class="amount-row">
-            <strong>Discount :</strong>
-            <span>{{ $item['total_discount'] ?? '' }}</span>
+            Discount :
+            {{ session('total_discount', 0) }}
         </div>
         <div class="amount-row">
-            <strong>Taxable :</strong>
-            <span>{{ number_format($taxable ?? 0, 2, ',', '.') }}</span>
+            Taxable :
+            {{ number_format(session('taxable', 0), 2, ',', '.') }}
         </div>
         <div class="amount-row">
-            <strong>Vat/PPN :</strong>
-            <span>{{ $item['tax_amount'] ?? '' }}</span>
+            Vat/PPN :
+            {{ session('tax_amount', 0) }}
         </div>
         <div class="amount-row">
-            <strong>Total :</strong>
-            <span>{{ $item['total_po'] ?? '' }}</span>
+            Total :{{ session('total_po', 0) }}
         </div>
+
     </div>
 
     <div class="section">
-        <strong>Keterangan :</strong><br>
+        Keterangan : <br>
         {{ $item['description'] ?? '' }}
     </div>
 
@@ -163,7 +163,7 @@
                 <td>Disetujui Oleh,</td>
                 <td>Diperiksa Oleh,</td>
                 <td>
-                    <p>Cimahi, {{ $purchase_date }}</p>
+                    Cimahi, {{ $purchase_date }}<br>
                     Dipesan Oleh,
                 </td>
             </tr>

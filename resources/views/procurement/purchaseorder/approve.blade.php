@@ -45,23 +45,10 @@
                                     readonly" id="order_date" name="order_date" disabled>
 
                                 <label for="principal" class="form-label fw-bold mt-2 mb-1 small">Principle</label>
-                                {{-- <select class="form-control" id="partner_id" name="partner_id" disabled>
-                                        @if (isset($partner->data))
-                                            @foreach ($partner->data as $item)
-                                                <option value="{{ $item->id }}">
-                                                    {{ isset($data->data->id) && $data->data->id == $item->partner_id ? 'selected' : '' }}{{ $item->partner_name }}
-                                                </option>
-                                            @endforeach
-                                        @else
-                                            <option value="">Data tidak tersedia</option>
-                                        @endif
-
-                                    </select> --}}
 
                                 <input type="text" class="form-control" value="{{ $data->data[0]->partner_name }}"
                                     id="status" name="status" disabled>
 
-                                {{-- <label for="status" class="form-label fw-bold mt-2 mb-1 small">Status</label> --}}
                                 <input type="hidden" class="form-control" value="" id="status" name="status"
                                     disabled>
                                 <input type="hidden" class="form-control" id="requested_by" name="requested_by"
@@ -343,7 +330,7 @@
                 const discountAmount = subtotal * (discount / 100);
                 const total = subtotal - discountAmount;
 
-                row.find('.total-input').val(total.toFixed(2));
+                row.find('.total-input').val(total.toFixed(0));
             }
 
             function updateTotals() {
