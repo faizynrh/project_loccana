@@ -107,16 +107,23 @@ class ExportProcurementPurchaseOrderDetail implements WithStyles
 
         $row = $lastRow + 1;
 
-        // Calculate values from the first item in data
-        $subtotal = $poData['total_price'];
-        $discount = $poData['total_discount'];
-        $taxable = $subtotal - $discount;
+        $subtotal = 0;
+        $total_discount = 0;
+
+        foreach ($this->data as $item) {
+            $subtotal += $item['qty'] * $item['unit_price'];
+            $total_discount += ($item['qty'] * $item['unit_price']) * ($item['discount'] / 100);
+        }
+
+
+        $taxable = $subtotal - $total_discount;
         $ppn = ($taxable * $poData['ppn']) / 100;
         $total = $taxable + $ppn;
 
+
         $staticRows = [
             ['label' => 'Subtotal', 'amount' => $subtotal],
-            ['label' => 'Discount', 'amount' => $discount],
+            ['label' => 'Discount', 'amount' => $total_discount],
             ['label' => 'Taxable', 'amount' => $taxable],
             ['label' => 'VAT/PPN', 'amount' => $ppn],
             ['label' => 'Total', 'amount' => $total]
@@ -154,7 +161,7 @@ class ExportProcurementPurchaseOrderDetail implements WithStyles
             $row++;
         }
         $row++;
-        $sheet->setCellValue('A' . $row, 'Keterangan :');
+        $sheet->setCellValue('A' . $row, 'Keterangan :' . $poData['description']);
         $sheet->mergeCells("A{$row}:F{$row}");
 
         // Jarak 1 baris (kosong)

@@ -82,7 +82,6 @@ class ReportController extends Controller
                 'end_date' => $end_date,
                 'company_id' => 0,
             ];
-
             $apiResponse = storeApi(env('REPORT_URL'), $requestbody);
             if ($apiResponse->successful()) {
                 $data = $apiResponse->json();
