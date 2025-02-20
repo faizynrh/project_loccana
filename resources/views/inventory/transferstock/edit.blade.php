@@ -51,7 +51,7 @@
                                         </div>
                                         <div class="col-md-9">
                                             <input type="date" class="form-control w-auto" name="transfer_date"
-                                                value="" required>
+                                                value="{{ $datas[0]->transfer_date }}" required>
                                         </div>
                                     </div>
                                     <div class="row mb-3 align-items-center">
@@ -60,7 +60,7 @@
                                         </div>
                                         <div class="col-md-9">
                                             <textarea class="form-control" name="transfer_reason" rows="5"
-                                                placeholder="Masukan keterangan transfer stock apabila diperlukan"></textarea>
+                                                placeholder="Masukan keterangan transfer stock apabila diperlukan">{{ $datas[0]->transfer_reason }}</textarea>
                                         </div>
                                     </div>
                                 </div>
