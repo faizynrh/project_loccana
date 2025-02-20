@@ -4,6 +4,7 @@ namespace App\Http\Controllers\inventory;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class TransferStockController extends Controller
 {
@@ -52,9 +53,6 @@ class TransferStockController extends Controller
         return view('inventory.transferstock.index');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         $company_id = 2;
@@ -77,9 +75,6 @@ class TransferStockController extends Controller
         }
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         try {
@@ -115,9 +110,6 @@ class TransferStockController extends Controller
         }
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(string $id)
     {
         try {
@@ -135,9 +127,6 @@ class TransferStockController extends Controller
         }
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(string $id)
     {
         try {
@@ -177,9 +166,6 @@ class TransferStockController extends Controller
         }
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, $id)
     {
         try {
@@ -213,9 +199,7 @@ class TransferStockController extends Controller
         }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
+
     public function destroy(string $id)
     {
         try {
@@ -224,6 +208,24 @@ class TransferStockController extends Controller
                 return redirect()->route('transfer_stock.index')->with('success', $apiResponse->json()['message']);
             } else {
                 return back()->withErrors($apiResponse->json()['message']);
+            }
+        } catch (\Exception $e) {
+            return back()->withErrors($e->getMessage());
+        }
+    }
+
+    public function print($id)
+    {
+        try {
+            $apiResponse = fectApi(env('TRANSFER_STOCK_URL') . '/' . $id);
+
+            if ($apiResponse->successful()) {
+                $data = json_decode($apiResponse->body());
+                $datas = $data->data;
+                $pdf = Pdf::loadView('inventory.transferstock.print', compact('datas'));
+                return $pdf->stream('Transfer Stock' . $id . '.pdf');
+            } else {
+                return back()->withErrors($apiResponse->status());
             }
         } catch (\Exception $e) {
             return back()->withErrors($e->getMessage());

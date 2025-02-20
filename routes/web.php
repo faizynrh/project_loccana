@@ -272,6 +272,7 @@ Route::middleware('auth.login')->group(
             Route::put('/update/{id}', [TransferStockController::class, 'update'])->name('update');
             Route::get('/detail/{id}', [TransferStockController::class, 'show'])->name('detail');
             Route::delete('/delete/{id}', [TransferStockController::class, 'destroy'])->name('destroy');
+            Route::get('/print/{id}', [TransferStockController::class, 'print'])->name('print');
         });
     }
 );
