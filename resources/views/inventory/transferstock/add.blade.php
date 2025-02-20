@@ -50,7 +50,7 @@
                                         </div>
                                         <div class="col-md-9">
                                             <input type="date" class="form-control w-auto" name="transfer_date"
-                                                value="">
+                                                value="" required>
                                         </div>
                                     </div>
                                     <div class="row mb-3 align-items-center">
@@ -303,10 +303,10 @@
                 <td>
                     <button class="btn btn-warning btn-sm edit-item">Edit</button>
                     <button class="btn btn-danger btn-sm delete-item">Hapus</button>
-                    <input type="text" class="item-id" value="${itemId}" name="id_item[]">
-                    <input type="text" value="${qty}" name="qty[]">
-                    <input type="text" class="sumber-gudang-id" value="${sumberGudangId}" name="sumber_gudang[]">
-                    <input type="text" class="target-gudang-id" value="${targetGudangId}" name="target_gudang[]">
+                    <input type="hidden" class="item-id" value="${itemId}" name="id_item[]">
+                    <input type="hidden" value="${qty}" name="qty[]">
+                    <input type="hidden" class="sumber-gudang-id" value="${sumberGudangId}" name="sumber_gudang[]">
+                    <input type="hidden" class="target-gudang-id" value="${targetGudangId}" name="target_gudang[]">
                 </td>
             </tr>
         `;
