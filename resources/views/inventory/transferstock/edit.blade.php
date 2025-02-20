@@ -33,8 +33,9 @@
                                 class="text-danger bg-light px-1">*</span>, dan
                             masukkan data dengan benar.</h6>
                     </div>
-                    <form action="{{ route('transfer_stock.store') }}" method="POST">
+                    <form action="{{ route('transfer_stock.update', $datas[0]->id) }}" method="POST">
                         @csrf
+                        @method('PUT')
                         <div class="card-body">
                             <div class="mb-3 p-1 d-flex justify-content-between align-items-center">
                                 <h5 class="fw-bold d-inline-block border-bottom pb-2 border-3">
@@ -82,8 +83,14 @@
                                                 @if (!empty($gudangs) && count($gudangs) > 0)
                                                     <option value="" disabled selected>Pilih Gudang</option>
                                                     <option value="0">Semua Gudang</option>
+                                                    <option value="2"
+                                                        {{ $datas[0]->from_warehouse_id == 2 ? 'selected' : '' }}>Gudang A
+                                                    </option>
+                                                    <option value="3">strung</option>
                                                     @foreach ($gudangs as $data)
-                                                        <option value="{{ $data->id }}">{{ $data->name }}</option>
+                                                        <option value="{{ $data->id }}"
+                                                            {{ $datas[0]->from_warehouse_id == $data->id ? 'selected' : '' }}>
+                                                            {{ $data->name }}</option>
                                                     @endforeach
                                                 @else
                                                     <option value="" selected disabled>Data Gudang Tidak Tersedia
@@ -102,8 +109,15 @@
                                                 @if (!empty($gudangs) && count($gudangs) > 0)
                                                     <option value="" disabled selected>Pilih Gudang</option>
                                                     <option value="0">Semua Gudang</option>
+                                                    <option value="3"
+                                                        {{ $datas[0]->to_warehouse_id == 3 ? 'selected' : '' }}>
+                                                        strung</option>
+                                                    <option value="2">Gudang A
+                                                    </option>
                                                     @foreach ($gudangs as $data)
-                                                        <option value="{{ $data->id }}">{{ $data->name }}</option>
+                                                        <option value="{{ $data->id }}"
+                                                            {{ $datas[0]->to_warehouse_id == $data->id ? 'selected' : '' }}>
+                                                            {{ $data->name }}</option>
                                                     @endforeach
                                                 @else
                                                     <option value="" selected disabled>Data Gudang Tidak Tersedia
@@ -122,7 +136,7 @@
                                                 @if (!empty($items) && count($items) > 0)
                                                     <option value="" disabled selected>Pilih Item</option>
                                                     @foreach ($items as $data)
-                                                        <option value="{{ $data->id }}">{{ $data->name }}</option>
+                                                        <option value="{{ $data->id }}"> {{ $data->name }}</option>
                                                     @endforeach
                                                 @else
                                                     <option value="" selected disabled>Data Item Tidak Tersedia
@@ -182,6 +196,25 @@
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        @foreach ($datas as $index => $item)
+                                            <tr>
+                                                <td>{{ $item->gudang_asal }}</td>
+                                                <td>{{ $item->gudang_tujuan }}</td>
+                                                <td>{{ $item->item_name }}</td>
+                                                <td>{{ $item->quantity }}</td>
+                                                <td>
+                                                    <button class="btn btn-warning btn-sm edit-item">Edit</button>
+                                                    <button class="btn btn-danger btn-sm delete-item">Hapus</button>
+                                                    <input type="hidden" class="item-id" value="{{ $item->item_id }}"
+                                                        name="id_item[]">
+                                                    <input type="hidden" value="{{ $item->quantity }}" name="qty[]">
+                                                    <input type="hidden" class="sumber-gudang-id"
+                                                        value="{{ $item->from_warehouse_id }}" name="sumber_gudang[]">
+                                                    <input type="hidden" class="target-gudang-id"
+                                                        value="{{ $item->to_warehouse_id }}" name="target_gudang[]">
+                                                </td>
+                                            </tr>
+                                        @endforeach
                                     </tbody>
                                 </table>
                             </div>
@@ -204,19 +237,13 @@
         $(document).ready(function() {
             let sumberGudang = $('select[name="sumber_gudang"]');
             let targetGudang = $('select[name="target_gudang"]');
-            let sumberGudangId = sumberGudang.val();
-            let targetGudangId = targetGudang.val();
             let itemSelect = $('select[name="item"]');
             let qtyInput = $('input[name="qty"]');
             let tableBody = $('table tbody');
 
-            targetGudang.prop('disabled', true);
-            itemSelect.prop('disabled', true);
-
             sumberGudang.change(function() {
                 let selectedSource = $(this).val();
                 targetGudang.prop('disabled', true).val('');
-                itemSelect.prop('disabled', true).val('');
 
                 if (selectedSource) {
                     targetGudang.prop('disabled', false);
@@ -234,22 +261,10 @@
                 let selectedTarget = $(this).val();
                 let selectedSource = sumberGudang.val();
 
-                itemSelect.prop('disabled', true).val('');
-
-                if (selectedTarget && selectedTarget !== selectedSource) {
-                    itemSelect.prop('disabled', false);
+                if (selectedTarget === selectedSource) {
+                    targetGudang.val('');
                 }
             });
-
-            function checkTableData() {
-                if (tableBody.children().length > 0) {
-                    sumberGudang.prop('disabled', true);
-                    targetGudang.prop('disabled', true);
-                } else {
-                    sumberGudang.prop('disabled', false);
-                    targetGudang.prop('disabled', false);
-                }
-            }
 
             function updateItemSelect() {
                 let selectedItems = [];
@@ -272,6 +287,20 @@
                     itemSelect.val('');
                 }
             }
+
+            function checkTableData() {
+                if (tableBody.children().length > 0) {
+                    sumberGudang.prop('disabled', true);
+                    targetGudang.prop('disabled', true);
+                } else {
+                    sumberGudang.prop('disabled', false);
+                    targetGudang.prop('disabled', false);
+                }
+
+                updateItemSelect();
+            }
+
+            checkTableData();
 
             $('.btn-success').click(function(e) {
                 e.preventDefault();
@@ -317,13 +346,11 @@
                 qtyInput.val('');
 
                 checkTableData();
-                updateItemSelect();
             });
 
             tableBody.on('click', '.delete-item', function() {
                 $(this).closest('tr').remove();
                 checkTableData();
-                updateItemSelect();
             });
 
             tableBody.on('click', '.edit-item', function() {
@@ -342,7 +369,6 @@
                 row.remove();
 
                 checkTableData();
-                updateItemSelect();
             });
         });
     </script>

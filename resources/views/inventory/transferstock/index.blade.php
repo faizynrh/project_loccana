@@ -99,7 +99,7 @@
                                                     <i class="bi bi-trash"></i>
                                                 </button>
                                             </form>
-                                            <a href="/transfer_stock/print/${row.id}" class="btn btn-sm btn-secondary" title="Print">
+                                            <a href="/transfer_stock/print/${row.id}" target="_blank" class="btn btn-sm btn-secondary" title="Print">
                                                 <i class="bi bi-printer"></i>
                                             </a>
                                         </div>

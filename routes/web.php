@@ -269,6 +269,12 @@ Route::middleware('auth.login')->group(
             Route::get('/', [TransferStockController::class, 'index'])->name('index');
             Route::get('/ajax', [TransferStockController::class, 'ajax'])->name('ajax');
             Route::get('/add', [TransferStockController::class, 'create'])->name('create');
+            Route::post('/store', [TransferStockController::class, 'store'])->name('store');
+            Route::get('/edit/{id}', [TransferStockController::class, 'edit'])->name('edit');
+            Route::put('/update/{id}', [TransferStockController::class, 'update'])->name('update');
+            Route::get('/detail/{id}', [TransferStockController::class, 'show'])->name('detail');
+            Route::delete('/delete/{id}', [TransferStockController::class, 'destroy'])->name('destroy');
+            Route::get('/print/{id}', [TransferStockController::class, 'print'])->name('print');
         });
     }
 );
