@@ -125,7 +125,8 @@ class TransferStockController extends Controller
 
             if ($apiResponse->successful()) {
                 $data = json_decode($apiResponse->body());
-                return view('inventory.transferstock.detail', compact('data'));
+                $datas = $data->data;
+                return view('inventory.transferstock.detail', compact('datas'));
             } else {
                 return back()->withErrors($apiResponse->json()['message']);
             }

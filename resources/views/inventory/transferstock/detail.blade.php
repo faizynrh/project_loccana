@@ -36,8 +36,7 @@
                                         <label class="form-label fw-bold mb-0">Tanggal Transfer</label>
                                     </div>
                                     <div class="col-md-9">
-                                        <input type="text" class="form-control" name="sku"
-                                            value="{{ $data->data[0]->transfer_date }}" readonly>
+                                        <input type="text" class="form-control" name="sku" value="" readonly>
                                     </div>
                                 </div>
                                 <div class="row mb-3 align-items-center">
@@ -45,8 +44,7 @@
                                         <label class="form-label fw-bold mb-0">Keterangan</label>
                                     </div>
                                     <div class="col-md-9">
-                                        <input type="text" class="form-control" name="name"
-                                            value="{{ $data->data[0]->transfer_reason }}" readonly>
+                                        <input type="text" class="form-control" name="name" value="" readonly>
                                     </div>
                                 </div>
                                 <div class="row mb-3 align-items-center">
@@ -69,13 +67,15 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <tr>
-                                                    <th></th>
-                                                    <th></th>
-                                                    <th>{{ $data->data[0]->item_code }}</th>
-                                                    <th>{{ $data->data[0]->item_name }}</th>
-                                                    <th>{{ $data->data[0]->quantity }}</th>
-                                                </tr>
+                                                @foreach ($datas as $index => $item)
+                                                    <tr>
+                                                        <td>{{ $item->gudang_asal }}</td>
+                                                        <td>{{ $item->gudang_tujuan }}</td>
+                                                        <td>{{ $item->item_code }}</td>
+                                                        <td>{{ $item->item_name }}</td>
+                                                        <td>{{ $item->quantity }}</td>
+                                                    </tr>
+                                                @endforeach
                                             </tbody>
                                         </table>
                                     </div>
