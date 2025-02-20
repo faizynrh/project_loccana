@@ -82,7 +82,37 @@ class TransferStockController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try {
+            $dataitems = [];
+            if ($request->has('id_item')) {
+                foreach ($request->input('id_item') as $index => $item_id) {
+                    $dataitems[] = [
+                        'item_id' => $item_id,
+                        'quantity' => $request->qty[$index],
+                    ];
+                }
+            }
+
+            $data = [
+                'from_warehouse_id' => $request->sumber_gudang[0],
+                'to_warehouse_id' => $request->target_gudang[0],
+                'transfer_date' => $request->transfer_date,
+                'status' => "transfer",
+                'transfer_reason' => $request->transfer_reason,
+                'company_id' => 2,
+                'items' => $dataitems
+            ];
+
+            $apiResponse = storeApi(env('TRANSFER_STOCK_URL'), $data);
+            if ($apiResponse->successful()) {
+                return redirect()->route('transfer_stock.index')
+                    ->with('success', $apiResponse->json()['message']);
+            } else {
+                return back()->withErrors($apiResponse->json()['message']);
+            }
+        } catch (\Exception $e) {
+            return back()->withErrors($e->getMessage());
+        }
     }
 
     /**
