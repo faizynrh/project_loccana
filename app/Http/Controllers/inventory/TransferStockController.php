@@ -125,6 +125,15 @@ class TransferStockController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        try {
+            $apiResponse = deleteApi(env('TRANSFER_STOCK_URL') . '/' . $id);
+            if ($apiResponse->successful()) {
+                return redirect()->route('transfer_stock.index')->with('success', $apiResponse->json()['message']);
+            } else {
+                return back()->withErrors($apiResponse->json()['message']);
+            }
+        } catch (\Exception $e) {
+            return back()->withErrors($e->getMessage());
+        }
     }
 }
