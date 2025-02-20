@@ -90,7 +90,18 @@ class TransferStockController extends Controller
      */
     public function show(string $id)
     {
-        //
+        try {
+            $apiResponse = fectApi(env('TRANSFER_STOCK_URL') . '/' . $id);
+
+            if ($apiResponse->successful()) {
+                $data = json_decode($apiResponse->body());
+                return view('inventory.transferstock.detail', compact('data'));
+            } else {
+                return back()->withErrors($apiResponse->json()['message']);
+            }
+        } catch (\Exception $e) {
+            return back()->withErrors($e->getMessage());
+        }
     }
 
     /**
