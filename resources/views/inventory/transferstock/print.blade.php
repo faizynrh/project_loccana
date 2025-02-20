@@ -70,10 +70,10 @@
 
     <div class="section" style="margin-bottom: 30px; display: flex; flex-direction: column; gap: 5px;">
         <div><span style="font-weight: bold; width: 200px; display: inline-block;">Tanggal Transfer Stock</span> :
-            <span></span>
+            <span>{{ $datas[0]->transfer_date }}</span>
         </div>
         <div><span style="font-weight: bold; width: 200px; display: inline-block;">Keterangan</span> :
-            <span></span>
+            <span>{{ $datas[0]->transfer_reason }}</span>
         </div>
         <div><span style="font-weight: bold; width: 200px; display: inline-block;">Gudang Asal</span> :
             <span>{{ $datas[0]->gudang_asal }}</span>
