@@ -1,5 +1,4 @@
 @extends('layouts.app')
-
 @section('content')
     @push('styles')
         <style>
@@ -314,32 +313,17 @@
                 row.find('.total-input').val(total.toFixed(0));
             }
 
-
             function updateTotals() {
-                let items = [];
                 let subtotal = 0;
                 let totalDiscount = 0;
 
-
                 $('.item-row').each(function() {
-                    const $row = $(this);
-                    const qty = parseFloat($row.find('.qty-input').val()) || 0;
-                    const price = parseFloat($row.find('.price-input').val()) || 0;
-                    const discount = parseFloat($row.find('.discount-input').val()) || 0;
-                    const itemCode = $row.find('.item-code').val() || '';
-                    const itemName = $row.find('.item-name').val() || '';
+                    const qty = parseFloat($(this).find('.qty-input').val()) || 0;
+                    const price = parseFloat($(this).find('.price-input').val()) || 0;
+                    const discount = parseFloat($(this).find('.discount-input').val()) || 0;
 
                     const rowSubtotal = qty * price;
                     const rowDiscount = rowSubtotal * (discount / 100);
-
-                    items.push({
-                        item_code: itemCode,
-                        item_name: itemName,
-                        qty: qty,
-                        unit_price: price,
-                        discount: discount,
-                        total_price: rowSubtotal - rowDiscount
-                    });
 
                     subtotal += rowSubtotal;
                     totalDiscount += rowDiscount;
@@ -350,49 +334,16 @@
                 const ppnAmount = taxableAmount * (ppnRate / 100);
                 const finalTotal = taxableAmount + ppnAmount;
 
-                // Update display
                 updateDisplayValue('Sub Total', subtotal);
                 updateDisplayValue('Diskon', totalDiscount);
                 updateDisplayValue('Taxable', taxableAmount);
                 updateDisplayValue('VAT/PPN', ppnAmount);
                 updateDisplayValue('Total', finalTotal);
 
-                // Store values in hidden inputs
                 $('#tax_amount').val(ppnAmount);
                 $('#total_amount').val(finalTotal);
-
-                // Save to session via AJAX
-                const sessionData = {
-                    items: items,
-                    sub_total: subtotal,
-                    total_discount: totalDiscount,
-                    taxable: taxableAmount,
-                    tax_amount: ppnAmount,
-                    total_po: finalTotal,
-                    description: $('#description').val() || '',
-                    partner_name: $('#partner_name').val() || '',
-                    term_of_payment: $('#term_of_payment').val() || '',
-                    number_po: $('#number_po').val() || '',
-                    order_date: $('#order_date').val() || ''
-                };
-
-                $.ajax({
-                    url: '/purchase_order/store-session',
-                    method: 'POST',
-                    data: {
-                        _token: $('meta[name="csrf-token"]').attr('content'),
-                        po_data: sessionData
-                    },
-                    success: function(response) {
-                        console.log('Session data saved successfully');
-                    },
-                    error: function(xhr, status, error) {
-                        console.error('Error saving session data:', error);
-                    }
-                });
             }
 
-            // Update display functions remain the same
             function updateDisplayValue(label, value) {
                 $('tr.fw-bold').each(function() {
                     if ($(this).find('td:eq(1)').text().trim() === label) {
@@ -408,10 +359,7 @@
                 });
             }
 
-            // Initialize calculations
-            $(document).ready(function() {
-                updateTotals();
-            });
+            updateTotals();
         });
     </script>
 @endpush
