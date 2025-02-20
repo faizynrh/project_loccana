@@ -148,15 +148,15 @@ class TransferStockController extends Controller
             } else {
                 $errors = [];
                 if (!$apiResponse->successful()) {
-                    $errors[] = 'Error API Response: ' . ($apiResponse->json()['message'] ?? 'Unknown error');
+                    $errors[] = ($apiResponse->json()['message']);
                 }
 
                 if (!$gudangResponse->successful()) {
-                    $errors[] = 'Error Gudang Response: ' . ($gudangResponse->json()['message'] ?? 'Unknown error');
+                    $errors[] =  ($gudangResponse->json()['message']);
                 }
 
                 if (!$itemResponse->successful()) {
-                    $errors[] = 'Error Item Response: ' . ($itemResponse->json()['message'] ?? 'Unknown error');
+                    $errors[] =  ($itemResponse->json()['message']);
                 }
 
                 return back()->withErrors(implode(' | ', $errors));
