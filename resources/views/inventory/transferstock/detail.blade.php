@@ -36,7 +36,8 @@
                                         <label class="form-label fw-bold mb-0">Tanggal Transfer</label>
                                     </div>
                                     <div class="col-md-9">
-                                        <input type="text" class="form-control" name="sku" value="" readonly>
+                                        <input type="text" class="form-control" name="sku"
+                                            value="{{ $datas[0]->transfer_date }}" readonly>
                                     </div>
                                 </div>
                                 <div class="row mb-3 align-items-center">
@@ -44,7 +45,8 @@
                                         <label class="form-label fw-bold mb-0">Keterangan</label>
                                     </div>
                                     <div class="col-md-9">
-                                        <input type="text" class="form-control" name="name" value="" readonly>
+                                        <input type="text" class="form-control" name="name"
+                                            value="{{ $datas[0]->transfer_reason }}" readonly>
                                     </div>
                                 </div>
                                 <div class="row mb-3 align-items-center">
