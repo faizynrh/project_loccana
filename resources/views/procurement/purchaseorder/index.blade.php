@@ -77,8 +77,10 @@
                                     </select>
                                 </div>
                             </form>
-
-
+                        </div>
+                        <div class="text-end">
+                            <h6 class="fw-bold">Total Per Bulan</h6>
+                            <h4 class="fw-bold" id="totalPerBulan">Rp 0,00</h4>
                         </div>
                         <div class="table-responsive">
                             <table class="table table-striped table-bordered mt-3" id="tablepurchaseorder">
@@ -126,6 +128,16 @@
                     data: function(d) {
                         d.month = $('#monthSelect').val();
                         d.year = $('#yearSelect').val();
+                    },
+                    dataSrc: function(response) {
+                        if (response.mtd) {
+                            const formattedNumber = new Intl.NumberFormat('id-ID', {
+                                minimumFractionDigits: 2,
+                                maximumFractionDigits: 2
+                            }).format(response.mtd);
+                            $('#totalPerBulan').html('Rp ' + formattedNumber);
+                        }
+                        return response.data;
                     }
                 },
                 columns: [{
@@ -187,44 +199,74 @@
                         data: null,
                         render: function(data, type, row) {
                             let actionButtons = `
-            <a href="/purchase_order/detail/${row.id}" class="btn btn-sm btn-info mb-2 me-2" title="Detail">
-                <i class="bi bi-eye"></i>
-            </a>
+
         `;
                             actionButtons += row.status.toLowerCase() === 'konfirmasi' ? `
-            <a href="/purchase_order/edit/${row.id}" class="btn btn-sm btn-warning mb-2 me-2" title="Edit">
-                <i class="bi bi-pencil"></i>
-            </a>
- <form action="/purchase_order/delete/${row.id}" method="POST" id="delete${row.id}" style="display:inline;">
-                @csrf
-                @method('DELETE')
-                <button type="button" class="btn btn-sm btn-danger mb-2 me-2" title="Hapus" onclick="confirmDelete(${row.id})">
-                    <i class="bi bi-trash"></i>
-                </button>
-            </form>
-            <a href="/purchase_order/print/${row.id}" class="btn btn-sm btn-light mb-2 me-2" target="_blank" title="Print">
-                    <i class="bi bi-printer"></i>
-                </a>
-                <a href="/purchase_order/excel/detail/${row.id}" class="btn btn-sm btn-success mb-2 me-2" title="Print">
-                    <i class="bi bi-file-earmark-excel"></i>
-                </a>
+                                <div class="btn-group dropdown me-1 mb-1">
+                                    <button type="button" class="btn btn-outline-danger rounded-3 dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-reference="parent">
+                                        <span class="sr-only"><i class="bi bi-list-task"></i></span>
+                                    </button>
+                                    <div class="dropdown-menu">
+                                        <a href="/purchase_order/detail/${row.id}" class="dropdown-item" title="Detail">
+                                            <i class="bi bi-eye text-primary"></i>
+                                            Detail
+                                        </a>
+                                       <a href="/purchase_order/print/${row.id}"  class="dropdown-item" target="_blank" title="Print">
+                                            <i class="bi bi-printer text-warning"></i>
+                                            Print PDF
+                                        </a>
+                                        <a href="/purchase_order/excel/detail/${row.id}"  class="dropdown-item" title="Print">
+                                            <i class="bi bi-file-earmark-excel text-success"></i>
+                                            Print Excel
+                                        </a>
+                                        <div class="dropdown-divider"></div>
+                                        <a href="/purchase_order/edit/${row.id}" class="dropdown-item" title="Edit">
+                                            <i class="bi bi-pencil text-info"></i>
+                                            Edit
+                                        </a>
+                                       <form action="/purchase_order/delete/${row.id}" method="POST" id="delete${row.id}" style="display:inline;">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="button" class="dropdown-item" title="Hapus" onclick="confirmDelete(${row.id})">
+                                                <i class="bi bi-trash text-danger"></i>
+                                                Delete
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
         ` :
-                                `<a href="/purchase_order/edit/${row.id}" class="btn btn-sm btn-warning mb-2 me-2 disabled" title="Edit">
-                    <i class="bi bi-pencil"></i>
-                </a>
-                 <form action="/purchase_order/delete/${row.id}" method="POST" id="delete${row.id}" style="display:inline;">
-                @csrf
-                @method('DELETE')
-                <button type="button" class="btn btn-sm btn-danger mb-2 me-2" title="Hapus" onclick="confirmDelete(${row.id})">
-                    <i class="bi bi-trash"></i>
-                </button>
-            </form>
-                <a href="/purchase_order/print/${row.id}" class="btn btn-sm btn-light mb-2 me-2" target="_blank" title="Print">
-                    <i class="bi bi-printer"></i>
-                </a>
-                <a href="/purchase_order/excel/detail/${row.id}" class="btn btn-sm btn-success mb-2 me-2" title="Print">
-                    <i class="bi bi-file-earmark-excel"></i>
-                </a>
+                                ` <div class="btn-group dropdown me-1 mb-1">
+                                    <button type="button" class="btn btn-outline-danger rounded-3 dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-reference="parent">
+                                        <span class="sr-only"><i class="bi bi-list-task"></i></span>
+                                    </button>
+                                    <div class="dropdown-menu">
+                                        <a href="/purchase_order/detail/${row.id}" class="dropdown-item" title="Detail">
+                                            <i class="bi bi-eye text-primary"></i>
+                                            Detail
+                                        </a>
+                                       <a href="/purchase_order/print/${row.id}"  class="dropdown-item" target="_blank" title="Print">
+                                            <i class="bi bi-printer text-warning"></i>
+                                            Print PDF
+                                        </a>
+                                        <a href="/purchase_order/excel/detail/${row.id}"  class="dropdown-item" title="Print">
+                                            <i class="bi bi-file-earmark-excel text-success"></i>
+                                            Print Excel
+                                        </a>
+                                        <div class="dropdown-divider"></div>
+                                        <a href="/purchase_order/edit/${row.id}" class="dropdown-item disabled" title="Edit">
+                                            <i class="bi bi-pencil"></i>
+                                            Edit
+                                        </a>
+                                       <form action="/purchase_order/delete/${row.id}" method="POST" id="delete${row.id}" style="display:inline;">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="button" class="dropdown-item disabled" title="Hapus" onclick="confirmDelete(${row.id})">
+                                                <i class="bi bi-trash"></i>
+                                                Delete
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
                 `;
                             return `<div class="d-flex">${actionButtons}</div>`;
                         }

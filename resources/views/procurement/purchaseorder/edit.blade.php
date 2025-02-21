@@ -137,8 +137,10 @@
                                         @endphp
                                         <tr style="border-bottom: 2px solid #000" class="item-row">
                                             <td colspan="2">
-                                                <select class="form-select" id="item_id_{{ $index }}"
-                                                    name="items[{{ $index }}][item_id]" required>
+                                                <select class="form-control"
+                                                    style="pointer-events: none; background-color: #e9ecef;"
+                                                    id="item_id_{{ $index }}"
+                                                    name="items[{{ $index }}][item_id]">
                                                     <option value="" selected disabled>Pilih Item</option>
                                                     @foreach ($items->data->items ?? [] as $option)
                                                         <option value="{{ $option->id }}"
