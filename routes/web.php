@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\penjualan\Controller;
+use App\Http\Controllers\penjualan\PenjualanController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ExportController;
 use App\Http\Controllers\masterdata\CoaController;
@@ -99,15 +101,15 @@ Route::middleware('auth.login')->group(
         // UOM
         Route::prefix('/uom')->name('uom.')->group(
             function () {
-                Route::get('/', [UomController::class, 'index'])->name('index');
-                Route::get('/ajax', [UomController::class, 'ajaxuom'])->name('ajax');
-                Route::get('/add', [UomController::class, 'create'])->name('create');
-                Route::post('/add', [UomController::class, 'store'])->name('store');
-                Route::delete('/delete/{id}', [UomController::class, 'destroy'])->name('destroy');
-                Route::get('/edit/{id}', [UomController::class, 'edit'])->name('edit');
-                Route::put('/update/{id}', [UomController::class, 'update'])->name('update');
-                Route::get('/detail/{id}', [UomController::class, 'show'])->name('show');
-            }
+            Route::get('/', [UomController::class, 'index'])->name('index');
+            Route::get('/ajax', [UomController::class, 'ajaxuom'])->name('ajax');
+            Route::get('/add', [UomController::class, 'create'])->name('create');
+            Route::post('/add', [UomController::class, 'store'])->name('store');
+            Route::delete('/delete/{id}', [UomController::class, 'destroy'])->name('destroy');
+            Route::get('/edit/{id}', [UomController::class, 'edit'])->name('edit');
+            Route::put('/update/{id}', [UomController::class, 'update'])->name('update');
+            Route::get('/detail/{id}', [UomController::class, 'show'])->name('show');
+        }
         );
 
 
@@ -280,5 +282,13 @@ Route::middleware('auth.login')->group(
             Route::get('/', [InventoryReportController::class, 'index'])->name('index');
             Route::get('/ajax', [InventoryReportController::class, 'ajax'])->name('ajax');
         });
+
+
+        // ===================================== PENJUALAN =========================================
+
+        Route::prefix('/penjualan')->name('penjualan.')->group(function () {
+            Route::get('/', [PenjualanController::class, 'index'])->name('index');
+        });
     }
+
 );

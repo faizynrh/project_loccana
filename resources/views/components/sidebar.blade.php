@@ -115,8 +115,8 @@
                         <span>Penjualan</span>
                     </a>
                     <ul class="submenu active">
-                        <li class="submenu-item">
-                            <a href="#" class="submenu-link">Penjualan</a>
+                        <li class="submenu-item {{ Request::is('purchase_order*') ? 'active' : '' }}">
+                            <a href="/penjualan" class="submenu-link">Penjualan</a>
                         </li>
                         <li class="submenu-item">
                             <a href="#" class="submenu-link">Range In Price</a>
