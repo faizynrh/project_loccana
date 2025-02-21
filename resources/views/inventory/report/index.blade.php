@@ -54,7 +54,7 @@
                             </div>
                         </form>
                         <div class="mt-3 d-flex justify-content-end">
-                            <button class="btn btn-primary" id="btnprint">
+                            <button class="btn btn-primary" id="exportBtn">
                                 <i class="bi bi-file-earmark-excel"></i> Export Excel
                             </button>
                         </div>
@@ -100,5 +100,131 @@
     </div>
 @endsection
 @push('scripts')
-    <script></script>
+    <script>
+        $(document).ready(function() {
+            $('#exportBtn').hide();
+
+            $('#exportBtn').click(function() {
+                var principal = $('#principal').val();
+                var start_date = $('#start_date').val();
+                var end_date = $('#end_date').val();
+                var principalName = $('#principal option:selected').text();
+
+                var formData = 'principal=' + principal +
+                    '&start_date=' + start_date + '&end_date=' + end_date +
+                    '&principal_name=' + encodeURIComponent(principalName);
+                console.log("Form Data:" + formData);
+                window.location.href = "/report_stock/export-excel?" + formData;
+            });
+
+            $('#searchForm').on('submit', function(e) {
+                e.preventDefault();
+
+                let $btnCari = $('button[type="submit"]');
+                $btnCari.prop('disabled', true).text('Processing...');
+
+                $('#tabledasarpembelian').DataTable().destroy();
+                var table = $('#tabledasarpembelian').DataTable({
+                    serverSide: true,
+                    processing: true,
+                    deferloading: false,
+                    searching: false,
+                    ajax: {
+                        url: '{{ route('report_stock.ajax') }}',
+                        type: 'GET',
+                        data: function(d) {
+                            d.principal = $('#principal').val();
+                            d.start_date = $('#start_date').val();
+                            d.end_date = $('#end_date').val();
+                        },
+                        complete: function() {
+                            $btnCari.prop('disabled', false).text('Cari');
+                        }
+                    },
+                    columns: [{
+                            data: 'item_code'
+                        },
+                        {
+                            data: 'item_name'
+                        },
+                        {
+                            data: 'size_uom'
+                        },
+                        {
+                            data: 'stok_awal'
+                        },
+                        {
+                            data: 'harga_satuan_awal'
+                            // render: function(data) {
+                            //     return formatRupiah(data);
+                            // }
+                        },
+                        {
+                            data: 'nilai_stock_awal'
+                        },
+                        {
+                            data: 'stok_masuk'
+                            // render: function(data) {
+                            //     return formatRupiah(data);
+                            // }
+                        },
+                        {
+                            data: 'total_discount'
+                        },
+                        {
+                            data: 'kuantiti_bonus'
+                            // lain2
+                        },
+                        {
+                            data: 'kuantiti_bonus'
+                        },
+                        {
+                            data: 'harga_satuan_penerimaan'
+                        },
+                        {
+                            data: 'nilai_pembelian'
+                        },
+                        {
+                            data: 'retur_po'
+                        },
+                        {
+                            data: 'keterangan'
+                        },
+                        {
+                            data: 'harga_pokok_di_endira'
+                        },
+                        {
+                            data: 'penjualan'
+                        },
+                        {
+                            data: 'nilai_saldo_akhir'
+                        },
+                        {
+                            data: 'qty_retur_jual'
+                        },
+                        {
+                            data: 'saldo_akhir'
+                        },
+                        {
+                            data: 'nilai_saldo_akhir'
+                        }
+                    ]
+                });
+
+                $('#exportBtn').show();
+            });
+
+            function formatRupiah(angka) {
+                if (angka) {
+                    return new Intl.NumberFormat('id-ID', {
+                        style: 'currency',
+                        currency: 'IDR',
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2
+                    }).format(angka);
+                }
+                return angka;
+            }
+        });
+    </script>
 @endpush

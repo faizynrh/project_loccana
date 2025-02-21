@@ -56,7 +56,7 @@
                     </ul>
                 </li>
                 <li
-                    class="sidebar-item has-sub {{ Request::is('penerimaan_barang*') || Request::is('purchase_order*') || Request::is('dasar_pembelian*') || Request::is('rekap_po*') || Request::is('invoice*') || Request::is('return*') || Request::is('report*') ? 'active' : '' }}">
+                    class="sidebar-item has-sub {{ Request::is('penerimaan_barang*') || Request::is('purchase_order*') || Request::is('dasar_pembelian*') || Request::is('rekap_po*') || Request::is('invoice*') || Request::is('return*') || Request::is('report/*') ? 'active' : '' }}">
                     <a href="#" class="sidebar-link">
                         <i class="bi bi-truck"></i>
                         <span>Procurement</span>
@@ -86,7 +86,7 @@
                     </ul>
                 </li>
                 <li
-                    class="sidebar-item has-sub {{ Request::is('stock*') || Request::is('stock_gudang*') || Request::is('stock_in_transit*') || Request::is('transfer_stock*') || Request::is('report_persediaan*') ? 'active' : '' }}">
+                    class="sidebar-item has-sub {{ Request::is('stock*') || Request::is('stock_gudang*') || Request::is('stock_in_transit*') || Request::is('transfer_stock*') || Request::is('report_stock*') ? 'active' : '' }}">
                     <a href="#" class="sidebar-link">
                         <i class="bi bi-box-seam"></i>
                         <span>Inventory</span>
@@ -104,8 +104,8 @@
                         <li class="submenu-item {{ Request::is('transfer_stock*') ? 'active' : '' }}">
                             <a href="/transfer_stock" class="submenu-link">Transfer Stok</a>
                         </li>
-                        <li class="submenu-item {{ Request::is('report_persediaan*') ? 'active' : '' }}">
-                            <a href="/report_persediaan" class="submenu-link">Report</a>
+                        <li class="submenu-item {{ Request::is('report_stock*') ? 'active' : '' }}">
+                            <a href="/report_stock" class="submenu-link">Report</a>
                         </li>
                     </ul>
                 </li>

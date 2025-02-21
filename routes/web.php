@@ -276,9 +276,10 @@ Route::middleware('auth.login')->group(
             Route::get('/print/{id}', [TransferStockController::class, 'print'])->name('print');
         });
 
-        Route::prefix('/report_persediaan')->name('report_persediaan.')->group(function () {
+        Route::prefix('/report_stock')->name('report_stock.')->group(function () {
             Route::get('/', [InventoryReportController::class, 'index'])->name('index');
             Route::get('/ajax', [InventoryReportController::class, 'ajax'])->name('ajax');
+            Route::get('/export-excel', [InventoryReportController::class, 'exportExcel'])->name('exportexcel');
         });
     }
 );
