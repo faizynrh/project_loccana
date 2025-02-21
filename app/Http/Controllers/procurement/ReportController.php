@@ -84,15 +84,14 @@ class ReportController extends Controller
             ];
             $apiResponse = storeApi(env('REPORT_URL'), $requestbody);
             if ($apiResponse->successful()) {
-                $data = $apiResponse->json();
-                $tableData = $data['data']['table'] ?? [];
+                $data = json_decode($apiResponse->body());
 
-                if (empty($tableData)) {
+                if (empty($data)) {
                     return back()->with('error', 'Tidak ada data untuk diexport.');
                 }
 
                 // Passing the extra data as arguments to the ExportProcurementReport class
-                return Excel::download(new ExportProcurementReport($tableData, $principalname, $start_date, $end_date), 'Procurement Report.xlsx');
+                return Excel::download(new ExportProcurementReport($data, $principalname, $start_date, $end_date), 'Procurement Report.xlsx');
             }
 
             return response()->json(['error' => $apiResponse->json()['message']]);
@@ -100,5 +99,4 @@ class ReportController extends Controller
             return response()->json(['error' => $e->getMessage()]);
         }
     }
-
 }
