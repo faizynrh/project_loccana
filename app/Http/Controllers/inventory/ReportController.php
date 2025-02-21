@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers\inventory;
 
-use App\Http\Controllers\Controller;
+use App\Exports\ExportInventoryReport;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\ExportInventoryStock;
 
 class ReportController extends Controller
 {
@@ -18,7 +21,7 @@ class ReportController extends Controller
             $search = $request->input('search.value') ?? '';
 
             $requestbody = [
-                'search' => $search,
+                // 'search' => $search,
                 'partner_id' => $partner_id,
                 'start_date' => $start_date,
                 'end_date' => $end_date,
@@ -26,7 +29,7 @@ class ReportController extends Controller
                 'limit' => $length,
                 'offset' => $start,
             ];
-            $apiResponse = storeApi(env('REPORT_INV_URL'), $requestbody);
+            $apiResponse = storeApi(env('REPORT_STOCK_URL') . '/lists', $requestbody);
             if ($apiResponse->successful()) {
                 $data = $apiResponse->json();
                 return response()->json([
@@ -60,51 +63,35 @@ class ReportController extends Controller
         return view('inventory.report.index');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function exportExcel(Request $request)
     {
-        //
-    }
+        try {
+            $partner_id = $request->input('principal', 0);
+            $start_date = $request->input('start_date', 0);
+            $end_date = $request->input('end_date', 0);
+            $principalname = $request->input('principal_name');
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
+            $requestbody = [
+                'partner_id' => $partner_id,
+                'start_date' => $start_date,
+                'end_date' => $end_date,
+                'company_id' => 0,
+            ];
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
+            $apiResponse = storeApi(env('REPORT_STOCK_URL') . '/lists', $requestbody);
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
+            if ($apiResponse->successful()) {
+                $data = json_decode($apiResponse->body());
+                if (empty($data)) {
+                    return back()->with('error', 'Tidak ada data untuk diexport.');
+                }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
+                return Excel::download(new ExportInventoryReport($data, $principalname, $start_date, $end_date), 'Inventory Report Stock.xlsx');
+            }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+            return response()->json(['error' => $apiResponse->json()['message']]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()]);
+        }
     }
 }
