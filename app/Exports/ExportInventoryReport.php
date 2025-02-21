@@ -48,9 +48,9 @@ class ExportInventoryReport implements WithTitle, WithStyles
         // Set headers manually
         // First row headers
         $sheet->setCellValue('A8', 'NO');
-        $sheet->setCellValue('B8', 'Kode Produk');
+        $sheet->setCellValue('B8', 'Kode Barang');
         $sheet->setCellValue('C8', 'Nama Barang');
-        $sheet->setCellValue('D8', 'Barang');
+        $sheet->setCellValue('D8', 'Ukuran');
         $sheet->setCellValue('E8', 'Saldo Awal');
         $sheet->setCellValue('H8', 'Penerimaan');
         $sheet->setCellValue('O8', 'Keterangan');
@@ -59,12 +59,12 @@ class ExportInventoryReport implements WithTitle, WithStyles
         $sheet->setCellValue('T8', 'Saldo Akhir');
 
         // Sub-headers (row 8)
-        $sheet->setCellValue('E9', 'Kuantiti');
+        $sheet->setCellValue('E9', 'Quantity');
         $sheet->setCellValue('F9', 'Harga Satuan');
         $sheet->setCellValue('G9', 'Nilai');
 
         $sheet->setCellValue('H9', 'Pembelian');
-        $sheet->setCellValue('I9', 'Disc. Produk');
+        $sheet->setCellValue('I9', 'Diskon Produk');
         $sheet->setCellValue('J9', 'Lain-lain');
         $sheet->setCellValue('K9', 'Bonus');
         $sheet->setCellValue('L9', 'Harga Satuan');
@@ -75,7 +75,7 @@ class ExportInventoryReport implements WithTitle, WithStyles
         $sheet->setCellValue('R9', 'Lain-lain');
         $sheet->setCellValue('S9', 'Retur');
 
-        $sheet->setCellValue('T9', 'Kuantiti');
+        $sheet->setCellValue('T9', 'Quantity');
         $sheet->setCellValue('U9', 'Nilai');
 
         // Merge Cells for Headers

@@ -63,9 +63,9 @@
                                 <table class="table table-striped table-bordered mt-3" id="tabledasarpembelian">
                                     <thead>
                                         <tr>
-                                            <th rowspan="2">Kode Produk</th>
+                                            <th rowspan="2">Kode Barang</th>
                                             <th rowspan="2">Nama Barang</th>
-                                            <th rowspan="2">Barang</th>
+                                            <th rowspan="2">Ukuran</th>
                                             <th colspan="3" class="text-center">Saldo Awal</th>
                                             <th colspan="7" class="text-center">Penerimaan</th>
                                             <th rowspan="2">Keterangan</th>
@@ -74,11 +74,11 @@
                                             <th colspan="2" class="text-center">Saldo Akhir</th>
                                         </tr>
                                         <tr>
-                                            <th>Kuantiti</th>
+                                            <th>Quantity</th>
                                             <th>Harga Satuan</th>
                                             <th>Nilai</th>
                                             <th>Pembelian</th>
-                                            <th>Disc. Produk</th>
+                                            <th>Diskon Produk</th>
                                             <th>Lain-lain</th>
                                             <th>Bonus</th>
                                             <th>Harga Satuan</th>
@@ -87,7 +87,7 @@
                                             <th>Penjualan</th>
                                             <th>Lain-lain</th>
                                             <th>Retur</th>
-                                            <th>Kuantiti</th>
+                                            <th>Quantity</th>
                                             <th>Nilai</th>
                                         </tr>
                                     </thead>
@@ -182,7 +182,10 @@
                             data: 'harga_satuan_penerimaan'
                         },
                         {
-                            data: 'nilai_pembelian'
+                            data: 'nilai_pembelian',
+                            // render: function(data) {
+                            //     return formatRupiah(data);
+                            // }
                         },
                         {
                             data: 'retur_po'
@@ -197,7 +200,7 @@
                             data: 'penjualan'
                         },
                         {
-                            data: 'nilai_saldo_akhir'
+                            data: 'nilai_saldo_akhir',
                         },
                         {
                             data: 'qty_retur_jual'
