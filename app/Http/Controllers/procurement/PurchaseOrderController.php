@@ -86,7 +86,7 @@ class PurchaseOrderController extends Controller
                 ];
 
                 $pdf = Pdf::loadView('procurement.purchaseorder.print', $viewData);
-                return $pdf->stream('procurement.purchase_order_' . $id . '.pdf');
+                return $pdf->stream('Purchase_Order.pdf');
             } else {
                 return back()->withErrors('Gagal mengambil data item: ' . $apiResponse->status());
             }
@@ -111,22 +111,30 @@ class PurchaseOrderController extends Controller
             'company_id' => 2,
         ];
 
+        $payloadmtd = [
+            'month' => $month,
+            'year' => $year,
+            'company_id' => 2,
+        ];
+
         if (!empty($search)) {
             $requestbody['search'] = $search;
         }
 
         $apiResponse = storeApi(env('PO_URL') . '/list', $requestbody);
-        // $mtdurl = getApiUrl() . '/loccana/itemreceipt/1.0.0/item_receipt/1.0.0/mtd';
+        $mtdResponse = storeApi(env('PO_URL') . '/mtd', $payloadmtd);
 
         if ($request->ajax()) {
             try {
-                if ($apiResponse->successful()) {
+                if ($apiResponse->successful() && $mtdResponse->successful()) {
                     $data = $apiResponse->json();
+                    $mtd = $mtdResponse->json();
                     return response()->json([
                         'draw' => $request->input('draw'),
                         'recordsTotal' => $data['data']['jumlah_filter'] ?? 0,
                         'recordsFiltered' => $data['data']['jumlah'] ?? 0,
                         'data' => $data['data']['table'] ?? [],
+                        'mtd' => $mtd['data'] ?? [],
                     ]);
                 }
                 return response()->json(['error' => 'Failed to fetch data'], 500);
@@ -313,7 +321,6 @@ class PurchaseOrderController extends Controller
             ];
             // dd($data);
             $apiResponse = updateApi(env('PO_URL') . '/' . $id, $data);
-            // dd($data);
             if ($apiResponse->successful()) {
                 Session::put('last_po_code', $request->input('code'));
                 return redirect()->route('purchaseorder.index')
@@ -401,7 +408,6 @@ class PurchaseOrderController extends Controller
     public function exportExcel(Request $request)
     {
         try {
-            $search = $request->input('search.value') ?? '';
             $month = $request->input('month', 11);
             $year = $request->input('year', 0);
             $length = $request->input('length', 10);
@@ -427,8 +433,10 @@ class PurchaseOrderController extends Controller
                     return back()->with('error', 'Tidak ada data untuk diexport.');
                 }
 
+
+
                 // Passing the extra data as arguments to the ExportProcurementReport class
-                return Excel::download(new ExportProcurementPurchaseOrder($tableData, $month, $year), 'Procurement Purchase Order.xlsx');
+                return Excel::download(new ExportProcurementPurchaseOrder($tableData, $month, $year), 'Purchase Order.xlsx');
             }
 
             return response()->json(['error' => $apiResponse->json()['message']]);
@@ -447,8 +455,10 @@ class PurchaseOrderController extends Controller
                 if (empty($data)) {
                     return back()->with('error', 'Tidak ada data untuk diexport.');
                 }
+                $po = $data[0]['number_po'] ?? 'data tidak masuk';
+                $name_principle = $data[0]['partner_name'] ?? 'data tidak masuk';
                 // dd($data);
-                return Excel::download(new ExportProcurementPurchaseOrderDetail($data), 'Procurement Purchase Order.xlsx');
+                return Excel::download(new ExportProcurementPurchaseOrderDetail($data), $po . ' - ' . $name_principle . '.xlsx');
                 // return Excel::download(new ExportProcurementPurchaseOrderDetail($data), "{$data['partner_name']}.xlsx");
             }
 

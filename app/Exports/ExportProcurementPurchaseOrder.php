@@ -64,7 +64,7 @@ class ExportProcurementPurchaseOrder implements WithStyles
                 'A' => $index + 1,
                 'B' => $item['po_code'] ?? '',
                 'C' => $item['name'] ?? '',
-                'D' => $item['order_date'] ?? '',
+                'D' => date('d-m-Y', strtotime($item['order_date'])),
                 'E' => $item['total_amount'] ?? '',
                 'F' => $item['term_of_payment'] ?? ''
             ];
