@@ -91,7 +91,6 @@ class ExportProcurementPurchaseOrderDetail implements WithStyles
                 ],
             ]);
 
-            // Add left and right borders for Amount column
             $sheet->getStyle("F{$row}")->applyFromArray([
                 'borders' => [
                     'allBorders' => [
@@ -161,7 +160,7 @@ class ExportProcurementPurchaseOrderDetail implements WithStyles
             $row++;
         }
         $row++;
-        $sheet->setCellValue('A' . $row, 'Keterangan :' . $poData['description']);
+        $sheet->setCellValue('A' . $row, 'Keterangan : ' . $poData['description']);
         $sheet->mergeCells("A{$row}:F{$row}");
 
         // Jarak 1 baris (kosong)

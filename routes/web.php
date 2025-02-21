@@ -192,8 +192,6 @@ Route::middleware('auth.login')->group(
             Route::put('/approve/{id}', [PurchaseOrderController::class, 'approve'])->name('approve');
             Route::put('/reject/{id}', [PurchaseOrderController::class, 'reject'])->name('reject');
             Route::get('/print/{id}', [PurchaseOrderController::class, 'print'])->name('print');
-            Route::post('/store-session', [PurchaseOrderController::class, 'storeSession'])
-                ->name('purchaseorder.storeSession');
             Route::get('/excel/detail/{id}', [PurchaseOrderController::class, 'exportExcelDetail'])->name('printexceldetail');
             Route::get('/excel', [PurchaseOrderController::class, 'exportExcel'])->name('printexcel');
         });

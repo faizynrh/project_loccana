@@ -128,28 +128,27 @@
             @endforeach
         </tbody>
     </table>
-
     <div class="amount-section">
         <div class="amount-row">
             Sub Total :
-            {{ number_format(session('sub_total', 0), 2, ',', '.') }}
+            {{ number_format($sub_total, 0, ',', '.') }}
         </div>
         <div class="amount-row">
             Discount :
-            {{ session('total_discount', 0) }}
+            {{ number_format($discount, 0, ',', '.') }}
         </div>
         <div class="amount-row">
             Taxable :
-            {{ number_format(session('taxable', 0), 2, ',', '.') }}
+            {{ number_format($taxable, 0, ',', '.') }}
         </div>
         <div class="amount-row">
             Vat/PPN :
-            {{ session('tax_amount', 0) }}
+            {{ number_format($vat, 0, ',', '.') }}
         </div>
         <div class="amount-row">
-            Total :{{ session('total_po', 0) }}
+            Total :
+            {{ number_format($total, 0, ',', '.') }}
         </div>
-
     </div>
 
     <div class="section">
@@ -163,7 +162,7 @@
                 <td>Disetujui Oleh,</td>
                 <td>Diperiksa Oleh,</td>
                 <td>
-                    Cimahi, {{ $purchase_date }}<br>
+                    <p> Cimahi, {{ $purchase_date }}</p>
                     Dipesan Oleh,
                 </td>
             </tr>
