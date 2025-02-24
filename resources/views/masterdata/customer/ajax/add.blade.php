@@ -25,7 +25,7 @@
             </div>
             <div class="row">
                 <div class="col-md-6 mb-3">
-                    <label for="chart_of_account_id" class="form-label fw-bold">COA ID</label>
+                    <label for="chart_of_account_id" class="form-label fw-bold">COA</label>
                     <select type="number" name="chart_of_account_id" placeholder="chart_of_account_id"
                         class="form-select" id="partner_type_id" required>
                         <option value="" disabled selected>Pilih COA</option>

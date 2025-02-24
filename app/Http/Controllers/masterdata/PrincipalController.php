@@ -25,7 +25,7 @@ class PrincipalController extends Controller
                 'is_customer' => false,
                 'is_supplier' => true
             ];
-            $apiResponse = storeApi(env('PRINCIPAL_URL') . '/lists', $requestbody);
+            $apiResponse = storeApi(env('PARTNER_URL') . '/lists', $requestbody);
 
             if (!empty($search)) {
                 $requestbody['search'] = $search;
@@ -99,7 +99,7 @@ class PrincipalController extends Controller
                 'is_supplier' => true
             ];
 
-            $apiResponse = storeApi(env('PRINCIPAL_URL') . '/', $data);
+            $apiResponse = storeApi(env('PARTNER_URL') . '/', $data);
             $responseData = $apiResponse->json();
             if ($apiResponse->successful()) {
                 return redirect()->route('principal.index')
@@ -122,7 +122,7 @@ class PrincipalController extends Controller
     {
         try {
             $companyid = 2;
-            $apiResponse = fectApi(env('PRINCIPAL_URL') . '/' . $id);
+            $apiResponse = fectApi(env('PARTNER_URL') . '/' . $id);
             $partnerResponse = fectApi(env('LIST_PARTNERTYPES'));
             $coaResponse = fectApi(env('LIST_COA') . '/' . $companyid);
 
@@ -147,7 +147,7 @@ class PrincipalController extends Controller
     {
         try {
             $companyid = 2;
-            $apiResponse = fectApi(env('PRINCIPAL_URL') . '/' . $id);
+            $apiResponse = fectApi(env('PARTNER_URL') . '/' . $id);
             $partnerResponse = fectApi(env('LIST_PARTNERTYPES'));
             $coaResponse = fectApi(env('LIST_COA') . '/' . $companyid);
 
@@ -175,13 +175,13 @@ class PrincipalController extends Controller
             $data = [
                 'name' => (string) $request->input('nama'),
                 'partner_type_id' => $request->input('partner_type_id'),
-                'contact_info' => $request->input('contact_info',),
-                'chart_of_account_id' => $request->input('chart_of_account_id',),
+                'contact_info' => $request->input('contact_info', ),
+                'chart_of_account_id' => $request->input('chart_of_account_id', ),
                 'company_id' => 2,
                 'is_customer' => true,
                 'is_supplier' => false
             ];
-            $apiResponse = updateApi(env('PRINCIPAL_URL') . '/' . $id, $data);
+            $apiResponse = updateApi(env('PARTNER_URL') . '/' . $id, $data);
             if ($apiResponse->successful()) {
                 return redirect()->route('principal.index')->with('success', $apiResponse->json()['message']);
             } else {
@@ -198,7 +198,7 @@ class PrincipalController extends Controller
     public function destroy(string $id)
     {
         try {
-            $apiResponse = deleteApi(env('PRINCIPAL_URL') . '/' . $id);
+            $apiResponse = deleteApi(env('PARTNER_URL') . '/' . $id);
 
             if ($apiResponse->successful()) {
                 return redirect()->route('principal.index')
