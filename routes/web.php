@@ -101,15 +101,15 @@ Route::middleware('auth.login')->group(
         // UOM
         Route::prefix('/uom')->name('uom.')->group(
             function () {
-                Route::get('/', [UomController::class, 'index'])->name('index');
-                Route::get('/ajax', [UomController::class, 'ajaxuom'])->name('ajax');
-                Route::get('/add', [UomController::class, 'create'])->name('create');
-                Route::post('/add', [UomController::class, 'store'])->name('store');
-                Route::delete('/delete/{id}', [UomController::class, 'destroy'])->name('destroy');
-                Route::get('/edit/{id}', [UomController::class, 'edit'])->name('edit');
-                Route::put('/update/{id}', [UomController::class, 'update'])->name('update');
-                Route::get('/detail/{id}', [UomController::class, 'show'])->name('show');
-            }
+            Route::get('/', [UomController::class, 'index'])->name('index');
+            Route::get('/ajax', [UomController::class, 'ajaxuom'])->name('ajax');
+            Route::get('/add', [UomController::class, 'create'])->name('create');
+            Route::post('/add', [UomController::class, 'store'])->name('store');
+            Route::delete('/delete/{id}', [UomController::class, 'destroy'])->name('destroy');
+            Route::get('/edit/{id}', [UomController::class, 'edit'])->name('edit');
+            Route::put('/update/{id}', [UomController::class, 'update'])->name('update');
+            Route::get('/detail/{id}', [UomController::class, 'show'])->name('show');
+        }
         );
 
 
@@ -290,6 +290,9 @@ Route::middleware('auth.login')->group(
         Route::prefix('/penjualan')->name('penjualan.')->group(function () {
             Route::get('/', [PenjualanController::class, 'index'])->name('index');
             Route::get('/ajax', [PenjualanController::class, 'ajaxselling'])->name('ajax');
+            Route::get('/add', [PenjualanController::class, 'create'])->name('create');
+            Route::post('/add', [PenjualanController::class, 'store'])->name('store');
+
         });
     }
 

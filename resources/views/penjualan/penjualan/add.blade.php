@@ -18,10 +18,10 @@
                         <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item">
-                                    <a href="/purchase_order">Purchase Order</a>
+                                    <a href="/purchase_order">Penjualan</a>
                                 </li>
                                 <li class="breadcrumb-item active" aria-current="page">
-                                    Add Purchase Order
+                                    Add Penjualan
                                 </li>
                             </ol>
                         </nav>
@@ -31,28 +31,40 @@
             <section class="section">
                 <div class="card">
                     <div class="card-header">
-                        <h4 class="card-title"> Form detail isian purchase order</h4>
+                        <h4 class="card-title"> Form detail Penjualan</h4>
                     </div>
                     <div class="card-body">
                         @include('alert.alert')
-                        <form id="createForm" method="POST" action="{{ route('purchaseorder.store') }}">
+                        <form id="createForm" method="POST" action="{{ route('penjualan.store') }}">
                             @csrf
                             <div class="row mb-3">
                                 <div class="col-md-6">
-                                    <label for="code" class="form-label fw-bold mt-2 mb-1 small">Kode</label>
+                                    <label for="code" class="form-label fw-bold mt-2 mb-1 small">Nomor Penjualan</label>
                                     <input type="text" class="form-control bg-body-secondary" id="code"
-                                        name="code" placeholder="Kode" value="{{ $poCode }}">
-                                    <label for="tanggal" class="form-label fw-bold mt-2 mb-1 small">Tanggal</label>
+                                        name="order_number" placeholder="Nomor Penjualan" value="">
+                                    <label for="tanggal" class="form-label fw-bold mt-2 mb-1 small">Tanggal Order</label>
                                     <input type="date" class="form-control" id="order_date" name="order_date" required>
 
-                                    <label for="principal" class="form-label fw-bold mt-2 mb-1 small">Principle</label>
+                                    <label for="tanggal" class="form-label fw-bold mt-2 mb-1 small">Tanggal
+                                        Pengiriman</label>
+                                    <input type="date" class="form-control" id="tanggal_pengiriman" name="delivery_date"
+                                        required>
+
+                                    <label for="customer" class="form-label fw-bold mt-2 mb-1 small">Customer</label>
                                     <select class="form-select" id="partner_id" name="partner_id" required>
-                                        <option value="" selected disabled>Pilih Partner</option>
+                                        <option value="" selected disabled>Pilih Customer</option>
                                         @foreach ($partner as $item)
                                             <option value="{{ $item['id'] }}">{{ $item['name'] }}</option>
                                         @endforeach
                                     </select>
-
+                                    <label for="description" class="form-label fw-bold mt-2 mb-1 small">Keterangan</label>
+                                    <textarea class="form-control" rows="5" id="description" name="description"></textarea>
+                                    {{-- <label for="status" class="form-label fw-bold mt-2 mb-1 small">Status</label> --}}
+                                    <input type="hidden" class="form-control" id="status" name="status">
+                                    <input type="hidden" class="form-control" id="currency_id" name="currency_id"
+                                        value="1">
+                                </div>
+                                <div class="col-md-6">
                                     <label for="gudang" class="form-label fw-bold mt-2 mb-1 small">Gudang</label>
                                     <select class="form-select" id="gudang" name="items[0][warehouse_id]" required>
                                         <option value="" selected disabled>Pilih Gudang</option>
@@ -60,17 +72,9 @@
                                             <option value="{{ $items['id'] }}">{{ $items['name'] }}</option>
                                         @endforeach
                                     </select>
-                                    {{-- <label for="status" class="form-label fw-bold mt-2 mb-1 small">Status</label> --}}
-                                    <input type="hidden" class="form-control" id="status" name="status"
-                                        value="konfirmasi">
-                                    <input type="hidden" class="form-control" id="requested_by" name="requested_by"
-                                        value="1">
-                                    <input type="hidden" class="form-control" id="currency_id" name="currency_id"
-                                        value="1">
-                                </div>
-                                <div class="col-md-6">
-                                    <label for="ppn" class="form-label fw-bold mt-2 mb-1 small">VAT/PPN</label>
-                                    <input type="number" class="form-control" id="ppn" name="ppn" required>
+
+                                    <label for="ship" class="form-label fw-bold mt-2 mb-1 small">Ship From :</label>
+                                    <textarea class="form-control bg-body-secondary" rows="5" id="ship" name="ship" readonly></textarea>
 
                                     <label for="pembayaran" class="form-label fw-bold mt-2 mb-1 small">Term
                                         Pembayaran</label>
@@ -81,12 +85,11 @@
                                         <option value="45 Hari">45 Hari</option>
                                         <option value="60 Hari">60 Hari</option>
                                         <option value="90 Hari">90 Hari</option>
-                                        <option value="lainnya">Lainnya</option>
+                                        <option value="">Lainnya</option>
                                     </select>
-                                    <input type="text" class="form-control mt-2 hidden" id="custom_payment_term"
-                                        placeholder="Masukkan jumlah hari">
-                                    <label for="description" class="form-label fw-bold mt-2 mb-1 small">Keterangan</label>
-                                    <textarea class="form-control" rows="5" id="description" name="description"></textarea>
+
+
+
                                 </div>
                             </div>
                             <div class="p-2">
@@ -96,13 +99,16 @@
                                 <thead>
                                     <tr style="border-bottom: 3px solid #000;">
                                         <th style="width: 140px">Kode</th>
-                                        <th style="width: 90px"></th>
-                                        <th style="width: 45px">Qty (Lt/Kg)</th>
+                                        <th style="width: 40px"></th>
+                                        <th style="width: 105px">notes</th>
+                                        <th style="width: 60px">Qty Box</th>
+                                        <th style="width: 45px">Qty Satuan</th>
+                                        <th style="width: 70px">Total Qty</th>
                                         <th style="width: 100px">Harga</th>
                                         <th style="width: 30px">Diskon (%)</th>
                                         <th style="width: 70px">Total</th>
                                         <th style="width: 30px"></th>
-                                        <th style="width: 30px"></th>
+                                        <th style="width: 30px">aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody id="tableBody">
@@ -110,14 +116,26 @@
                                     <tr style="border-bottom: 2px solid #000" class="item-row">
                                         <td colspan="2">
                                             <select class="form-select item-select" name="items[0][item_id]">
-                                                <option value="" disabled selected>Silahkan pilih principle terlebih
-                                                    dahulu</option>
+                                                <option value="" disabled selected>Pilih Customer Dahulu
+                                                </option>
                                             </select>
                                             <input type="hidden" name="items[0][uom_id]" class="uom-input">
                                         </td>
                                         <td>
-                                            <input type="number" name="items[0][quantity]"
+                                            <input type="text" name="items[0][notes]"
+                                                class="form-control notes-input">
+                                        </td>
+                                        <td>
+                                            <input type="number" name="items[0][box_quantity]"
                                                 class="form-control qty-input" value="1" min="1">
+                                        </td>
+                                        <td>
+                                            <input type="number" name="items[0][per_box_quantity]"
+                                                class="form-control qty-input" value="1" min="1">
+                                        <td>
+                                            <input type="number" name="items[0][quantity]"
+                                                class="form-control qty-input bg-body-secondary" value="1"
+                                                min="1" readonly>
                                         </td>
                                         <td>
                                             <input type="number" name="items[0][unit_price]"
@@ -135,39 +153,39 @@
                                         <td></td>
                                     </tr>
                                     <tr style="border-bottom: 2px solid #000;">
-                                        <td colspan="6"></td>
+                                        <td colspan="9"></td>
                                         <td class="text-center">
                                             <button class="btn btn-primary fw-bold" id="add-row">+</button>
                                         </td>
                                     </tr>
                                 </tbody>
                                 <tr class="fw-bold">
-                                    <td colspan="4"></td>
+                                    <td colspan="7"></td>
                                     <td>Sub Total</td>
                                     <td style="float: right;">0</td>
                                     <td></td>
                                 </tr>
                                 <tr class="fw-bold">
-                                    <td colspan="4"></td>
+                                    <td colspan="7"></td>
                                     <td>Diskon</td>
                                     <td style="float: right;">0</td>
                                     <td></td>
                                 </tr class="fw-bold">
                                 <tr class="fw-bold">
-                                    <td colspan="4"></td>
+                                    <td colspan="7"></td>
                                     <td>Taxable</td>
                                     <td style="float: right">0</td>
                                     <td></td>
                                 </tr class="fw-bold">
                                 <tr class="fw-bold">
-                                    <td colspan="4"></td>
+                                    <td colspan="7"></td>
                                     <td>VAT/PPN</td>
                                     <td style="float: right">0
                                     </td>
                                     <td></td>
                                 </tr>
                                 <tr class="fw-bold" style="border-top: 2px solid #000">
-                                    <td colspan="4"></td>
+                                    <td colspan="7"></td>
                                     <td>Total</td>
                                     <td style="float: right">0</td>
                                 </tr>
@@ -192,47 +210,6 @@
 @push('scripts')
     <script>
         $(document).ready(function() {
-
-            $('#pembayaran').on('change', function() {
-                const selectedValue = $(this).val();
-                const customInput = $('#custom_payment_term');
-
-                if (selectedValue === 'lainnya') {
-                    customInput.removeClass('hidden');
-                    $(this).attr('name', '');
-                    customInput.attr('name', 'term_of_payment');
-                    customInput.prop('required', true);
-                } else {
-                    customInput.addClass('hidden');
-                    $(this).attr('name', 'term_of_payment');
-                    customInput.attr('name', '');
-                    customInput.prop('required', false);
-                }
-            });
-
-            $('#custom_payment_term').on('input', function() {
-                let value = $(this).val();
-                // Remove any non-numeric characters
-                value = value.replace(/[^\d]/g, '');
-                if (value) {
-                    $(this).val(value);
-                }
-            });
-
-            $('#custom_payment_term').on('blur', function() {
-                let value = $(this).val();
-                if (value) {
-                    $(this).val(value + ' Hari');
-                }
-            });
-
-            $('#custom_payment_term').on('focus', function() {
-                let value = $(this).val();
-                // Remove "Hari" when focusing on the input
-                value = value.replace(' Hari', '');
-                $(this).val(value);
-            });
-
             $('#partner_id').on('change', function() {
                 var poId = $(this).val();
                 console.log('Selected poId:', poId);

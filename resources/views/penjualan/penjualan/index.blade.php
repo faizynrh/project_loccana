@@ -33,7 +33,7 @@
                     <div class="card-body">
                         @include('alert.alert')
                         <div class="d-flex align-items-center mb-2">
-                            <a href="/purchase_order/add" class="btn btn-primary me-2 fw-bold">+ Tambah Penjualan</a>
+                            <a href="/penjualan/add" class="btn btn-primary me-2 fw-bold">+ Tambah Penjualan</a>
                             <div class="d-flex align-items-center">
                                 <select id="yearSelect" class="form-select me-2" name="year" style="width: auto;">
                                     @php
