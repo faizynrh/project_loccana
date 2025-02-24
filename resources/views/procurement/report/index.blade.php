@@ -110,7 +110,7 @@
                         '&start_date=' + start_date + '&end_date=' + end_date +
                         '&principal_name=' + encodeURIComponent(principalName);
                     console.log("Form Data:" + formData);
-                    window.location.href = "/report/export-excel?" + formData;
+                    window.location.href = "/report_pembelian/export-excel?" + formData;
                 });
 
 
@@ -125,7 +125,7 @@
                         serverSide: true,
                         processing: true,
                         ajax: {
-                            url: '{{ route('report.ajax') }}',
+                            url: '{{ route('report_pembelian.ajax') }}',
                             type: 'GET',
                             data: function(d) {
                                 d.principal = $('#principal').val();
