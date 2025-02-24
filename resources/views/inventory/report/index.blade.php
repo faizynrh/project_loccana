@@ -2,6 +2,31 @@
 @section('content')
     @push('styles')
         <style>
+            #tablereportstock thead tr:first-child th,
+            #tablereportstock thead tr:nth-child(2) th {
+                position: sticky;
+                background: white;
+                z-index: 0;
+                border-bottom: 2px solid #ddd;
+            }
+
+            #tablereportstock thead tr:first-child th {
+                top: 0;
+            }
+
+            #tablereportstock thead tr:nth-child(2) th {
+                top: 40px;
+            }
+
+            .table-responsive {
+                max-height: 400px;
+                overflow-y: auto;
+            }
+
+            .last-row {
+                background-color: #ffff00 !important;
+                font-weight: bold !important;
+            }
         </style>
     @endpush
     <div id="main-content">
@@ -60,7 +85,7 @@
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
-                                <table class="table table-striped table-bordered mt-3" id="tabledasarpembelian">
+                                <table class="table table-striped table-bordered mt-3 table-fixed" id="tablereportstock">
                                     <thead>
                                         <tr>
                                             <th rowspan="2">Kode Barang</th>
@@ -91,6 +116,8 @@
                                             <th>Nilai</th>
                                         </tr>
                                     </thead>
+                                    <tbody>
+                                    </tbody>
                                 </table>
                             </div>
                         </div>
@@ -123,98 +150,64 @@
                 let $btnCari = $('button[type="submit"]');
                 $btnCari.prop('disabled', true).text('Processing...');
 
-                $('#tabledasarpembelian').DataTable().destroy();
-                var table = $('#tabledasarpembelian').DataTable({
-                    serverSide: true,
-                    processing: true,
-                    deferloading: false,
-                    searching: false,
-                    ajax: {
-                        url: '{{ route('report_stock.ajax') }}',
-                        type: 'GET',
-                        data: function(d) {
-                            d.principal = $('#principal').val();
-                            d.start_date = $('#start_date').val();
-                            d.end_date = $('#end_date').val();
-                        },
-                        complete: function() {
-                            $btnCari.prop('disabled', false).text('Cari');
-                        }
-                    },
-                    columns: [{
-                            data: 'item_code'
-                        },
-                        {
-                            data: 'item_name'
-                        },
-                        {
-                            data: 'size_uom'
-                        },
-                        {
-                            data: 'stok_awal'
-                        },
-                        {
-                            data: 'harga_satuan_awal'
-                            // render: function(data) {
-                            //     return formatRupiah(data);
-                            // }
-                        },
-                        {
-                            data: 'nilai_stock_awal'
-                        },
-                        {
-                            data: 'stok_masuk'
-                            // render: function(data) {
-                            //     return formatRupiah(data);
-                            // }
-                        },
-                        {
-                            data: 'total_discount'
-                        },
-                        {
-                            data: 'kuantiti_bonus'
-                            // lain2
-                        },
-                        {
-                            data: 'kuantiti_bonus'
-                        },
-                        {
-                            data: 'harga_satuan_penerimaan'
-                        },
-                        {
-                            data: 'nilai_pembelian',
-                            // render: function(data) {
-                            //     return formatRupiah(data);
-                            // }
-                        },
-                        {
-                            data: 'retur_po'
-                        },
-                        {
-                            data: 'keterangan'
-                        },
-                        {
-                            data: 'harga_pokok_di_endira'
-                        },
-                        {
-                            data: 'penjualan'
-                        },
-                        {
-                            data: 'nilai_saldo_akhir',
-                        },
-                        {
-                            data: 'qty_retur_jual'
-                        },
-                        {
-                            data: 'saldo_akhir'
-                        },
-                        {
-                            data: 'nilai_saldo_akhir'
-                        }
-                    ]
-                });
+                let formData = {
+                    principal: $('#principal').val(),
+                    start_date: $('#start_date').val(),
+                    end_date: $('#end_date').val()
+                };
 
-                $('#exportBtn').show();
+                $('#loading-overlay').fadeIn();
+
+                $.ajax({
+                    url: '{{ route('report_stock.ajax') }}',
+                    type: 'GET',
+                    data: formData,
+                    success: function(response) {
+                        let data = response.data;
+
+                        let tableBody = $('#tablereportstock tbody');
+                        tableBody.empty();
+
+                        $.each(data, function(index, item) {
+                            let row = `
+        <tr class="${index === data.length - 1 ? 'last-row' : ''}">
+            <td>${item.item_code || '-'}</td>
+            <td>${item.item_name || '-'}</td>
+            <td>${item.size_uom || '-'}</td>
+            <td>${item.stok_awal || 0}</td>
+            <td>${item.harga_satuan_awal || 0}</td>
+            <td>${item.nilai_stock_awal || 0}</td>
+            <td>${item.stok_masuk || 0}</td>
+            <td>${item.total_discount || 0}</td>
+            <td>lain2</td>
+            <td>${item.kuantiti_bonus || 0}</td>
+            <td>${item.harga_satuan_penerimaan || 0}</td>
+            <td>${item.nilai_pembelian || 0}</td>
+            <td>${item.retur_po || 0}</td>
+            <td>${item.keterangan || '-'}</td>
+            <td>${item.harga_pokok_di_endira || 0}</td>
+            <td>${item.penjualan || 0}</td>
+            <td>lain lain</td>
+            <td>${item.qty_retur_jual || 0}</td>
+            <td>${item.saldo_akhir || 0}</td>
+            <td>${item.nilai_saldo_akhir || 0}</td>
+        </tr>
+    `;
+                            tableBody.append(row);
+                        });
+
+                        $('#exportBtn').show();
+
+                        $btnCari.prop('disabled', false).text('Cari');
+                    },
+                    error: function(xhr) {
+                        alert('Gagal mengambil data: ' + xhr.responseText);
+                        $btnCari.prop('disabled', false).text('Cari');
+                    },
+                    complete: function() {
+                        $('#loading-overlay').fadeOut();
+                    }
+                });
             });
 
             function formatRupiah(angka) {

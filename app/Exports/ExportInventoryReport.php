@@ -101,8 +101,13 @@ class ExportInventoryReport implements WithTitle, WithStyles
 
         // Add data
         $row = 10;
-        foreach ($this->data->data->table as $index => $item) {
-            $sheet->setCellValue('A' . $row, $index + 1);
+        $totalRows = count($this->data->data);
+        foreach ($this->data->data as $index => $item) {
+            // Jika ini bukan baris terakhir, isi kolom "NO"
+            if ($index + 1 < $totalRows) {
+                $sheet->setCellValue('A' . $row, $index + 1);
+            }
+
             $sheet->setCellValue('B' . $row, $item->item_code);
             $sheet->setCellValue('C' . $row, $item->item_name);
             $sheet->setCellValue('D' . $row, $item->size_uom);
@@ -111,7 +116,7 @@ class ExportInventoryReport implements WithTitle, WithStyles
             $sheet->setCellValue('G' . $row, $item->nilai_stock_awal);
             $sheet->setCellValue('H' . $row, $item->stok_masuk);
             $sheet->setCellValue('I' . $row, $item->total_discount);
-            $sheet->setCellValue('J' . $row, $item->kuantiti_bonus); # KOLOM LAIN LAIN GAADA
+            $sheet->setCellValue('J' . $row, $item->kuantiti_bonus);
             $sheet->setCellValue('K' . $row, $item->kuantiti_bonus);
             $sheet->setCellValue('L' . $row, $item->harga_satuan_penerimaan);
             $sheet->setCellValue('M' . $row, $item->nilai_pembelian);
@@ -119,21 +124,38 @@ class ExportInventoryReport implements WithTitle, WithStyles
             $sheet->setCellValue('O' . $row, $item->keterangan);
             $sheet->setCellValue('P' . $row, $item->harga_pokok_di_endira);
             $sheet->setCellValue('Q' . $row, $item->penjualan);
-            $sheet->setCellValue('R' . $row, $item->nilai_saldo_akhir); # KOLOM LAIN LAIN GAADA
+            $sheet->setCellValue('R' . $row, $item->nilai_saldo_akhir);
             $sheet->setCellValue('S' . $row, $item->qty_retur_jual);
             $sheet->setCellValue('T' . $row, $item->saldo_akhir);
             $sheet->setCellValue('U' . $row, $item->nilai_saldo_akhir);
+
             $row++;
         }
 
         // Style data
-        $lastRow = count($this->data->data->table) + 9;
+        $lastRow = count($this->data->data) + 9;
         $sheet->getStyle('A10:U' . $lastRow)->getBorders()
             ->getAllBorders()
             ->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
         $sheet->getStyle('A10:U' . $lastRow)->getAlignment()
             ->setHorizontal('center')
             ->setVertical('center');
+
+        $sheet->getStyle('A' . $lastRow . ':U' . $lastRow)->applyFromArray([
+            'font' => [
+                'bold' => true,
+                'size' => 12, // Bisa disesuaikan agar lebih tebal
+                'color' => ['rgb' => '000000'], // Warna teks hitam
+            ],
+            'fill' => [
+                'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
+                'startColor' => ['rgb' => 'FFFF00'], // Warna kuning
+            ],
+            'alignment' => [
+                'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+                'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+            ],
+        ]);
 
         // Auto-size columns
         foreach (range('A', 'U') as $columnID) {
