@@ -110,7 +110,7 @@ NPWP: 01.555.161.7.428.000</textarea>
                                         </td>
                                         <td>
                                             <p class="fw-bold">
-                                                Rp.{{ number_format($item->total_harga_per_item, 2, ',', '.') }}</p>
+                                                Rp.{{ number_format($item->total_keseluruhan, 2, ',', '.') }}</p>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -123,8 +123,24 @@ NPWP: 01.555.161.7.428.000</textarea>
                             </tbody>
                         </table>
                         <div class="row">
-                            <div class="col-md-12 text-end">
-                                <a href="/return_penjualan" class="btn btn-secondary ms-2">Batal</a>
+                            <div class="col-md-12 d-flex justify-content-end align-items-center gap-2 mt-3">
+                                <form id="approve{{ $data->data[0]->sales_invoice_id }}" method="POST"
+                                    action="{{ route('return_penjualan.approve', $data->data[0]->sales_invoice_id) }}">
+                                    @csrf
+                                    @method('PUT')
+                                    <button type="button" class="btn btn-primary"
+                                        onclick="confirmApprove('{{ $data->data[0]->sales_invoice_id }}')">Approve</button>
+                                </form>
+
+                                <form id="reject{{ $data->data[0]->sales_invoice_id }}" method="POST"
+                                    action="{{ route('return_penjualan.reject', $data->data[0]->sales_invoice_id) }}">
+                                    @csrf
+                                    @method('PUT')
+                                    <button type="button" class="btn btn-danger"
+                                        onclick="confirmReject('{{ $data->data[0]->sales_invoice_id }}')">Reject</button>
+                                </form>
+
+                                <a href="/return_penjualan" class="btn btn-secondary">Batal</a>
                             </div>
                         </div>
                     </div>

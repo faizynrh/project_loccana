@@ -304,8 +304,14 @@ Route::middleware('auth.login')->group(
         Route::prefix('/return_penjualan')->name('return_penjualan.')->group(function () {
             Route::get('/', [ReturnPenjualanController::class, 'index'])->name('index');
             Route::get('/ajax', [ReturnPenjualanController::class, 'ajax'])->name('ajax');
+            Route::get('/add', [ReturnPenjualanController::class, 'create'])->name('create');
+            Route::get('/detail/{id}', [ReturnPenjualanController::class, 'show'])->name('detail');
             Route::get('/edit/{id}', [ReturnPenjualanController::class, 'edit'])->name('edit');
             Route::put('/update/{id}', [ReturnPenjualanController::class, 'update'])->name('update');
+            Route::delete('/delete/{id}', [ReturnPenjualanController::class, 'destroy'])->name('destroy');
+            Route::get('/approve/{id}', [ReturnPenjualanController::class, 'detail_approve'])->name('detail_approve');
+            Route::put('/approve/{id}', [ReturnPenjualanController::class, 'approve'])->name('approve');
+            Route::put('/reject/{id}', [ReturnPenjualanController::class, 'reject'])->name('reject');
         });
     }
 
