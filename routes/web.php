@@ -21,6 +21,8 @@ use App\Http\Controllers\procurement\InvoiceController;
 use App\Http\Controllers\procurement\RekapPOController;
 use App\Http\Controllers\masterdata\PrincipalController;
 use App\Http\Controllers\penjualan\RangePriceController;
+use App\Http\Controllers\penjualan\ReturnController as PenjualanReturnController;
+use App\Http\Controllers\penjualan\ReturnPenjualanController;
 use App\Http\Controllers\procurement\PurchaseOrderController;
 use App\Http\Controllers\procurement\DasarPembelianController;
 use App\Http\Controllers\procurement\PenerimaanBarangController;
@@ -62,7 +64,7 @@ Route::middleware('auth.login')->group(
 
 
         // ==========================================MASTERDATA========================================
-    
+
         // ITEM
         Route::prefix('/item')->name('item.')->group(function () {
             Route::get('/', [ItemController::class, 'index'])->name('index');
@@ -162,7 +164,7 @@ Route::middleware('auth.login')->group(
         });
 
         // ===================================== PROCUREMENT =========================================
-    
+
         // PENERIMAAN BARANG
         Route::prefix('/penerimaan_barang')->name('penerimaan_barang.')->group(function () {
             Route::get('/', [PenerimaanBarangController::class, 'index'])->name('index');
@@ -220,7 +222,7 @@ Route::middleware('auth.login')->group(
             Route::delete('/delete/{id}', [InvoiceController::class, 'destroy'])->name('destroy');
         });
 
-        Route::prefix('/return')->name('return.')->group(function () {
+        Route::prefix('/return_pembelian')->name('return_pembelian.')->group(function () {
             Route::get('/', [ReturnController::class, 'index'])->name('index');
             Route::get('/ajax', [ReturnController::class, 'ajax'])->name('ajax');
             Route::get('/detailadd/{id}', [ReturnController::class, 'detailadd'])->name('detailadd');
@@ -240,7 +242,7 @@ Route::middleware('auth.login')->group(
 
 
         // ===================================== INVENTORY =========================================
-    
+
         Route::prefix('/stock')->name('stock.')->group(function () {
             Route::get('/', [StockController::class, 'index'])->name('index');
             Route::get('/ajax', [StockController::class, 'ajax'])->name('ajax');
@@ -285,7 +287,7 @@ Route::middleware('auth.login')->group(
 
 
         // ===================================== PENJUALAN =========================================
-    
+
         Route::prefix('/penjualan')->name('penjualan.')->group(function () {
             Route::get('/', [PenjualanController::class, 'index'])->name('index');
             Route::get('/ajax', [PenjualanController::class, 'ajaxselling'])->name('ajax');
@@ -296,6 +298,13 @@ Route::middleware('auth.login')->group(
             Route::get('/ajax', [RangePriceController::class, 'ajax'])->name('ajax');
             Route::get('/edit/{id}', [RangePriceController::class, 'edit'])->name('edit');
             Route::put('/update/{id}', [RangePriceController::class, 'update'])->name('update');
+        });
+
+        Route::prefix('/return_penjualan')->name('return_penjualan.')->group(function () {
+            Route::get('/', [ReturnPenjualanController::class, 'index'])->name('index');
+            Route::get('/ajax', [ReturnPenjualanController::class, 'ajax'])->name('ajax');
+            Route::get('/edit/{id}', [ReturnPenjualanController::class, 'edit'])->name('edit');
+            Route::put('/update/{id}', [ReturnPenjualanController::class, 'update'])->name('update');
         });
     }
 

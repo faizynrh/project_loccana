@@ -9,7 +9,7 @@
             <div class="page-title">
                 <div class="row">
                     <div class="col-12 col-md-6 order-md-1 order-last">
-                        <h3>Return Management</h3>
+                        <h3>Return Pembelian Management</h3>
                     </div>
                     <div class="col-12 col-md-6 order-md-2 order-first">
                         <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
@@ -18,7 +18,7 @@
                                     <a href="/dashboard">Dashboard</a>
                                 </li>
                                 <li class="breadcrumb-item active" aria-current="page">
-                                    Return Management
+                                    Return Pembelian Management
                                 </li>
                             </ol>
                         </nav>
@@ -30,7 +30,7 @@
                     <div class="card-header">
                         <div class="d-flex justify-content-between align-items-center">
                             <div class="d-flex align-items-center">
-                                <a href="/return/add" class="btn btn-primary me-2 fw-bold">+ Tambah Return</a>
+                                <a href="/return_pembelian/add" class="btn btn-primary me-2 fw-bold">+ Tambah Return</a>
                                 <select id="yearSelect" class="form-select me-2" name="year" style="width: auto;">
                                     @php
                                         $currentYear = Carbon\Carbon::now()->year;
@@ -90,7 +90,7 @@
                     serverSide: true,
                     processing: true,
                     ajax: {
-                        url: '{{ route('return.ajax') }}',
+                        url: '{{ route('return_pembelian.ajax') }}',
                         type: 'GET',
                         data: function(d) {
                             d.month = lastMonth;
@@ -117,13 +117,13 @@
                             render: function(data, type, row) {
                                 return `
                                 <div class="d-flex">
-                                    <a href="/return/detail/${row.id_return}" class="btn btn-sm btn-info mb-2" style="margin-right:4px;" title="Detail">
+                                    <a href="/return_pembelian/detail/${row.id_return}" class="btn btn-sm btn-info mb-2" style="margin-right:4px;" title="Detail">
                                         <i class="bi bi-eye"></i>
                                     </a>
-                                    <a href="/return/edit/${row.id_return}" class="btn btn-sm btn-warning mb-2" style="margin-right:4px;" title="Edit">
+                                    <a href="/return_pembelian/edit/${row.id_return}" class="btn btn-sm btn-warning mb-2" style="margin-right:4px;" title="Edit">
                                         <i class="bi bi-pencil"></i>
                                     </a>
-                                    <form action="/return/delete/${row.id_return}" method="POST" id="delete${row.id_return}" style="display:inline;">
+                                    <form action="/return_pembelian/delete/${row.id_return}" method="POST" id="delete${row.id_return}" style="display:inline;">
                                         @csrf
                                         @method('DELETE')
                                         <button type="button" class="btn btn-sm btn-danger mb-2" style="margin-right:4px;" title="Hapus" onclick="confirmDelete(${row.id_return})">

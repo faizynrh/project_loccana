@@ -124,7 +124,7 @@ class ReturnController extends Controller
             ];
             $apiResponse = storeApi(env('RETURN_URL'), $data);
             if ($apiResponse->successful()) {
-                return redirect()->route('return.index')
+                return redirect()->route('return_pembelian.index')
                     ->with('success', $apiResponse->json()['message']);
             } else {
                 return back()->withErrors($apiResponse->json()['message']);
@@ -178,7 +178,7 @@ class ReturnController extends Controller
             ];
             $apiResponse = updateApi(env('RETURN_URL') . '/' . $id, $data);
             if ($apiResponse->successful()) {
-                return redirect()->route('return.index')->with('success', $apiResponse->json()['message']);
+                return redirect()->route('return_pembelian.index')->with('success', $apiResponse->json()['message']);
             } else {
                 return back()->withErrors($apiResponse->json()['message']);
             }
@@ -192,7 +192,7 @@ class ReturnController extends Controller
         try {
             $apiResponse = deleteApi(env('RETURN_URL') . '/' . $id);
             if ($apiResponse->successful()) {
-                return redirect()->route('return.index')->with('success', $apiResponse->json()['message']);
+                return redirect()->route('return_pembelian.index')->with('success', $apiResponse->json()['message']);
             } else {
                 return back()->withErrors($apiResponse->json()['message']);
             }

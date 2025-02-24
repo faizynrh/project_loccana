@@ -16,7 +16,7 @@
                         <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item">
-                                    <a href="index.html">Dashboard</a>
+                                    <a href="/return_pembelian">Dashboard</a>
                                 </li>
                                 <li class="breadcrumb-item active" aria-current="page">
                                     Tambah Return Pembelian
@@ -30,7 +30,7 @@
                 <div class="card">
                     <div class="card-body">
                         @include('alert.alert')
-                        <form action="{{ route('return.store') }}" method="POST" id="createForm">
+                        <form action="{{ route('return_pembelian.store') }}" method="POST" id="createForm">
                             @csrf
                             <div class="row mb-3">
                                 <div class="col-md-6">
@@ -132,7 +132,8 @@
                             <div class="row">
                                 <div class="col-md-12 text-end">
                                     <button type="submit" class="btn btn-primary" id="submitButton">Simpan</button>
-                                    <a href="{{ route('invoice.index') }}" class="btn btn-secondary ms-2">Batal</a>
+                                    <a href="{{ route('return_pembelian.index') }}"
+                                        class="btn btn-secondary ms-2">Batal</a>
                                 </div>
                             </div>
                         </form>
@@ -149,7 +150,7 @@
 
             $('#no_invoice').on('change', function() {
                 const id = $(this).val();
-                const url = '{{ route('return.detailadd', ':id') }}'.replace(':id', id);
+                const url = '{{ route('return_pembelian.detailadd', ':id') }}'.replace(':id', id);
 
                 if (id) {
                     $('#loading-overlay').fadeIn();
