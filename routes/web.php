@@ -26,6 +26,7 @@ use App\Http\Controllers\penjualan\ReturnPenjualanController;
 use App\Http\Controllers\procurement\PurchaseOrderController;
 use App\Http\Controllers\procurement\DasarPembelianController;
 use App\Http\Controllers\procurement\PenerimaanBarangController;
+use App\Http\Controllers\procurement\ReturnPembelianController;
 
 /*
 |--------------------------------------------------------------------------
@@ -223,15 +224,15 @@ Route::middleware('auth.login')->group(
         });
 
         Route::prefix('/return_pembelian')->name('return_pembelian.')->group(function () {
-            Route::get('/', [ReturnController::class, 'index'])->name('index');
-            Route::get('/ajax', [ReturnController::class, 'ajax'])->name('ajax');
-            Route::get('/detailadd/{id}', [ReturnController::class, 'detailadd'])->name('detailadd');
-            Route::get('/add', [ReturnController::class, 'create'])->name('create');
-            Route::post('/add', [ReturnController::class, 'store'])->name('store');
-            Route::get('/edit/{id}', [ReturnController::class, 'edit'])->name('edit');
-            Route::put('/update/{id}', [ReturnController::class, 'update'])->name('update');
-            Route::get('/detail/{id}', [ReturnController::class, 'show'])->name('detail');
-            Route::delete('/delete/{id}', [ReturnController::class, 'destroy'])->name('destroy');
+            Route::get('/', [ReturnPembelianController::class, 'index'])->name('index');
+            Route::get('/ajax', [ReturnPembelianController::class, 'ajax'])->name('ajax');
+            Route::get('/detailadd/{id}', [ReturnPembelianController::class, 'detailadd'])->name('detailadd');
+            Route::get('/add', [ReturnPembelianController::class, 'create'])->name('create');
+            Route::post('/add', [ReturnPembelianController::class, 'store'])->name('store');
+            Route::get('/edit/{id}', [ReturnPembelianController::class, 'edit'])->name('edit');
+            Route::put('/update/{id}', [ReturnPembelianController::class, 'update'])->name('update');
+            Route::get('/detail/{id}', [ReturnPembelianController::class, 'show'])->name('detail');
+            Route::delete('/delete/{id}', [ReturnPembelianController::class, 'destroy'])->name('destroy');
         });
 
         Route::prefix('/report_pembelian')->name('report_pembelian.')->group(function () {

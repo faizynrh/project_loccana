@@ -5,7 +5,7 @@ namespace App\Http\Controllers\procurement;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-class ReturnController extends Controller
+class ReturnPembelianController extends Controller
 {
     public function ajax(Request $request)
     {
