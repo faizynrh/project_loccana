@@ -132,6 +132,7 @@
                 const $button = $(this);
 
                 $('#loading-overlay').fadeIn();
+                $button.prop('disabled', true).html('<i class="bi bi-hourglass-split"></i>');
 
                 $.ajax({
                     url: url,
@@ -152,6 +153,7 @@
                     },
                     complete: function() {
                         $('#loading-overlay').fadeOut();
+                        $button.prop('disabled', false).html('<i class="bi bi-pencil"></i>');
                     }
                 });
             });
