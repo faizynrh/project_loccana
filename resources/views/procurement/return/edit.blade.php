@@ -10,7 +10,7 @@
             <div class="page-title">
                 <div class="row">
                     <div class="col-12 col-md-6 order-md-1 order-last">
-                        <h3>Detail Return Pembelian</h3>
+                        <h3>Edit Return Pembelian</h3>
                     </div>
                     <div class="col-12 col-md-6 order-md-2 order-first">
                         <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
@@ -19,7 +19,7 @@
                                     <a href="index.html">Dashboard</a>
                                 </li>
                                 <li class="breadcrumb-item active" aria-current="page">
-                                    Detail Return Pembelian
+                                    Edit Return Pembelian
                                 </li>
                             </ol>
                         </nav>
@@ -30,7 +30,7 @@
                 <div class="card">
                     <div class="card-body">
                         @include('alert.alert')
-                        <form action="{{ route('return.update', $data->data[0]->id_return) }}" method="POST"
+                        <form action="{{ route('return_pembelian.update', $data->data[0]->id_return) }}" method="POST"
                             id="createForm">
                             @csrf
                             @method('PUT')
@@ -177,7 +177,8 @@
                             <div class="row">
                                 <div class="col-md-12 text-end">
                                     <button type="submit" class="btn btn-primary" id="submitButton">Simpan</button>
-                                    <a href="{{ route('return.index') }}" class="btn btn-secondary ms-2">Back</a>
+                                    <a href="{{ route('return_pembelian.index') }}"
+                                        class="btn btn-secondary ms-2">Back</a>
                                 </div>
                             </div>
                         </form>

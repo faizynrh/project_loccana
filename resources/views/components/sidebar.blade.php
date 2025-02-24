@@ -56,7 +56,7 @@
                     </ul>
                 </li>
                 <li
-                    class="sidebar-item has-sub {{ Request::is('penerimaan_barang*') || Request::is('purchase_order*') || Request::is('dasar_pembelian*') || Request::is('rekap_po*') || Request::is('invoice*') || Request::is('return*') || Request::is('report_pembelian*') ? 'active' : '' }}">
+                    class="sidebar-item has-sub {{ Request::is('penerimaan_barang*') || Request::is('purchase_order*') || Request::is('dasar_pembelian*') || Request::is('rekap_po*') || Request::is('invoice*') || Request::is('return_pembelian*') || Request::is('report_pembelian*') ? 'active' : '' }}">
                     <a href="#" class="sidebar-link">
                         <i class="bi bi-truck"></i>
                         <span>Procurement</span>
@@ -77,8 +77,8 @@
                         <li class="submenu-item {{ Request::is('rekap_*') ? 'active' : '' }}">
                             <a href="/rekap_po" class="submenu-link">Rekap PO</a>
                         </li>
-                        <li class="submenu-item {{ Request::is('return*') ? 'active' : '' }}">
-                            <a href="/return" class="submenu-link">Return</a>
+                        <li class="submenu-item {{ Request::is('return_pembelian*') ? 'active' : '' }}">
+                            <a href="/return_pembelian" class="submenu-link">Return</a>
                         </li>
                         <li class="submenu-item {{ Request::is('report_pembelian*') ? 'active' : '' }}">
                             <a href="/report_pembelian" class="submenu-link">Report</a>
@@ -109,7 +109,8 @@
                         </li>
                     </ul>
                 </li>
-                <li class="sidebar-item has-sub">
+                <li
+                    class="sidebar-item has-sub {{ Request::is('range_price*') || Request::is('return_penjualan*') ? 'active' : '' }}">
                     <a href="#" class="sidebar-link">
                         <i class="bi bi-cart-fill"></i>
                         <span>Penjualan</span>
@@ -118,11 +119,11 @@
                         <li class="submenu-item {{ Request::is('purchase_order*') ? 'active' : '' }}">
                             <a href="/penjualan" class="submenu-link">Penjualan</a>
                         </li>
-                        <li class="submenu-item">
-                            <a href="#" class="submenu-link">Range In Price</a>
+                        <li class="submenu-item {{ Request::is('range_price*') ? 'active' : '' }}">
+                            <a href="/range_price" class="submenu-link">Range Price Management</a>
                         </li>
-                        <li class="submenu-item">
-                            <a href="#" class="submenu-link">Retur</a>
+                        <li class="submenu-item {{ Request::is('return_penjualan*') ? 'active' : '' }}">
+                            <a href="/return_penjualan" class="submenu-link">Retur</a>
                         </li>
                         <li class="submenu-item">
                             <a href="#" class="submenu-link">Dasar Penjualan</a>
