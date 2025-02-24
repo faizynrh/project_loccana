@@ -18,10 +18,8 @@ class ReportController extends Controller
             $end_date = $request->input('end_date', 0);
             $length = $request->input('length', 10);
             $start = $request->input('start', 0);
-            $search = $request->input('search.value') ?? '';
 
             $requestbody = [
-                // 'search' => $search,
                 'partner_id' => $partner_id,
                 'start_date' => $start_date,
                 'end_date' => $end_date,
@@ -33,10 +31,7 @@ class ReportController extends Controller
             if ($apiResponse->successful()) {
                 $data = $apiResponse->json();
                 return response()->json([
-                    'draw' => $request->input('draw'),
-                    'recordsTotal' => $data['data']['jumlah_filter'] ?? 0,
-                    'recordsFiltered' => $data['data']['jumlah'] ?? 0,
-                    'data' => $data['data']['table'] ?? [],
+                    'data' => $data['data'],
                 ]);
             }
             return response()->json([
