@@ -1,9 +1,7 @@
 <?php
 
-use App\Http\Controllers\penjualan\Controller;
 use App\Http\Controllers\penjualan\PenjualanController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ExportController;
 use App\Http\Controllers\masterdata\CoaController;
 use App\Http\Controllers\masterdata\UomController;
 use App\Http\Controllers\masterdata\ItemController;
@@ -22,6 +20,7 @@ use App\Http\Controllers\masterdata\CustomerController;
 use App\Http\Controllers\procurement\InvoiceController;
 use App\Http\Controllers\procurement\RekapPOController;
 use App\Http\Controllers\masterdata\PrincipalController;
+use App\Http\Controllers\penjualan\RangePriceController;
 use App\Http\Controllers\procurement\PurchaseOrderController;
 use App\Http\Controllers\procurement\DasarPembelianController;
 use App\Http\Controllers\procurement\PenerimaanBarangController;
@@ -289,6 +288,13 @@ Route::middleware('auth.login')->group(
 
         Route::prefix('/penjualan')->name('penjualan.')->group(function () {
             Route::get('/', [PenjualanController::class, 'index'])->name('index');
+        });
+
+        Route::prefix('/range_price')->name('range_price.')->group(function () {
+            Route::get('/', [RangePriceController::class, 'index'])->name('index');
+            Route::get('/ajax', [RangePriceController::class, 'ajax'])->name('ajax');
+            Route::get('/edit/{id}', [RangePriceController::class, 'edit'])->name('edit');
+            Route::put('/update/{id}', [RangePriceController::class, 'update'])->name('update');
         });
     }
 

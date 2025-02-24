@@ -109,7 +109,7 @@
                         </li>
                     </ul>
                 </li>
-                <li class="sidebar-item has-sub">
+                <li class="sidebar-item has-sub {{ Request::is('range_price*') ? 'active' : '' }}">
                     <a href="#" class="sidebar-link">
                         <i class="bi bi-cart-fill"></i>
                         <span>Penjualan</span>
@@ -118,8 +118,8 @@
                         <li class="submenu-item {{ Request::is('purchase_order*') ? 'active' : '' }}">
                             <a href="/penjualan" class="submenu-link">Penjualan</a>
                         </li>
-                        <li class="submenu-item">
-                            <a href="#" class="submenu-link">Range In Price</a>
+                        <li class="submenu-item {{ Request::is('range_price*') ? 'active' : '' }}">
+                            <a href="/range_price" class="submenu-link">Range Price Management</a>
                         </li>
                         <li class="submenu-item">
                             <a href="#" class="submenu-link">Retur</a>
