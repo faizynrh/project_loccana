@@ -294,6 +294,8 @@ Route::middleware('auth.login')->group(
             Route::get('/ajax', [PenjualanController::class, 'ajaxselling'])->name('ajax');
             Route::get('/add', [PenjualanController::class, 'create'])->name('create');
             Route::post('/add', [PenjualanController::class, 'store'])->name('store');
+            Route::get('/getItemsList/{id}', [PenjualanController::class, 'getItemsList'])->name('getitem');
+            // Route::get('/getgudang/{id}', [PenjualanController::class, 'getGudang'])->name('getgudang');
         });
 
         Route::prefix('/range_price')->name('range_price.')->group(function () {

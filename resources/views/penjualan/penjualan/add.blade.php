@@ -85,9 +85,10 @@
                                         <option value="45 Hari">45 Hari</option>
                                         <option value="60 Hari">60 Hari</option>
                                         <option value="90 Hari">90 Hari</option>
-                                        <option value="">Lainnya</option>
+                                        <option value="lainnya">Lainnya</option>
                                     </select>
-
+                                    <input type="text" class="form-control mt-2 hidden" id="custom_payment_term"
+                                        placeholder="Masukkan jumlah hari">
 
 
                                 </div>
@@ -210,9 +211,48 @@
 @push('scripts')
     <script>
         $(document).ready(function() {
+            $('#pembayaran').on('change', function() {
+                const selectedValue = $(this).val();
+                const customInput = $('#custom_payment_term');
+
+                if (selectedValue === 'lainnya') {
+                    customInput.removeClass('hidden');
+                    $(this).attr('name', '');
+                    customInput.attr('name', 'term_of_payment');
+                    customInput.prop('required', true);
+                } else {
+                    customInput.addClass('hidden');
+                    $(this).attr('name', 'term_of_payment');
+                    customInput.attr('name', '');
+                    customInput.prop('required', false);
+                }
+            });
+
+            $('#custom_payment_term').on('input', function() {
+                let value = $(this).val();
+                // Remove any non-numeric characters
+                value = value.replace(/[^\d]/g, '');
+                if (value) {
+                    $(this).val(value);
+                }
+            });
+
+            $('#custom_payment_term').on('blur', function() {
+                let value = $(this).val();
+                if (value) {
+                    $(this).val(value + ' Hari');
+                }
+            });
+
+            $('#custom_payment_term').on('focus', function() {
+                let value = $(this).val();
+                // Remove "Hari" when focusing on the input
+                value = value.replace(' Hari', '');
+                $(this).val(value);
+            });
             $('#partner_id').on('change', function() {
                 var poId = $(this).val();
-                console.log('Selected poId:', poId);
+                // console.log('Selected poId:', poId);
 
                 if (poId) {
                     var companyId = 2;

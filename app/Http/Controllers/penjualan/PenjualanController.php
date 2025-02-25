@@ -124,6 +124,39 @@ class PenjualanController extends Controller
         }
 
     }
+    // protected function getgudang($company_id)
+    // {
+    //     $apiUrl = env('LIST_GUDANG');
+    //     $response = storeApi($apiUrl, ['company_id' => $company_id]);
+
+    //     if ($response->successful()) {
+    //         $warehouses = $response->json()['data'] ?? [];
+
+    //         return response()->json([
+    //             'success' => true,
+    //             'data' => $warehouses
+    //         ]);
+    //     }
+
+    //     return response()->json([
+    //         'success' => false,
+    //         'data' => []
+    //     ]);
+    // }
+    protected function getItemsList($company_id)
+    {
+        $apiUrl = env('LIST_ITEMS');
+        $response = storeApi($apiUrl, ['company_id' => $company_id]);
+
+        if ($response->successful()) {
+            $items = $response->json()['data']['items'] ?? [];
+            $unit_of_measure_id = $response->json()['data']['unit_of_measure_id'] ?? [];
+            $sku = $response->json()['data']['sku'] ?? [];
+            return response()->json(['items' => $items, 'unit_of_measure_id' => $unit_of_measure_id, 'sku' => $sku]);
+        }
+
+        return response()->json(['items' => [], 'unit_of_measure_id' => []]);
+    }
 
     /**
      * Store a newly created resource in storage.

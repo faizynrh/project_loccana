@@ -79,6 +79,7 @@
                                             '45 Hari' => '45 Hari',
                                             '60 Hari' => '60 Hari',
                                             '90 Hari' => '90 Hari',
+                                            'lainnya' => 'Lainnya',
                                         ];
                                         $selectedTerm = $data->data[0]->term_of_payment ?? null;
                                     @endphp
@@ -90,6 +91,8 @@
                                             </option>
                                         @endforeach
                                     </select>
+                                    <input type="text" class="form-control mt-2 hidden" id="custom_payment_term"
+                                        placeholder="Masukkan jumlah hari">
 
 
                                     <label for="description" class="form-label fw-bold mt-2 mb-1 small">Keterangan</label>
@@ -247,6 +250,46 @@
 @push('scripts')
     <script>
         $(document).ready(function() {
+            // Handle custom payment term
+            $('#pembayaran').on('change', function() {
+                const selectedValue = $(this).val();
+                const customInput = $('#custom_payment_term');
+
+                if (selectedValue === 'lainnya') {
+                    customInput.removeClass('hidden');
+                    $(this).attr('name', '');
+                    customInput.attr('name', 'term_of_payment');
+                    customInput.prop('required', true);
+                } else {
+                    customInput.addClass('hidden');
+                    $(this).attr('name', 'term_of_payment');
+                    customInput.attr('name', '');
+                    customInput.prop('required', false);
+                }
+            });
+
+            $('#custom_payment_term').on('input', function() {
+                let value = $(this).val();
+                // Remove any non-numeric characters
+                value = value.replace(/[^\d]/g, '');
+                if (value) {
+                    $(this).val(value);
+                }
+            });
+
+            $('#custom_payment_term').on('blur', function() {
+                let value = $(this).val();
+                if (value) {
+                    $(this).val(value + ' Hari');
+                }
+            });
+
+            $('#custom_payment_term').on('focus', function() {
+                let value = $(this).val();
+                // Remove "Hari" when focusing on the input
+                value = value.replace(' Hari', '');
+                $(this).val(value);
+            });
             // Handle item select change to update UOM
             // $(document).on('change', '.form-select', function() {
             //     const uomId = $(this).find(':selected').data('uom');
