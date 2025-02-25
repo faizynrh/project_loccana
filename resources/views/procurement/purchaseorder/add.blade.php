@@ -232,10 +232,9 @@
                 value = value.replace(' Hari', '');
                 $(this).val(value);
             });
-
             $('#partner_id').on('change', function() {
                 var poId = $(this).val();
-                console.log('Selected poId:', poId);
+
 
                 if (poId) {
                     var companyId = 2;

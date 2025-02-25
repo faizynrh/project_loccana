@@ -182,7 +182,7 @@
                             let statusLabel = data;
 
                             if (data.toLowerCase() === 'konfirmasi') {
-                                statusClass = 'badge bg-warning';
+                                statusClass = 'btn btn-warning btn-sm';
                                 statusLabel = `<a href="/purchase_order/approve/${row.id}" class="text-dark text-decoration-none" title="Klik untuk Approve">
                                 <span class="${statusClass}">${data}</span>
                            </a>`;
