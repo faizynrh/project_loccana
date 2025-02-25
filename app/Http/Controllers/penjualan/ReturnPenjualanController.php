@@ -140,7 +140,6 @@ class ReturnPenjualanController extends Controller
 
             if ($apiResponse->successful()) {
                 $data = json_decode($apiResponse->body());
-                dd($data);
                 return view('penjualan.returnpenjualan.detail', compact('data'));
             } else {
                 return back()->withErrors($apiResponse->json()['message']);
