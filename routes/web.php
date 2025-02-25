@@ -103,15 +103,15 @@ Route::middleware('auth.login')->group(
         // UOM
         Route::prefix('/uom')->name('uom.')->group(
             function () {
-            Route::get('/', [UomController::class, 'index'])->name('index');
-            Route::get('/ajax', [UomController::class, 'ajaxuom'])->name('ajax');
-            Route::get('/add', [UomController::class, 'create'])->name('create');
-            Route::post('/add', [UomController::class, 'store'])->name('store');
-            Route::delete('/delete/{id}', [UomController::class, 'destroy'])->name('destroy');
-            Route::get('/edit/{id}', [UomController::class, 'edit'])->name('edit');
-            Route::put('/update/{id}', [UomController::class, 'update'])->name('update');
-            Route::get('/detail/{id}', [UomController::class, 'show'])->name('show');
-        }
+                Route::get('/', [UomController::class, 'index'])->name('index');
+                Route::get('/ajax', [UomController::class, 'ajaxuom'])->name('ajax');
+                Route::get('/add', [UomController::class, 'create'])->name('create');
+                Route::post('/add', [UomController::class, 'store'])->name('store');
+                Route::delete('/delete/{id}', [UomController::class, 'destroy'])->name('destroy');
+                Route::get('/edit/{id}', [UomController::class, 'edit'])->name('edit');
+                Route::put('/update/{id}', [UomController::class, 'update'])->name('update');
+                Route::get('/detail/{id}', [UomController::class, 'show'])->name('show');
+            }
         );
 
 
@@ -294,7 +294,6 @@ Route::middleware('auth.login')->group(
             Route::get('/ajax', [PenjualanController::class, 'ajaxselling'])->name('ajax');
             Route::get('/add', [PenjualanController::class, 'create'])->name('create');
             Route::post('/add', [PenjualanController::class, 'store'])->name('store');
-
         });
 
         Route::prefix('/range_price')->name('range_price.')->group(function () {
@@ -308,6 +307,8 @@ Route::middleware('auth.login')->group(
             Route::get('/', [ReturnPenjualanController::class, 'index'])->name('index');
             Route::get('/ajax', [ReturnPenjualanController::class, 'ajax'])->name('ajax');
             Route::get('/add', [ReturnPenjualanController::class, 'create'])->name('create');
+            Route::get('/detail_invoice/{id}', [ReturnPenjualanController::class, 'getinvoiceDetails'])->name('getinvoiceDetails');
+            Route::post('/store', [ReturnPenjualanController::class, 'store'])->name('store');
             Route::get('/detail/{id}', [ReturnPenjualanController::class, 'show'])->name('detail');
             Route::get('/edit/{id}', [ReturnPenjualanController::class, 'edit'])->name('edit');
             Route::put('/update/{id}', [ReturnPenjualanController::class, 'update'])->name('update');

@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\penjualan;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 
 class ReturnPenjualanController extends Controller
@@ -51,14 +50,87 @@ class ReturnPenjualanController extends Controller
     {
         return view('penjualan.returnpenjualan.index');
     }
+
+    public function getinvoiceDetails(Request $request, $id)
+    {
+        try {
+            $apiResponse = fectApi(env('INVOICE_PENJUALAN_URL') . '/' . $id);
+            // dd($apiResponse->json());
+            $items = [];
+            if ($apiResponse->successful()) {
+                $data = json_decode($apiResponse->body());
+                $items = [];
+                foreach ($data->data as $item) {
+                    $items[] = [
+                        'item_id' => $item->item_id,
+                        'sales_order_detail_id' => $item->sales_order_detail_id,
+                        'item_code' => $item->item_code,
+                        'item_name' => $item->item_name,
+                        'quantity' => $item->quantity,
+                        'unit_price' => $item->unit_price,
+                        'total_price' => $item->total_price,
+                    ];
+                }
+                return response()->json([
+                    'sales_invoice_id' => $data->data[0]->invoice_id,
+                    'order_date' => $data->data[0]->order_date,
+                    'partner_name' => $data->data[0]->partner_name,
+                    'att' => $data->data[0]->description_sales_order,
+                    'contact_info' => $data->data[0]->contact_info,
+                    'term_of_payment' => $data->data[0]->term_of_payment,
+                    'invoice_notes' => $data->data[0]->invoice_notes,
+                    'total_amount' => $data->data[0]->total_amount,
+                    'items' => $items
+                ]);
+            }
+            return response()->json(['error' => $apiResponse->json()['message']]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()]);
+        }
+    }
     public function create()
     {
-        return view('penjualan.returnpenjualan.add');
+        $company_id = 2;
+        $invoiceResponse = fectApi(env('LIST_INVOICE_PENJUALAN') . '/' . $company_id);
+        if ($invoiceResponse->successful()) {
+            $data = json_decode($invoiceResponse->body());
+            // dd($data);
+            return view('penjualan.returnpenjualan.add', compact('data'));
+        } else {
+            return back()->withErrors($invoiceResponse->json()['message']);
+        }
     }
 
     public function store(Request $request)
     {
-        //
+        try {
+            $items = [];
+            if ($request->has('items')) {
+                foreach ($request->items as $item) {
+                    $items[] = [
+                        'sales_order_detail_id' => $item['sales_order_detail_id'],
+                        'quantity' => $item['qty_retur'],
+                        'notes' => $item['notes_item'],
+                    ];
+                }
+            }
+
+            $data = [
+                'sales_invoice_id' => $request->sales_invoice_id,
+                'return_date' => $request->return_date,
+                'notes' => $request->notes_return,
+                'items' => $items
+            ];
+
+            $apiResponse = storeApi(env('RETURN_PENJUALAN_URL'), $data);
+            if ($apiResponse->successful()) {
+                return redirect()->route('return_penjualan.index')->with('success', $apiResponse->json()['message']);
+            } else {
+                return back()->withErrors($apiResponse->json()['message']);
+            }
+        } catch (\Exception $e) {
+            return back()->withErrors($e->getMessage());
+        }
     }
 
     public function show(string $id)
@@ -68,6 +140,7 @@ class ReturnPenjualanController extends Controller
 
             if ($apiResponse->successful()) {
                 $data = json_decode($apiResponse->body());
+                dd($data);
                 return view('penjualan.returnpenjualan.detail', compact('data'));
             } else {
                 return back()->withErrors($apiResponse->json()['message']);
@@ -108,7 +181,7 @@ class ReturnPenjualanController extends Controller
             }
             $data = [
                 'sales_invoice_id' => $request->sales_invoice_id,
-                'retrun_date' => $request->return_date,
+                'return_date' => $request->return_date,
                 'notes' => $request->notes,
                 'items' => $items,
             ];

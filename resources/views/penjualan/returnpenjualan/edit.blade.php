@@ -139,7 +139,7 @@ NPWP: 01.555.161.7.428.000</textarea>
                                         </tr>
                                     @endforeach
                                     <tr class="fw-bold">
-                                        <td colspan="6" class="text-end">Total Retur</td>
+                                        <td colspan="5" class="text-end">Total Retur</td>
                                         <td class="text-end total-retur">Rp.0,00</td>
                                     </tr>
                                 </tbody>
