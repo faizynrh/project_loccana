@@ -91,7 +91,7 @@ NPWP: 01.555.161.7.428.000</textarea>
                                 <thead>
                                     <tr style="border-bottom: 3px solid #000;">
                                         <th width="140px">Kode</th>
-                                        <th>Ukuran</th>
+                                        {{-- <th>Ukuran</th> --}}
                                         <th>Qty Retur</th>
                                         <th>Qty Order</th>
                                         <th>Harga</th>
@@ -107,11 +107,11 @@ NPWP: 01.555.161.7.428.000</textarea>
                                                     value="{{ $item->sales_order_detail }}">
                                                 <textarea type="text" class="form-control bg-body-secondary w-100" readonly rows="3">{{ $item->item_code }}</textarea>
                                             </td>
-                                            <td>
+                                            {{-- <td>
                                                 <input type="text" class="form-control bg-body-secondary"
                                                     name="unit_box[{{ $index }}]" id="qty_order"
                                                     value="{{ $item->unit_box }}" readonly>
-                                            </td>
+                                            </td> --}}
                                             <td>
                                                 <input type="number" class="form-control"
                                                     name="qty_return[{{ $index }}]" id="qty_return"
@@ -139,7 +139,7 @@ NPWP: 01.555.161.7.428.000</textarea>
                                         </tr>
                                     @endforeach
                                     <tr class="fw-bold">
-                                        <td colspan="6" class="text-end">Total Retur</td>
+                                        <td colspan="5" class="text-end">Total Retur</td>
                                         <td class="text-end total-retur">Rp.0,00</td>
                                     </tr>
                                 </tbody>

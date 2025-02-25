@@ -20,6 +20,7 @@ use App\Http\Controllers\masterdata\CustomerController;
 use App\Http\Controllers\procurement\InvoiceController;
 use App\Http\Controllers\procurement\RekapPOController;
 use App\Http\Controllers\masterdata\PrincipalController;
+use App\Http\Controllers\penjualan\InvoicePenjualanController;
 use App\Http\Controllers\penjualan\RangePriceController;
 use App\Http\Controllers\penjualan\ReturnController as PenjualanReturnController;
 use App\Http\Controllers\penjualan\ReturnPenjualanController;
@@ -65,7 +66,7 @@ Route::middleware('auth.login')->group(
 
 
         // ==========================================MASTERDATA========================================
-    
+
         // ITEM
         Route::prefix('/item')->name('item.')->group(function () {
             Route::get('/', [ItemController::class, 'index'])->name('index');
@@ -103,15 +104,15 @@ Route::middleware('auth.login')->group(
         // UOM
         Route::prefix('/uom')->name('uom.')->group(
             function () {
-            Route::get('/', [UomController::class, 'index'])->name('index');
-            Route::get('/ajax', [UomController::class, 'ajaxuom'])->name('ajax');
-            Route::get('/add', [UomController::class, 'create'])->name('create');
-            Route::post('/add', [UomController::class, 'store'])->name('store');
-            Route::delete('/delete/{id}', [UomController::class, 'destroy'])->name('destroy');
-            Route::get('/edit/{id}', [UomController::class, 'edit'])->name('edit');
-            Route::put('/update/{id}', [UomController::class, 'update'])->name('update');
-            Route::get('/detail/{id}', [UomController::class, 'show'])->name('show');
-        }
+                Route::get('/', [UomController::class, 'index'])->name('index');
+                Route::get('/ajax', [UomController::class, 'ajaxuom'])->name('ajax');
+                Route::get('/add', [UomController::class, 'create'])->name('create');
+                Route::post('/add', [UomController::class, 'store'])->name('store');
+                Route::delete('/delete/{id}', [UomController::class, 'destroy'])->name('destroy');
+                Route::get('/edit/{id}', [UomController::class, 'edit'])->name('edit');
+                Route::put('/update/{id}', [UomController::class, 'update'])->name('update');
+                Route::get('/detail/{id}', [UomController::class, 'show'])->name('show');
+            }
         );
 
 
@@ -165,7 +166,7 @@ Route::middleware('auth.login')->group(
         });
 
         // ===================================== PROCUREMENT =========================================
-    
+
         // PENERIMAAN BARANG
         Route::prefix('/penerimaan_barang')->name('penerimaan_barang.')->group(function () {
             Route::get('/', [PenerimaanBarangController::class, 'index'])->name('index');
@@ -200,17 +201,6 @@ Route::middleware('auth.login')->group(
             Route::get('/excel', [PurchaseOrderController::class, 'exportExcel'])->name('printexcel');
         });
 
-
-        Route::prefix('/dasar_pembelian')->name('dasar_pembelian.')->group(function () {
-            Route::get('/', [DasarPembelianController::class, 'index'])->name('index');
-            Route::get('/ajax', [DasarPembelianController::class, 'ajax'])->name('ajax');
-        });
-
-        Route::prefix('/rekap_po')->name('rekap_po.')->group(function () {
-            Route::get('/', [RekapPOController::class, 'index'])->name('index');
-            Route::get('/ajax', [RekapPOController::class, 'ajax'])->name('ajax');
-        });
-
         Route::prefix('/invoice')->name('invoice.')->group(function () {
             Route::get('/', [InvoiceController::class, 'index'])->name('index');
             Route::get('/ajax', [InvoiceController::class, 'ajax'])->name('ajax');
@@ -221,6 +211,16 @@ Route::middleware('auth.login')->group(
             Route::put('/update/{id}', [InvoiceController::class, 'update'])->name('update');
             Route::get('/detail/{id}', [InvoiceController::class, 'show'])->name('detail');
             Route::delete('/delete/{id}', [InvoiceController::class, 'destroy'])->name('destroy');
+        });
+
+        Route::prefix('/dasar_pembelian')->name('dasar_pembelian.')->group(function () {
+            Route::get('/', [DasarPembelianController::class, 'index'])->name('index');
+            Route::get('/ajax', [DasarPembelianController::class, 'ajax'])->name('ajax');
+        });
+
+        Route::prefix('/rekap_po')->name('rekap_po.')->group(function () {
+            Route::get('/', [RekapPOController::class, 'index'])->name('index');
+            Route::get('/ajax', [RekapPOController::class, 'ajax'])->name('ajax');
         });
 
         Route::prefix('/return_pembelian')->name('return_pembelian.')->group(function () {
@@ -243,7 +243,7 @@ Route::middleware('auth.login')->group(
 
 
         // ===================================== INVENTORY =========================================
-    
+
         Route::prefix('/stock')->name('stock.')->group(function () {
             Route::get('/', [StockController::class, 'index'])->name('index');
             Route::get('/ajax', [StockController::class, 'ajax'])->name('ajax');
@@ -288,7 +288,7 @@ Route::middleware('auth.login')->group(
 
 
         // ===================================== PENJUALAN =========================================
-    
+
         Route::prefix('/penjualan')->name('penjualan.')->group(function () {
             Route::get('/', [PenjualanController::class, 'index'])->name('index');
             Route::get('/ajax', [PenjualanController::class, 'ajaxselling'])->name('ajax');
@@ -310,6 +310,8 @@ Route::middleware('auth.login')->group(
             Route::get('/', [ReturnPenjualanController::class, 'index'])->name('index');
             Route::get('/ajax', [ReturnPenjualanController::class, 'ajax'])->name('ajax');
             Route::get('/add', [ReturnPenjualanController::class, 'create'])->name('create');
+            Route::get('/detail_invoice/{id}', [ReturnPenjualanController::class, 'getinvoiceDetails'])->name('getinvoiceDetails');
+            Route::post('/store', [ReturnPenjualanController::class, 'store'])->name('store');
             Route::get('/detail/{id}', [ReturnPenjualanController::class, 'show'])->name('detail');
             Route::get('/edit/{id}', [ReturnPenjualanController::class, 'edit'])->name('edit');
             Route::put('/update/{id}', [ReturnPenjualanController::class, 'update'])->name('update');
@@ -317,6 +319,16 @@ Route::middleware('auth.login')->group(
             Route::get('/approve/{id}', [ReturnPenjualanController::class, 'detail_approve'])->name('detail_approve');
             Route::put('/approve/{id}', [ReturnPenjualanController::class, 'approve'])->name('approve');
             Route::put('/reject/{id}', [ReturnPenjualanController::class, 'reject'])->name('reject');
+        });
+
+        Route::prefix('/invoice_penjualan')->name('invoice_penjualan.')->group(function () {
+            Route::get('/', [InvoicePenjualanController::class, 'index'])->name('index');
+            Route::get('/ajax', [InvoicePenjualanController::class, 'ajax'])->name('ajax');
+            Route::get('/detail_selling/{id}', [InvoicePenjualanController::class, 'getdetails'])->name('getdetails');
+            Route::get('/add', [InvoicePenjualanController::class, 'create'])->name('create');
+            Route::post('/store', [InvoicePenjualanController::class, 'store'])->name('store');
+            Route::get('/detail/{id}', [InvoicePenjualanController::class, 'show'])->name('detail');
+            Route::delete('/delete/{id}', [InvoicePenjualanController::class, 'destroy'])->name('destroy');
         });
     }
 

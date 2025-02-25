@@ -9,7 +9,7 @@
             <div class="page-title">
                 <div class="row">
                     <div class="col-12 col-md-6 order-md-1 order-last">
-                        <h3>Detail Retur Penjualan</h3>
+                        <h3>Approve Retur Penjualan</h3>
                     </div>
                     <div class="col-12 col-md-6 order-md-2 order-first">
                         <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
@@ -18,7 +18,7 @@
                                     <a href="/return_penjualan">Dashboard</a>
                                 </li>
                                 <li class="breadcrumb-item active" aria-current="page">
-                                    Detail Retur Penjualan
+                                    Approve Retur Penjualan
                                 </li>
                             </ol>
                         </nav>
@@ -129,17 +129,15 @@ NPWP: 01.555.161.7.428.000</textarea>
                                     @csrf
                                     @method('PUT')
                                     <button type="button" class="btn btn-primary"
-                                        onclick="confirmApprove('{{ $data->data[0]->sales_invoice_id }}')">Approve</button>
+                                        onclick="confirmApprove('{{ $data->data[0]->sales_invoice_id }}')">Setujui</button>
                                 </form>
-
                                 <form id="reject{{ $data->data[0]->sales_invoice_id }}" method="POST"
                                     action="{{ route('return_penjualan.reject', $data->data[0]->sales_invoice_id) }}">
                                     @csrf
                                     @method('PUT')
                                     <button type="button" class="btn btn-danger"
-                                        onclick="confirmReject('{{ $data->data[0]->sales_invoice_id }}')">Reject</button>
+                                        onclick="confirmReject('{{ $data->data[0]->sales_invoice_id }}')">Tolak</button>
                                 </form>
-
                                 <a href="/return_penjualan" class="btn btn-secondary">Batal</a>
                             </div>
                         </div>
