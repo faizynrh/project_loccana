@@ -161,7 +161,7 @@ NPWP: 01.555.161.7.428.000</textarea>
                                                                 <input type="hidden" name="items[${index}][sales_order_detail_id]" value="${item.sales_order_detail_id}">
                                                                 <textarea type="text" class="form-control w-100" name="items[${index}][item_code]" readonly rows="3">${item.item_code}</textarea>
                                                             </td>
-                                                            <td><input type="number" class="form-control qty_retur" name="items[${index}][qty_retur]" min="0" required></td>
+                                                            <td><input type="number" class="form-control qty_retur" name="items[${index}][qty_retur]" min="1" required></td>
                                                             <td><input type="number" class="form-control bg-body-secondary qty_order" name="items[${index}][qty_order]" value="${item.quantity}" readonly></td>
                                                             <td><input type="number" class="form-control bg-body-secondary unit_price" name="items[${index}][unit_price]" value="${item.unit_price}" readonly></td>
                                                             <td><input type="number" class="form-control bg-body-secondary total_price" name="items[${index}][total_price]" value="0" readonly></td>
