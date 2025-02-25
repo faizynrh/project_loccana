@@ -20,6 +20,7 @@ use App\Http\Controllers\masterdata\CustomerController;
 use App\Http\Controllers\procurement\InvoiceController;
 use App\Http\Controllers\procurement\RekapPOController;
 use App\Http\Controllers\masterdata\PrincipalController;
+use App\Http\Controllers\penjualan\InvoicePenjualanController;
 use App\Http\Controllers\penjualan\RangePriceController;
 use App\Http\Controllers\penjualan\ReturnController as PenjualanReturnController;
 use App\Http\Controllers\penjualan\ReturnPenjualanController;
@@ -200,17 +201,6 @@ Route::middleware('auth.login')->group(
             Route::get('/excel', [PurchaseOrderController::class, 'exportExcel'])->name('printexcel');
         });
 
-
-        Route::prefix('/dasar_pembelian')->name('dasar_pembelian.')->group(function () {
-            Route::get('/', [DasarPembelianController::class, 'index'])->name('index');
-            Route::get('/ajax', [DasarPembelianController::class, 'ajax'])->name('ajax');
-        });
-
-        Route::prefix('/rekap_po')->name('rekap_po.')->group(function () {
-            Route::get('/', [RekapPOController::class, 'index'])->name('index');
-            Route::get('/ajax', [RekapPOController::class, 'ajax'])->name('ajax');
-        });
-
         Route::prefix('/invoice')->name('invoice.')->group(function () {
             Route::get('/', [InvoiceController::class, 'index'])->name('index');
             Route::get('/ajax', [InvoiceController::class, 'ajax'])->name('ajax');
@@ -221,6 +211,16 @@ Route::middleware('auth.login')->group(
             Route::put('/update/{id}', [InvoiceController::class, 'update'])->name('update');
             Route::get('/detail/{id}', [InvoiceController::class, 'show'])->name('detail');
             Route::delete('/delete/{id}', [InvoiceController::class, 'destroy'])->name('destroy');
+        });
+
+        Route::prefix('/dasar_pembelian')->name('dasar_pembelian.')->group(function () {
+            Route::get('/', [DasarPembelianController::class, 'index'])->name('index');
+            Route::get('/ajax', [DasarPembelianController::class, 'ajax'])->name('ajax');
+        });
+
+        Route::prefix('/rekap_po')->name('rekap_po.')->group(function () {
+            Route::get('/', [RekapPOController::class, 'index'])->name('index');
+            Route::get('/ajax', [RekapPOController::class, 'ajax'])->name('ajax');
         });
 
         Route::prefix('/return_pembelian')->name('return_pembelian.')->group(function () {
@@ -318,6 +318,16 @@ Route::middleware('auth.login')->group(
             Route::get('/approve/{id}', [ReturnPenjualanController::class, 'detail_approve'])->name('detail_approve');
             Route::put('/approve/{id}', [ReturnPenjualanController::class, 'approve'])->name('approve');
             Route::put('/reject/{id}', [ReturnPenjualanController::class, 'reject'])->name('reject');
+        });
+
+        Route::prefix('/invoice_penjualan')->name('invoice_penjualan.')->group(function () {
+            Route::get('/', [InvoicePenjualanController::class, 'index'])->name('index');
+            Route::get('/ajax', [InvoicePenjualanController::class, 'ajax'])->name('ajax');
+            Route::get('/detail_selling/{id}', [InvoicePenjualanController::class, 'getdetails'])->name('getdetails');
+            Route::get('/add', [InvoicePenjualanController::class, 'create'])->name('create');
+            Route::post('/store', [InvoicePenjualanController::class, 'store'])->name('store');
+            Route::get('/detail/{id}', [InvoicePenjualanController::class, 'show'])->name('detail');
+            Route::delete('/delete/{id}', [InvoicePenjualanController::class, 'destroy'])->name('destroy');
         });
     }
 
