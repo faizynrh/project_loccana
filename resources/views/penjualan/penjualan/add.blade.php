@@ -12,7 +12,7 @@
             <div class="page-title">
                 <div class="row">
                     <div class="col-12 col-md-6 order-md-1 order-last">
-                        <h3>Add Purchase Order</h3>
+                        <h3>Add Penjualan</h3>
                     </div>
                     <div class="col-12 col-md-6 order-md-2 order-first">
                         <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
@@ -31,7 +31,7 @@
             <section class="section">
                 <div class="card">
                     <div class="card-header">
-                        <h4 class="card-title"> Form detail Penjualan</h4>
+                        <h4 class="card-title"> Form Penjualan</h4>
                     </div>
                     <div class="card-body">
                         @include('alert.alert')
@@ -89,8 +89,8 @@
                                     </select>
                                     <input type="text" class="form-control mt-2 hidden" id="custom_payment_term"
                                         placeholder="Masukkan jumlah hari">
-
-
+                                    <label for="ppn" class="form-label fw-bold mt-2 mb-1 small">PPN</label>
+                                    <input type="number" class="form-control" id="ppn" name="tax_rate" required>
                                 </div>
                             </div>
                             <div class="p-2">
@@ -102,7 +102,7 @@
                                         <th style="width: 140px">Kode</th>
                                         <th style="width: 40px"></th>
                                         <th style="width: 105px">notes</th>
-                                        <th style="width: 60px">Qty Box</th>
+                                        <th style="width: 80px">Qty Box</th>
                                         <th style="width: 45px">Qty Satuan</th>
                                         <th style="width: 70px">Total Qty</th>
                                         <th style="width: 100px">Harga</th>
@@ -113,7 +113,6 @@
                                     </tr>
                                 </thead>
                                 <tbody id="tableBody">
-                                    <tr style="border-bottom: 2px solid #000" class="item-row">
                                     <tr style="border-bottom: 2px solid #000" class="item-row">
                                         <td colspan="2">
                                             <select class="form-select item-select" name="items[0][item_id]">
@@ -162,22 +161,10 @@
                                 </tbody>
                                 <tr class="fw-bold">
                                     <td colspan="7"></td>
-                                    <td>Sub Total</td>
+                                    <td>DPP</td>
                                     <td style="float: right;">0</td>
                                     <td></td>
                                 </tr>
-                                <tr class="fw-bold">
-                                    <td colspan="7"></td>
-                                    <td>Diskon</td>
-                                    <td style="float: right;">0</td>
-                                    <td></td>
-                                </tr class="fw-bold">
-                                <tr class="fw-bold">
-                                    <td colspan="7"></td>
-                                    <td>Taxable</td>
-                                    <td style="float: right">0</td>
-                                    <td></td>
-                                </tr class="fw-bold">
                                 <tr class="fw-bold">
                                     <td colspan="7"></td>
                                     <td>VAT/PPN</td>
@@ -197,7 +184,8 @@
                                     <input type="hidden" name="company_id" id="company_id" value="2">
                                     <input type="hidden" name="total_amount" id="total_amount" value="0">
                                     <button type="submit" class="btn btn-primary" id="submitButton">Submit</button>
-                                    {{-- <button type="button" class="btn btn-danger ms-2" id="rejectButton">Reject</button> --}}
+                                    {{-- <button type="button" class="btn btn-danger ms-2" id="rejectButton">Reject</button>
+                                    --}}
                                     <a href="/purchase_order" class="btn btn-secondary ms-2">Batal</a>
                                 </div>
                             </div>
@@ -289,6 +277,49 @@
                 $('.item-select').html(options);
             }
 
+            $(document).on('change', '.item-select', function() {
+                const selectedUOM = $(this).find(':selected').data('uom');
+                $(this).siblings('.uom-input').val(selectedUOM);
+
+                // Get the item ID from the selected option
+                const itemId = $(this).val();
+                const row = $(this).closest('tr');
+
+                if (itemId) {
+                    // Make an AJAX request to get the stock information
+                    $.ajax({
+                        url: '/penjualan/getStock/' + itemId,
+                        type: 'GET',
+                        dataType: 'json',
+                        success: function(response) {
+                            // Display stock information below the quantity input
+                            const stockInfo = response.stock ? response.stock : 0;
+
+                            // Remove existing stock info if any
+                            row.find('.stock-info').remove();
+
+                            // Add stock info after the box quantity input
+                            row.find('input[name$="[box_quantity]"]').parent().append(
+                                `<div class="stock-info text-danger small mt-1">Stock: ${stockInfo}</div>`
+                            );
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('Error fetching stock information:', error);
+
+                            // Remove existing stock info and show error
+                            row.find('.stock-info').remove();
+                            row.find('input[name$="[box_quantity]"]').parent().append(
+                                '<div class="stock-info text-danger small mt-1">Stock: Unable to fetch</div>'
+                            );
+                        }
+                    });
+                } else {
+                    // If no item is selected, remove any existing stock info
+                    row.find('.stock-info').remove();
+                }
+            });
+
+
             function createNewRow(rowCount) {
                 const currentItems = $('#tableBody').data('current-items');
                 let itemOptions = '<option value="" disabled selected>--Pilih Item--</option>';
@@ -300,34 +331,45 @@
                     });
                 } else {
                     itemOptions =
-                        '<option value="" disabled selected>Silahkan pilih partner terlebih dahulu</option>';
+                        '<option value="" disabled selected>Pilih Customer Dahulu</option>';
                 }
 
                 return `
-            <tr style="border-bottom: 2px solid #000" class="item-row">
-                <td colspan="2">
-                    <select class="form-select item-select" name="items[${rowCount}][item_id]">
-                        ${itemOptions}
-                    </select>
-                    <input type="hidden" name="items[${rowCount}][uom_id]" class="uom-input">
-                </td>
-                <td>
-                    <input type="number" class="form-control qty-input" name="items[${rowCount}][quantity]" value="0" min="0">
-                </td>
-                <td>
-                    <input type="number" class="form-control price-input" name="items[${rowCount}][unit_price]" value="0" min="0">
-                </td>
-                <td>
-                    <input type="number" class="form-control discount-input" name="items[${rowCount}][discount]" value="0" min="0" max="100">
-                </td>
-                <td colspan="2">
-                    <input type="number" class="form-control bg-body-secondary total-input" name="items[${rowCount}][total_price]" readonly>
-                </td>
-                <td class="text-center">
-                    <button type="button" class="btn btn-danger btn-sm remove-row">X</button>
-                </td>
-            </tr>
-        `;
+                                <tr style="border-bottom: 2px solid #000" class="item-row">
+                                    <td colspan="2">
+                                        <select class="form-select item-select" name="items[${rowCount}][item_id]">
+                                            <option value="" disabled selected>Pilih Customer Dahulu</option>
+                                            ${itemOptions}
+                                        </select>
+                                        <input type="hidden" name="items[${rowCount}][uom_id]" class="uom-input">
+                                    </td>
+                                    <td>
+                                        <input type="text" name="items[${rowCount}][notes]" class="form-control notes-input">
+                                    </td>
+                                    <td>
+                                        <input type="number" name="items[${rowCount}][box_quantity]" class="form-control qty-input" value="1" min="1">
+                                    </td>
+                                    <td>
+                                        <input type="number" name="items[${rowCount}][per_box_quantity]" class="form-control qty-input" value="1" min="1">
+                                    </td>
+                                    <td>
+                                        <input type="number" name="items[${rowCount}][quantity]" class="form-control qty-input bg-body-secondary" value="1" min="1" readonly>
+                                    </td>
+                                    <td>
+                                        <input type="number" name="items[${rowCount}][unit_price]" class="form-control price-input" value="0" min="0">
+                                    </td>
+                                    <td>
+                                        <input type="number" name="items[${rowCount}][discount]" class="form-control discount-input" value="0" min="0" max="100">
+                                    </td>
+                                    <td colspan="2">
+                                        <input type="number" name="items[${rowCount}][total_price]" class="form-control bg-body-secondary total-input" readonly>
+                                    </td>
+                                    <td class="text-center">
+                                        <button type="button" class="btn btn-danger btn-sm remove-row">X</button>
+                                    </td>
+                                </tr>
+                            `;
+
             }
 
             $(document).on('change', '.item-select', function() {

@@ -157,6 +157,17 @@ class PenjualanController extends Controller
 
         return response()->json(['items' => [], 'unit_of_measure_id' => []]);
     }
+    protected function getstock($id)
+    {
+        $apiResponse = fectApi(env('STOCK_ITEM') . '/' . $id);
+
+        if ($apiResponse->successful()) {
+            $stock = $apiResponse->json()['data']['stock'] ?? [];
+            return response()->json(['stock' => $stock]);
+        }
+
+        return response()->json(['stock' => []]);
+    }
 
     /**
      * Store a newly created resource in storage.
@@ -209,7 +220,7 @@ class PenjualanController extends Controller
                 'items' => $items,
             ];
             $apiResponse = storeApi(env('PENJUALAN_URL'), $data);
-            dd($apiResponse->json(), $data);
+            // dd($apiResponse->json(), $data);
             if ($apiResponse->successful()) {
                 // Session::put('last_po_code', $request->input('code'));
                 return redirect()->route('penjualan.index')
@@ -228,6 +239,19 @@ class PenjualanController extends Controller
     public function show(string $id)
     {
         //
+        try {
+            $apiResponse = fectApi(env('PENJUALAN_URL') . '/' . $id);
+            if ($apiResponse->successful()) {
+                $data = json_decode($apiResponse->body());
+                dd($data);
+                return view('penjualan.penjualan.detail', compact('data'));
+            } else {
+                return back()->withErrors('Gagal mengambil data item: ' . $apiResponse->status());
+            }
+        } catch (\Exception $e) {
+            return back()->withErrors($e->getMessage());
+        }
+
     }
 
     /**
