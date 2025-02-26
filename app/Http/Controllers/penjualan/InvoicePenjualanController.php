@@ -141,7 +141,7 @@ class InvoicePenjualanController extends Controller
                 'due_date' => $request->due_date,
                 'notes' => $request->notes_invoice,
                 'tax_invoice' => $request->tax_invoice,
-                'status' => "test",
+                'status' => "unpaid",
                 'company_id' => 2,
                 'total_amount' => $request->total_amount,
                 'items' => $items
@@ -218,7 +218,7 @@ class InvoicePenjualanController extends Controller
                 'due_date' => $request->due_date,
                 'notes' => $request->invoice_notes,
                 'tax_invoice' => $request->tax_invoice,
-                'status' => "test",
+                'status' => "unpaid",
                 'total_amount' => $request->total_amount,
                 'items' => $items
             ];
