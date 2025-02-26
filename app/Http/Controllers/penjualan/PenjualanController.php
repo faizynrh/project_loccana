@@ -188,8 +188,8 @@ class PenjualanController extends Controller
                     'unit_price' => (float) ($itemData['unit_price'] ?? 0),
                     'quantity' => (int) ($itemData['quantity'] ?? 0),
                     'box_quantity' => $itemData['box_quantity'],
-                    'per_box_quantity' => $itemData['per_box_quantity'],
-                    'discount' => (float) ($itemData['discount'] ?? 0),
+                    'per_box_quantity' => $itemData['per_box_quantity'] ?? 0,
+                    'discount' => $itemData['discount'] ?? 0,
                     'notes' => ($itemData['notes'] ?? ''),
                     // 'mutation_id' => $itemData['notes'] ?? 0,
                     'uom_id' => (int) ($itemData['uom_id'] ?? 0),
@@ -210,7 +210,7 @@ class PenjualanController extends Controller
                 'coa_id' => 999,
                 'payment_coa' => 0,
                 'currency_id' => $request->input('currency_id'),
-                'tax_rate' => 1,
+                'tax_rate' => $request->input('tax_rate'),
                 'tax_amount' => (float) $request->input('tax_amount'),
                 'sequence_number' => 10,
                 'status' => 'diterima',
@@ -220,7 +220,7 @@ class PenjualanController extends Controller
                 'items' => $items,
             ];
             $apiResponse = storeApi(env('PENJUALAN_URL'), $data);
-            // dd($apiResponse->json(), $data);
+            dd($apiResponse->json(), $data);
             if ($apiResponse->successful()) {
                 // Session::put('last_po_code', $request->input('code'));
                 return redirect()->route('penjualan.index')
@@ -243,7 +243,7 @@ class PenjualanController extends Controller
             $apiResponse = fectApi(env('PENJUALAN_URL') . '/' . $id);
             if ($apiResponse->successful()) {
                 $data = json_decode($apiResponse->body());
-                dd($data);
+                // dd($data);
                 return view('penjualan.penjualan.detail', compact('data'));
             } else {
                 return back()->withErrors('Gagal mengambil data item: ' . $apiResponse->status());
@@ -260,6 +260,31 @@ class PenjualanController extends Controller
     public function edit(string $id)
     {
         //
+        $company_id = 2;
+        $customer = 'true';
+        $suplier = 'false';
+        $data = [
+            'company_id' => 2
+        ];
+
+        $partnerResponse = fectApi(env('LIST_PARTNER') . '/' . $company_id . '/' . $suplier . '/' . $customer);
+        $gudangResponse = fectApi(env('LIST_GUDANG') . '/' . $company_id);
+
+        if ($partnerResponse->successful() && $gudangResponse->successful()) {
+            $partner = $partnerResponse->json()['data'];
+            $gudang = $gudangResponse->json()['data'];
+            // $poCode = $this->generatePOCode();
+            return view('penjualan.penjualan.edit', compact('partner', 'gudang', ));
+        } else {
+            $errors = [];
+            if (!$gudangResponse->successful()) {
+                $errors[] = $gudangResponse->json()['message'];
+            }
+            if (!$partnerResponse->successful()) {
+                $errors[] = $partnerResponse->json()['message'];
+            }
+            return back()->withErrors($errors);
+        }
     }
 
     /**
@@ -273,8 +298,20 @@ class PenjualanController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy($id)
     {
-        //
+        try {
+            $apiResponse = deleteApi(env('PENJUALAN_URL') . '/' . $id);
+            if ($apiResponse->successful()) {
+                return redirect()->route('penjualan.index')
+                    ->with('success', $apiResponse->json()['message']);
+            } else {
+                return back()->withErrors(
+                    $apiResponse->json()['message']
+                );
+            }
+        } catch (\Exception $e) {
+            return back()->withErrors($e->getMessage());
+        }
     }
 }

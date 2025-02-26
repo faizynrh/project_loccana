@@ -107,6 +107,20 @@
 @push('scripts')
     <script>
         $(document).ready(function() {
+            $('#filterForm').on('submit', function(e) {
+                e.preventDefault();
+
+                const dataTable = $('#tablepurchaseorder').DataTable();
+                const {
+                    recordsTotal
+                } = dataTable.page.info();
+                if (!$('#total_entries').length) {
+                    $(this).append('<input type="hidden" id="total_entries" name="total_entries">');
+                }
+                $('#total_entries').val(recordsTotal);
+                this.submit();
+            });
+
             function reloadTable() {
                 var month = $('#monthSelect').val();
                 var year = $('#yearSelect').val();

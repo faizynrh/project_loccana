@@ -408,23 +408,21 @@ class PurchaseOrderController extends Controller
     public function exportExcel(Request $request)
     {
         try {
-            $month = $request->input('month', 11);
-            $year = $request->input('year', 0);
-            $length = $request->input('length', 10);
-            $start = $request->input('start', 0);
+            $month = $request->input('month', 0);
+            $year = $request->input('year', now()->year);
+            $total_entries = $request->input('total_entries'); // Get total entries from request
 
             $requestbody = [
                 'search' => '',
                 'month' => $month,
                 'year' => $year,
-                'limit' => $length,
-                'offset' => $start,
+                'limit' => $total_entries, // Use total_entries instead of fixed value
+                'offset' => 0,
                 'company_id' => 2,
             ];
 
             $apiResponse = storeApi(env('PO_URL') . '/' . 'list', $requestbody);
 
-            // dd($apiResponse->json(), $requestbody);
             if ($apiResponse->successful()) {
                 $data = $apiResponse->json();
                 $tableData = $data['data']['table'];
@@ -433,9 +431,7 @@ class PurchaseOrderController extends Controller
                     return back()->with('error', 'Tidak ada data untuk diexport.');
                 }
 
-
-
-                // Passing the extra data as arguments to the ExportProcurementReport class
+                // Passing the data to the ExportProcurementReport class
                 return Excel::download(new ExportProcurementPurchaseOrder($tableData, $month, $year), 'Purchase Order.xlsx');
             }
 

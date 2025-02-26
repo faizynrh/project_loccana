@@ -59,7 +59,7 @@
                                 <label for="tanggal" class="form-label fw-bold mt-2 mb-1 small">Tanggal</label>
                                 <input type="text" class="form-control"
                                     value="{{ \Carbon\Carbon::parse($data->data[0]->order_date)->format('Y-m-d') }}"
-                                    readonly" id="order_date" name="order_date" disabled>
+                                    readonly id="order_date" name="order_date" disabled>
 
                                 <label for="principal" class="form-label fw-bold mt-2 mb-1 small">Principle</label>
                                 {{-- <select class="form-control" id="partner_id" name="partner_id" disabled>

@@ -222,7 +222,7 @@
                                                             <i class="bi bi-pencil text-info"></i>
                                                             Edit
                                                         </a>
-                                                       <form action="/purchase_order/delete/${row.id}" method="POST" id="delete${row.id}" style="display:inline;">
+                                                       <form action="/penjualan/delete/${row.id}" method="POST" id="delete${row.id}" style="display:inline;">
                                                             @csrf
                                                             @method('DELETE')
                                                             <button type="button" class="dropdown-item" title="Hapus" onclick="confirmDelete(${row.id})">
@@ -239,20 +239,20 @@
                                                         <span class="sr-only"><i class="bi bi-list-task"></i></span>
                                                     </button>
                                                     <div class="dropdown-menu">
-                                                        <a href="/purchase_order/detail/${row.id}" class="dropdown-item" title="Detail">
+                                                        <a href="/penjualan/detail/${row.id}" class="dropdown-item" title="Detail">
                                                             <i class="bi bi-eye text-primary"></i>
                                                             Detail
                                                         </a>
-                                                       <a href="/purchase_order/print/${row.id}"  class="dropdown-item" target="_blank" title="Print">
+                                                       <a href="/penjualan/print/${row.id}"  class="dropdown-item" target="_blank" title="Print">
                                                             <i class="bi bi-printer text-warning"></i>
                                                             Print PDF
                                                         </a>
                                                         <div class="dropdown-divider"></div>
-                                                        <a href="/purchase_order/edit/${row.id}" class="dropdown-item" title="Edit">
+                                                        <a href="/penjualan/edit/${row.id}" class="dropdown-item" title="Edit">
                                                             <i class="bi bi-pencil text-info"></i>
                                                             Edit
                                                         </a>
-                                                       <form action="/purchase_order/delete/${row.id}" method="POST" id="delete${row.id}" style="display:inline;">
+                                                       <form action="/penjualan/delete/${row.id}" method="POST" id="delete${row.id}" style="display:inline;">
                                                             @csrf
                                                             @method('DELETE')
                                                             <button type="button" class="dropdown-item" title="Hapus" onclick="confirmDelete(${row.id})">
