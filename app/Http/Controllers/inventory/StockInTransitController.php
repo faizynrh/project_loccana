@@ -140,8 +140,8 @@ class StockInTransitController extends Controller
                 if (empty($data)) {
                     return back()->with('error', 'Tidak ada data untuk diexport.');
                 }
-
-                return Excel::download(new ExportInventoryStockInTransit($data, $start_date, $end_date), 'Laporan Stock In Transit.xlsx');
+                $fileName = 'Laporan Stock In Transit ' . $start_date . ' s.d ' . $end_date . '.xlsx';
+                return Excel::download(new ExportInventoryStockInTransit($data, $start_date, $end_date), $fileName);
             }
 
             return response()->json(['error' => $apiResponse->json()['message']]);
