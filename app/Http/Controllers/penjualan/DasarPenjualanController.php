@@ -66,16 +66,20 @@ class DasarPenjualanController extends Controller
     public function exportExcel(Request $request)
     {
         try {
-            $partner_id = $request->input('principal', 0);
-            $start_date = $request->input('start_date', 0);
-            $end_date = $request->input('end_date', 0);
+            $partner_id = $request->input('principal');
+            $start_date = $request->input('start_date');
+            $end_date = $request->input('end_date');
             $principalname = $request->input('principal_name');
+            $length = $request->input('total_entries');
 
             $requestbody = [
+                'search' => '',
                 'partner_id' => $partner_id,
                 'start_date' => $start_date,
                 'end_date' => $end_date,
                 'company_id' => 0,
+                'limit' => $length,
+                'offset' => 0,
             ];
 
             $apiResponse = storeApi(env('DASAR_PENJUALAN_URL'), $requestbody);

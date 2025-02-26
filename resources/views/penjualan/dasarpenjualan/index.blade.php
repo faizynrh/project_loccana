@@ -3,20 +3,20 @@
     @push('styles')
         <style>
             /* #tabledasarpenjualan thead tr:first-child th {
-                        position: sticky;
-                        background: white;
-                        z-index: 0;
-                        border-bottom: 2px solid #ddd;
-                    }
+                                        position: sticky;
+                                        background: white;
+                                        z-index: 0;
+                                        border-bottom: 2px solid #ddd;
+                                    }
 
-                    #tabledasarpenjualan thead tr:first-child th {
-                        top: 0;
-                    }
+                                    #tabledasarpenjualan thead tr:first-child th {
+                                        top: 0;
+                                    }
 
-                    .table-responsive {
-                        max-height: 50px;
-                        overflow-y: auto;
-                    } */
+                                    .table-responsive {
+                                        max-height: 50px;
+                                        overflow-y: auto;
+                                    } */
         </style>
     @endpush
     <div id="main-content">
@@ -108,14 +108,24 @@
             $('#btnprint').hide();
 
             $('#btnprint').click(function() {
-                var principal = $('#principal').val();
-                var start_date = $('#start_date').val();
-                var end_date = $('#end_date').val();
-                var principalName = $('#principal option:selected').text();
+                const dataTable = $('#tabledasarpenjualan').DataTable();
+                const {
+                    recordsDisplay
+                } = dataTable.page.info();
 
-                var formData = 'principal=' + principal +
-                    '&start_date=' + start_date + '&end_date=' + end_date +
-                    '&principal_name=' + encodeURIComponent(principalName);
+                const principal = $('#principal').val();
+                const start_date = $('#start_date').val();
+                const end_date = $('#end_date').val();
+                const principalName = $('#principal option:selected').text();
+
+                const formData = new URLSearchParams({
+                    principal: principal,
+                    start_date: start_date,
+                    end_date: end_date,
+                    principal_name: principalName,
+                    total_entries: recordsDisplay
+                }).toString();
+                console.log(formData);
                 window.location.href = "/dasar_penjualan/export-excel?" + formData;
             });
 
