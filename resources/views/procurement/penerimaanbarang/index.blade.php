@@ -10,7 +10,7 @@
             <div class="page-title">
                 <div class="row">
                     <div class="col-12 col-md-6 order-md-1 order-last">
-                        <h3>Penerimaan Barang Management</h3>
+                        <h3>Penerimaan Barang</h3>
                         {{-- <p class="text-subtitle text-muted">
                             Easily manage and adjust product prices.
                         </p> --}}
@@ -22,7 +22,7 @@
                                     <a href="/dashboard">Dashboard</a>
                                 </li>
                                 <li class="breadcrumb-item active" aria-current="page">
-                                    Penerimaan Barang Management
+                                    Penerimaan Barang
                                 </li>
                             </ol>
                         </nav>
@@ -41,7 +41,8 @@
                                         $currentYear = Carbon\Carbon::now()->year;
                                     @endphp
                                     @for ($year = $currentYear; $year >= 2019; $year--)
-                                        <option value="{{ $year }}" {{ $year == request('year') ? 'selected' : '' }}>
+                                        <option value="{{ $year }}"
+                                            {{ $year == request('year') ? 'selected' : '' }}>
                                             {{ $year }}
                                         </option>
                                     @endfor
@@ -52,7 +53,8 @@
                                         $currentMonth = Carbon\Carbon::now()->month;
                                     @endphp
                                     @foreach (['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'] as $index => $monthName)
-                                        <option value="{{ $index + 1 }}" {{ request('month') == strval($index + 1) || $currentMonth == $index + 1 ? 'selected' : '' }}>
+                                        <option value="{{ $index + 1 }}"
+                                            {{ request('month') == strval($index + 1) || $currentMonth == $index + 1 ? 'selected' : '' }}>
                                             {{ $monthName }}
                                         </option>
                                     @endforeach
@@ -95,7 +97,7 @@
 @endsection
 @push('scripts')
     <script>
-        $(document).ready(function () {
+        $(document).ready(function() {
             var lastMonth = $('#monthSelect').val();
             var lastYear = $('#yearSelect').val();
 
@@ -106,11 +108,11 @@
                     ajax: {
                         url: '{{ route('penerimaan_barang.ajax') }}',
                         type: 'GET',
-                        data: function (d) {
+                        data: function(d) {
                             d.month = lastMonth;
                             d.year = lastYear;
                         },
-                        dataSrc: function (response) {
+                        dataSrc: function(response) {
                             if (response.mtd && response.mtd.mtd_item_receive !== undefined) {
                                 const formattedNumber = new Intl.NumberFormat('id-ID', {
                                     minimumFractionDigits: 2,
@@ -122,107 +124,107 @@
                         }
                     },
                     columns: [{
-                        data: null,
-                        render: function (data, type, row, meta) {
-                            return meta.row + meta.settings._iDisplayStart + 1;
-                        }
-                    },
-                    {
-                        data: 'do_number'
-                    },
-                    {
-                        data: 'order_date',
-                        render: function (data) {
-                            if (data) {
-                                var date = new Date(data);
-                                return (
-                                    date.getDate().toString().padStart(2, '0') +
-                                    '-' +
-                                    (date.getMonth() + 1).toString().padStart(2, '0') +
-                                    '-' +
-                                    date.getFullYear()
-                                );
+                            data: null,
+                            render: function(data, type, row, meta) {
+                                return meta.row + meta.settings._iDisplayStart + 1;
                             }
-                            return data;
                         },
-                    },
-                    {
-                        data: 'number_po'
-                    },
-                    {
-                        data: 'receipt_date',
-                        render: function (data) {
-                            if (data) {
-                                var date = new Date(data);
-                                return (
-                                    date.getDate().toString().padStart(2, '0') +
-                                    '-' +
-                                    (date.getMonth() + 1).toString().padStart(2, '0') +
-                                    '-' +
-                                    date.getFullYear()
-                                );
-                            }
-                            return data;
+                        {
+                            data: 'do_number'
                         },
-                    },
-                    {
-                        data: 'name'
-                    },
-                    {
-                        data: 'total_receive_price',
-                        render: function (data) {
-                            if (data) {
-                                return new Intl.NumberFormat('id-ID', {
-                                    style: 'currency',
-                                    currency: 'IDR',
-                                    minimumFractionDigits: 2,
-                                    maximumFractionDigits: 2
-                                }).format(data);
+                        {
+                            data: 'order_date',
+                            render: function(data) {
+                                if (data) {
+                                    var date = new Date(data);
+                                    return (
+                                        date.getDate().toString().padStart(2, '0') +
+                                        '-' +
+                                        (date.getMonth() + 1).toString().padStart(2, '0') +
+                                        '-' +
+                                        date.getFullYear()
+                                    );
+                                }
+                                return data;
+                            },
+                        },
+                        {
+                            data: 'number_po'
+                        },
+                        {
+                            data: 'receipt_date',
+                            render: function(data) {
+                                if (data) {
+                                    var date = new Date(data);
+                                    return (
+                                        date.getDate().toString().padStart(2, '0') +
+                                        '-' +
+                                        (date.getMonth() + 1).toString().padStart(2, '0') +
+                                        '-' +
+                                        date.getFullYear()
+                                    );
+                                }
+                                return data;
+                            },
+                        },
+                        {
+                            data: 'name'
+                        },
+                        {
+                            data: 'total_receive_price',
+                            render: function(data) {
+                                if (data) {
+                                    return new Intl.NumberFormat('id-ID', {
+                                        style: 'currency',
+                                        currency: 'IDR',
+                                        minimumFractionDigits: 2,
+                                        maximumFractionDigits: 2
+                                    }).format(data);
+                                }
+                                return data;
                             }
-                            return data;
-                        }
-                    },
-                    {
-                        data: 'qty_bonus',
-                        render: function (data) {
-                            if (data) {
-                                return new Intl.NumberFormat('id-ID', {
-                                    style: 'currency',
-                                    currency: 'IDR',
-                                    minimumFractionDigits: 2,
-                                    maximumFractionDigits: 2
-                                }).format(data);
+                        },
+                        {
+                            data: 'qty_bonus',
+                            render: function(data) {
+                                if (data) {
+                                    return new Intl.NumberFormat('id-ID', {
+                                        style: 'currency',
+                                        currency: 'IDR',
+                                        minimumFractionDigits: 2,
+                                        maximumFractionDigits: 2
+                                    }).format(data);
+                                }
+                                return data;
                             }
-                            return data;
-                        }
-                    },
-                    {
-                        data: 'total_po',
-                        render: function (data) {
-                            if (data) {
-                                return new Intl.NumberFormat('id-ID', {
-                                    style: 'currency',
-                                    currency: 'IDR',
-                                    minimumFractionDigits: 2,
-                                    maximumFractionDigits: 2
-                                }).format(data);
+                        },
+                        {
+                            data: 'total_po',
+                            render: function(data) {
+                                if (data) {
+                                    return new Intl.NumberFormat('id-ID', {
+                                        style: 'currency',
+                                        currency: 'IDR',
+                                        minimumFractionDigits: 2,
+                                        maximumFractionDigits: 2
+                                    }).format(data);
+                                }
+                                return data;
                             }
-                            return data;
-                        }
-                    },
-                    {
-                        data: 'qty_receipt'
-                    },
-                    {
-                        data: 'status'
-                    },
-                    {
-                        data: 'description'
-                    },
-                    {
-                        data: null,
-                        render: function (data, type, row) {
-                            return `
+                        },
+                        {
+                            data: 'qty_receipt'
+                        },
+                        {
+                            data: 'status'
+                        },
+                        {
+                            data: 'description'
+                        },
+                        {
+                            data: null,
+                            render: function(data, type, row) {
+                                return `
                                                                 <div class="d-flex">
                                                                     <a href="/penerimaan_barang/detail/${row.id_receipt}" class="btn btn-sm btn-info mb-2" style="margin-right:4px;" title="Detail">
                                                                         <i class="bi bi-eye"></i>
@@ -239,13 +241,13 @@
                                                                     </form>
                                                                 </div>
                                                             `;
+                            }
                         }
-                    }
                     ]
                 });
             }
             initializeTable();
-            $('#monthSelect').change(function () {
+            $('#monthSelect').change(function() {
                 var month = $('#monthSelect').val();
                 if (month !== lastMonth) {
                     lastMonth = month;
@@ -253,7 +255,7 @@
                 }
                 console.log(month);
             });
-            $('#yearSelect').change(function () {
+            $('#yearSelect').change(function() {
                 var year = $('#yearSelect').val();
                 if (year !== lastYear) {
                     lastYear = year;
