@@ -88,8 +88,8 @@ class ReportPenjualanController extends Controller
                 if (empty($data)) {
                     return back()->with('error', 'Tidak ada data untuk diexport.');
                 }
-
-                return Excel::download(new ExportPenjualanReport($data, $principalname, $start_date, $end_date), 'Laporan Penjualan.xlsx');
+                $fileName = 'Laporan Penjualan ' . $principalname . ' ' . $start_date . ' s.d ' . $end_date . '.xlsx';
+                return Excel::download(new ExportPenjualanReport($data, $principalname, $start_date, $end_date), $fileName);
             }
             return response()->json(['error' => $apiResponse->json()['message']]);
         } catch (\Exception $e) {
