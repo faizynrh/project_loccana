@@ -48,7 +48,7 @@
             </section>
         </div>
     </div>
-    @include('masterdata.coa.ajax.modal')
+    @include('modal.modal')
 @endsection
 @push('scripts')
     <script>
@@ -123,13 +123,13 @@
                     },
                     success: function(response) {
                         console.log(response);
-                        updateModal('#modal-coa', 'Tambah COA', response,
+                        updateModal('#modal-example', 'Tambah COA', response,
                             'modal-lg');
                     },
                     error: function(xhr) {
                         let errorMsg = xhr.responseText ||
                             '<p>An error occurred while loading the content.</p>';
-                        $('#content-coa').html(errorMsg);
+                        $('#content-example').html(errorMsg);
                     },
                     complete: function() {
                         $('#loading-overlay').fadeOut();
@@ -154,13 +154,13 @@
                         //
                     },
                     success: function(response) {
-                        updateModal('#modal-coa', 'Detail COA', response,
+                        updateModal('#modal-example', 'Detail COA', response,
                             'modal-lg');
                     },
                     error: function(xhr) {
                         let errorMsg = xhr.responseText ||
                             '<p>An error occurred while loading the content.</p>';
-                        $('#content-coa').html(errorMsg);
+                        $('#content-example').html(errorMsg);
                     },
                     complete: function() {
                         $('#loading-overlay').fadeOut();
@@ -186,13 +186,13 @@
                         //
                     },
                     success: function(response) {
-                        updateModal('#modal-coa', 'Edit COA', response,
+                        updateModal('#modal-example', 'Edit COA', response,
                             'modal-lg');
                     },
                     error: function(xhr) {
                         let errorMsg = xhr.responseText ||
                             '<p>An error occurred while loading the content.</p>';
-                        $('#content-coa').html(errorMsg);
+                        $('#content-example').html(errorMsg);
                     },
                     complete: function() {
                         $('#loading-overlay').fadeOut();
