@@ -326,6 +326,8 @@ Route::middleware('auth.login')->group(
             Route::get('/detail_selling/{id}', [InvoicePenjualanController::class, 'getdetails'])->name('getdetails');
             Route::get('/add', [InvoicePenjualanController::class, 'create'])->name('create');
             Route::post('/store', [InvoicePenjualanController::class, 'store'])->name('store');
+            Route::get('/edit/{id}', [InvoicePenjualanController::class, 'edit'])->name('edit');
+            Route::put('/update/{id}', [InvoicePenjualanController::class, 'update'])->name('update');
             Route::get('/detail/{id}', [InvoicePenjualanController::class, 'show'])->name('detail');
             Route::delete('/delete/{id}', [InvoicePenjualanController::class, 'destroy'])->name('destroy');
         });
