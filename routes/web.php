@@ -201,7 +201,7 @@ Route::middleware('auth.login')->group(
             Route::get('/excel', [PurchaseOrderController::class, 'exportExcel'])->name('printexcel');
         });
 
-        Route::prefix('/invoice')->name('invoice.')->group(function () {
+        Route::prefix('/invoice_pembelian')->name('invoice_pembelian.')->group(function () {
             Route::get('/', [InvoiceController::class, 'index'])->name('index');
             Route::get('/ajax', [InvoiceController::class, 'ajax'])->name('ajax');
             Route::get('/detaildo/{id}', [InvoiceController::class, 'getDODetails'])->name('getdetails');

@@ -155,7 +155,7 @@
                         </table>
                         <div class="row">
                             <div class="col-md-12 text-end">
-                                <a href="{{ route('invoice.index') }}" class="btn btn-primary ms-2">Back</a>
+                                <a href="{{ route('invoice_pembelian.index') }}" class="btn btn-primary ms-2">Back</a>
                             </div>
                         </div>
                     </div>
