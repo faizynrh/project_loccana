@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\penjualan;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 
 class InvoicePenjualanController extends Controller
@@ -142,7 +141,7 @@ class InvoicePenjualanController extends Controller
                 'due_date' => $request->due_date,
                 'notes' => $request->notes_invoice,
                 'tax_invoice' => $request->tax_invoice,
-                'status' => "status",
+                'status' => "test",
                 'company_id' => 2,
                 'total_amount' => $request->total_amount,
                 'items' => $items
@@ -224,7 +223,6 @@ class InvoicePenjualanController extends Controller
                 'items' => $items
             ];
             $apiResponse = updateApi(env('INVOICE_PENJUALAN_URL') . '/' . $id, $data);
-            // dd($apiResponse->json(), $data);
             if ($apiResponse->successful()) {
                 return redirect()->route('invoice_penjualan.index')
                     ->with('success', $apiResponse->json()['message']);
