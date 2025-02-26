@@ -126,8 +126,8 @@ class StockController extends Controller
                 if (empty($data)) {
                     return back()->with('error', 'Tidak ada data untuk diexport.');
                 }
-
-                return Excel::download(new ExportInventoryStock($data, $start_date, $end_date), 'Inventory Stock.xlsx');
+                $fileName = 'Laporan Stok ' . $start_date . ' s.d ' . $end_date . '.xlsx';
+                return Excel::download(new ExportInventoryStock($data, $start_date, $end_date), $fileName);
             }
 
             return response()->json(['error' => $apiResponse->json()['message']]);
