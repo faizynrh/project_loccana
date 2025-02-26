@@ -55,11 +55,11 @@
             </section>
         </div>
     </div>
-    @include('masterdata.item.ajax.modal')
+    @include('modal.modal')
 @endsection
 @push('scripts')
     <script>
-        $(document).ready(function () {
+        $(document).ready(function() {
             $('#tableitem').DataTable({
                 serverSide: true,
                 processing: true,
@@ -68,33 +68,33 @@
                     type: 'GET',
                 },
                 columns: [{
-                    data: null,
-                    render: function (data, type, row, meta) {
-                        return meta.row + meta.settings._iDisplayStart + 1;
-                    }
-                },
-                {
-                    data: 'item_code'
-                },
-                {
-                    data: 'item_name'
-                },
-                {
-                    data: 'item_description'
-                },
-                {
-                    data: 'uom_name'
-                },
-                {
-                    data: 'partner_name'
-                },
-                {
-                    data: 'status'
-                },
-                {
-                    data: null,
-                    render: function (data, type, row) {
-                        return `
+                        data: null,
+                        render: function(data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+                    {
+                        data: 'item_code'
+                    },
+                    {
+                        data: 'item_name'
+                    },
+                    {
+                        data: 'item_description'
+                    },
+                    {
+                        data: 'uom_name'
+                    },
+                    {
+                        data: 'partner_name'
+                    },
+                    {
+                        data: 'status'
+                    },
+                    {
+                        data: null,
+                        render: function(data, type, row) {
+                            return `
                             <button type="button" class="btn btn-sm btn-info btn-detail-item"
                                 data-id="${row.id}"
                                 title="Detail">
@@ -113,108 +113,103 @@
                                 </button>
                             </form>
                         `;
+                        }
                     }
-                }
                 ]
             });
 
-            function updateModal(modalId, title, content, sizeClass) {
-                let modalDialog = $(`${modalId} .modal-dialog`);
-                modalDialog.removeClass('modal-full modal-xl modal-lg modal-md').addClass(sizeClass);
-
-                $(`${modalId} .modal-title`).text(title);
-                $(`${modalId} .modal-body`).html(content);
-
-                let myModal = new bootstrap.Modal(document.getElementById(modalId.substring(1)));
-                myModal.show();
-            }
-
-            $(document).on('click', '.btn-add-item', function (e) {
+            $(document).on('click', '.btn-add-item', function(e) {
                 e.preventDefault();
                 const url = '{{ route('item.create') }}'
                 const $button = $(this);
 
                 $('#loading-overlay').fadeIn();
+                $button.prop("disabled", true).html('<i class="bi bi-hourglass-split"></i>');
 
                 $.ajax({
                     url: url,
                     type: 'GET',
                     dataType: 'html',
-                    beforeSend: function () {
+                    beforeSend: function() {
                         //
                     },
-                    success: function (response) {
+                    success: function(response) {
                         console.log(response);
-                        updateModal('#modal-item', 'Tambah Item', response,
+                        updateModal('#modal-example', 'Tambah Item', response,
                             'modal-lg');
                     },
-                    error: function (xhr) {
+                    error: function(xhr) {
                         let errorMsg = xhr.responseText ||
                             '<p>An error occurred while loading the content.</p>';
-                        $('#content-item').html(errorMsg);
+                        $('#content-example').html(errorMsg);
                     },
-                    complete: function () {
+                    complete: function() {
                         $('#loading-overlay').fadeOut();
+                        $button.prop("disabled", false).html('+ Tambah Item');
                     }
                 });
             });
 
-            $(document).on('click', '.btn-detail-item', function (e) {
+            $(document).on('click', '.btn-detail-item', function(e) {
                 e.preventDefault();
                 const itemid = $(this).data('id');
                 const url = '{{ route('item.detail', ':itemid') }}'.replace(':itemid', itemid);
                 const $button = $(this);
 
                 $('#loading-overlay').fadeIn();
+                $button.prop("disabled", true).html('<i class="bi bi-hourglass-split"></i>');
 
                 $.ajax({
                     url: url,
                     type: 'GET',
                     dataType: 'html',
-                    beforeSend: function () {
+                    beforeSend: function() {
                         //
                     },
-                    success: function (response) {
-                        updateModal('#modal-item', 'Detail Item', response,
+                    success: function(response) {
+                        updateModal('#modal-example', 'Detail Item', response,
                             'modal-lg');
                     },
-                    error: function (xhr) {
+                    error: function(xhr) {
                         let errorMsg = xhr.responseText ||
                             '<p>An error occurred while loading the content.</p>';
-                        $('#content-item').html(errorMsg);
+                        $('#content-example').html(errorMsg);
                     },
-                    complete: function () {
+                    complete: function() {
                         $('#loading-overlay').fadeOut();
+                        $button.prop("disabled", false).html('<i class="bi bi-eye"></i>');
                     }
                 });
             });
 
-            $(document).on('click', '.btn-edit-item', function (e) {
+            $(document).on('click', '.btn-edit-item', function(e) {
                 e.preventDefault();
                 const itemid = $(this).data('id');
                 const url = '{{ route('item.edit', ':itemid') }}'.replace(':itemid', itemid);
                 const $button = $(this);
 
                 $('#loading-overlay').fadeIn();
+                $button.prop("disabled", true).html('<i class="bi bi-hourglass-split"></i>');
 
                 $.ajax({
                     url: url,
                     type: 'GET',
                     dataType: 'html',
-                    beforeSend: function () {
+                    beforeSend: function() {
                         //
                     },
-                    success: function (response) {
-                        updateModal('#modal-item', 'Edit Item', response,
+                    success: function(response) {
+                        updateModal('#modal-example', 'Edit Item', response,
                             'modal-lg');
                     },
-                    error: function (xhr) {
+                    error: function(xhr) {
                         let errorMsg = xhr.responseText ||
                             '<p>An error occurred while loading the content.</p>';
-                        $('#content-item').html(errorMsg);
+                        $('#content-example').html(errorMsg);
                     },
-                    complete: function () {
+                    complete: function() {
                         $('#loading-overlay').fadeOut();
+                        $button.prop("disabled", false).html('<i class="bi bi-pencil"></i>');
                     }
                 });
             });

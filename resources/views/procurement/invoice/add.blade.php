@@ -30,7 +30,7 @@
                 <div class="card">
                     <div class="card-body">
                         @include('alert.alert')
-                        <form action="{{ route('invoice.store') }}" method="POST" id="createForm">
+                        <form action="{{ route('invoice_pembelian.store') }}" method="POST" id="createForm">
                             @csrf
                             <div class="row mb-3">
                                 <div class="col-md-6">
@@ -57,8 +57,7 @@
                                     <input type="text" class="form-control bg-body-secondary" id="partner_name"
                                         placeholder="Nama Principal" readonly>
                                     <label for="shipFrom" class="form-label fw-bold mt-2 mb-1 small">Alamat</label>
-                                    <textarea class="form-control bg-body-secondary" rows="4" placeholder="Alamat Principal"
-                                        id="address" readonly></textarea>
+                                    <textarea class="form-control bg-body-secondary" rows="4" placeholder="Alamat Principal" id="address" readonly></textarea>
                                     <label class="form-label fw-bold mt-2 mb-1 small">Att</label>
                                     <input type="text" class="form-control bg-body-secondary" placeholder="Att" readonly>
                                     <label class="form-label fw-bold mt-2 mb-1 small">No. Telp</label>
@@ -80,20 +79,19 @@
                                     <label class="form-label fw-bold mt-2 mb-1 small">VAT/PPN</label>
                                     <input type="text" class="form-control bg-body-secondary" id="ppn" readonly>
                                     <label class="form-label fw-bold mt-2 mb-1 small">Term Pembayaran</label>
-                                    <input type="text" class="form-control bg-body-secondary" placeholder="Term Pembayaran"
-                                        readonly>
+                                    <input type="text" class="form-control bg-body-secondary"
+                                        placeholder="Term Pembayaran" readonly>
                                     <label class="form-label fw-bold mt-2 mb-1 small">Keterangan</label>
-                                    <textarea class="form-control bg-body-secondary" id="shipFrom" rows="4"
-                                        placeholder="Keterangan" readonly></textarea>
+                                    <textarea class="form-control bg-body-secondary" id="shipFrom" rows="4" placeholder="Keterangan" readonly></textarea>
                                     <label class="form-label fw-bold mt-2 mb-1 small">No Invoice</label>
-                                    <input type="text" class="form-control" name="invoice_number" placeholder="No Invoice">
+                                    <input type="text" class="form-control" name="invoice_number"
+                                        placeholder="No Invoice">
                                     <label class="form-label fw-bold mt-2 mb-1 small">Tanggal Invoice</label>
                                     <input type="date" class="form-control" name="invoice_date" id="invoice_date">
                                     <label class="form-label fw-bold mt-2 mb-1 small">Tanggal Jatuh Tempo</label>
                                     <input type="date" class="form-control" name="due_date">
                                     <label class="form-label fw-bold mt-2 mb-1 small">Keterangan Invoice</label>
-                                    <textarea class="form-control" id="shipFrom" rows="4"
-                                        placeholder="Keterangan Invoice"></textarea>
+                                    <textarea class="form-control" id="shipFrom" rows="4" placeholder="Keterangan Invoice"></textarea>
                                     <label class="form-label fw-bold mt-2 mb-1 small">Faktur Pajak</label>
                                     <input type="text" class="form-control" placeholder="Faktur Pajak">
                                     <input type="hidden" name="total_discount" id="total_discount" value="0">
@@ -146,7 +144,8 @@
                             <div class="row">
                                 <div class="col-md-12 text-end">
                                     <button type="submit" class="btn btn-primary" id="submitButton">Simpan</button>
-                                    <a href="{{ route('invoice.index') }}" class="btn btn-secondary ms-2">Batal</a>
+                                    <a href="{{ route('invoice_pembelian.index') }}"
+                                        class="btn btn-secondary ms-2">Batal</a>
                                 </div>
                             </div>
                         </form>
@@ -158,7 +157,7 @@
 @endsection
 @push('scripts')
     <script>
-        $(document).ready(function () {
+        $(document).ready(function() {
             $('#submitButton').hide();
 
             const styles = `
@@ -208,7 +207,7 @@
                 }).format(number);
             }
 
-            $('#nodo').on('change', function () {
+            $('#nodo').on('change', function() {
                 const id = $(this).val();
                 const url = '{{ route('invoice.getdetails', ':id') }}'.replace(':id', id);
 
@@ -219,7 +218,7 @@
                         url: url,
                         type: 'GET',
                         dataType: 'json',
-                        success: function (response) {
+                        success: function(response) {
                             if (response.error) {
                                 Swal.fire('Error', response.error, 'error');
                                 return;
@@ -250,7 +249,7 @@
                                 tableBody.show();
                                 $('#submitButton').show();
 
-                                response.items.forEach(function (item, index) {
+                                response.items.forEach(function(item, index) {
                                     const row = `
                                                         <tr class="table-items" style="border-bottom: 1px solid #000;">
                                                             <td class="item-column item-name">
@@ -312,7 +311,7 @@
                                                     `;
                                 tableBody.append(footerRow);
 
-                                tableBody.on('input', '.harga, .diskon', function () {
+                                tableBody.on('input', '.harga, .diskon', function() {
                                     updateRowCalculations($(this).closest('tr'));
                                     updateTotalCalculations();
                                 });
@@ -322,14 +321,14 @@
                                 $('#submitButton').hide();
                             }
                         },
-                        error: function (xhr, status, error) {
+                        error: function(xhr, status, error) {
                             Swal.fire('Error', 'Gagal mengambil detail PO', 'error');
                             $('#tableBody').hide();
                             $('#rejectButton').hide();
                             $('#submitButton').hide();
                             $('#gudang').prop('disabled', true);
                         },
-                        complete: function () {
+                        complete: function() {
                             $('#loading-overlay').fadeOut();
                         }
                     });
@@ -364,7 +363,7 @@
                 let subtotal = 0;
                 let totalDiskon = 0;
 
-                $('#tableBody tr.table-items').each(function () {
+                $('#tableBody tr.table-items').each(function() {
                     const qty = parseFloat($(this).find('.qty').val().replace(/[^0-9.-]+/g, '')) || 0;
                     const harga = parseFloat($(this).find('.harga').val()) || 0;
                     const diskonPercent = parseFloat($(this).find('.diskon').val()) || 0;

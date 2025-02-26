@@ -51,11 +51,11 @@
             </section>
         </div>
     </div>
-    @include('masterdata.price.ajax.modal')
+    @include('modal.modal')
 @endsection
 @push('scripts')
     <script>
-        $(document).ready(function () {
+        $(document).ready(function() {
             $('#tableprice').DataTable({
                 serverSide: true,
                 processing: true,
@@ -64,30 +64,30 @@
                     type: 'GET',
                 },
                 columns: [{
-                    data: null,
-                    render: function (data, type, row, meta) {
-                        return meta.row + meta.settings._iDisplayStart + 1;
-                    }
-                },
-                {
-                    data: 'kode_item'
-                },
-                {
-                    data: 'nama_item'
-                },
-                {
-                    data: 'nama_principal'
-                },
-                {
-                    data: 'harga_pokok'
-                },
-                {
-                    data: 'harga_beli'
-                },
-                {
-                    data: null,
-                    render: function (data, type, row) {
-                        return `
+                        data: null,
+                        render: function(data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+                    {
+                        data: 'kode_item'
+                    },
+                    {
+                        data: 'nama_item'
+                    },
+                    {
+                        data: 'nama_principal'
+                    },
+                    {
+                        data: 'harga_pokok'
+                    },
+                    {
+                        data: 'harga_beli'
+                    },
+                    {
+                        data: null,
+                        render: function(data, type, row) {
+                            return `
                                     <div class="d-flex">
                                     <button type="button" class="btn btn-sm btn-warning me-2 btn-edit-price"
                                         data-id="${row.id}"
@@ -105,48 +105,38 @@
                                     </form>
                                     </div>
                                 `;
+                        }
                     }
-                }
                 ]
             });
-
-            function updateModal(modalId, title, content, sizeClass) {
-                let modalDialog = $(`${modalId} .modal-dialog`);
-                modalDialog.removeClass('modal-full modal-xl modal-lg modal-md').addClass(sizeClass);
-
-                $(`${modalId} .modal-title`).text(title);
-                $(`${modalId} .modal-body`).html(content);
-
-                let myModal = new bootstrap.Modal(document.getElementById(modalId.substring(1)));
-                myModal.show();
-            }
-
-            $(document).on('click', '.btn-edit-price', function (e) {
+            $(document).on('click', '.btn-edit-price', function(e) {
                 e.preventDefault();
                 const priceId = $(this).data('id');
                 const url = '{{ route('price.edit', ':priceId') }}'.replace(':priceId', priceId);
                 const $button = $(this);
 
                 $('#loading-overlay').fadeIn();
+                $button.prop("disabled", true).html('<i class="bi bi-hourglass-split"></i>');
 
                 $.ajax({
                     url: url,
                     type: 'GET',
                     dataType: 'html',
-                    beforeSend: function () {
+                    beforeSend: function() {
                         //
                     },
-                    success: function (response) {
-                        updateModal('#modal-price', 'Edit COA', response,
+                    success: function(response) {
+                        updateModal('#modal-layout', 'Edit Price', response,
                             'modal-lg');
                     },
-                    error: function (xhr) {
+                    error: function(xhr) {
                         let errorMsg = xhr.responseText ||
                             '<p>An error occurred while loading the content.</p>';
-                        $('#content-price').html(errorMsg);
+                        $('#content-layout').html(errorMsg);
                     },
-                    complete: function () {
+                    complete: function() {
                         $('#loading-overlay').fadeOut();
+                        $button.prop("disabled", false).html('<i class="bi bi-pencil"></i>');
                     }
                 });
             });

@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\penjualan;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 
 class InvoicePenjualanController extends Controller
@@ -142,7 +141,7 @@ class InvoicePenjualanController extends Controller
                 'due_date' => $request->due_date,
                 'notes' => $request->notes_invoice,
                 'tax_invoice' => $request->tax_invoice,
-                'status' => "status",
+                'status' => "unpaid",
                 'company_id' => 2,
                 'total_amount' => $request->total_amount,
                 'items' => $items
@@ -177,12 +176,62 @@ class InvoicePenjualanController extends Controller
 
     public function edit(string $id)
     {
-        //
+        try {
+            $apiResponse = fectApi(env('INVOICE_PENJUALAN_URL') . '/' . $id);
+            if ($apiResponse->successful()) {
+                $data = json_decode($apiResponse->body());
+                return view('penjualan.invoicepenjualan.edit', compact('data'));
+            } else {
+                return back()->withErrors($apiResponse->json()['message']);
+            }
+        } catch (\Exception $e) {
+            return back()->withErrors($e->getMessage());
+        }
     }
 
     public function update(Request $request, string $id)
     {
-        //
+        try {
+            $items = [];
+            if ($request->has('items')) {
+                foreach ($request->input('items') as $item) {
+                    $items[] = [
+                        'item_id' => $item['item_id'],
+                        'sales_order_detail_id' => $item['sales_order_detail_id'],
+                        'sales_invoice_detail_id' => $item['invoice_detail_id'],
+                        'mutation_id' => $item['mutation_id'],
+                        'quantity' => $item['quantity'],
+                        'unit_price' => $item['unit_price'],
+                        'per_box_quantity' => $item['per_box_quantity'],
+                        'discount' => $item['discount'],
+                        'notes' => $item['notes'],
+                        'total_amount' => $item['total_price'],
+                        'box_quantity' => $item['box_quantity'],
+                    ];
+                }
+            }
+
+            $data = [
+                'sales_order_id' => $request->sales_order_id,
+                'invoice_number' => $request->invoice_number,
+                'invoice_date' => $request->invoice_date,
+                'due_date' => $request->due_date,
+                'notes' => $request->invoice_notes,
+                'tax_invoice' => $request->tax_invoice,
+                'status' => "unpaid",
+                'total_amount' => $request->total_amount,
+                'items' => $items
+            ];
+            $apiResponse = updateApi(env('INVOICE_PENJUALAN_URL') . '/' . $id, $data);
+            if ($apiResponse->successful()) {
+                return redirect()->route('invoice_penjualan.index')
+                    ->with('success', $apiResponse->json()['message']);
+            } else {
+                return back()->withErrors($apiResponse->json()['message']);
+            }
+        } catch (\Exception $e) {
+            return back()->withErrors($e->getMessage());
+        }
     }
 
     public function destroy($id)

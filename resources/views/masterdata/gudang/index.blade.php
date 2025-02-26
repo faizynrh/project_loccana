@@ -53,11 +53,11 @@
             </section>
         </div>
     </div>
-    @include('masterdata.gudang.ajax.modal')
+    @include('modal.modal')
 @endsection
 @push('scripts')
     <script>
-        $(document).ready(function () {
+        $(document).ready(function() {
             $('#tablegudang').DataTable({
                 serverSide: true,
                 processing: true,
@@ -66,27 +66,27 @@
                     type: 'GET',
                 },
                 columns: [{
-                    data: null,
-                    render: function (data, type, row, meta) {
-                        return meta.row + meta.settings._iDisplayStart + 1;
-                    }
-                },
-                {
-                    data: 'name'
-                },
-                {
-                    data: 'description',
-                },
-                {
-                    data: 'location'
-                },
-                {
-                    data: 'capacity'
-                },
-                {
-                    data: null,
-                    render: function (data, type, row) {
-                        return `
+                        data: null,
+                        render: function(data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+                    {
+                        data: 'name'
+                    },
+                    {
+                        data: 'description',
+                    },
+                    {
+                        data: 'location'
+                    },
+                    {
+                        data: 'capacity'
+                    },
+                    {
+                        data: null,
+                        render: function(data, type, row) {
+                            return `
                                     <button type="button" class="btn btn-sm btn-warning me-2 btn-edit-gudang"
                                                         data-id="${row.id}"
                                                         title="Edit">
@@ -101,77 +101,70 @@
                                         </button>
                                     </form>
                         `;
+                        }
                     }
-                }
                 ]
             });
 
-            function updateModal(modalId, title, content, sizeClass) {
-                let modalDialog = $(`${modalId} .modal-dialog`);
-                modalDialog.removeClass('modal-full modal-xl modal-lg modal-md').addClass(sizeClass);
-
-                $(`${modalId} .modal-title`).text(title);
-                $(`${modalId} .modal-body`).html(content);
-
-                let myModal = new bootstrap.Modal(document.getElementById(modalId.substring(1)));
-                myModal.show();
-            }
-
-            $(document).on('click', '.btn-add-gudang', function (e) {
+            $(document).on('click', '.btn-add-gudang', function(e) {
                 e.preventDefault();
                 const url = '{{ route('gudang.store') }}'
                 const $button = $(this);
 
                 $('#loading-overlay').fadeIn();
+                $button.prop("disabled", true).html('<i class="bi bi-hourglass-split"></i>');
 
                 $.ajax({
                     url: url,
                     type: 'GET',
                     dataType: 'html',
-                    beforeSend: function () {
+                    beforeSend: function() {
                         //
                     },
-                    success: function (response) {
-                        updateModal('#modal-gudang', 'Tambah Gudang', response,
+                    success: function(response) {
+                        updateModal('#modal-example', 'Tambah Gudang', response,
                             'modal-lg');
                     },
-                    error: function (xhr) {
+                    error: function(xhr) {
                         let errorMsg = xhr.responseText ||
                             '<p>An error occurred while loading the content.</p>';
-                        $('#content-gudang').html(errorMsg);
+                        $('#content-example').html(errorMsg);
                     },
-                    complete: function () {
+                    complete: function() {
                         $('#loading-overlay').fadeOut();
+                        $button.prop("disabled", false).html('+ Tambah Gudang');
                     }
                 });
             });
 
-            $(document).on('click', '.btn-edit-gudang', function (e) {
+            $(document).on('click', '.btn-edit-gudang', function(e) {
                 e.preventDefault();
                 const gudangid = $(this).data('id');
                 const url = '{{ route('gudang.edit', ':gudangid') }}'.replace(':gudangid', gudangid);
                 const $button = $(this);
 
                 $('#loading-overlay').fadeIn();
+                $button.prop("disabled", true).html('<i class="bi bi-hourglass-split"></i>');
 
                 $.ajax({
                     url: url,
                     type: 'GET',
                     dataType: 'html',
-                    beforeSend: function () {
+                    beforeSend: function() {
                         //
                     },
-                    success: function (response) {
-                        updateModal('#modal-gudang', 'Edit Gudang', response,
+                    success: function(response) {
+                        updateModal('#modal-example', 'Edit Gudang', response,
                             'modal-lg');
                     },
-                    error: function (xhr) {
+                    error: function(xhr) {
                         let errorMsg = xhr.responseText ||
                             '<p>An error occurred while loading the content.</p>';
-                        $('#content-gudang').html(errorMsg);
+                        $('#content-example').html(errorMsg);
                     },
-                    complete: function () {
+                    complete: function() {
                         $('#loading-overlay').fadeOut();
+                        $button.prop("disabled", false).html('<i class="bi bi-pencil"></i>');
                     }
                 });
             });

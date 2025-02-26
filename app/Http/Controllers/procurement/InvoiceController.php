@@ -139,7 +139,7 @@ class InvoiceController extends Controller
 
             $apiResponse = storeApi(env('INVOICE_URL'), $data);
             if ($apiResponse->successful()) {
-                return redirect()->route('invoice.index')
+                return redirect()->route('invoice_pembeian.index')
                     ->with('success', $apiResponse->json()['message']);
             } else {
                 return back()->withErrors($apiResponse->json()['message']);
@@ -168,7 +168,7 @@ class InvoiceController extends Controller
     {
         try {
             $apiResponse = fectApi(env('INVOICE_URL') . '/' . $id);
-
+            // dd($apiResponse->json());
             if ($apiResponse->successful()) {
                 $data = json_decode($apiResponse->body());
                 return view('procurement.invoice.edit', compact('data'));
@@ -182,6 +182,7 @@ class InvoiceController extends Controller
 
     public function update(Request $request, $id)
     {
+        // dd($request->all());
         try {
             $items = [];
             if ($request->has('item_id')) {
@@ -209,7 +210,7 @@ class InvoiceController extends Controller
             ];
             $apiResponse = updateApi(env('INVOICE_URL') . '/' . $id, $data);
             if ($apiResponse->successful()) {
-                return redirect()->route('invoice.index')->with('success', $apiResponse->json()['message']);
+                return redirect()->route('invoice_pembelian.index')->with('success', $apiResponse->json()['message']);
             } else {
                 return back()->withErrors($apiResponse->json()['message']);
             }
@@ -223,7 +224,7 @@ class InvoiceController extends Controller
         try {
             $apiResponse = deleteApi(env('INVOICE_URL') . '/' . $id);
             if ($apiResponse->successful()) {
-                return redirect()->route('invoice.index')->with('success', $apiResponse->json()['message']);
+                return redirect()->route('invoice_pembelian.index')->with('success', $apiResponse->json()['message']);
             } else {
                 return back()->withErrors($apiResponse->json()['message']);
             }

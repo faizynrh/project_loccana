@@ -165,10 +165,9 @@ NPWP: 01.555.161.7.428.000</textarea>
                                     const row = `
                                                         <tr class="table-items" style="border-bottom: 1px solid #000;">
                                                             <td class="item-column item-name">
-                                                                <input type="text" class="form-control bg-body-secondary sales_order_detail_id" name="items[${index}][sales_order_detail_id]"
+                                                                <input type="hidden" class="form-control bg-body-secondary sales_order_detail_id" name="items[${index}][sales_order_detail_id]"
                                                                     value="${item.sales_order_detail_id}" readonly>
-                                                                <input type="hidden" class="form-control bg-body-secondary item_code" name="items[${index}][item_code]"
-                                                                    value="${item.item_code} - ${item.item_name}" readonly>
+                                                                <textarea class="form-control bg-body-secondary item_code" name="items[${index}][item_code]" readonly>${item.item_code} - ${item.item_name}</textarea
                                                             </td>
                                                             <td>
                                                                 <input type="tex" class="form-control bg-body-secondary box_quantity text-end"
