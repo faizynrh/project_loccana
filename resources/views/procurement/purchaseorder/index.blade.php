@@ -111,13 +111,25 @@
                 e.preventDefault();
 
                 const dataTable = $('#tablepurchaseorder').DataTable();
-                const {
-                    recordsTotal
-                } = dataTable.page.info();
+
+                // Get the total number of rows that match the search criteria
+                // This gets the full count, not just what's visible on the current page
+                const totalFilteredEntries = dataTable.page.info().recordsDisplay;
+
+                // Get the total number of rows without filtering
+                const totalEntries = dataTable.page.info().recordsTotal;
+
                 if (!$('#total_entries').length) {
                     $(this).append('<input type="hidden" id="total_entries" name="total_entries">');
                 }
-                $('#total_entries').val(recordsTotal);
+                $('#total_entries').val(totalFilteredEntries);
+
+                // Add total entries as well (optional)
+                if (!$('#total_all_entries').length) {
+                    $(this).append('<input type="hidden" id="total_all_entries" name="total_all_entries">');
+                }
+                $('#total_all_entries').val(totalEntries);
+
                 this.submit();
             });
 

@@ -410,13 +410,16 @@ class PurchaseOrderController extends Controller
         try {
             $month = $request->input('month', 0);
             $year = $request->input('year', now()->year);
-            $total_entries = $request->input('total_entries'); // Get total entries from request
+            $total_entries = $request->input('total_entries');
+
+            // Make sure we have a reasonable number for limit
+            $limit = intval($total_entries) > 0 ? intval($total_entries) : 1000;
 
             $requestbody = [
-                'search' => '',
+                'search' => $request->input('search', ''),
                 'month' => $month,
                 'year' => $year,
-                'limit' => $total_entries, // Use total_entries instead of fixed value
+                'limit' => $limit, // Use the filtered entries count
                 'offset' => 0,
                 'company_id' => 2,
             ];
