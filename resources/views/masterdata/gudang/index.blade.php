@@ -53,7 +53,7 @@
             </section>
         </div>
     </div>
-    @include('masterdata.gudang.ajax.modal')
+    @include('modal.modal')
 @endsection
 @push('scripts')
     <script>
@@ -122,13 +122,13 @@
                         //
                     },
                     success: function(response) {
-                        updateModal('#modal-gudang', 'Tambah Gudang', response,
+                        updateModal('#modal-example', 'Tambah Gudang', response,
                             'modal-lg');
                     },
                     error: function(xhr) {
                         let errorMsg = xhr.responseText ||
                             '<p>An error occurred while loading the content.</p>';
-                        $('#content-gudang').html(errorMsg);
+                        $('#content-example').html(errorMsg);
                     },
                     complete: function() {
                         $('#loading-overlay').fadeOut();
@@ -154,13 +154,13 @@
                         //
                     },
                     success: function(response) {
-                        updateModal('#modal-gudang', 'Edit Gudang', response,
+                        updateModal('#modal-example', 'Edit Gudang', response,
                             'modal-lg');
                     },
                     error: function(xhr) {
                         let errorMsg = xhr.responseText ||
                             '<p>An error occurred while loading the content.</p>';
-                        $('#content-gudang').html(errorMsg);
+                        $('#content-example').html(errorMsg);
                     },
                     complete: function() {
                         $('#loading-overlay').fadeOut();
