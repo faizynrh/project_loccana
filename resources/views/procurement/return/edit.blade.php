@@ -97,13 +97,13 @@
                             <table class="table mt-3">
                                 <thead>
                                     <tr style="border-bottom: 3px solid #000;">
-                                        <th style="width: 175px">Kode</th>
+                                        <th>Kode</th>
                                         <th>Qty Order Total</th>
                                         <th>Qty Retur</th>
                                         <th>Qty Order</th>
                                         <th>Harga</th>
                                         <th>Diskon</th>
-                                        <th style="width: 15%">Total</th>
+                                        <th>Total</th>
                                         <th>Keterangan</th>
                                     </tr>
                                 </thead>
@@ -114,9 +114,7 @@
                                                 <input type="hidden" class="form-control bg-body-secondary"
                                                     name="item_id[{{ $index }}]" value="{{ $item->item_id }}"
                                                     readonly>
-                                                <input type="text" class="form-control bg-body-secondary"
-                                                    name="item_name[{{ $index }}]" value="{{ $item->item_name }}"
-                                                    readonly>
+                                                <textarea class="form-control bg-body-secondary" name="item_name[{{ $index }}]" readonly>{{ $item->item_name }}</textarea>
                                             </td>
                                             <td>
                                                 <input type="text" class="form-control bg-body-secondary"
