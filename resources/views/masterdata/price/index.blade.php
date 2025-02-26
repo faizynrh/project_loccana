@@ -51,7 +51,7 @@
             </section>
         </div>
     </div>
-    @include('masterdata.price.ajax.modal')
+    @include('modal.modal')
 @endsection
 @push('scripts')
     <script>
@@ -126,13 +126,13 @@
                         //
                     },
                     success: function(response) {
-                        updateModal('#modal-price', 'Edit COA', response,
+                        updateModal('#modal-layout', 'Edit Price', response,
                             'modal-lg');
                     },
                     error: function(xhr) {
                         let errorMsg = xhr.responseText ||
                             '<p>An error occurred while loading the content.</p>';
-                        $('#content-price').html(errorMsg);
+                        $('#content-layout').html(errorMsg);
                     },
                     complete: function() {
                         $('#loading-overlay').fadeOut();
