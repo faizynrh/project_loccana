@@ -106,17 +106,6 @@
                 ]
             });
 
-            function updateModal(modalId, title, content, sizeClass) {
-                let modalDialog = $(`${modalId} .modal-dialog`);
-                modalDialog.removeClass('modal-full modal-xl modal-lg modal-md').addClass(sizeClass);
-
-                $(`${modalId} .modal-title`).text(title);
-                $(`${modalId} .modal-body`).html(content);
-
-                let myModal = new bootstrap.Modal(document.getElementById(modalId.substring(1)));
-                myModal.show();
-            }
-
             $(document).on('click', '.btn-add-coa', function(e) {
                 e.preventDefault();
                 const url = '{{ route('coa.store') }}'
