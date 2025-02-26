@@ -10,16 +10,16 @@
             <div class="page-title">
                 <div class="row">
                     <div class="col-12 col-md-6 order-md-1 order-last">
-                        <h3>Detail Stock In Transit</h3>
+                        <h3>Tambah Transfer Stok</h3>
                     </div>
                     <div class="col-12 col-md-6 order-md-2 order-first">
                         <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item">
-                                    <a href="/stock">Dashboard</a>
+                                    <a href="/transfer_stock">Dashboard</a>
                                 </li>
                                 <li class="breadcrumb-item active" aria-current="page">
-                                    Detail Stock In Transit
+                                    Tambah Transfer Stok
                                 </li>
                             </ol>
                         </nav>
