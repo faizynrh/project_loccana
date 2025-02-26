@@ -152,7 +152,7 @@
                             data: 'harga_pokok'
                         },
                         {
-                            data: 'haerga_perkemasan' //typo
+                            data: 'harga_perkemasan'
                         },
                         {
                             data: 'harga_jual_perkemasan'
@@ -161,7 +161,7 @@
                             data: 'harga_jual_lt_kg'
                         },
                         {
-                            data: 'laba_lugi_perkemasan' //typo
+                            data: 'laba_rugi_perkemasan'
                         },
                         {
                             data: 'laba_rugi_perproduk'
