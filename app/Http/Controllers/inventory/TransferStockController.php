@@ -223,7 +223,7 @@ class TransferStockController extends Controller
                 $data = json_decode($apiResponse->body());
                 $datas = $data->data;
                 $pdf = Pdf::loadView('inventory.transferstock.print', compact('datas'));
-                return $pdf->stream('Transfer Stock ' . $datas[0]->gudang_asal . ' ke ' . $datas[0]->gudang_tujuan . ' tanggal ' . $datas[0]->transfer_date . '.pdf');
+                return $pdf->stream('Transfer Stok ' . $datas[0]->gudang_asal . ' ke ' . $datas[0]->gudang_tujuan . ' ' . $datas[0]->transfer_date . '.pdf');
             } else {
                 return back()->withErrors($apiResponse->status());
             }
