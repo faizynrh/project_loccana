@@ -191,7 +191,7 @@
                                     <button type="submit" class="btn btn-primary" id="submitButton">Submit</button>
                                     {{-- <button type="button" class="btn btn-danger ms-2" id="rejectButton">Reject</button>
                                     --}}
-                                    <a href="/purchase_order" class="btn btn-secondary ms-2">Batal</a>
+                                    <a href="/penjualan" class="btn btn-secondary ms-2">Batal</a>
                                 </div>
                             </div>
                         </form>
