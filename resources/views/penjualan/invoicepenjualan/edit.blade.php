@@ -129,8 +129,7 @@ NPWP: 01.555.161.7.428.000
                                                 <input type="hidden" class="form-control bg-body-secondary mutation_id"
                                                     name="items[{{ $index }}][mutation_id]"
                                                     value="{{ $item->mutation_id }}" readonly>
-                                                <input type="text" class="form-control bg-body-secondary item_code"
-                                                    value="{{ $item->item_code }} - {{ $item->item_name }}" readonly>
+                                                <textarea class="form-control bg-body-secondary item_code" readonly>{{ $item->item_code }} - {{ $item->item_name }}</textarea>
                                             </td>
                                             <td>
                                                 <input type="text"
