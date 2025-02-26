@@ -143,7 +143,7 @@
                     end_date: end_date,
                     principal_name: principalName
                 }).toString();
-                window.location.href = "/report_stock/export-excel?" + formData;
+                window.location.href = "/report_persediaan/export-excel?" + formData;
             });
 
             $('#searchForm').on('submit', function(e) {
@@ -161,7 +161,7 @@
                 $('#loading-overlay').fadeIn();
 
                 $.ajax({
-                    url: '{{ route('report_stock.ajax') }}',
+                    url: '{{ route('report_persediaan.ajax') }}',
                     type: 'GET',
                     data: formData,
                     success: function(response) {

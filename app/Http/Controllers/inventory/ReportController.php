@@ -25,7 +25,7 @@ class ReportController extends Controller
                 'end_date' => $end_date,
                 'company_id' => 0,
             ];
-            $apiResponse = storeApi(env('REPORT_STOCK_URL') . '/lists', $requestbody);
+            $apiResponse = storeApi(env('REPORT_PERSEDIAAN_URL') . '/lists', $requestbody);
             if ($apiResponse->successful()) {
                 $data = $apiResponse->json();
                 return response()->json([
@@ -71,7 +71,7 @@ class ReportController extends Controller
                 'company_id' => 0,
             ];
 
-            $apiResponse = storeApi(env('REPORT_STOCK_URL') . '/lists', $requestbody);
+            $apiResponse = storeApi(env('REPORT_PERSEDIAAN_URL') . '/lists', $requestbody);
 
             if ($apiResponse->successful()) {
                 $data = json_decode($apiResponse->body());
