@@ -20,6 +20,7 @@ use App\Http\Controllers\masterdata\CustomerController;
 use App\Http\Controllers\procurement\InvoiceController;
 use App\Http\Controllers\procurement\RekapPOController;
 use App\Http\Controllers\masterdata\PrincipalController;
+use App\Http\Controllers\penjualan\DasarPenjualanController;
 use App\Http\Controllers\penjualan\InvoicePenjualanController;
 use App\Http\Controllers\penjualan\RangePriceController;
 use App\Http\Controllers\penjualan\ReturnController as PenjualanReturnController;
@@ -331,6 +332,12 @@ Route::middleware('auth.login')->group(
             Route::put('/update/{id}', [InvoicePenjualanController::class, 'update'])->name('update');
             Route::get('/detail/{id}', [InvoicePenjualanController::class, 'show'])->name('detail');
             Route::delete('/delete/{id}', [InvoicePenjualanController::class, 'destroy'])->name('destroy');
+        });
+
+        Route::prefix('/dasar_penjualan')->name('dasar_penjualan.')->group(function () {
+            Route::get('/', [DasarPenjualanController::class, 'index'])->name('index');
+            Route::get('/ajax', [DasarPenjualanController::class, 'ajax'])->name('ajax');
+            Route::get('/export-excel', [DasarPenjualanController::class, 'exportExcel'])->name('exportexcel');
         });
     }
 
