@@ -132,11 +132,6 @@
             $('#exportBtn').hide();
 
             $('#exportBtn').click(function() {
-                const dataTable = $('#tablereportstock').DataTable();
-                const {
-                    recordsDisplay
-                } = dataTable.page.info();
-
                 const principal = $('#principal').val();
                 const start_date = $('#start_date').val();
                 const end_date = $('#end_date').val();
@@ -146,8 +141,7 @@
                     principal: principal,
                     start_date: start_date,
                     end_date: end_date,
-                    principal_name: principalName,
-                    total_entries: recordsDisplay
+                    principal_name: principalName
                 }).toString();
                 window.location.href = "/report_stock/export-excel?" + formData;
             });
