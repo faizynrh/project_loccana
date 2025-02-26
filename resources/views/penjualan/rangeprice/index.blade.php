@@ -49,7 +49,7 @@
                     </div>
             </section>
         </div>
-        @include('penjualan.rangeprice.ajax.modal')
+        @include('modal.modal')
     </div>
 @endsection
 @push('scripts')
@@ -112,17 +112,6 @@
                 ]
             });
 
-            function updateModal(modalId, title, content, sizeClass) {
-                let modalDialog = $(`${modalId} .modal-dialog`);
-                modalDialog.removeClass('modal-full modal-xl modal-lg modal-md').addClass(sizeClass);
-
-                $(`${modalId} .modal-title`).text(title);
-                $(`${modalId} .modal-body`).html(content);
-
-                let myModal = new bootstrap.Modal(document.getElementById(modalId.substring(1)));
-                myModal.show();
-            }
-
             $(document).on('click', '.btn-edit-range_price', function(e) {
                 e.preventDefault();
                 const range_priceId = $(this).data('id');
@@ -142,14 +131,14 @@
                         //
                     },
                     success: function(response) {
-                        updateModal('#modal-range_price',
+                        updateModal('#modal-example',
                             'Edit Range Price', response,
                             'modal-lg');
                     },
                     error: function(xhr) {
                         let errorMsg = xhr.responseText ||
                             '<p>An error occurred while loading the content.</p>';
-                        $('#content-range_price').html(errorMsg);
+                        $('#content-example').html(errorMsg);
                     },
                     complete: function() {
                         $('#loading-overlay').fadeOut();
