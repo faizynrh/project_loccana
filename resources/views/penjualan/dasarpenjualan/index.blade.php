@@ -2,6 +2,21 @@
 @section('content')
     @push('styles')
         <style>
+            /* #tabledasarpenjualan thead tr:first-child th {
+                        position: sticky;
+                        background: white;
+                        z-index: 0;
+                        border-bottom: 2px solid #ddd;
+                    }
+
+                    #tabledasarpenjualan thead tr:first-child th {
+                        top: 0;
+                    }
+
+                    .table-responsive {
+                        max-height: 50px;
+                        overflow-y: auto;
+                    } */
         </style>
     @endpush
     <div id="main-content">
@@ -152,7 +167,7 @@
                             data: 'harga_pokok'
                         },
                         {
-                            data: 'haerga_perkemasan' //typo
+                            data: 'harga_perkemasan'
                         },
                         {
                             data: 'harga_jual_perkemasan'
@@ -161,7 +176,7 @@
                             data: 'harga_jual_lt_kg'
                         },
                         {
-                            data: 'laba_lugi_perkemasan' //typo
+                            data: 'laba_rugi_perkemasan'
                         },
                         {
                             data: 'laba_rugi_perproduk'

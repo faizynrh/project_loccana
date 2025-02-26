@@ -80,10 +80,10 @@ class ExportDasarPenjualan implements WithStyles
             $sheet->setCellValue('G' . $row, $item->qty_pcs);
             $sheet->setCellValue('H' . $row, $item->total);
             $sheet->setCellValue('I' . $row, $item->harga_pokok);
-            $sheet->setCellValue('J' . $row, $item->haerga_perkemasan); //typo
+            $sheet->setCellValue('J' . $row, $item->harga_perkemasan); //typo
             $sheet->setCellValue('K' . $row, $item->harga_jual_perkemasan);
             $sheet->setCellValue('L' . $row, $item->harga_jual_lt_kg);
-            $sheet->setCellValue('M' . $row, $item->laba_lugi_perkemasan); //typo
+            $sheet->setCellValue('M' . $row, $item->laba_rugi_perkemasan); //typo
             $sheet->setCellValue('N' . $row, $item->laba_rugi_perproduk);
             $sheet->setCellValue('O' . $row, $item->percent);
             $row++;
