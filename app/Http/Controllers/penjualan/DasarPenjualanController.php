@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers\penjualan;
 
-use App\Exports\ExportDasarPenjualan;
 use Illuminate\Http\Request;
-use Maatwebsite\Excel\Facades\Excel;
 use App\Http\Controllers\Controller;
-use App\Exports\ExportInventoryReport;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\ExportPenjualanDasar;
 
 class DasarPenjualanController extends Controller
 {
@@ -90,7 +89,7 @@ class DasarPenjualanController extends Controller
                     return back()->with('error', 'Tidak ada data untuk diexport.');
                 }
 
-                return Excel::download(new ExportDasarPenjualan($data, $principalname, $start_date, $end_date), 'Laporan Dasar Penjualan.xlsx');
+                return Excel::download(new ExportPenjualanDasar($data, $principalname, $start_date, $end_date), 'Laporan Dasar Penjualan.xlsx');
             }
 
             return response()->json(['error' => $apiResponse->json()['message']]);
