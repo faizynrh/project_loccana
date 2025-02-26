@@ -75,22 +75,24 @@ class ReportController extends Controller
             $start_date = $request->input('start_date', 0);
             $end_date = $request->input('end_date', 0);
             $principalname = $request->input('principal_name');
+            $length = $request->input('total_entries');
 
             $requestbody = [
+                'search' => '',
                 'partner_id' => $partner_id,
                 'start_date' => $start_date,
                 'end_date' => $end_date,
                 'company_id' => 0,
+                'limit' => $length,
+                'offset' => 0,
             ];
             $apiResponse = storeApi(env('REPORT_URL'), $requestbody);
             if ($apiResponse->successful()) {
                 $data = json_decode($apiResponse->body());
-
                 if (empty($data)) {
                     return back()->with('error', 'Tidak ada data untuk diexport.');
                 }
 
-                // Passing the extra data as arguments to the ExportProcurementReport class
                 return Excel::download(new ExportProcurementReport($data, $principalname, $start_date, $end_date), 'Procurement Report.xlsx');
             }
 
