@@ -109,7 +109,7 @@
                                             <p class="fw-bold">{{ $item->unit_price }}</p>
                                         </td>
                                         <td class="">
-                                            <p class="fw-bold">{{ $item->discount }}</p>
+                                            <p class="fw-bold">{{ $item->discount }}%</p>
                                         </td>
                                         <td class="text-end">
                                             <p class="fw-bold">{{ $item->harga_per_item }}</p>

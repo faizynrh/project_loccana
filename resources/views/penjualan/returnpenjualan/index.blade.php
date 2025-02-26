@@ -9,7 +9,7 @@
             <div class="page-title">
                 <div class="row">
                     <div class="col-12 col-md-6 order-md-1 order-last">
-                        <h3>Return Penjualan Management</h3>
+                        <h3>Return Penjualan</h3>
                     </div>
                     <div class="col-12 col-md-6 order-md-2 order-first">
                         <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
@@ -18,7 +18,7 @@
                                     <a href="/dashboard">Dashboard</a>
                                 </li>
                                 <li class="breadcrumb-item active" aria-current="page">
-                                    Return Penjualan Management
+                                    Return Penjualan
                                 </li>
                             </ol>
                         </nav>
@@ -86,7 +86,6 @@
     <script>
         $(document).ready(function() {
             function initializeTable() {
-                // Cek apakah DataTable sudah diinisialisasi, jika iya maka destroy dulu
                 if ($.fn.DataTable.isDataTable('#tablereturnpenjualan')) {
                     $('#tablereturnpenjualan').DataTable().destroy();
                 }

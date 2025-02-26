@@ -172,6 +172,9 @@
                             <a href="#" class="submenu-link">Buku Besar Pembantu</a>
                         </li>
                         <li class="submenu-item">
+                            <a href="#" class="submenu-link">Laba Rugi</a>
+                        </li>
+                        <li class="submenu-item">
                             <a href="#" class="submenu-link">Neraca</a>
                         </li>
                         <li class="submenu-item">
@@ -179,6 +182,9 @@
                         </li>
                         <li class="submenu-item">
                             <a href="#" class="submenu-link">Report Hutang</a>
+                        </li>
+                        <li class="submenu-item">
+                            <a href="#" class="submenu-link">Report Piutang</a>
                         </li>
                     </ul>
                 </li>

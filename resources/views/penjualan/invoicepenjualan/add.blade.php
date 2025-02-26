@@ -121,7 +121,8 @@ NPWP: 01.555.161.7.428.000</textarea>
                             <div class="row">
                                 <div class="col-md-12 text-end">
                                     <button type="submit" class="btn btn-primary" id="submitButton">Simpan</button>
-                                    <a href="{{ route('invoice.index') }}" class="btn btn-secondary ms-2">Batal</a>
+                                    <a href="{{ route('invoice_penjualan.index') }}"
+                                        class="btn btn-secondary ms-2">Batal</a>
                                 </div>
                             </div>
                         </form>

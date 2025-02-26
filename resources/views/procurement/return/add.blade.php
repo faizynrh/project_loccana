@@ -96,13 +96,13 @@
                             <table class="table mt-3">
                                 <thead>
                                     <tr style="border-bottom: 3px solid #000;">
-                                        <th style="width: 25%">Kode</th>
-                                        <th style="width:40px">Retur Satuan</th>
+                                        <th>Kode</th>
+                                        <th>Retur Satuan</th>
                                         <th>Qty Retur</th>
                                         <th>Qty Order</th>
                                         <th>Harga</th>
                                         <th>Diskon</th>
-                                        <th style="width: 15%">Total</th>
+                                        <th>Total</th>
                                         <th>Keterangan</th>
                                     </tr>
                                 </thead>
@@ -146,8 +146,6 @@
 @push('scripts')
     <script>
         $(document).ready(function() {
-            $('#submitButton').hide();
-
             $('#no_invoice').on('change', function() {
                 const id = $(this).val();
                 const url = '{{ route('return_pembelian.detailadd', ':id') }}'.replace(':id', id);
@@ -177,7 +175,6 @@
                             tableBody.empty();
                             if (response.items && response.items.length > 0) {
                                 tableBody.show();
-                                $('#submitButton').show();
 
                                 response.items.forEach(function(item, index) {
                                     const row = `
@@ -185,8 +182,7 @@
                                                         <td class="item-column item-name">
                                                             <input type="hidden" class="form-control bg-body-secondary item_id" name="items[${index}][item_id]"
                                                                 value="${item.item_id}" readonly>
-                                                            <input type="text" class="form-control bg-body-secondary item_code" name="items[${index}][item_code]"
-                                                                value="${item.item_code}" readonly>
+                                                            <textarea class="form-control bg-body-secondary item_code" name="items[${index}][item_code]" readonly>${item.item_code}</textarea>
                                                         </td>
                                                         <td class="number-column">
                                                             <input type="text" class="form-control text-end retur_satuan" name="items[${index}][retur_satuan]" required>
@@ -248,24 +244,19 @@
                                 });
 
                                 updateTotalCalculations();
-                            } else {
-                                $('#submitButton').hide();
-                            }
+                            } else {}
                         },
                         error: function(xhr, status, error) {
                             Swal.fire('Error', 'Gagal mengambil detail PO', 'error');
                             $('#tableBody').hide();
                             $('#rejectButton').hide();
-                            $('#submitButton').hide();
                             $('#gudang').prop('disabled', true);
                         },
                         complete: function() {
                             $('#loading-overlay').fadeOut();
                         }
                     });
-                } else {
-                    $('#submitButton').hide();
-                }
+                } else {}
             });
 
             function formatDateToYMD(dateString) {
