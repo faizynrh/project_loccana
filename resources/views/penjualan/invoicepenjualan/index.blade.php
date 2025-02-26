@@ -10,7 +10,7 @@
             <div class="page-title">
                 <div class="row">
                     <div class="col-12 col-md-6 order-md-1 order-last">
-                        <h3>Invoice Penjualan Management</h3>
+                        <h3>Invoice Penjualan</h3>
                     </div>
                     <div class="col-12 col-md-6 order-md-2 order-first">
                         <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
@@ -19,7 +19,7 @@
                                     <a href="/dashboard">Dashboard</a>
                                 </li>
                                 <li class="breadcrumb-item active" aria-current="page">
-                                    Invoice Penjualan Management
+                                    Invoice Penjualan
                                 </li>
                             </ol>
                         </nav>
@@ -189,7 +189,7 @@
                                                 <form action="/invoice_penjualan/delete/${row.invoice_id}" method="POST" invoice_id="delete${row.id}" style="display:inline;">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="button" class="btn btn-sm btn-danger mb-2" style="margin-right:4px;" title="Hapus" onclick="confirmDelete(${row.id})" ${row.status === 'paid' ? 'disabled' : ''}>
+                                                    <button type="submit" class="btn btn-sm btn-danger mb-2" style="margin-right:4px;" title="Hapus" onclick="confirmDelete(${row.id})" ${row.status === 'paid' ? 'disabled' : ''}>
                                                         <i class="bi bi-trash"></i>
                                                     </button>
                                                 </form>
