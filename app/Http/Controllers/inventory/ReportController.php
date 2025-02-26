@@ -70,7 +70,6 @@ class ReportController extends Controller
                 'end_date' => $end_date,
                 'company_id' => 0,
             ];
-            dd($requestbody);
 
             $apiResponse = storeApi(env('REPORT_STOCK_URL') . '/lists', $requestbody);
 
