@@ -105,6 +105,9 @@ NPWP: 01.555.161.7.428.000</textarea>
                                             <td>
                                                 <input type="hidden" name="sales_order_detail_id[{{ $index }}]"
                                                     value="{{ $item->sales_order_detail }}">
+                                                <input type="hidden"
+                                                    name="selling_return_detail_id[{{ $index }}]"
+                                                    value="{{ $item->selling_return_detail_id }}">
                                                 <textarea type="text" class="form-control bg-body-secondary w-100" readonly rows="3">{{ $item->item_code }}</textarea>
                                             </td>
                                             {{-- <td>

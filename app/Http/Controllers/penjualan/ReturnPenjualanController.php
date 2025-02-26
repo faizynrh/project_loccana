@@ -173,6 +173,7 @@ class ReturnPenjualanController extends Controller
                 foreach ($request->input('sales_order_detail_id') as $index => $sales_order_detail_id) {
                     $items[] = [
                         'sales_order_detail_id' => $sales_order_detail_id,
+                        'return_detail_id' => $request->input('selling_return_detail_id')[$index],
                         'quantity' => $request->input('qty_return')[$index],
                         'notes' => $request->input('notes_item')[$index],
                     ];
