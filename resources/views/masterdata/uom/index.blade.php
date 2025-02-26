@@ -48,7 +48,7 @@
         </div>
     </div>
     @push('scripts')
-        @include('masterdata.uom.ajax.modal')
+        @include('modal.modal')
         <script>
             $(document).ready(function() {
                 $('#tableuom').DataTable({
@@ -98,16 +98,6 @@
                 });
             });
 
-            function updateModal(modalId, title, content, sizeClass) {
-                let modalDialog = $(`${modalId} .modal-dialog`);
-                modalDialog.removeClass('modal-full modal-xl modal-lg modal-md').addClass(sizeClass);
-
-                $(`${modalId} .modal-title`).text(title);
-                $(`${modalId} .modal-body`).html(content);
-
-                let myModal = new bootstrap.Modal(document.getElementById(modalId.substring(1)));
-                myModal.show();
-            }
 
             $(document).on('click', '.btn-add-uom', function(e) {
                 e.preventDefault();
@@ -115,6 +105,7 @@
                 const $button = $(this);
 
                 $('#loading-overlay').fadeIn();
+                $button.prop("disabled", true).html('<i class="bi bi-hourglass-split"></i>');
 
                 $.ajax({
                     url: url,
@@ -124,16 +115,18 @@
                         //
                     },
                     success: function(response) {
-                        updateModal('#modal-uom', 'Tambah Uom', response,
+                        updateModal('#modal-example', 'Tambah Uom', response,
                             'modal-lg');
                     },
                     error: function(xhr) {
                         let errorMsg = xhr.responseText ||
                             '<p>An error occurred while loading the content.</p>';
-                        $('#content-uom').html(errorMsg);
+                        $('#content-example').html(errorMsg);
+
                     },
                     complete: function() {
                         $('#loading-overlay').fadeOut();
+                        $button.prop("disabled", false).html('+ Tambah UOM');
                     }
                 });
             });
@@ -145,6 +138,7 @@
                 const $button = $(this);
 
                 $('#loading-overlay').fadeIn();
+                $button.prop("disabled", true).html('<i class="bi bi-hourglass-split"></i>');
 
                 $.ajax({
                     url: url,
@@ -154,16 +148,17 @@
                         //
                     },
                     success: function(response) {
-                        updateModal('#modal-uom', 'Detail uom', response,
+                        updateModal('#modal-example', 'Detail uom', response,
                             'modal-lg');
                     },
                     error: function(xhr) {
                         let errorMsg = xhr.responseText ||
                             '<p>An error occurred while loading the content.</p>';
-                        $('#content-uom').html(errorMsg);
+                        $('#content-example').html(errorMsg);
                     },
                     complete: function() {
                         $('#loading-overlay').fadeOut();
+                        $button.prop("disabled", false).html('<i class="bi bi-eye"></i>');
                     }
                 });
             });
@@ -175,6 +170,7 @@
                 const $button = $(this);
 
                 $('#loading-overlay').fadeIn();
+                $button.prop("disabled", true).html('<i class="bi bi-hourglass-split"></i>');
 
                 $.ajax({
                     url: url,
@@ -184,20 +180,20 @@
                         //
                     },
                     success: function(response) {
-                        updateModal('#modal-uom', 'Edit Uom', response,
+                        updateModal('#modal-example', 'Edit Uom', response,
                             'modal-lg');
                     },
                     error: function(xhr) {
                         let errorMsg = xhr.responseText ||
                             '<p>An error occurred while loading the content.</p>';
-                        $('#content-uom').html(errorMsg);
+                        $('#content-example').html(errorMsg);
                     },
                     complete: function() {
                         $('#loading-overlay').fadeOut();
+                        $button.prop("disabled", false).html('<i class="bi bi-pencil"></i>');
                     }
                 });
             });
-
 
             function disableButton(event) {
                 let form = event.target;

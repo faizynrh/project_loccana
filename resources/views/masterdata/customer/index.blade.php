@@ -48,7 +48,7 @@
             </section>
         </div>
     </div>
-    @include('masterdata.customer.ajax.modal')
+    @include('modal.modal')
     @push('scripts')
         <script>
             $(document).ready(function() {
@@ -105,16 +105,6 @@
                 });
             });
 
-            function updateModal(modalId, title, content, sizeClass) {
-                let modalDialog = $(`${modalId} .modal-dialog`);
-                modalDialog.removeClass('modal-full modal-xl modal-lg modal-md').addClass(sizeClass);
-
-                $(`${modalId} .modal-title`).text(title);
-                $(`${modalId} .modal-body`).html(content);
-
-                let myModal = new bootstrap.Modal(document.getElementById(modalId.substring(1)));
-                myModal.show();
-            }
 
             $(document).on('click', '.btn-add-customer', function(e) {
                 e.preventDefault();
@@ -122,6 +112,7 @@
                 const $button = $(this);
 
                 $('#loading-overlay').fadeIn();
+                $button.prop("disabled", true).html('<i class="bi bi-hourglass-split"></i>');
 
                 $.ajax({
                     url: url,
@@ -131,16 +122,17 @@
                         //
                     },
                     success: function(response) {
-                        updateModal('#modal-customer', 'Tambah customer', response,
+                        updateModal('#modal-example', 'Tambah Customer', response,
                             'modal-lg');
                     },
                     error: function(xhr) {
                         let errorMsg = xhr.responseText ||
                             '<p>An error occurred while loading the content.</p>';
-                        $('#content-customer').html(errorMsg);
+                        $('#content-example').html(errorMsg);
                     },
                     complete: function() {
                         $('#loading-overlay').fadeOut();
+                        $button.prop("disabled", false).html('+ Tambah Customer');
                     }
                 });
             });
@@ -152,6 +144,7 @@
                 const $button = $(this);
 
                 $('#loading-overlay').fadeIn();
+                $button.prop("disabled", true).html('<i class="bi bi-hourglass-split"></i>');
 
                 $.ajax({
                     url: url,
@@ -161,16 +154,17 @@
                         //
                     },
                     success: function(response) {
-                        updateModal('#modal-customer', 'Detail customer', response,
+                        updateModal('#modal-example', 'Detail customer', response,
                             'modal-lg');
                     },
                     error: function(xhr) {
                         let errorMsg = xhr.responseText ||
                             '<p>An error occurred while loading the content.</p>';
-                        $('#content-customer').html(errorMsg);
+                        $('#content-example').html(errorMsg);
                     },
                     complete: function() {
                         $('#loading-overlay').fadeOut();
+                        $button.prop("disabled", false).html('<i class="bi bi-eye"></i>');
                     }
                 });
             });
@@ -182,6 +176,7 @@
                 const $button = $(this);
 
                 $('#loading-overlay').fadeIn();
+                $button.prop("disabled", true).html('<i class="bi bi-hourglass-split"></i>');
 
                 $.ajax({
                     url: url,
@@ -191,16 +186,17 @@
                         //
                     },
                     success: function(response) {
-                        updateModal('#modal-customer', 'Edit customer', response,
+                        updateModal('#modal-example', 'Edit customer', response,
                             'modal-lg');
                     },
                     error: function(xhr) {
                         let errorMsg = xhr.responseText ||
                             '<p>An error occurred while loading the content.</p>';
-                        $('#content-customer').html(errorMsg);
+                        $('#content-example').html(errorMsg);
                     },
                     complete: function() {
                         $('#loading-overlay').fadeOut();
+                        $button.prop("disabled", false).html('<i class="bi bi-pencil"></i>');
                     }
                 });
             });

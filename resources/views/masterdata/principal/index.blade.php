@@ -50,7 +50,7 @@
             </section>
         </div>
     </div>
-    @include('masterdata.principal.ajax.modal')
+    @include('modal.modal')
     @push('scripts')
         <script>
             $(document).ready(function() {
@@ -105,23 +105,13 @@
                 });
             });
 
-            function updateModal(modalId, title, content, sizeClass) {
-                let modalDialog = $(`${modalId} .modal-dialog`);
-                modalDialog.removeClass('modal-full modal-xl modal-lg modal-md').addClass(sizeClass);
-
-                $(`${modalId} .modal-title`).text(title);
-                $(`${modalId} .modal-body`).html(content);
-
-                let myModal = new bootstrap.Modal(document.getElementById(modalId.substring(1)));
-                myModal.show();
-            }
-
             $(document).on('click', '.btn-add-principal', function(e) {
                 e.preventDefault();
                 const url = '{{ route('principal.store') }}'
                 const $button = $(this);
 
                 $('#loading-overlay').fadeIn();
+                $button.prop("disabled", true).html('<i class="bi bi-hourglass-split"></i>');
 
                 $.ajax({
                     url: url,
@@ -131,16 +121,17 @@
                         //
                     },
                     success: function(response) {
-                        updateModal('#modal-principal', 'Tambah principal', response,
+                        updateModal('#modal-example', 'Tambah principal', response,
                             'modal-lg');
                     },
                     error: function(xhr) {
                         let errorMsg = xhr.responseText ||
                             '<p>An error occurred while loading the content.</p>';
-                        $('#content-principal').html(errorMsg);
+                        $('#content-example').html(errorMsg);
                     },
                     complete: function() {
                         $('#loading-overlay').fadeOut();
+                        $button.prop("disabled", false).html('+ Tambah Principal');
                     }
                 });
             });
@@ -152,6 +143,7 @@
                 const $button = $(this);
 
                 $('#loading-overlay').fadeIn();
+                $button.prop("disabled", true).html('<i class="bi bi-hourglass-split"></i>');
 
                 $.ajax({
                     url: url,
@@ -161,16 +153,17 @@
                         //
                     },
                     success: function(response) {
-                        updateModal('#modal-principal', 'Detail principal', response,
+                        updateModal('#modal-example', 'Detail principal', response,
                             'modal-lg');
                     },
                     error: function(xhr) {
                         let errorMsg = xhr.responseText ||
                             '<p>An error occurred while loading the content.</p>';
-                        $('#content-principal').html(errorMsg);
+                        $('#content-example').html(errorMsg);
                     },
                     complete: function() {
                         $('#loading-overlay').fadeOut();
+                        $button.prop("disabled", false).html('<i class="bi bi-eye"></i>');
                     }
                 });
             });
@@ -182,6 +175,8 @@
                 const $button = $(this);
 
                 $('#loading-overlay').fadeIn();
+                $button.prop("disabled", true).html('<i class="bi bi-hourglass-split"></i>');
+
 
                 $.ajax({
                     url: url,
@@ -191,16 +186,17 @@
                         //
                     },
                     success: function(response) {
-                        updateModal('#modal-principal', 'Edit principal', response,
+                        updateModal('#modal-example', 'Edit Principal', response,
                             'modal-lg');
                     },
                     error: function(xhr) {
                         let errorMsg = xhr.responseText ||
                             '<p>An error occurred while loading the content.</p>';
-                        $('#content-principal').html(errorMsg);
+                        $('#content-example').html(errorMsg);
                     },
                     complete: function() {
                         $('#loading-overlay').fadeOut();
+                        $button.prop("disabled", false).html('<i class="bi bi-pencil"></i>');
                     }
                 });
             });
