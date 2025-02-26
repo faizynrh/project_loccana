@@ -132,16 +132,28 @@
             $('#btnprint').hide();
 
             $('#btnprint').click(function() {
-                var principal = $('#principal').val();
-                var start_date = $('#start_date').val();
-                var end_date = $('#end_date').val();
-                var principalName = $('#principal option:selected').text();
+                const dataTable = $('#tablereportpenjualan').DataTable();
+                const {
+                    recordsDisplay
+                } = dataTable.page.info();
 
-                var formData = 'principal=' + principal +
-                    '&start_date=' + start_date + '&end_date=' + end_date +
-                    '&principal_name=' + encodeURIComponent(principalName);
+                const principal = $('#principal').val();
+                const start_date = $('#start_date').val();
+                const end_date = $('#end_date').val();
+                const principalName = $('#principal option:selected').text();
+
+                const formData = new URLSearchParams({
+                    principal: principal,
+                    start_date: start_date,
+                    end_date: end_date,
+                    principal_name: principalName,
+                    total_entries: recordsDisplay
+                }).toString();
+                console.log(formData);
                 window.location.href = "/report_penjualan/export-excel?" + formData;
             });
+
+
 
             $('#searchForm').on('submit', function(e) {
                 e.preventDefault();
@@ -161,6 +173,8 @@
                             d.principal = $('#principal').val();
                             d.start_date = $('#start_date').val();
                             d.end_date = $('#end_date').val();
+                            var pageInfo = $('#tablereportpenjualan').DataTable().page.info();
+                            d.total_entries = pageInfo.recordsTotal;
                         },
                         complete: function() {
                             $btnCari.prop('disabled', false).text('Cari');
