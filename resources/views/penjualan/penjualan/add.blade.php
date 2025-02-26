@@ -127,15 +127,14 @@
                                         </td>
                                         <td>
                                             <input type="number" name="items[0][box_quantity]"
-                                                class="form-control qty-input" value="1" min="1">
+                                                class="form-control box-qty-input" min="0">
                                         </td>
                                         <td>
                                             <input type="number" name="items[0][per_box_quantity]"
-                                                class="form-control qty-input" value="1" min="1">
+                                                class="form-control qty-input" min="0">
                                         <td>
                                             <input type="number" name="items[0][quantity]"
-                                                class="form-control qty-input bg-body-secondary" value="1"
-                                                min="1" readonly>
+                                                class="form-control total-qty bg-body-secondary" min="0" readonly>
                                         </td>
                                         <td>
                                             <input type="number" name="items[0][unit_price]"
@@ -162,6 +161,12 @@
                                 <tr class="fw-bold">
                                     <td colspan="7"></td>
                                     <td>DPP</td>
+                                    <td style="float: right;">0</td>
+                                    <td></td>
+                                </tr>
+                                <tr class="fw-bold">
+                                    <td colspan="7"></td>
+                                    <td>Diskon</td>
                                     <td style="float: right;">0</td>
                                     <td></td>
                                 </tr>
@@ -347,13 +352,13 @@
                                         <input type="text" name="items[${rowCount}][notes]" class="form-control notes-input">
                                     </td>
                                     <td>
-                                        <input type="number" name="items[${rowCount}][box_quantity]" class="form-control qty-input" value="1" min="1">
+                                        <input type="number" name="items[${rowCount}][box_quantity]" class="form-control box-qty-input" value="1" min="1">
                                     </td>
                                     <td>
                                         <input type="number" name="items[${rowCount}][per_box_quantity]" class="form-control qty-input" value="1" min="1">
                                     </td>
                                     <td>
-                                        <input type="number" name="items[${rowCount}][quantity]" class="form-control qty-input bg-body-secondary" value="1" min="1" readonly>
+                                        <input type="number" name="items[${rowCount}][quantity]" class="form-control total-qty bg-body-secondary" value="1" min="1" readonly>
                                     </td>
                                     <td>
                                         <input type="number" name="items[${rowCount}][unit_price]" class="form-control price-input" value="0" min="0">
@@ -392,13 +397,15 @@
                 }
             });
 
-            $(document).on('input', '.qty-input, .price-input, .discount-input', function() {
-                var row = $(this).closest('tr');
-                calculateRowTotal(row);
-                updateTotals();
-            });
+            $(document).on('input', '.box-qty-input, .qty-input, .total-qty, .price-input, .discount-input',
+                function() {
+                    var row = $(this).closest('tr');
+                    calculateRowTotal(row);
+                    updateTotals();
+                });
 
             function calculateRowTotal(row) {
+                const boxqty = parseFloat(row.find('.box-qty-input').val()) || 0;
                 const qty = parseFloat(row.find('.qty-input').val()) || 0;
                 const price = parseFloat(row.find('.price-input').val()) || 0;
                 let discount = parseFloat(row.find('.discount-input').val()) || 0;
@@ -408,42 +415,54 @@
                     row.find('.discount-input').val(100);
                 }
 
-                const subtotal = qty * price;
+
+                const totalqty = boxqty + qty;
+                row.find('.total-qty').val(totalqty.toFixed(0));
+
+                const subtotal = totalqty * price;
+                const ppn = parseFloat($('#ppn').val()) || 0;
+                const ppn_decimal = ppn / 100;
+                const hargapokok = subtotal / (1 + ppn_decimal);
+                const nilaippn = subtotal - hargapokok;
                 const discountAmount = subtotal * (discount / 100);
                 const total = subtotal - discountAmount;
 
                 row.find('.total-input').val(total.toFixed(0));
+
+                row.data('discountAmount', discountAmount);
+                row.data('nilaippn', nilaippn); // Simpan nilaippn di data-row
             }
 
             function updateTotals() {
                 let subtotal = 0;
                 let totalDiscount = 0;
+                let totalPPN = 0;
+                let totalFinal = 0;
 
                 $('.item-row').each(function() {
                     const qty = parseFloat($(this).find('.qty-input').val()) || 0;
                     const price = parseFloat($(this).find('.price-input').val()) || 0;
                     const discount = parseFloat($(this).find('.discount-input').val()) || 0;
+                    const total = parseFloat($(this).find('.total-input').val()) || 0;
 
                     const rowSubtotal = qty * price;
                     const rowDiscount = rowSubtotal * (discount / 100);
 
                     subtotal += rowSubtotal;
-                    totalDiscount += rowDiscount;
+                    totalDiscount += $(this).data('discountAmount') || 0;
+                    totalFinal += total;
+                    totalPPN += $(this).data('nilaippn') || 0; // Ambil nilaippn
                 });
 
-                const taxableAmount = subtotal - totalDiscount;
-                const ppnRate = parseFloat($('#ppn').val()) || 0;
-                const ppnAmount = taxableAmount * (ppnRate / 100);
-                const finalTotal = taxableAmount + ppnAmount;
+                const dpp = totalFinal - totalPPN;
 
-                updateDisplayValue('Sub Total', subtotal);
+                updateDisplayValue('DPP', dpp);
                 updateDisplayValue('Diskon', totalDiscount);
-                updateDisplayValue('Taxable', taxableAmount);
-                updateDisplayValue('VAT/PPN', ppnAmount);
-                updateDisplayValue('Total', finalTotal);
+                updateDisplayValue('VAT/PPN', totalPPN);
+                updateDisplayValue('Total', totalFinal);
 
-                $('#tax_amount').val(ppnAmount);
-                $('#total_amount').val(finalTotal);
+                $('#tax_amount').val(totalPPN);
+                $('#total_amount').val(totalFinal);
             }
 
             function updateDisplayValue(label, value) {
@@ -462,6 +481,7 @@
             }
 
             updateTotals();
+
         });
     </script>
 @endpush
