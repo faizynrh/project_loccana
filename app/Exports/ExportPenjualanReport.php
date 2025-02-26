@@ -5,7 +5,7 @@ namespace App\Exports;
 use Maatwebsite\Excel\Concerns\WithStyles;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class ExportReportPenjualan implements WithStyles
+class ExportPenjualanReport implements WithStyles
 {
     protected $data;
     protected $principalname;
