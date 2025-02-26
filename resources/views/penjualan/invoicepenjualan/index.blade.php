@@ -186,13 +186,12 @@
                                                 <a href="/invoice_penjualan/edit/${row.invoice_id}" class="btn btn-sm btn-warning mb-2" style="margin-right:4px;" title="Edit" ${row.status === 'paid' ? 'disabled' : ''}>
                                                     <i class="bi bi-pencil"></i>
                                                 </a>
-                                                <form action="/invoice_penjualan/delete/${row.invoice_id}" method="POST" invoice_id="delete${row.id}" style="display:inline;">
+                                                <form action="/invoice_penjualan/delete/${row.invoice_id}" method="POST" id="delete${row.invoice_id}" style="display:inline;">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="submit" class="btn btn-sm btn-danger mb-2" style="margin-right:4px;" title="Hapus" onclick="confirmDelete(${row.id})" ${row.status === 'paid' ? 'disabled' : ''}>
+                                                    <button type="button" class="btn btn-sm btn-danger mb-2" style="margin-right:4px;" title="Hapus" onclick="confirmDelete(${row.invoice_id})" ${row.status === 'paid' ? 'disabled' : ''}>
                                                         <i class="bi bi-trash"></i>
                                                     </button>
-                                                </form>
                                             </div>
                                         `;
                             }
