@@ -52,7 +52,7 @@
 @endsection
 @push('scripts')
     <script>
-        $(document).ready(function () {
+        $(document).ready(function() {
             $('#tablecoa').DataTable({
                 serverSide: true,
                 processing: true,
@@ -61,24 +61,24 @@
                     type: 'GET',
                 },
                 columns: [{
-                    data: null,
-                    render: function (data, type, row, meta) {
-                        return meta.row + meta.settings._iDisplayStart + 1;
-                    }
-                },
-                {
-                    data: 'parent'
-                },
-                {
-                    data: 'coa'
-                },
-                {
-                    data: 'description'
-                },
-                {
-                    data: null,
-                    render: function (data, type, row) {
-                        return `
+                        data: null,
+                        render: function(data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+                    {
+                        data: 'parent'
+                    },
+                    {
+                        data: 'coa'
+                    },
+                    {
+                        data: 'description'
+                    },
+                    {
+                        data: null,
+                        render: function(data, type, row) {
+                            return `
                                             <div class="d-flex mb-2">
                                                         <button type="button" class="btn btn-sm btn-info me-2 btn-detail-coa"
                                                             data-id="${row.id}"
@@ -101,8 +101,8 @@
                                                         </form>
                                             </div>
                                         `;
+                        }
                     }
-                }
                 ]
             });
 
@@ -117,92 +117,97 @@
                 myModal.show();
             }
 
-            $(document).on('click', '.btn-add-coa', function (e) {
+            $(document).on('click', '.btn-add-coa', function(e) {
                 e.preventDefault();
                 const url = '{{ route('coa.store') }}'
                 const $button = $(this);
 
                 $('#loading-overlay').fadeIn();
+                $button.prop("disabled", true).html('<i class="bi bi-hourglass-split"></i>');
 
                 $.ajax({
                     url: url,
                     type: 'GET',
                     dataType: 'html',
-                    beforeSend: function () {
+                    beforeSend: function() {
                         //
                     },
-                    success: function (response) {
+                    success: function(response) {
                         console.log(response);
                         updateModal('#modal-coa', 'Tambah COA', response,
                             'modal-lg');
                     },
-                    error: function (xhr) {
+                    error: function(xhr) {
                         let errorMsg = xhr.responseText ||
                             '<p>An error occurred while loading the content.</p>';
                         $('#content-coa').html(errorMsg);
                     },
-                    complete: function () {
+                    complete: function() {
                         $('#loading-overlay').fadeOut();
+                        $button.prop("disabled", false).html('+ Tambah COA');
                     }
                 });
             });
 
-            $(document).on('click', '.btn-detail-coa', function (e) {
+            $(document).on('click', '.btn-detail-coa', function(e) {
                 e.preventDefault();
                 const coaId = $(this).data('id');
                 const url = '{{ route('coa.detail', ':coaId') }}'.replace(':coaId', coaId);
                 const $button = $(this);
 
                 $('#loading-overlay').fadeIn();
-
+                $button.prop("disabled", true).html('<i class="bi bi-hourglass-split"></i>');
                 $.ajax({
                     url: url,
                     type: 'GET',
                     dataType: 'html',
-                    beforeSend: function () {
+                    beforeSend: function() {
                         //
                     },
-                    success: function (response) {
+                    success: function(response) {
                         updateModal('#modal-coa', 'Detail COA', response,
                             'modal-lg');
                     },
-                    error: function (xhr) {
+                    error: function(xhr) {
                         let errorMsg = xhr.responseText ||
                             '<p>An error occurred while loading the content.</p>';
                         $('#content-coa').html(errorMsg);
                     },
-                    complete: function () {
+                    complete: function() {
                         $('#loading-overlay').fadeOut();
+                        $button.prop("disabled", false).html('<i class="bi bi-eye"></i>');
                     }
                 });
             });
 
-            $(document).on('click', '.btn-edit-coa', function (e) {
+            $(document).on('click', '.btn-edit-coa', function(e) {
                 e.preventDefault();
                 const coaId = $(this).data('id');
                 const url = '{{ route('coa.edit', ':coaId') }}'.replace(':coaId', coaId);
                 const $button = $(this);
 
                 $('#loading-overlay').fadeIn();
+                $button.prop("disabled", true).html('<i class="bi bi-hourglass-split"></i>');
 
                 $.ajax({
                     url: url,
                     type: 'GET',
                     dataType: 'html',
-                    beforeSend: function () {
+                    beforeSend: function() {
                         //
                     },
-                    success: function (response) {
+                    success: function(response) {
                         updateModal('#modal-coa', 'Edit COA', response,
                             'modal-lg');
                     },
-                    error: function (xhr) {
+                    error: function(xhr) {
                         let errorMsg = xhr.responseText ||
                             '<p>An error occurred while loading the content.</p>';
                         $('#content-coa').html(errorMsg);
                     },
-                    complete: function () {
+                    complete: function() {
                         $('#loading-overlay').fadeOut();
+                        $button.prop("disabled", false).html('<i class="bi bi-pencil"></i>');
                     }
                 });
             });
