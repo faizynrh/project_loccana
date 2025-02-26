@@ -57,7 +57,7 @@
 @endsection
 @push('scripts')
     <script>
-        $(document).ready(function () {
+        $(document).ready(function() {
             $('#tablegudang').DataTable({
                 serverSide: true,
                 processing: true,
@@ -66,27 +66,27 @@
                     type: 'GET',
                 },
                 columns: [{
-                    data: null,
-                    render: function (data, type, row, meta) {
-                        return meta.row + meta.settings._iDisplayStart + 1;
-                    }
-                },
-                {
-                    data: 'name'
-                },
-                {
-                    data: 'description',
-                },
-                {
-                    data: 'location'
-                },
-                {
-                    data: 'capacity'
-                },
-                {
-                    data: null,
-                    render: function (data, type, row) {
-                        return `
+                        data: null,
+                        render: function(data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+                    {
+                        data: 'name'
+                    },
+                    {
+                        data: 'description',
+                    },
+                    {
+                        data: 'location'
+                    },
+                    {
+                        data: 'capacity'
+                    },
+                    {
+                        data: null,
+                        render: function(data, type, row) {
+                            return `
                                     <button type="button" class="btn btn-sm btn-warning me-2 btn-edit-gudang"
                                                         data-id="${row.id}"
                                                         title="Edit">
@@ -101,8 +101,8 @@
                                         </button>
                                     </form>
                         `;
+                        }
                     }
-                }
                 ]
             });
 
@@ -117,61 +117,65 @@
                 myModal.show();
             }
 
-            $(document).on('click', '.btn-add-gudang', function (e) {
+            $(document).on('click', '.btn-add-gudang', function(e) {
                 e.preventDefault();
                 const url = '{{ route('gudang.store') }}'
                 const $button = $(this);
 
                 $('#loading-overlay').fadeIn();
+                $button.prop("disabled", true).html('<i class="bi bi-hourglass-split"></i>');
 
                 $.ajax({
                     url: url,
                     type: 'GET',
                     dataType: 'html',
-                    beforeSend: function () {
+                    beforeSend: function() {
                         //
                     },
-                    success: function (response) {
+                    success: function(response) {
                         updateModal('#modal-gudang', 'Tambah Gudang', response,
                             'modal-lg');
                     },
-                    error: function (xhr) {
+                    error: function(xhr) {
                         let errorMsg = xhr.responseText ||
                             '<p>An error occurred while loading the content.</p>';
                         $('#content-gudang').html(errorMsg);
                     },
-                    complete: function () {
+                    complete: function() {
                         $('#loading-overlay').fadeOut();
+                        $button.prop("disabled", false).html('+ Tambah Gudang');
                     }
                 });
             });
 
-            $(document).on('click', '.btn-edit-gudang', function (e) {
+            $(document).on('click', '.btn-edit-gudang', function(e) {
                 e.preventDefault();
                 const gudangid = $(this).data('id');
                 const url = '{{ route('gudang.edit', ':gudangid') }}'.replace(':gudangid', gudangid);
                 const $button = $(this);
 
                 $('#loading-overlay').fadeIn();
+                $button.prop("disabled", true).html('<i class="bi bi-hourglass-split"></i>');
 
                 $.ajax({
                     url: url,
                     type: 'GET',
                     dataType: 'html',
-                    beforeSend: function () {
+                    beforeSend: function() {
                         //
                     },
-                    success: function (response) {
+                    success: function(response) {
                         updateModal('#modal-gudang', 'Edit Gudang', response,
                             'modal-lg');
                     },
-                    error: function (xhr) {
+                    error: function(xhr) {
                         let errorMsg = xhr.responseText ||
                             '<p>An error occurred while loading the content.</p>';
                         $('#content-gudang').html(errorMsg);
                     },
-                    complete: function () {
+                    complete: function() {
                         $('#loading-overlay').fadeOut();
+                        $button.prop("disabled", false).html('<i class="bi bi-pencil"></i>');
                     }
                 });
             });
