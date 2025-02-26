@@ -99,11 +99,19 @@
         <script>
             $(document).ready(function() {
                 $('#exportBtn').click(function() {
-                    var start_date = $('#start_date').val();
-                    var end_date = $('#end_date').val();
+                    const dataTable = $('#tablestock').DataTable();
+                    const {
+                        recordsDisplay
+                    } = dataTable.page.info();
 
-                    var formData = '&start_date=' + start_date + '&end_date=' + end_date;
-                    console.log("Form Data:" + formData);
+                    const start_date = $('#start_date').val();
+                    const end_date = $('#end_date').val();
+
+                    const formData = new URLSearchParams({
+                        start_date: start_date,
+                        end_date: end_date,
+                        total_entries: recordsDisplay
+                    }).toString();
                     window.location.href = "/stock/export-excel?" + formData;
                 });
                 let table = $('#tablestock').DataTable({

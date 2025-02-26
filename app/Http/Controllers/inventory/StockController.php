@@ -108,11 +108,15 @@ class StockController extends Controller
         try {
             $start_date = $request->input('start_date', 0);
             $end_date = $request->input('end_date', 0);
+            $length = $request->input('total_entries');
 
             $requestbody = [
+                'search' => '',
                 'start_date' => $start_date,
                 'end_date' => $end_date,
                 'company_id' => 0,
+                'limit' => $length,
+                'offset' => 0,
             ];
 
             $apiResponse = storeApi(env('STOCK_URL') . '/lists', $requestbody);
