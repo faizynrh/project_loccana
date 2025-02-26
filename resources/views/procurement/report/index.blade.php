@@ -101,15 +101,23 @@
                 $('#exportBtn').hide();
 
                 $('#exportBtn').click(function() {
-                    var principal = $('#principal').val();
-                    var start_date = $('#start_date').val();
-                    var end_date = $('#end_date').val();
-                    var principalName = $('#principal option:selected').text();
+                    const dataTable = $('#tablereport').DataTable();
+                    const {
+                        recordsDisplay
+                    } = dataTable.page.info();
 
-                    var formData = 'principal=' + principal +
-                        '&start_date=' + start_date + '&end_date=' + end_date +
-                        '&principal_name=' + encodeURIComponent(principalName);
-                    console.log("Form Data:" + formData);
+                    const principal = $('#principal').val();
+                    const start_date = $('#start_date').val();
+                    const end_date = $('#end_date').val();
+                    const principalName = $('#principal option:selected').text();
+
+                    const formData = new URLSearchParams({
+                        principal: principal,
+                        start_date: start_date,
+                        end_date: end_date,
+                        principal_name: principalName,
+                        total_entries: recordsDisplay
+                    }).toString();
                     window.location.href = "/report_pembelian/export-excel?" + formData;
                 });
 

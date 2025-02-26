@@ -65,12 +65,16 @@ class ReportController extends Controller
             $start_date = $request->input('start_date', 0);
             $end_date = $request->input('end_date', 0);
             $principalname = $request->input('principal_name');
+            $length = $request->input('total_entries');
 
             $requestbody = [
+                'search' => '',
                 'partner_id' => $partner_id,
                 'start_date' => $start_date,
                 'end_date' => $end_date,
                 'company_id' => 0,
+                'limit' => $length,
+                'offset' => 0,
             ];
 
             $apiResponse = storeApi(env('REPORT_STOCK_URL') . '/lists', $requestbody);

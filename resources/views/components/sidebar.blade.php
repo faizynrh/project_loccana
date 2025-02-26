@@ -110,7 +110,7 @@
                     </ul>
                 </li>
                 <li
-                    class="sidebar-item has-sub {{ Request::is('penjualan*') || Request::is('range_price*') || Request::is('return_penjualan*') || Request::is('invoice_penjualan*') || Request::is('dasar_penjualan*') ? 'active' : '' }}">
+                    class="sidebar-item has-sub {{ Request::is('penjualan*') || Request::is('range_price*') || Request::is('return_penjualan*') || Request::is('invoice_penjualan*') || Request::is('dasar_penjualan*') || Request::is('report_penjualan*') ? 'active' : '' }}">
                     <a href="#" class="sidebar-link">
                         <i class="bi bi-cart-fill"></i>
                         <span>Penjualan</span>
@@ -131,8 +131,8 @@
                         <li class="submenu-item {{ Request::is('dasar_penjualan*') ? 'active' : '' }}">
                             <a href="/dasar_penjualan" class="submenu-link">Dasar Penjualan</a>
                         </li>
-                        <li class="submenu-item">
-                            <a href="#" class="submenu-link">Report</a>
+                        <li class="submenu-item {{ Request::is('report_penjualan*') ? 'active' : '' }}">
+                            <a href="/report_penjualan" class="submenu-link">Report</a>
                         </li>
                     </ul>
                 </li>

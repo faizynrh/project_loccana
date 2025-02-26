@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Controllers\procurement;
+namespace App\Http\Controllers\penjualan;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Maatwebsite\Excel\Facades\Excel;
-use App\Exports\ExportProcurementReport;
+use App\Exports\ExportPenjualanReport;
 
-class ReportController extends Controller
+class ReportPenjualanController extends Controller
 {
     public function ajax(Request $request)
     {
@@ -20,22 +20,17 @@ class ReportController extends Controller
             $search = $request->input('search.value') ?? '';
 
             $requestbody = [
+                'search' => $search,
                 'partner_id' => $partner_id,
                 'start_date' => $start_date,
                 'end_date' => $end_date,
-                'search' => $search,
                 'company_id' => 0,
                 'limit' => $length,
                 'offset' => $start,
             ];
-
-            $apiResponse = storeApi(env('REPORT_URL'), $requestbody);
+            $apiResponse = storeApi(env('REPORT_PENJUALAN_URL'), $requestbody);
             if ($apiResponse->successful()) {
                 $data = $apiResponse->json();
-
-                $tableData = $data['data']['table'] ?? [];
-
-                session(['export_data' => $tableData]);
                 return response()->json([
                     'draw' => $request->input('draw'),
                     'recordsTotal' => $data['data']['jumlah_filter'] ?? 0,
@@ -62,18 +57,17 @@ class ReportController extends Controller
         $partnerResponse = fectApi(env('LIST_PARTNER') . '/' . $company_id . '/' . $supplier . '/' . $customer);
         if ($partnerResponse->successful()) {
             $partner = json_decode($partnerResponse->body());
-            return view('procurement.report.index', compact('partner'));
+            return view('penjualan.reportpenjualan.index', compact('partner'));
         }
-        return view('procurement.report.index');
+        return view('penjualan.reportpenjualan.index');
     }
-
 
     public function exportExcel(Request $request)
     {
         try {
-            $partner_id = $request->input('principal', 0);
-            $start_date = $request->input('start_date', 0);
-            $end_date = $request->input('end_date', 0);
+            $partner_id = $request->input('principal');
+            $start_date = $request->input('start_date');
+            $end_date = $request->input('end_date');
             $principalname = $request->input('principal_name');
             $length = $request->input('total_entries');
 
@@ -86,16 +80,17 @@ class ReportController extends Controller
                 'limit' => $length,
                 'offset' => 0,
             ];
-            $apiResponse = storeApi(env('REPORT_URL'), $requestbody);
+
+            $apiResponse = storeApi(env('REPORT_PENJUALAN_URL'), $requestbody);
+
             if ($apiResponse->successful()) {
                 $data = json_decode($apiResponse->body());
                 if (empty($data)) {
                     return back()->with('error', 'Tidak ada data untuk diexport.');
                 }
 
-                return Excel::download(new ExportProcurementReport($data, $principalname, $start_date, $end_date), 'Procurement Report.xlsx');
+                return Excel::download(new ExportPenjualanReport($data, $principalname, $start_date, $end_date), 'Laporan Penjualan.xlsx');
             }
-
             return response()->json(['error' => $apiResponse->json()['message']]);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()]);

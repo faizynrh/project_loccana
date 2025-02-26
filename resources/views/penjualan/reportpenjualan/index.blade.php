@@ -2,21 +2,21 @@
 @section('content')
     @push('styles')
         <style>
-            /* #tabledasarpenjualan thead tr:first-child th {
-                                        position: sticky;
-                                        background: white;
-                                        z-index: 0;
-                                        border-bottom: 2px solid #ddd;
-                                    }
+            #tablereportpenjualane thead tr:first-child th {
+                position: sticky;
+                background: white;
+                z-index: 0;
+                border-bottom: 2px solid #ddd;
+            }
 
-                                    #tabledasarpenjualan thead tr:first-child th {
-                                        top: 0;
-                                    }
+            #tablereportpenjualane thead tr:first-child th {
+                top: 0;
+            }
 
-                                    .table-responsive {
-                                        max-height: 50px;
-                                        overflow-y: auto;
-                                    } */
+            .table-responsivee {
+                max-height: 50px;
+                overflow-y: auto;
+            }
         </style>
     @endpush
     <div id="main-content">
@@ -24,7 +24,7 @@
             <div class="page-title">
                 <div class="row">
                     <div class="col-12 col-md-6 order-md-1 order-last">
-                        <h3>Laporan Dasar Penjualan</h3>
+                        <h3>Laporan Penjualan</h3>
                     </div>
                     <div class="col-12 col-md-6 order-md-2 order-first">
                         <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
@@ -33,7 +33,7 @@
                                     <a href="/dashboard">Dashboard</a>
                                 </li>
                                 <li class="breadcrumb-item active" aria-current="page">
-                                    Laporan Dasar Penjualan
+                                    Laporan Penjualan
                                 </li>
                             </ol>
                         </nav>
@@ -75,24 +75,48 @@
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
-                                <table class="table table-striped table-bordered mt-3" id="tabledasarpenjualan">
+                                <table class="table table-striped table-bordered mt-3" id="tablereportpenjualan">
                                     <thead>
                                         <tr>
-                                            <th>Tgl</th>
-                                            <th>Produk</th>
-                                            <th>Customer</th>
-                                            <th>Faktur</th>
-                                            <th>Lt/Kg</th>
+                                            <th rowspan="2">No</th>
+                                            <th rowspan="2">Kode Produk</th>
+                                            <th rowspan="2">Nama Produk</th>
+                                            <th rowspan="2">Kemasan</th>
+                                            <th colspan="6" class="text-center">Jumlah</th>
+                                            <th colspan="5" class="text-center">Rata-Rata</th>
+                                            <th rowspan="2">Persentase</th>
+                                        </tr>
+                                        <tr>
                                             <th>Pcs</th>
+                                            <th>Lt/Kg</th>
+                                            <th>Total Diskon</th>
                                             <th>Total</th>
+                                            <th>PPN</th>
+                                            <th>Total + PPN</th>
                                             <th>Harga Pokok</th>
                                             <th>Harga per Kemasan</th>
-                                            <th>Harga Jual per Kemasan</th>
-                                            <th>Harga Jual Lt/kg</th>
-                                            <th>Laba/Rugi per Kemasan</th>
-                                            <th>Laba Rugi Per Produk</th>
-                                            <th>Percent</th>
+                                            <th>Harga per Liter</th>
+                                            <th>Laba/Rugi per Liter</th>
+                                            <th>Rugi Per Produk</th>
                                         </tr>
+                                        {{-- <tr>
+                                            <th>No</th>
+                                            <th>Kode Produk</th>
+                                            <th>Nama Produk</th>
+                                            <th>Kemasan</th>
+                                            <th>Jumlah Pcs</th>
+                                            <th>Jumlah Lt/Kg</th>
+                                            <th>Jumlah Total</th>
+                                            <th>Jumlah PPN</th>
+                                            <th>Jumlah Total + PPN</th>
+                                            <th>Jumlah Total Diskon</th>
+                                            <th>Rata-Rata Harga Pokok</th>
+                                            <th>Rata-Rata Harga per Kemasan</th>
+                                            <th>Rata-Rata Harga per Liter</th>
+                                            <th>Rata-Rata Laba/Rugi per Liter</th>
+                                            <th>Rata-Rata Rugi Per Produk</th>
+                                            <th>Persentase</th>
+                                        </tr> --}}
                                     </thead>
                                 </table>
                             </div>
@@ -108,7 +132,7 @@
             $('#btnprint').hide();
 
             $('#btnprint').click(function() {
-                const dataTable = $('#tabledasarpenjualan').DataTable();
+                const dataTable = $('#tablereportpenjualan').DataTable();
                 const {
                     recordsDisplay
                 } = dataTable.page.info();
@@ -126,8 +150,10 @@
                     total_entries: recordsDisplay
                 }).toString();
                 console.log(formData);
-                window.location.href = "/dasar_penjualan/export-excel?" + formData;
+                window.location.href = "/report_penjualan/export-excel?" + formData;
             });
+
+
 
             $('#searchForm').on('submit', function(e) {
                 e.preventDefault();
@@ -135,64 +161,75 @@
                 let $btnCari = $('button[type="submit"]');
                 $btnCari.prop('disabled', true).text('Processing...');
 
-                $('#tabledasarpenjualan').DataTable().destroy();
-                var table = $('#tabledasarpenjualan').DataTable({
+                $('#tablereportpenjualan').DataTable().destroy();
+                var table = $('#tablereportpenjualan').DataTable({
                     serverSide: true,
                     processing: true,
                     deferloading: false,
                     ajax: {
-                        url: '{{ route('dasar_penjualan.ajax') }}',
+                        url: '{{ route('report_penjualan.ajax') }}',
                         type: 'GET',
                         data: function(d) {
                             d.principal = $('#principal').val();
                             d.start_date = $('#start_date').val();
                             d.end_date = $('#end_date').val();
+                            var pageInfo = $('#tablereportpenjualan').DataTable().page.info();
+                            d.total_entries = pageInfo.recordsTotal;
                         },
                         complete: function() {
                             $btnCari.prop('disabled', false).text('Cari');
                         }
                     },
                     columns: [{
-                            data: 'tgl_penjualan'
+                            data: null,
+                            render: function(data, type, row, meta) {
+                                return meta.row + meta.settings._iDisplayStart + 1;
+                            }
                         },
                         {
-                            data: 'item'
+                            data: 'kode_produk'
                         },
                         {
-                            data: 'partner_name'
+                            data: 'produk'
                         },
                         {
-                            data: 'faktur'
+                            data: 'kemasan'
                         },
                         {
-                            data: 'qty_lt_kg'
+                            data: 'sum_of_pcs'
                         },
                         {
-                            data: 'qty_pcs'
+                            data: 'sum_of_ltkg'
                         },
                         {
-                            data: 'total'
+                            data: 'sum_of_total_diskon'
                         },
                         {
-                            data: 'harga_pokok'
+                            data: 'sum_of_total'
                         },
                         {
-                            data: 'harga_perkemasan'
+                            data: 'sum_of_ppn'
                         },
                         {
-                            data: 'harga_jual_perkemasan'
+                            data: 'sum_of_totppn'
                         },
                         {
-                            data: 'harga_jual_lt_kg'
+                            data: 'average_of_harga_pokok'
                         },
                         {
-                            data: 'laba_rugi_perkemasan'
+                            data: 'average_hargakemasan'
                         },
                         {
-                            data: 'laba_rugi_perproduk'
+                            data: 'average_hargalt'
                         },
                         {
-                            data: 'percent'
+                            data: 'laba_rugi'
+                        },
+                        {
+                            data: 'labarugi_produk'
+                        },
+                        {
+                            data: 'persen'
                         },
                     ]
                 });
