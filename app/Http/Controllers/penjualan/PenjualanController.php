@@ -269,12 +269,15 @@ class PenjualanController extends Controller
 
         $partnerResponse = fectApi(env('LIST_PARTNER') . '/' . $company_id . '/' . $suplier . '/' . $customer);
         $gudangResponse = fectApi(env('LIST_GUDANG') . '/' . $company_id);
+        $apiResponse = fectApi(env('PENJUALAN_URL') . '/' . $id);
 
-        if ($partnerResponse->successful() && $gudangResponse->successful()) {
+        if ($partnerResponse->successful() && $gudangResponse->successful() && $apiResponse->successful()) {
             $partner = $partnerResponse->json()['data'];
             $gudang = $gudangResponse->json()['data'];
+            $data = json_decode($apiResponse->getbody()->getContents(), false);
+            // dd($data);
             // $poCode = $this->generatePOCode();
-            return view('penjualan.penjualan.edit', compact('partner', 'gudang', ));
+            return view('penjualan.penjualan.edit', compact('partner', 'gudang', 'data'));
         } else {
             $errors = [];
             if (!$gudangResponse->successful()) {
@@ -282,6 +285,9 @@ class PenjualanController extends Controller
             }
             if (!$partnerResponse->successful()) {
                 $errors[] = $partnerResponse->json()['message'];
+            }
+            if (!$apiResponse->successful()) {
+                $errors[] = $apiResponse->json()['message'];
             }
             return back()->withErrors($errors);
         }
