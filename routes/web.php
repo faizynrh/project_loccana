@@ -360,8 +360,13 @@ Route::middleware('auth.login')->group(
             Route::get('/ajax', action: [HutangController::class, 'ajax'])->name('ajax');
             Route::get('/ajaxpembayaran', action: [HutangController::class, 'ajaxpembayaran'])->name('ajaxpembayaran');
             Route::get('/', [HutangController::class, 'index'])->name('index');
-            Route::get('/pembayaran', [HutangController::class, 'pembayaran'])->name('pembayaran');
             Route::get('/detail_hutang/{id}', [HutangController::class, 'showhutang'])->name('detail');
+            Route::get('/pembayaran', [HutangController::class, 'pembayaran'])->name('pembayaran');
+            Route::get('/pembayaran/add', [HutangController::class, 'create'])->name('create');
+            Route::post('/store', [HutangController::class, 'store'])->name('store');
+            Route::get('/getinvoice/{id}', [HutangController::class, 'getinvoice'])->name('getinvoice');
+            Route::get('/pembayaran/detail_pembayaran/{id}', [HutangController::class, 'showpembayaran'])->name('detail');
+            Route::delete('/pembayaran/delete/{id}', [HutangController::class, 'destroy'])->name('destroy');
         });
     }
 

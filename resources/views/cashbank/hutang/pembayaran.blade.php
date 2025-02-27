@@ -19,10 +19,13 @@
                         <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item">
-                                    <a href="/hutang">Dashboard</a>
+                                    <a href="/dashboard">Dashboard</a>
+                                </li>
+                                <li class="breadcrumb-item">
+                                    <a href="/hutang">Hutang</a>
                                 </li>
                                 <li class="breadcrumb-item active" aria-current="page">
-                                    List Pembayaran Hutang
+                                    Pembayaran Hutang
                                 </li>
                             </ol>
                         </nav>
@@ -34,7 +37,7 @@
                     <div class="card-header">
                         <div class="d-flex justify-content-between align-items-center">
                             <div class="d-flex align-items-center">
-                                <a href="/hutang/add" class="btn btn-primary me-2 fw-bold">+ Pembayaran</a>
+                                <a href="/hutang/pembayaran/add" class="btn btn-primary me-2 fw-bold">+ Pembayaran</a>
                                 <select id="yearSelect" class="form-select me-2" name="year" style="width: auto;">
                                     @php
                                         $currentYear = Carbon\Carbon::now()->year;
@@ -64,7 +67,7 @@
                                     <option value="konfirmasi">Konfirmasi</option>
                                 </select>
                             </div>
-                            <a href="/hutang" class="btn btn-primary me-2 fw-bold text-end">Kembali</a>
+                            <a href="/hutang" class="btn btn-secondary me-2 fw-bold text-end">Kembali</a>
                         </div>
                     </div>
                     <div class="card-body">
@@ -120,7 +123,10 @@
                             data: 'partner_name'
                         },
                         {
-                            data: 'total'
+                            data: 'total',
+                            render: function(data, type, row) {
+                                return formatRupiah(data);
+                            }
                         },
                         {
                             data: 'tgl'
@@ -132,17 +138,44 @@
                             data: 'status'
                         },
                         {
+                            data: 'status'
+                        },
+                        {
                             data: null,
                             render: function(data, type, row) {
-                                return `
-                                    <div class="text-center">
-                                        <a href="/penerimaan_barang/detail/${row.invoice_id}" class="btn btn-sm btn-info mb-2" title="Detail">
-                                            <i class="bi bi-eye"></i>
-                                        </a>
-                                    </div>
-                                    `;
+                                let actionButtons = `
+            <div class="btn-group dropdown me-1 mb-1">
+                <button type="button" class="btn btn-outline-danger rounded-3 dropdown-toggle dropdown-toggle-split"
+                        data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-reference="parent">
+                    <span class="sr-only"><i class="bi bi-list-task"></i></span>
+                </button>
+                <div class="dropdown-menu">
+                    <a href="/hutang/pembayaran/detail_pembayaran/${row.transaksi_id}" class="dropdown-item" title="Detail">
+                        <i class="bi bi-eye text-primary"></i> Detail
+                    </a>
+                    <a href="/penerimaan_barang/print/${row.transaksi_id}" class="dropdown-item" target="_blank" title="Print PDF">
+                        <i class="bi bi-printer text-warning"></i> Print PDF
+                    </a>
+                    <div class="dropdown-divider"></div>
+                    <a href="/penerimaan_barang/edit/${row.transaksi_id}" class="dropdown-item" title="Edit">
+                        <i class="bi bi-pencil text-info"></i> Edit
+                    </a>
+                    <form action="/hutang/pembayaran/delete/${row.transaksi_id}" method="POST" id="delete${row.transaksi_id}" style="display:inline;">
+                        @csrf
+                        @method('DELETE')
+                        <button type="button" class="dropdown-item" title="Hapus" onclick="confirmDelete(${row.transaksi_id})">
+                            <i class="bi bi-trash text-danger"></i> Delete
+                        </button>
+                    </form>
+                </div>
+            </div>
+        `;
+
+                                return `<div class="d-flex">${actionButtons}</div>`;
                             }
                         }
+
+
                     ]
                 });
             };

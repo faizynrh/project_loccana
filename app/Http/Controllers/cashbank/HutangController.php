@@ -115,12 +115,60 @@ class HutangController extends Controller
         return view('cashbank.hutang.pembayaran');
     }
 
+    public function showpembayaran(string $id)
+    {
+        try {
+            $apiResponse = fectApi(env('HUTANG_URL') . '/hutang/' . $id);
+            if ($apiResponse->successful()) {
+                $data = json_decode($apiResponse->body());
+                return view('cashbank.hutang.detailpembayaran', compact('data'));
+            } else {
+                return back()->withErrors($apiResponse->json()['message']);
+            }
+        } catch (\Exception $e) {
+            return back()->withErrors($e->getMessage());
+        }
+    }
+
     /**
      * Store a newly created resource in storage.
      */
+    public function create(Request $request)
+    {
+        $companyid = 2;
+        $partnerResponse = fectApi(env('LIST_PARTNERTYPES'));
+        $coaResponse = fectApi(env('LIST_COA') . '/' . $companyid);
+        if ($partnerResponse->successful() && $coaResponse->successful()) {
+            $partner
+                = json_decode($partnerResponse->body(), false);
+            $coa =
+                json_decode($coaResponse->body(), false);
+            return view('cashbank.hutang.add', compact('partner', 'coa'));
+        } else {
+            $errors = [];
+            if (!$coaResponse->successful()) {
+                $errors[] = $coaResponse->json()['message'];
+            }
+            if (!$partnerResponse->successful()) {
+                $errors[] = $partnerResponse->json()['message'];
+            }
+            return back()->withErrors($errors);
+        }
+    }
+
+    public function getinvoice($id)
+    {
+        $apiResponse = fectApi(env('LIST_INVOICE_BAYAR') . '/' . $id); // Panggil API eksternal
+        if ($apiResponse->successful()) {
+            return response()->json($apiResponse->json()['data']);
+        } else {
+            return response()->json($apiResponse->json()['message']);
+        }
+    }
+
     public function store(Request $request)
     {
-        //
+        dd($request->all());
     }
 
     /**
@@ -152,6 +200,15 @@ class HutangController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        try {
+            $apiResponse = deleteApi(env('HUTANG_URL') . '/hutang/' . $id);
+            if ($apiResponse->successful()) {
+                return redirect()->route('hutang.pembayaran')->with('success', $apiResponse->json()['message']);
+            } else {
+                return back()->withErrors($apiResponse->json()['message']);
+            }
+        } catch (\Exception $e) {
+            return back()->withErrors($e->getMessage());
+        }
     }
 }

@@ -7806,3 +7806,15 @@ function updateModal(modalId, title, content, sizeClass) {
     );
     myModal.show();
 }
+
+function formatRupiah(angka) {
+    if (angka) {
+        return new Intl.NumberFormat("id-ID", {
+            style: "currency",
+            currency: "IDR",
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+        }).format(angka);
+    }
+    return angka;
+}
