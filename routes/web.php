@@ -11,6 +11,7 @@ use App\Http\Controllers\authentication\ShowDashboard;
 use App\Http\Controllers\procurement\ReportController;
 use App\Http\Controllers\procurement\ReturnController;
 use App\Http\Controllers\authentication\AuthController;
+use App\Http\Controllers\cashbank\HutangController;
 use App\Http\Controllers\inventory\ReportController as InventoryReportController;
 use App\Http\Controllers\inventory\StockController;
 use App\Http\Controllers\inventory\StockGudangController;
@@ -352,6 +353,17 @@ Route::middleware('auth.login')->group(
             Route::get('/ajax', [ReportPenjualanController::class, 'ajax'])->name('ajax');
             Route::get('/export-excel', [ReportPenjualanController::class, 'exportExcel'])->name('exportexcel');
         });
+
+        // ===================================== CASHBANK =========================================
+
+        Route::prefix('/hutang')->name('hutang.')->group(function () {
+            Route::get('/ajax', action: [HutangController::class, 'ajax'])->name('ajax');
+            Route::get('/ajaxpembayaran', action: [HutangController::class, 'ajaxpembayaran'])->name('ajaxpembayaran');
+            Route::get('/', [HutangController::class, 'index'])->name('index');
+            Route::get('/pembayaran', [HutangController::class, 'pembayaran'])->name('pembayaran');
+            Route::get('/detail_hutang/{id}', [HutangController::class, 'showhutang'])->name('detail');
+        });
     }
+
 
 );
