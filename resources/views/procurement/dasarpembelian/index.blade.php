@@ -84,10 +84,32 @@
 @endsection
 @push('scripts')
     <script>
-        $(document).ready(function () {
+        $(document).ready(function() {
             $('#btnprint').hide();
 
-            $('#searchForm').on('submit', function (e) {
+            $('#btnprint').click(function() {
+                const dataTable = $('#tabledasarpembelian').DataTable();
+                const {
+                    recordsDisplay
+                } = dataTable.page.info();
+
+                const principal = $('#principal').val();
+                const start_date = $('#start_date').val();
+                const end_date = $('#end_date').val();
+                const principalName = $('#principal option:selected').text();
+
+                const formData = new URLSearchParams({
+                    principal: principal,
+                    start_date: start_date,
+                    end_date: end_date,
+                    principal_name: principalName,
+                    total_entries: recordsDisplay
+                }).toString();
+                console.log(formData);
+                window.location.href = "/dasar_pembelian/export-excel?" + formData;
+            });
+
+            $('#searchForm').on('submit', function(e) {
                 e.preventDefault();
 
                 let $btnCari = $('button[type="submit"]');
@@ -101,75 +123,72 @@
                     ajax: {
                         url: '{{ route('dasar_pembelian.ajax') }}',
                         type: 'GET',
-                        data: function (d) {
+                        data: function(d) {
                             d.principal = $('#principal').val();
                             d.start_date = $('#start_date').val();
                             d.end_date = $('#end_date').val();
                         },
-                        complete: function () {
+                        complete: function() {
                             $btnCari.prop('disabled', false).text('Cari');
                         }
                     },
                     columns: [{
-                        data: 'order_date',
-                        render: function (data) {
-                            if (data) {
-                                var date = new Date(data);
-                                return (
-                                    date.getDate().toString().padStart(2, '0') +
-                                    '-' +
-                                    (date.getMonth() + 1).toString().padStart(2,
-                                        '0') +
-                                    '-' +
-                                    date.getFullYear()
-                                );
-                            }
-                            return data;
+                            data: 'order_date',
+                            render: function(data) {
+                                if (data) {
+                                    var date = new Date(data);
+                                    return (
+                                        date.getDate().toString().padStart(2, '0') +
+                                        '-' +
+                                        (date.getMonth() + 1).toString().padStart(2,
+                                            '0') +
+                                        '-' +
+                                        date.getFullYear()
+                                    );
+                                }
+                                return data;
+                            },
                         },
-                    },
-                    {
-                        data: 'item_code'
-                    },
-                    {
-                        data: 'item_name'
-                    },
-                    {
-                        data: 'partner_name'
-                    },
-                    {
-                        data: 'qty'
-                    },
-                    {
-                        data: 'harga',
-                        render: function (data) {
-                            return formatRupiah(data);
+                        {
+                            data: 'item_code'
+                        },
+                        {
+                            data: 'item_name'
+                        },
+                        {
+                            data: 'partner_name'
+                        },
+                        {
+                            data: 'qty'
+                        },
+                        {
+                            data: 'harga',
+                            render: function(data) {
+                                return formatRupiah(data);
+                            }
+                        },
+                        {
+                            data: 'jumlah',
+                            render: function(data) {
+                                return formatRupiah(data);
+                            }
+                        },
+                        {
+                            data: 'ppn',
+                            render: function(data) {
+                                return formatRupiah(data);
+                            }
+                        },
+                        {
+                            data: 'jumlah_plus_ppn',
+                            render: function(data) {
+                                return formatRupiah(data);
+                            }
                         }
-                    },
-                    {
-                        data: 'jumlah',
-                        render: function (data) {
-                            return formatRupiah(data);
-                        }
-                    },
-                    {
-                        data: 'ppn',
-                        render: function (data) {
-                            return formatRupiah(data);
-                        }
-                    },
-                    {
-                        data: 'jumlah_plus_ppn',
-                        render: function (data) {
-                            return formatRupiah(data);
-                        }
-                    }
                     ]
                 });
 
                 $('#btnprint').show();
-                $('#btnprint').on('click', function () {
-                    table.button(0).trigger();
-                });
             });
 
             function formatRupiah(angka) {
@@ -182,27 +201,6 @@
                     }).format(angka);
                 }
                 return angka;
-            }
-
-            function getFormattedFilename() {
-                const bulan = [
-                    "Januari", "Februari", "Maret", "April", "Mei", "Juni",
-                    "Juli", "Agustus", "September", "Oktober", "November", "Desember"
-                ];
-
-                let startDate = new Date($('#start_date').val());
-                let endDate = new Date($('#end_date').val());
-                let principal = $('#principal option:selected').text().trim();
-
-                let startTanggal = startDate.getDate();
-                let startBulan = bulan[startDate.getMonth()];
-                let startTahun = startDate.getFullYear();
-
-                let endTanggal = endDate.getDate();
-                let endBulan = bulan[endDate.getMonth()];
-                let endTahun = endDate.getFullYear();
-
-                return `Laporan Dasar Pembelian ${principal} periode ${startTanggal} ${startBulan} ${startTahun} s/d ${endTanggal} ${endBulan} ${endTahun}`;
             }
         });
     </script>

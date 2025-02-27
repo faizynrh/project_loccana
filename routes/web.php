@@ -218,6 +218,7 @@ Route::middleware('auth.login')->group(
         Route::prefix('/dasar_pembelian')->name('dasar_pembelian.')->group(function () {
             Route::get('/', [DasarPembelianController::class, 'index'])->name('index');
             Route::get('/ajax', [DasarPembelianController::class, 'ajax'])->name('ajax');
+            Route::get('/export-excel', [DasarPembelianController::class, 'exportExcel'])->name('exportexcel');
         });
 
         Route::prefix('/rekap_po')->name('rekap_po.')->group(function () {
