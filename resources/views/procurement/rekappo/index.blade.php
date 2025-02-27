@@ -126,6 +126,30 @@
             $(document).ready(function() {
                 $('#btnprint').hide();
 
+                $('#btnprint').click(function() {
+                    const dataTable = $('#tablerekappo').DataTable();
+                    const {
+                        recordsDisplay
+                    } = dataTable.page.info();
+
+                    const principal = $('#principal').val();
+                    const year = $('#year').val();
+                    const month = $('#month').val();
+                    const principalName = $('#principal option:selected').text();
+                    const status = $('#tablerekappo thead select').val();
+
+                    const formData = new URLSearchParams({
+                        principal: principal,
+                        year: year,
+                        month: month,
+                        principal_name: principalName,
+                        status: status,
+                        total_entries: recordsDisplay
+                    }).toString();
+                    console.log(formData);
+                    window.location.href = "/rekap_po/export-excel?" + formData;
+                });
+
                 $('#searchForm').on('submit', function(e) {
                     e.preventDefault();
 
@@ -135,40 +159,40 @@
                     $('#tablerekappo').DataTable().destroy();
                     $('#tablerekappo thead').empty();
                     var header1Html = `
-                                        <tr>
-                                            <th colspan="12" class="text-center">PO</th>
-                                            <th colspan="9" class="text-center">Receiving</th>
-                                        </tr>
-                                    `;
+                            <tr>
+                                <th colspan="12" class="text-center">PO</th>
+                                <th colspan="9" class="text-center">Receiving</th>
+                            </tr>
+                        `;
 
                     var header2Html = `
-                                        <tr>
-                                            <th>No</th>
-                                            <th>Tanggal PO</th>
-                                            <th>Nomor PO</th>
-                                            <th>Principle</th>
-                                            <th>Kode Produk</th>
-                                            <th>Produk</th>
-                                            <th>Kemasan</th>
-                                            <th>Qlt</th>
-                                            <th>QBox</th>
-                                            <th>Tgl RC</th>
-                                            <th>SJ/SPPB</th>
-                                            <th>Total RC</th>
-                                            <th>Original PO</th>
-                                            <th>Dispro</th>
-                                            <th>Bonus</th>
-                                            <th>Titipan</th>
-                                            <th>Sisa Po</th>
-                                            <th>Sisa Box</th>
-                                            <th>Status</th>
-                                        </tr>
-                                    `;
+                            <tr>
+                                <th>No</th>
+                                <th>Tanggal PO</th>
+                                <th>Nomor PO</th>
+                                <th>Principle</th>
+                                <th>Kode Produk</th>
+                                <th>Produk</th>
+                                <th>Kemasan</th>
+                                <th>Qlt</th>
+                                <th>QBox</th>
+                                <th>Tgl RC</th>
+                                <th>SJ/SPPB</th>
+                                <th>Total RC</th>
+                                <th>Original PO</th>
+                                <th>Dispro</th>
+                                <th>Bonus</th>
+                                <th>Titipan</th>
+                                <th>Sisa Po</th>
+                                <th>Sisa Box</th>
+                                <th>Status</th>
+                            </tr>
+                        `;
 
                     $('#tablerekappo thead').html(header2Html);
 
                     var table = $('#tablerekappo').DataTable({
-                        serverSide: false,
+                        serverSide: true,
                         processing: true,
                         deferloading: false,
                         ajax: {
@@ -178,11 +202,13 @@
                                 d.principal = $('#principal').val();
                                 d.year = $('#year').val();
                                 d.month = $('#month').val();
+                                d.status = $('#tablerekappo thead select').val();
                             },
                             complete: function() {
                                 $btnCari.prop('disabled', false).text('Cari');
                             }
                         },
+
                         columns: [{
                                 data: null,
                                 render: function(data, type, row, meta) {
@@ -279,24 +305,13 @@
                         '</select>'
                     );
 
-                    $('#btnprint').on('click', function() {
-                        table.button(0).trigger();
+                    $('#tablerekappo thead').on('change', 'select', function() {
+                        $('#loading-overlay').fadeIn();
+                        table.ajax.reload(function() {
+                            $('#loading-overlay').fadeOut();
+                        });
                     });
 
-                    $('#tablerekappo thead').on('change', 'select', function() {
-                        var status = $(this).val();
-                        console.log('Status yang dipilih: ', status);
-                        $('#loading-overlay').fadeIn();
-                        if (status === 'all') {
-                            console.log('Menghapus filter status');
-                            table.column(18).search('').draw();
-                            $('#loading-overlay').fadeOut();
-                        } else {
-                            console.log('Filter berdasarkan status: ', status);
-                            table.column(18).search(status).draw();
-                            $('#loading-overlay').fadeOut();
-                        }
-                    });
                 });
 
                 function formatRupiah(angka) {
@@ -310,23 +325,6 @@
                     }
                     return angka;
                 }
-
-                function getFormattedFilename() {
-                    const bulan = [
-                        "Januari", "Februari", "Maret", "April", "Mei", "Juni",
-                        "Juli", "Agustus", "September", "Oktober", "November", "Desember"
-                    ];
-
-                    let principal = $('#principal option:selected').text().trim();
-                    let selectedMonth = $('#month').val();
-                    let selectedYear = $('#year').val();
-
-                    let bulanText = selectedMonth == 0 ? "Semua Bulan" : bulan[selectedMonth -
-                        1];
-
-                    return `Laporan Rekap PO ${principal} ${bulanText} ${selectedYear}`;
-                }
-
             });
         </script>
     @endpush

@@ -223,6 +223,7 @@ Route::middleware('auth.login')->group(
         Route::prefix('/rekap_po')->name('rekap_po.')->group(function () {
             Route::get('/', [RekapPOController::class, 'index'])->name('index');
             Route::get('/ajax', [RekapPOController::class, 'ajax'])->name('ajax');
+            Route::get('/export-excel', [RekapPOController::class, 'exportExcel'])->name('exportexcel');
         });
 
         Route::prefix('/return_pembelian')->name('return_pembelian.')->group(function () {
