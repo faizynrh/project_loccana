@@ -154,7 +154,7 @@
                                 data: 'tanggal'
                             },
                             {
-                                data: 'koder_produk'
+                                data: 'kode_produk'
                             },
                             {
                                 data: 'nama_barang'
@@ -178,7 +178,7 @@
                                 }
                             },
                             {
-                                data: 'pnn',
+                                data: 'ppn',
                                 render: function(data) {
                                     return formatRupiah(data);
                                 }

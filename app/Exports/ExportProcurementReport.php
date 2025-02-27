@@ -77,13 +77,13 @@ class ExportProcurementReport implements WithStyles
         foreach ($this->data->data->table as $index => $item) {
             $sheet->setCellValue('A' . $row, $index + 1);
             $sheet->setCellValue('B' . $row, $item->tanggal);
-            $sheet->setCellValue('C' . $row, $item->koder_produk);
+            $sheet->setCellValue('C' . $row, $item->kode_produk);
             $sheet->setCellValue('D' . $row, $item->nama_barang);
             $sheet->setCellValue('E' . $row, $item->kemasan);
             $sheet->setCellValue('F' . $row, $item->qty);
             $sheet->setCellValue('G' . $row, $item->harga);
             $sheet->setCellValue('H' . $row, $item->jumlah);
-            $sheet->setCellValue('I' . $row, $item->pnn);
+            $sheet->setCellValue('I' . $row, $item->ppn);
             $sheet->setCellValue('J' . $row, $item->jumlah_plus_ppn);
             $sheet->setCellValue('K' . $row, $item->no_trans);
             $sheet->setCellValue('L' . $row, $item->no_invoice);
