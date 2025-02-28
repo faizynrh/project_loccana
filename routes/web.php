@@ -69,7 +69,7 @@ Route::middleware('auth.login')->group(
 
 
         // ==========================================MASTERDATA========================================
-    
+
         // ITEM
         Route::prefix('/item')->name('item.')->group(function () {
             Route::get('/', [ItemController::class, 'index'])->name('index');
@@ -107,15 +107,15 @@ Route::middleware('auth.login')->group(
         // UOM
         Route::prefix('/uom')->name('uom.')->group(
             function () {
-            Route::get('/', [UomController::class, 'index'])->name('index');
-            Route::get('/ajax', [UomController::class, 'ajaxuom'])->name('ajax');
-            Route::get('/add', [UomController::class, 'create'])->name('create');
-            Route::post('/add', [UomController::class, 'store'])->name('store');
-            Route::delete('/delete/{id}', [UomController::class, 'destroy'])->name('destroy');
-            Route::get('/edit/{id}', [UomController::class, 'edit'])->name('edit');
-            Route::put('/update/{id}', [UomController::class, 'update'])->name('update');
-            Route::get('/detail/{id}', [UomController::class, 'show'])->name('show');
-        }
+                Route::get('/', [UomController::class, 'index'])->name('index');
+                Route::get('/ajax', [UomController::class, 'ajaxuom'])->name('ajax');
+                Route::get('/add', [UomController::class, 'create'])->name('create');
+                Route::post('/add', [UomController::class, 'store'])->name('store');
+                Route::delete('/delete/{id}', [UomController::class, 'destroy'])->name('destroy');
+                Route::get('/edit/{id}', [UomController::class, 'edit'])->name('edit');
+                Route::put('/update/{id}', [UomController::class, 'update'])->name('update');
+                Route::get('/detail/{id}', [UomController::class, 'show'])->name('show');
+            }
         );
 
 
@@ -169,7 +169,7 @@ Route::middleware('auth.login')->group(
         });
 
         // ===================================== PROCUREMENT =========================================
-    
+
         // PENERIMAAN BARANG
         Route::prefix('/penerimaan_barang')->name('penerimaan_barang.')->group(function () {
             Route::get('/', [PenerimaanBarangController::class, 'index'])->name('index');
@@ -248,7 +248,7 @@ Route::middleware('auth.login')->group(
 
 
         // ===================================== INVENTORY =========================================
-    
+
         Route::prefix('/stock')->name('stock.')->group(function () {
             Route::get('/', [StockController::class, 'index'])->name('index');
             Route::get('/ajax', [StockController::class, 'ajax'])->name('ajax');
@@ -293,7 +293,7 @@ Route::middleware('auth.login')->group(
 
 
         // ===================================== PENJUALAN =========================================
-    
+
         Route::prefix('/penjualan')->name('penjualan.')->group(function () {
             Route::get('/', [PenjualanController::class, 'index'])->name('index');
             Route::get('/ajax', [PenjualanController::class, 'ajaxselling'])->name('ajax');
@@ -358,16 +358,21 @@ Route::middleware('auth.login')->group(
         });
 
         // ===================================== CASHBANK =========================================
-    
+
         Route::prefix('/hutang')->name('hutang.')->group(function () {
-            Route::get('/ajax', action: [HutangController::class, 'ajax'])->name('ajax');
-            Route::get('/ajaxpembayaran', action: [HutangController::class, 'ajaxpembayaran'])->name('ajaxpembayaran');
+            Route::get('/ajax', [HutangController::class, 'ajax'])->name('ajax');
+            Route::get('/ajaxpembayaran', [HutangController::class, 'ajaxpembayaran'])->name('ajaxpembayaran');
             Route::get('/', [HutangController::class, 'index'])->name('index');
             Route::get('/detail_hutang/{id}', [HutangController::class, 'showhutang'])->name('detail');
             Route::get('/pembayaran', [HutangController::class, 'pembayaran'])->name('pembayaran');
             Route::get('/pembayaran/add', [HutangController::class, 'create'])->name('create');
-            Route::post('/store', [HutangController::class, 'store'])->name('store');
             Route::get('/getinvoice/{id}', [HutangController::class, 'getinvoice'])->name('getinvoice');
+            Route::post('/pembayaran/store', [HutangController::class, 'store'])->name('store');
+            Route::get('/pembayaran/edit/{id}', [HutangController::class, 'edit'])->name('edit');
+            Route::put('/pembayaran/update/{id}', [HutangController::class, 'update'])->name('update');
+            Route::get('/pembayaran/approve/{id}', [HutangController::class, 'detail_approve'])->name('detail_approve');
+            Route::put('/pembayaran/approve/{id}', [HutangController::class, 'approve'])->name('approve');
+            Route::put('/pembayaran/reject/{id}', [HutangController::class, 'reject'])->name('reject');
             Route::get('/pembayaran/detail_pembayaran/{id}', [HutangController::class, 'showpembayaran'])->name('detail');
             Route::delete('/pembayaran/delete/{id}', [HutangController::class, 'destroy'])->name('destroy');
         });

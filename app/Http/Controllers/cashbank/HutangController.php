@@ -136,7 +136,9 @@ class HutangController extends Controller
     public function create(Request $request)
     {
         $companyid = 2;
-        $partnerResponse = fectApi(env('LIST_PARTNERTYPES'));
+        $supplier = "true";
+        $customer = "false";
+        $partnerResponse = fectApi(env('LIST_PARTNER') . '/' . $companyid . '/' . $supplier . '/' . $customer);
         $coaResponse = fectApi(env('LIST_COA') . '/' . $companyid);
         if ($partnerResponse->successful() && $coaResponse->successful()) {
             $partner
@@ -206,33 +208,136 @@ class HutangController extends Controller
         }
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(string $id)
     {
-        //
+        try {
+            $companyid = 2;
+            $supplier = "true";
+            $customer = "false";
+            $partnerResponse = fectApi(env('LIST_PARTNER') . '/' . $companyid . '/' . $supplier . '/' . $customer);
+            $coaResponse = fectApi(env('LIST_COA') . '/' . $companyid);
+            $apiResponse = fectApi(env('HUTANG_URL') . '/' . $id);
+            $idpartner = $apiResponse->json()['data'][0]['partner_id'];
+            $invoiceResponse = fectApi(env('LIST_INVOICE_BAYAR') . '/' . $idpartner);
+            if ($apiResponse->successful() && $coaResponse->successful() && $partnerResponse->successful()) {
+                $data = json_decode($apiResponse->body());
+                $partner = json_decode($partnerResponse->body());
+                $coa = json_decode($coaResponse->body());
+                $invoice = json_decode($invoiceResponse->body());
+                // dd([$data, $partner, $coa, $invoice]);
+                // dd($data);
+                return view('cashbank.hutang.edit', compact('data', 'partner', 'coa', 'invoice'));
+            } else {
+                $errors = [];
+                if (!$coaResponse->successful()) {
+                    $errors[] = $coaResponse->json()['message'];
+                }
+                if (!$partnerResponse->successful()) {
+                    $errors[] = $partnerResponse->json()['message'];
+                }
+                if (!$apiResponse->successful()) {
+                    $errors[] = $apiResponse->json()['message'];
+                }
+                if (!$invoiceResponse->successful()) {
+                    $errors[] = $invoiceResponse->json()['message'];
+                }
+                return back()->withErrors($errors);
+            }
+        } catch (\Exception $e) {
+            return back()->withErrors($e->getMessage());
+        }
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, string $id)
     {
-        //
+        // dd($request->all());
+        try {
+            $items = [];
+            if ($request->has('items')) {
+                foreach ($request->input('items') as $item) {
+                    $items[] = [
+                        'invoice_id' => $item['invoice'],
+                        'amount_paid' => $item['amount_paid'],
+                        'payment_date' => $request->payment_date,
+                        'notes' => $item['notes'],
+                        'payment_detail_id' => $item['id_payment_detail'],
+                    ];
+                }
+            }
+
+            $data = [
+                'payment_date' => $request->payment_date,
+                'total_amount' => $request->total_amount,
+                'remaining_amount' => $request->remaining_amount,
+                'payment_type' => $request->payment_type,
+                'coa_id' => $request->cash_account,
+                'company_id' => 2,
+                'warehouse_id' => 0,
+                'items' => $items
+            ];
+            $apiResponse = updateApi(env('HUTANG_URL') . '/' . $id, $data);
+            // dd($apiResponse->json(), $data);
+            if ($apiResponse->successful()) {
+                return redirect()->route('hutang.pembayaran')
+                    ->with('success', $apiResponse->json()['message']);
+            } else {
+                return back()->withErrors($apiResponse->json()['message']);
+            }
+        } catch (\Exception $e) {
+            return back()->withErrors($e->getMessage());
+        }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
+    public function detail_approve(string $id)
+    {
+        try {
+            $apiResponse = fectApi(env('HUTANG_URL') . '/' . $id);
+            if ($apiResponse->successful()) {
+                $data = json_decode($apiResponse->body());
+                // dd($data);
+                return view('cashbank.hutang.approve', compact('data'));
+            } else {
+                return back()->withErrors($apiResponse->json()['message']);
+            }
+        } catch (\Exception $e) {
+            return back()->withErrors($e->getMessage());
+        }
+    }
+
+    public function approve(Request $request, $id)
+    {
+        try {
+            $data = [
+                'status' => 'Approved'
+            ];
+            $apiResponse = updateApi(env('HUTANG_URL') . '/approve/' . $id, $data);
+            if ($apiResponse->successful()) {
+                return redirect()->route('hutang.pembayaran')->with('success', $apiResponse->json()['message']);
+            } else {
+                return back()->withErrors($apiResponse->json()['message']);
+            }
+        } catch (\Exception $e) {
+            return back()->withErrors($e->getMessage());
+        }
+    }
+
+    public function reject(Request $request, $id)
+    {
+        try {
+            $data = [
+                'status' => 'Rejected'
+            ];
+            $apiResponse = updateApi(env('HUTANG_URL') . '/approve/' . $id, $data);
+            if ($apiResponse->successful()) {
+                return redirect()->route('hutang.pembayaran')->with('success', $apiResponse->json()['message']);
+            } else {
+                return back()->withErrors($apiResponse->json()['message']);
+            }
+        } catch (\Exception $e) {
+            return back()->withErrors($e->getMessage());
+        }
+    }
+
     public function destroy(string $id)
     {
         try {

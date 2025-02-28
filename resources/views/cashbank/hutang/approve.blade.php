@@ -10,7 +10,7 @@
             <div class="page-title">
                 <div class="row">
                     <div class="col-12 col-md-6 order-md-1 order-last">
-                        <h3>Detail Invoice</h3>
+                        <h3>Approve Pembayaran</h3>
                     </div>
                     <div class="col-12 col-md-6 order-md-2 order-first">
                         <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
@@ -19,7 +19,7 @@
                                     <a href="/invoice_penjualan">Dashboard</a>
                                 </li>
                                 <li class="breadcrumb-item active" aria-current="page">
-                                    Detail Invoice
+                                    Approve Pembayaran
                                 </li>
                             </ol>
                         </nav>
@@ -99,8 +99,22 @@
                             </tbody>
                         </table>
                         <div class="row">
-                            <div class="col-md-12 text-end">
-                                <a href="{{ route('hutang.pembayaran') }}" class="btn btn-primary ms-2">Back</a>
+                            <div class="col-md-12 d-flex justify-content-end align-items-center gap-2 mt-3">
+                                <form id="approve{{ $data->data[0]->id_payment }}" method="POST"
+                                    action="{{ route('hutang.approve', $data->data[0]->id_payment) }}">
+                                    @csrf
+                                    @method('PUT')
+                                    <button type="button" class="btn btn-primary"
+                                        onclick="confirmApprove('{{ $data->data[0]->id_payment }}')">Setujui</button>
+                                </form>
+                                <form id="reject{{ $data->data[0]->id_payment }}" method="POST"
+                                    action="{{ route('hutang.reject', $data->data[0]->id_payment) }}">
+                                    @csrf
+                                    @method('PUT')
+                                    <button type="button" class="btn btn-danger"
+                                        onclick="confirmReject('{{ $data->data[0]->id_payment }}')">Tolak</button>
+                                </form>
+                                <a href="{{ route('hutang.pembayaran') }}" class="btn btn-secondary">Batal</a>
                             </div>
                         </div>
                     </div>

@@ -135,10 +135,23 @@
                             data: 'type_akun'
                         },
                         {
-                            data: 'status'
-                        },
-                        {
-                            data: 'status'
+                            data: 'status',
+                            className: 'text-center',
+                            render: function(data, type, row) {
+                                let statusClass = '';
+                                let statusLabel = data;
+
+                                if (data.toLowerCase() === 'lunas') {
+                                    statusClass = 'btn btn-warning btn-sm ';
+                                    statusLabel =
+                                        `<a href="/hutang/pembayaran/approve/${row.transaksi_id}" class="${statusClass}" title="Klik untuk Approve"> ${data}</a>`;
+                                } else if (data.toLowerCase() === '') {
+                                    statusClass = 'badge bg-success fw-bold';
+                                }
+                                return statusLabel !== data ? statusLabel :
+                                    `<span class="${statusClass}">${data}</span>`;
+                            }
+
                         },
                         {
                             data: null,
@@ -157,7 +170,7 @@
                         <i class="bi bi-printer text-warning"></i> Print PDF
                     </a>
                     <div class="dropdown-divider"></div>
-                    <a href="/penerimaan_barang/edit/${row.transaksi_id}" class="dropdown-item" title="Edit">
+                    <a href="/hutang/pembayaran/edit/${row.transaksi_id}" class="dropdown-item" title="Edit">
                         <i class="bi bi-pencil text-info"></i> Edit
                     </a>
                     <form action="/hutang/pembayaran/delete/${row.transaksi_id}" method="POST" id="delete${row.transaksi_id}" style="display:inline;">
