@@ -124,7 +124,7 @@
                                                 class="form-control qty-input" min="0"
                                                 value="{{ $item->per_box_quantity }}">
                                         <td>
-                                            <input type="number" name="items[0][quantity]"
+                                            <input type="number" readonly name="items[0][quantity]"
                                                 class="form-control total-qty bg-body-secondary" min="0" readonly>
                                         </td>
                                         <td>
@@ -177,10 +177,24 @@
                                 <input type="hidden" name="tax_amount" id="tax_amount" value="0">
                                 <input type="hidden" name="company_id" id="company_id" value="2">
                                 <input type="hidden" name="total_amount" id="total_amount" value="0">
-                                {{-- <button type="submit" class="btn btn-primary" id="submitButton">Submit</button> --}}
-                                {{-- <button type="button" class="btn btn-danger ms-2" id="rejectButton">Reject</button>
-                                    --}}
-                                <a href="/penjualan" class="btn btn-secondary ms-2">Back</a>
+                                <table style="float: right">
+                                    <tr>
+                                        <td>
+                                            <form id="approve{{ $data->data[0]->id_selling }}" method="POST"
+                                                action="{{ route('penjualan.approve', $data->data[0]->id_selling) }}">
+                                                @csrf
+                                                @method('PUT')
+                                                <button type="button" class="btn btn-primary" id="submitButton"
+                                                    onclick="confirmApprove('{{ $data->data[0]->id_selling }}')">Approve</button>
+                                            </form>
+                                        </td>
+                                        <td>
+                                            <a href="/purchase_order" class="btn btn-secondary ms-2">Back</a>
+                                        </td>
+                                    </tr>
+                                </table>
+
+
                             </div>
                         </div>
                     </div>

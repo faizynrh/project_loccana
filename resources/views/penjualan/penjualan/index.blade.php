@@ -183,9 +183,9 @@
                             let statusClass = '';
                             let statusLabel = data;
 
-                            if (data.toLowerCase() === 'konfirmasi') {
+                            if (data.toLowerCase() === 'approve') {
                                 statusClass = 'badge bg-warning';
-                                statusLabel = `<a href="/purchase_order/approve/${row.id}" class="text-dark text-decoration-none" title="Klik untuk Approve">
+                                statusLabel = `<a href="/penjualan/approve/${row.id}" class="text-dark text-decoration-none" title="Klik untuk Approve">
                                                 <span class="${statusClass}">${data}</span>
                                            </a>`;
                             } else if (data.toLowerCase() === 'reject') {
@@ -203,7 +203,7 @@
                             let actionButtons = `
 
                         `;
-                            actionButtons += row.status.toLowerCase() === 'konfirmasi' ? `
+                            actionButtons += row.status.toLowerCase() === 'approve' ? `
                                                 <div class="btn-group dropdown me-1 mb-1">
                                                     <button type="button" class="btn btn-outline-danger rounded-3 dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-reference="parent">
                                                         <span class="sr-only"><i class="bi bi-list-task"></i></span>
@@ -213,12 +213,12 @@
                                                             <i class="bi bi-eye text-primary"></i>
                                                             Detail
                                                         </a>
-                                                       <a href="/purchase_order/print/${row.id}"  class="dropdown-item" target="_blank" title="Print">
+                                                       <a href="/penjualan/print/${row.id}"  class="dropdown-item" target="_blank" title="Print">
                                                             <i class="bi bi-printer text-warning"></i>
                                                             Print PDF
                                                         </a>
                                                         <div class="dropdown-divider"></div>
-                                                        <a href="/purchase_order/edit/${row.id}" class="dropdown-item" title="Edit">
+                                                        <a href="/penjualan/edit/${row.id}" class="dropdown-item" title="Edit">
                                                             <i class="bi bi-pencil text-info"></i>
                                                             Edit
                                                         </a>

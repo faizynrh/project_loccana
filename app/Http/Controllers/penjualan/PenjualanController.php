@@ -220,7 +220,7 @@ class PenjualanController extends Controller
                 'items' => $items,
             ];
             $apiResponse = storeApi(env('PENJUALAN_URL'), $data);
-            dd($apiResponse->json(), $data);
+            // dd($apiResponse->json(), $data);
             if ($apiResponse->successful()) {
                 // Session::put('last_po_code', $request->input('code'));
                 return redirect()->route('penjualan.index')
@@ -263,9 +263,7 @@ class PenjualanController extends Controller
         $company_id = 2;
         $customer = 'true';
         $suplier = 'false';
-        $data = [
-            'company_id' => 2
-        ];
+
 
         $partnerResponse = fectApi(env('LIST_PARTNER') . '/' . $company_id . '/' . $suplier . '/' . $customer);
         $gudangResponse = fectApi(env('LIST_GUDANG') . '/' . $company_id);
@@ -375,6 +373,40 @@ class PenjualanController extends Controller
                 return back()->withErrors(
                     $apiResponse->json()['message']
                 );
+            }
+        } catch (\Exception $e) {
+            return back()->withErrors($e->getMessage());
+        }
+    }
+    public function vapprove($id)
+    {
+        try {
+            $apiResponse = fectApi(env('PENJUALAN_URL') . '/' . $id);
+            if ($apiResponse->successful()) {
+                $data = json_decode($apiResponse->body());
+                // dd($data);
+                return view('penjualan.penjualan.approve', compact('data'));
+            } else {
+                return back()->withErrors('Gagal mengambil data item: ' . $apiResponse->status());
+            }
+        } catch (\Exception $e) {
+            return back()->withErrors($e->getMessage());
+        }
+    }
+
+    public function approve(Request $request, $id)
+    {
+        try {
+            $data = [
+                'status' => 'Approve'
+            ];
+            // dd($data);
+            $apiResponse = updateApi(env('PENJUALAN_URL') . '/approve/' . $id, $data);
+            // dd($apiResponse);
+            if ($apiResponse->successful()) {
+                return redirect()->route('penjualan.index')->with('success', $apiResponse->json()['message']);
+            } else {
+                return back()->withErrors($apiResponse->json()['message']);
             }
         } catch (\Exception $e) {
             return back()->withErrors($e->getMessage());
