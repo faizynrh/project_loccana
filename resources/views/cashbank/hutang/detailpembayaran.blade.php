@@ -87,14 +87,14 @@
                                         </td>
                                         <td>
                                             <p class="fw-bold" id="total">
-                                                {{ $item->ammount }}</p>
+                                                {{ $item->amount }}</p>
                                         </td>
                                     </tr>
                                 @endforeach
 
                                 <tr class="fw-bold">
                                     <td colspan="4" class="text-end">Total</td>
-                                    <td class="text-end" id="amount">{{ $data->data[0]->ammount }}</td>
+                                    <td class="text-end" id="amount">{{ $data->data[0]->amount }}</td>
                                 </tr>
                             </tbody>
                         </table>

@@ -157,7 +157,7 @@
                         <i class="bi bi-printer text-warning"></i> Print PDF
                     </a>
                     <div class="dropdown-divider"></div>
-                    <a href="/penerimaan_barang/edit/${row.transaksi_id}" class="dropdown-item" title="Edit">
+                    <a href="/hutang/pembayaran/edit/${row.transaksi_id}" class="dropdown-item" title="Edit">
                         <i class="bi bi-pencil text-info"></i> Edit
                     </a>
                     <form action="/hutang/pembayaran/delete/${row.transaksi_id}" method="POST" id="delete${row.transaksi_id}" style="display:inline;">

@@ -363,8 +363,10 @@ Route::middleware('auth.login')->group(
             Route::get('/detail_hutang/{id}', [HutangController::class, 'showhutang'])->name('detail');
             Route::get('/pembayaran', [HutangController::class, 'pembayaran'])->name('pembayaran');
             Route::get('/pembayaran/add', [HutangController::class, 'create'])->name('create');
-            Route::post('/store', [HutangController::class, 'store'])->name('store');
             Route::get('/getinvoice/{id}', [HutangController::class, 'getinvoice'])->name('getinvoice');
+            Route::post('/store', [HutangController::class, 'store'])->name('store');
+            Route::get('/pembayaran/edit/{id}', [HutangController::class, 'edit'])->name('edit');
+            Route::put('/update/{id}', [HutangController::class, 'update'])->name('update');
             Route::get('/pembayaran/detail_pembayaran/{id}', [HutangController::class, 'showpembayaran'])->name('detail');
             Route::delete('/pembayaran/delete/{id}', [HutangController::class, 'destroy'])->name('destroy');
         });
