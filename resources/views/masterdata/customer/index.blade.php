@@ -33,9 +33,9 @@
                             <thead>
                                 <tr>
                                     <th>No</th>
-                                    <th>Contact Info</th>
-                                    <th>Nama</th>
                                     <th>Partner Tipe</th>
+                                    <th>Nama</th>
+                                    <th>Contact Info</th>
                                     {{-- <th>COA ID</th> --}}
                                     <th scope="col">Action</th>
                                 </tr>
@@ -66,17 +66,18 @@
                             }
                         },
                         {
-                            data: 'contact_info',
-                            defaultContent: ''
-                        },
-                        {
-                            data: 'name'
-                        }, {
 
                             data: 'partner_type',
                             defaultContent: ''
                         },
-                        // {
+
+                        {
+                            data: 'name'
+
+                        }, {
+                            data: 'contact_info',
+                            defaultContent: ''
+                        }, // {
                         //     data: 'chart_of_account_id',
                         //     defaultContent: ''
                         // },
