@@ -25,7 +25,7 @@
                                     <a href="/hutang/pembayaran">Pembayaran Hutang</a>
                                 </li>
                                 <li class="breadcrumb-item active" aria-current="page">
-                                    Tambah Pembayaran Hutang
+                                    Tambah
                                 </li>
                             </ol>
                         </nav>
@@ -40,9 +40,10 @@
                             <div class="row mb-3">
                                 <div class="col-md-6">
                                     <label class="form-label fw-bold mt-2 mb-1 small">Kode</label>
-                                    <input type="text" class="form-control" name="payment_number" value="K2025000">
+                                    <input type="text" class="form-control" name="payment_number" value="K2025000"
+                                        required>
                                     <label class="form-label fw-bold mt-2 mb-1 small">Tanggal Pembayaran</label>
-                                    <input type="date" class="form-control" name="payment_date">
+                                    <input type="date" class="form-control" name="payment_date"required>
                                     <label class="form-label fw-bold mt-2 mb-1 small">Principal</label>
                                     <select id="principal" class="form-select" name="principal" required>
                                         <option value="" selected disabled>Pilih Principal</option>
@@ -66,21 +67,17 @@
                                     <select id="cash_account" class="form-select" name="cash_account" required>
                                         <option value="" selected disabled>Pilih Cash Account</option>
                                         @foreach ($coa->data as $coa)
-                                            <option value="{{ $coa->id }}" data-company_id="{{ $coa->company_id }}">
-                                                {{ $coa->description }}
-                                            </option>
+                                            <option value="{{ $coa->id }}">{{ $coa->account_name }}</option>
                                         @endforeach
                                     </select>
-                                    <input type="text" id="company_id_display" class="form-control mt-2"
-                                        placeholder="Company ID" name="company_id" readonly>
                                     <label class="form-label fw-bold mt-2 mb-1 small">Tanggal Terbit</label>
-                                    <input type="date" class="form-control" value="">
+                                    <input type="date" class="form-control">
                                     <label class="form-label fw-bold mt-2 mb-1 small">Jatuh Tempo</label>
-                                    <input type="date" class="form-control" value="">
+                                    <input type="date" class="form-control">
                                     <label class="form-label fw-bold mt-2 mb-1 small">Keterangan</label>
                                     <textarea class="form-control" rows="4"></textarea>
-                                    <input type="text" class="form-control" id="total_amount" name="total_amount">
-                                    <input type="text" class="form-control" id="remaining_amount"
+                                    <input type="hidden" class="form-control" id="total_amount" name="total_amount">
+                                    <input type="hidden" class="form-control" id="remaining_amount"
                                         name="remaining_amount">
                                 </div>
                             </div>
@@ -103,8 +100,8 @@
                                         <td>
                                             <select id="invoiceSelect" class="form-select w-auto item-select"
                                                 name="items[0][invoice]" required>
-                                                <option value="" selected disabled>Pilih Invoice</option>
-                                                <option value="1">Pilih Invoice</option>
+                                                <option value="" selected disabled>Pilih Principal Terlebih Dahulu
+                                                </option>
                                             </select>
                                         </td>
                                         <td>
@@ -135,7 +132,6 @@
                                                 id="add-row">+</button>
                                         </td>
                                     </tr>
-
                                     <tr id="total-row" class="fw-bold">
                                         <td colspan="5" class="text-end">Total</td>
                                         <td class="text-end" id="amount">Rp. 0,00</td>
@@ -174,7 +170,6 @@
                                             <select id="invoiceSelect" class="form-select w-auto item-select"
                                                 name="items[0][invoice]" required>
                                                 <option value="" selected disabled>Pilih Invoice</option>
-                                                <option value="1">Pilih Invoice</option>
                                             </select>
                                         </td>
                                         <td>
@@ -189,7 +184,7 @@
                                                 name="items[0][jatuhtempo]" disabled>
                                         </td>
                                         <td>
-                                            <input type="number" class="form-control" name="items[0][amount_paid]"
+                                            <input type="number" class="form-control" name="items[0][amount_paid]" id="amount_paid"
                                                 required>
                                         </td>
                                         <td>
@@ -292,10 +287,24 @@
 
             function handleRowAddition(principalId) {
                 fetchInvoices(principalId, function(options, availableCount) {
+                    // Hitung jumlah baris yang sudah ada (tidak termasuk footer rows)
+                    const currentRowCount = $('#tableBody tr').not('#add-button-row, #total-row').length;
+                    console.log(principalId);
+                    // Cek apakah sudah mencapai batas maksimum invoice
+                    if (currentRowCount >= availableCount) {
+                        Swal.fire({
+                            title: 'Peringatan',
+                            text: 'Jumlah baris sudah mencapai maksimum jumlah invoice yang tersedia!',
+                            icon: 'warning',
+                            confirmButtonText: 'Oke'
+                        });
+                        return;
+                    }
+
                     if (availableCount === 0) {
                         Swal.fire({
                             title: 'Peringatan',
-                            text: 'Semua Invoice Sudah Dipilih, Tidak Bisa Menambah Baris Baru!',
+                            text: 'Data Invoice tidak tersedia!',
                             icon: 'warning',
                             confirmButtonText: 'Oke'
                         });
@@ -338,6 +347,7 @@
                 row.find('input[name*="[nilai]"]').val(selectedOption.data('nilai') || 0);
                 row.find('input[name*="[sisa]"]').val(selectedOption.data('sisa') || 0);
                 row.find('input[name*="[jatuhtempo]"]').val(selectedOption.data('jatuhtempo') || '');
+                row.find('input[name*="[amount_paid]"]').val(selectedOption.data('sisa') || 0);
 
                 // Update other dropdowns
                 updateAllDropdowns();
@@ -345,24 +355,81 @@
 
             $(document).on('click', '#add-row', function(e) {
                 e.preventDefault();
-                handleRowAddition($('#principal').val());
+
+                const principalId = $('#principal').val();
+
+                if (!principalId) {
+                    Swal.fire({
+                        title: 'Peringatan',
+                        text: 'Silahkan pilih principal terlebih dahulu!',
+                        icon: 'warning',
+                        confirmButtonText: 'Oke'
+                    });
+                    return;
+                }
+
+                handleRowAddition(principalId);
+                disableFirstRowButton();
             });
+
+            disableFirstRowButton();
 
             $(document).on('click', '.remove-row', function(e) {
                 e.preventDefault();
+
                 const row = $(this).closest('tr');
                 const selectedValue = row.find('.item-select').val();
 
-                // Remove from tracked invoices
+                // Pastikan tidak menghapus baris pertama
+                if (row.is(':first-child')) {
+                    return; // Mencegah penghapusan baris pertama
+                }
+
+                // Remove dari daftar selectedInvoices jika ada value yang dipilih
                 if (selectedValue) {
                     state.selectedInvoices.delete(selectedValue.toString());
                 }
 
-                // Remove row and update dropdowns
+                // Hapus baris dan perbarui dropdown
                 row.remove();
                 updateAllDropdowns();
             });
 
+            function disableFirstRowButton() {
+                $('#tableBody tr:first-child .remove-row').prop('disabled', true);
+            }
+
+            $(document).on('input', 'input[name*="[amount_paid]"]', function() {
+                updateTotalAmount();
+            });
+
+            updateTotalAmount();
+
+            function updateTotalAmount() {
+                let total = 0;
+
+                $('input[name*="[amount_paid]"]').each(function() {
+                    let value = parseFloat($(this).val()) || 0;
+                    total += value;
+                });
+
+                $('#total_amount').val(total);
+
+                $('#amount').text(formatRupiah(total));
+            }
+
+            function updateTotalRemaining() {
+                let total = 0;
+
+                $('input[name*="[sisa]"]').each(function() {
+                    let value = parseFloat($(this).val()) || 0;
+                    total += value;
+                });
+
+                $('#remaining_amount').val(total);
+            }
+
+            updateTotalRemaining();
 
             // Initialization
             const initialPrincipalId = $('#principal').val();
@@ -371,12 +438,6 @@
                     $('.item-select').html(options);
                 }, false);
             }
-
-            $('#cash_account').change(function() {
-                let selectedCompanyId = $(this).find(':selected').data(
-                    'company_id');
-                $('#company_id_display').val(selectedCompanyId);
-            });
         });
     </script>
 @endpush
