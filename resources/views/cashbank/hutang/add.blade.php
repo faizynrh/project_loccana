@@ -76,8 +76,8 @@
                                     <input type="date" class="form-control">
                                     <label class="form-label fw-bold mt-2 mb-1 small">Keterangan</label>
                                     <textarea class="form-control" rows="4"></textarea>
-                                    <input type="text" class="form-control" id="total_amount" name="total_amount">
-                                    <input type="text" class="form-control" id="remaining_amount"
+                                    <input type="hidden" class="form-control" id="total_amount" name="total_amount">
+                                    <input type="hidden" class="form-control" id="remaining_amount"
                                         name="remaining_amount">
                                 </div>
                             </div>

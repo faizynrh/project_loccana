@@ -192,7 +192,6 @@ class HutangController extends Controller
                 'coa_id' => $request->cash_account,
                 'company_id' => 2,
                 'warehouse_id' => 0,
-
                 'items' => $items
             ];
             $apiResponse = storeApi(env('HUTANG_URL'), $data);
