@@ -135,10 +135,23 @@
                             data: 'type_akun'
                         },
                         {
-                            data: 'status'
-                        },
-                        {
-                            data: 'status'
+                            data: 'status',
+                            className: 'text-center',
+                            render: function(data, type, row) {
+                                let statusClass = '';
+                                let statusLabel = data;
+
+                                if (data.toLowerCase() === 'lunas') {
+                                    statusClass = 'btn btn-warning btn-sm ';
+                                    statusLabel =
+                                        `<a href="/hutang/pembayaran/approve/${row.transaksi_id}" class="${statusClass}" title="Klik untuk Approve"> ${data}</a>`;
+                                } else if (data.toLowerCase() === '') {
+                                    statusClass = 'badge bg-success fw-bold';
+                                }
+                                return statusLabel !== data ? statusLabel :
+                                    `<span class="${statusClass}">${data}</span>`;
+                            }
+
                         },
                         {
                             data: null,
