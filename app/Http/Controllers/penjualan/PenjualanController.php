@@ -300,7 +300,65 @@ class PenjualanController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        try {
+            $itemsRequest = $request->input('items');
+            $warehouseId = isset($itemsRequest[0]['warehouse_id']) ? (int) $itemsRequest[0]['warehouse_id'] : 0;
+
+            $items = [];
+            foreach ($itemsRequest as $itemData) {
+                $entry = [
+                    // 'sales_order_id' => 1,
+                    'item_id' => (int) ($itemData['item_id'] ?? 0),
+                    'quantity' => (int) ($itemData['quantity'] ?? 0),
+                    'mutation_date' => now(),
+                    'mutation_id' => 11,
+                    'mutation_reason' => 'penjualan',
+                    'unit_price' => (float) ($itemData['unit_price'] ?? 0),
+                    'box_quantity' => $itemData['box_quantity'],
+                    'per_box_quantity' => $itemData['per_box_quantity'] ?? 0,
+                    'discount' => $itemData['discount'] ?? 0,
+                    'notes' => ($itemData['notes'] ?? ''),
+                    // 'mutation_id' => $itemData['notes'] ?? 0,
+                    'uom_id' => (int) ($itemData['uom_id'] ?? 0),
+                    'warehouse_id' => $warehouseId,
+                    'sales_order_details_id' => 3
+                ];
+
+                $items[] = $entry;
+            }
+
+            $data = [
+                "sales_id" => 1,
+                // "order_number" => $request->input('order_number' ?? 1),
+                "order_date" => $request->input('order_date'),
+                "delivery_date" => $request->input('delivery_date'),
+                'partner_id' => $request->input('partner_id'),
+                'term_of_payment' => $request->input('term_of_payment'),
+                'total_amount' => (float) $request->input('total_amount'),
+                'coa_id' => 999,
+                'payment_coa' => 0,
+                'currency_id' => $request->input('currency_id'),
+                'tax_rate' => $request->input('tax_rate'),
+                'tax_amount' => (float) $request->input('tax_amount'),
+                'sequence_number' => 10,
+                'status' => 'konfirmasi',
+                'description' => $request->input('description'),
+                // 'company_id' => 2,
+                'warehouse_id' => $warehouseId,
+                'items' => $items,
+            ];
+            $apiResponse = updateApi(env('PENJUALAN_URL') . '/' . $id, $data);
+            // dd($data, $apiResponse->json());
+            if ($apiResponse->successful()) {
+                // Session::put('last_po_code', $request->input('code'));
+                return redirect()->route('penjualan.index')
+                    ->with('success', $apiResponse->json()['message']);
+            } else {
+                return back()->withErrors($apiResponse->json()['message']);
+            }
+        } catch (\Exception $e) {
+            return back()->withErrors($e->getMessage());
+        }
     }
 
     /**
