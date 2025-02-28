@@ -26,7 +26,7 @@ class HutangController extends Controller
                 'limit' => $length,
                 'offset' => $start,
             ];
-            $apiResponse = storeApi(env('HUTANG_URL') . '/hutang/list', $requestbody);
+            $apiResponse = storeApi(env('HUTANG_URL') . '/list', $requestbody);
             if ($apiResponse->successful()) {
                 $data = $apiResponse->json();
                 return response()->json([
@@ -66,7 +66,7 @@ class HutangController extends Controller
                 'limit' => $length,
                 'offset' => $start,
             ];
-            $apiResponse = storeApi(env('HUTANG_URL') . '/hutang/pembayaran/list', $requestbody);
+            $apiResponse = storeApi(env('HUTANG_URL') . '/pembayaran/list', $requestbody);
             if ($apiResponse->successful()) {
                 $data = $apiResponse->json();
                 return response()->json([
@@ -95,7 +95,7 @@ class HutangController extends Controller
     public function showhutang(string $id)
     {
         try {
-            $apiResponse = fectApi(env('HUTANG_URL') . '/hutang_invoice/detail/' . $id);
+            $apiResponse = fectApi(env('HUTANG_URL') . '/invoice/detail/' . $id);
             if ($apiResponse->successful()) {
                 $data = json_decode($apiResponse->body());
                 return view('cashbank.hutang.detailhutang', compact('data'));
@@ -118,7 +118,7 @@ class HutangController extends Controller
     public function showpembayaran(string $id)
     {
         try {
-            $apiResponse = fectApi(env('HUTANG_URL') . '/hutang/' . $id);
+            $apiResponse = fectApi(env('HUTANG_URL') . '/' . $id);
             if ($apiResponse->successful()) {
                 $data = json_decode($apiResponse->body());
                 return view('cashbank.hutang.detailpembayaran', compact('data'));
@@ -168,7 +168,43 @@ class HutangController extends Controller
 
     public function store(Request $request)
     {
-        dd($request->all());
+        // dd($request->all());
+        try {
+            $items = [];
+            if ($request->has('items')) {
+                foreach ($request->input('items') as $item) {
+                    $items[] = [
+                        'invoice_id' => $item['invoice'],
+                        'amount_paid' => $item['amount_paid'],
+                        'payment_date' => $request->payment_date,
+                        'notes' => $item['notes'],
+                    ];
+                }
+            }
+
+            $data = [
+                'payment_number' => $request->payment_number,
+                'payment_date' => $request->payment_date,
+                'partner_id' => $request->principal,
+                'total_amount' => $request->total_amount,
+                'remaining_amount' => $request->remaining_amount,
+                'payment_type' => $request->payment_type,
+                'coa_id' => $request->cash_account,
+                'company_id' => 2,
+                'warehouse_id' => 0,
+
+                'items' => $items
+            ];
+            $apiResponse = storeApi(env('HUTANG_URL'), $data);
+            if ($apiResponse->successful()) {
+                return redirect()->route('hutang.pembayaran')
+                    ->with('success', $apiResponse->json()['message']);
+            } else {
+                return back()->withErrors($apiResponse->json()['message']);
+            }
+        } catch (\Exception $e) {
+            return back()->withErrors($e->getMessage());
+        }
     }
 
     /**
@@ -201,7 +237,7 @@ class HutangController extends Controller
     public function destroy(string $id)
     {
         try {
-            $apiResponse = deleteApi(env('HUTANG_URL') . '/hutang/' . $id);
+            $apiResponse = deleteApi(env('HUTANG_URL') . '/' . $id);
             if ($apiResponse->successful()) {
                 return redirect()->route('hutang.pembayaran')->with('success', $apiResponse->json()['message']);
             } else {
