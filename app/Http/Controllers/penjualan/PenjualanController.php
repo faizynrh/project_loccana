@@ -270,14 +270,16 @@ class PenjualanController extends Controller
         $partnerResponse = fectApi(env('LIST_PARTNER') . '/' . $company_id . '/' . $suplier . '/' . $customer);
         $gudangResponse = fectApi(env('LIST_GUDANG') . '/' . $company_id);
         $apiResponse = fectApi(env('PENJUALAN_URL') . '/' . $id);
+        $itemsResponse = storeApi(env('LIST_ITEMS'), ['company_id' => $company_id]);
 
-        if ($partnerResponse->successful() && $gudangResponse->successful() && $apiResponse->successful()) {
+        if ($partnerResponse->successful() && $gudangResponse->successful() && $apiResponse->successful() && $itemsResponse->successful()) {
             $partner = $partnerResponse->json()['data'];
             $gudang = $gudangResponse->json()['data'];
             $data = json_decode($apiResponse->getbody()->getContents(), false);
-            // dd($data);
+            $items = json_decode($itemsResponse->getbody()->getContents(), false);
+            // dd($items, $data, $partner, $gudang);
             // $poCode = $this->generatePOCode();
-            return view('penjualan.penjualan.edit', compact('partner', 'gudang', 'data'));
+            return view('penjualan.penjualan.edit', compact('items', 'partner', 'gudang', 'data'));
         } else {
             $errors = [];
             if (!$gudangResponse->successful()) {

@@ -54,10 +54,16 @@
                                     <input type="date" class="form-control" id="tanggal_pengiriman"
                                         value="{{ \Carbon\Carbon::parse($data->data[0]->delivery_date)->format('Y-m-d') }}"
                                         name="delivery_date" required>
-
                                     <label for="customer" class="form-label fw-bold mt-2 mb-1 small">Customer</label>
-                                    <input type="text" name="partner_name" value="{{ $data->data[0]->partner_name }}"
-                                        id="" class="form-control" rea>
+                                    <select class="form-select" id="partner_id" name="partner_id" required>
+                                        <option value="" selected disabled>Pilih Partner</option>
+                                        @foreach ($partner as $item)
+                                            <option value="{{ $item['id'] }}"
+                                                {{ $data->data[0]->partner_id == $item['id'] ? 'selected' : '' }}>
+                                                {{ $item['name'] }}
+                                            </option>
+                                        @endforeach
+                                    </select>
                                     <label for="description" class="form-label fw-bold mt-2 mb-1 small">Keterangan</label>
                                     <textarea class="form-control" rows="5" id="description" name="description">{{ $data->data[0]->description }}</textarea>
                                     {{-- <label for="status" class="form-label fw-bold mt-2 mb-1 small">Status</label> --}}
@@ -66,13 +72,13 @@
                                         value="1">
                                 </div>
                                 <div class="col-md-6">
-                                    {{-- <label for="gudang" class="form-label fw-bold mt-2 mb-1 small">Gudang</label>
-                                <select class="form-select" id="gudang" name="items[0][warehouse_id]" required>
-                                    <option value="" selected disabled>Pilih Gudang</option>
-                                    @foreach ($gudang as $items)
-                                        <option value="{{ $items['id'] }}">{{ $items['name'] }}</option>
-                                    @endforeach
-                                </select> --}}
+                                    <label for="gudang" class="form-label fw-bold mt-2 mb-1 small">Gudang</label>
+                                    <select class="form-select" id="gudang" name="items[0][warehouse_id]" required>
+                                        <option value="" selected disabled>Pilih Gudang</option>
+                                        @foreach ($gudang as $warehouse)
+                                            <option value="{{ $warehouse['id'] }}">{{ $warehouse['name'] }}</option>
+                                        @endforeach
+                                    </select>
 
                                     <label for="ship" class="form-label fw-bold mt-2 mb-1 small">Ship From :</label>
                                     <textarea class="form-control bg-body-secondary" rows="5" id="ship" name="ship" required></textarea>
@@ -105,51 +111,72 @@
                                         <th style="width: 30px">aksi</th>
                                     </tr>
                                 </thead>
-                                @foreach ($data->data as $item)
-                                    <tbody id="tableBody">
-                                        <tr style="border-bottom: 2px solid #000" class="item-row">
-                                            <td colspan="2">
-                                                <input type="text" name="items[0][uom_name]"
-                                                    value="{{ $item->item_code }} - {{ $item->item_name }}"
-                                                    class="form-control box-qty-input" required>
-
-                                                <input type="hidden" required name="items[0][uom_id]" class="uom-input">
-                                            </td>
-                                            <td>
-                                                <input type="text" name="items[0][notes]"
-                                                    class="form-control notes-input">
-                                            </td>
-                                            <td>
-                                                <input type="number" name="items[0][box_quantity]"
-                                                    class="form-control box-qty-input" min="0"
-                                                    value="{{ $item->box_quantity }}">
-                                            </td>
-                                            <td>
-                                                <input type="number" name="items[0][per_box_quantity]"
-                                                    class="form-control qty-input" min="0"
-                                                    value="{{ $item->per_box_quantity }}">
-                                            <td>
-                                                <input type="number" name="items[0][quantity]"
-                                                    class="form-control total-qty bg-body-secondary" min="0"
-                                                    required readonly>
-                                            </td>
-                                            <td>
-                                                <input type="number" required name="items[0][unit_price]"
-                                                    class="form-control price-input" value="{{ $item->unit_price }}"
-                                                    min="0">
-                                            </td>
-                                            <td>
-                                                <input type="number" name="items[0][discount]"
-                                                    class="form-control discount-input" value="{{ $item->discount }}"
-                                                    min="0" max="100">
-                                            </td>
-                                            <td colspan="2">
-                                                <input type="number" name="items[0][total_price]"
-                                                    class="form-control bg-body-secondary total-input" readonly
-                                                    value="{{ $item->total_price }}">
-                                            </td>
-                                            <td></td>
-                                        </tr>
+                                {{-- @php
+                                    dd($items);
+                                @endphp --}}
+                                @foreach ($data->data as $index => $item)
+                                    <tr style="border-bottom: 2px solid #000" class="item-row">
+                                        <td colspan="2">
+                                            <select class="form-control item-select" id="item_id_{{ $index }}"
+                                                name="items[{{ $index }}][item_id]"
+                                                style="pointer-events: none; background-color: #e9ecef;">
+                                                <option value="" selected disabled>Pilih Item</option>
+                                                @foreach ($items->data->items as $option)
+                                                    <option value="{{ $option->id }}"
+                                                        data-uom="{{ $option->unit_of_measure_id }}"
+                                                        {{ $item->item_id == $option->id ? 'selected' : '' }}>
+                                                        {{ $option->sku }} - {{ $option->name }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                            <input type="hidden" name="items[{{ $index }}][uom_id]"
+                                                class="uom-input"
+                                                value="{{ collect($items->data->items)->firstWhere('id', $item->item_id)->unit_of_measure_id ?? '' }}">
+                                        </td>
+                                        </select>
+                                        <input type="hidden" required name="items[0][uom_id]" class="uom-input">
+                                        </td>
+                                        <td>
+                                            <input type="text" name="items[0][notes]"
+                                                class="form-control notes-input">
+                                        </td>
+                                        <td>
+                                            <input type="number" name="items[0][box_quantity]"
+                                                class="form-control box-qty-input" min="0"
+                                                value="{{ $item->box_quantity }}">
+                                        </td>
+                                        <td>
+                                            <input type="number" name="items[0][per_box_quantity]"
+                                                class="form-control qty-input" min="0"
+                                                value="{{ $item->per_box_quantity }}">
+                                        <td>
+                                            <input type="number" name="items[0][quantity]"
+                                                class="form-control total-qty bg-body-secondary" min="0" required
+                                                readonly>
+                                        </td>
+                                        <td>
+                                            <input type="number" required name="items[0][unit_price]"
+                                                class="form-control price-input" value="{{ $item->unit_price }}"
+                                                min="0">
+                                        </td>
+                                        <td>
+                                            <input type="number" name="items[0][discount]"
+                                                class="form-control discount-input" value="{{ $item->discount }}"
+                                                min="0" max="100">
+                                        </td>
+                                        <td colspan="2">
+                                            <input type="number" name="items[0][total_price]"
+                                                class="form-control bg-body-secondary total-input" readonly
+                                                value="{{ $item->total_price }}">
+                                        </td>
+                                        <td></td>
+                                    </tr>
+                                    <tr style="border-bottom: 2px solid #000;">
+                                        <td colspan="9"></td>
+                                        <td class="text-center">
+                                            <button class="btn btn-primary fw-bold" id="add-row">+</button>
+                                        </td>
+                                    </tr>
                                     </tbody>
                                 @endforeach
 
@@ -177,6 +204,7 @@
                                     <td>Total</td>
                                     <td style="float: right">0</td>
                                 </tr>
+
                             </table>
                             <div class="row">
                                 <div class="col-md-12 text-end">
@@ -199,6 +227,7 @@
 @push('scripts')
     <script>
         $(document).ready(function() {
+            // Payment term related code (unchanged)
             $('#pembayaran').on('change', function() {
                 const selectedValue = $(this).val();
                 const customInput = $('#custom_payment_term');
@@ -238,29 +267,8 @@
                 value = value.replace(' Hari', '');
                 $(this).val(value);
             });
-            $('#partner_id').on('change', function() {
-                var poId = $(this).val();
-                // console.log('Selected poId:', poId);
 
-                if (poId) {
-                    var companyId = 2;
-                    $.ajax({
-                        url: '/purchase_order/getItemsList/' + companyId,
-                        type: 'GET',
-                        dataType: 'json',
-                        success: function(response) {
-                            updateAllItemSelects(response.items);
-                        },
-                        error: function(xhr, status, error) {
-                            Swal.fire('Error', 'Gagal mengambil data item', 'error');
-                            $('.item-select').html(
-                                '<option value="" disabled selected>Tidak ada item tersedia</option>'
-                            );
-                        }
-                    });
-                }
-            });
-
+            // Item selection related functions
             function updateAllItemSelects(items) {
                 var options = '<option value="" disabled selected>--Pilih Item--</option>';
                 if (items && items.length > 0) {
@@ -272,7 +280,8 @@
                     options = '<option value="" disabled selected>Tidak ada item tersedia</option>';
                 }
 
-                $('#tableBody').data('current-items', items);
+                // Store items data for future use
+                $('#transaction-table').data('current-items', items);
 
                 $('.item-select').html(options);
             }
@@ -319,89 +328,101 @@
                 }
             });
 
-
+            // Fixed function to create new rows
             function createNewRow(rowCount) {
-                const currentItems = $('#tableBody').data('current-items');
-                let itemOptions = '<option value="" disabled selected>--Pilih Item--</option>';
+                // Get items from the existing select elements
+                let itemOptions = '';
+                const firstSelect = $('.item-select').first();
 
-                if (currentItems && currentItems.length > 0) {
-                    currentItems.forEach(function(item) {
+                if (firstSelect.length > 0) {
+                    // Clone options from the first select element
+                    firstSelect.find('option').each(function() {
+                        const value = $(this).val();
+                        const text = $(this).text();
+                        const uom = $(this).data('uom') || '';
+                        const selected = $(this).is(':selected') ? 'selected' : '';
+                        const disabled = $(this).is(':disabled') ? 'disabled' : '';
+
                         itemOptions +=
-                            `<option value="${item.id}" data-uom="${item.unit_of_measure_id}">${item.sku} - ${item.name}</option>`;
+                            `<option value="${value}" data-uom="${uom}" ${selected} ${disabled}>${text}</option>`;
                     });
                 } else {
-                    itemOptions =
-                        '<option value="" disabled selected>Pilih Customer Dahulu</option>';
+                    itemOptions = '<option value="" disabled selected>Pilih Item</option>';
                 }
 
                 return `
-                                <tr style="border-bottom: 2px solid #000" class="item-row">
-                                    <td colspan="2">
-                                        <select class="form-select item-select" name="items[${rowCount}][item_id]">
-                                            <option value="" disabled selected>Pilih Customer Dahulu</option>
-                                            ${itemOptions}
-                                        </select>
-                                        <input type="hidden" name="items[${rowCount}][uom_id]" class="uom-input">
-                                    </td>
-                                    <td>
-                                        <input type="text" name="items[${rowCount}][notes]" class="form-control notes-input">
-                                    </td>
-                                    <td>
-                                        <input type="number" name="items[${rowCount}][box_quantity]" class="form-control box-qty-input" value="1" min="1">
-                                    </td>
-                                    <td>
-                                        <input type="number" name="items[${rowCount}][per_box_quantity]" class="form-control qty-input" value="1" min="1">
-                                    </td>
-                                    <td>
-                                        <input type="number" name="items[${rowCount}][quantity]" class="form-control total-qty bg-body-secondary" value="1" min="1" readonly>
-                                    </td>
-                                    <td>
-                                        <input type="number" name="items[${rowCount}][unit_price]" class="form-control price-input" value="0" min="0">
-                                    </td>
-                                    <td>
-                                        <input type="number" name="items[${rowCount}][discount]" class="form-control discount-input" value="0" min="0" max="100">
-                                    </td>
-                                    <td colspan="2">
-                                        <input type="number" name="items[${rowCount}][total_price]" class="form-control bg-body-secondary total-input" readonly>
-                                    </td>
-                                    <td class="text-center">
-                                        <button type="button" class="btn btn-danger btn-sm remove-row">X</button>
-                                    </td>
-                                </tr>
-                            `;
-
+            <tr style="border-bottom: 2px solid #000" class="item-row">
+                <td colspan="2">
+                    <select class="form-select item-select" id="item_id_${rowCount}" name="items[${rowCount}][item_id]" required>
+                        ${itemOptions}
+                    </select>
+                    <input type="hidden" name="items[${rowCount}][uom_id]" class="uom-input">
+                </td>
+                <td>
+                    <input type="text" name="items[${rowCount}][notes]" class="form-control notes-input">
+                </td>
+                <td>
+                    <input type="number" name="items[${rowCount}][box_quantity]" class="form-control box-qty-input" value="1" min="0">
+                </td>
+                <td>
+                    <input type="number" name="items[${rowCount}][per_box_quantity]" class="form-control qty-input" value="1" min="0">
+                </td>
+                <td>
+                    <input type="number" name="items[${rowCount}][quantity]" class="form-control total-qty bg-body-secondary" value="1" min="0" readonly>
+                </td>
+                <td>
+                    <input type="number" name="items[${rowCount}][unit_price]" class="form-control price-input" value="0" min="0">
+                </td>
+                <td>
+                    <input type="number" name="items[${rowCount}][discount]" class="form-control discount-input" value="0" min="0" max="100">
+                </td>
+                <td colspan="2">
+                    <input type="number" name="items[${rowCount}][total_price]" class="form-control bg-body-secondary total-input" readonly value="0">
+                </td>
+                <td class="text-center">
+                    <button type="button" class="btn btn-danger btn-sm remove-row">X</button>
+                </td>
+            </tr>
+        `;
             }
 
-            $(document).on('change', '.item-select', function() {
-                const selectedUOM = $(this).find(':selected').data('uom');
-                $(this).siblings('.uom-input').val(selectedUOM);
-            });
-
+            // Fix add-row button handler
             $('#add-row').on('click', function(e) {
                 e.preventDefault();
                 const rowCount = $('.item-row').length;
                 const newRowHtml = createNewRow(rowCount);
-                $(newRowHtml).insertBefore('#tableBody tr:last');
+                $(this).closest('tr').before(newRowHtml);
                 updateTotals();
             });
 
+            // Handle remove row
             $(document).on('click', '.remove-row', function() {
                 if ($('.item-row').length > 1) {
                     $(this).closest('tr').remove();
                     updateTotals();
+                } else {
+                    alert('Minimal harus ada satu item');
                 }
             });
 
-            $(document).on('input', '.box-qty-input, .qty-input, .total-qty, .price-input, .discount-input',
-                function() {
-                    var row = $(this).closest('tr');
-                    calculateRowTotal(row);
-                    updateTotals();
+            // Fix calculation logic for rows and make it work in realtime
+            $(document).on('input', '.box-qty-input, .qty-input, .price-input, .discount-input', function() {
+                var row = $(this).closest('tr');
+                calculateRowTotal(row);
+                updateTotals();
+            });
+
+            // Also trigger calculation when PPN changes
+            $('#ppn').on('input', function() {
+                $('.item-row').each(function() {
+                    calculateRowTotal($(this));
                 });
+                updateTotals();
+            });
 
             function calculateRowTotal(row) {
-                const boxqty = parseFloat(row.find('.box-qty-input').val()) || 0;
-                const qty = parseFloat(row.find('.qty-input').val()) || 0;
+                const boxQty = parseFloat(row.find('.box-qty-input').val()) || 0;
+                const perBoxQty = parseFloat(row.find('.qty-input').val()) || 0;
                 const price = parseFloat(row.find('.price-input').val()) || 0;
                 let discount = parseFloat(row.find('.discount-input').val()) || 0;
 
@@ -410,60 +431,60 @@
                     row.find('.discount-input').val(100);
                 }
 
+                const totalQty = boxQty + perBoxQty;
+                row.find('.total-qty').val(totalQty.toFixed(0));
 
-                const totalqty = boxqty + qty;
-                row.find('.total-qty').val(totalqty.toFixed(0));
-
-                const subtotal = totalqty * price;
-                const ppn = parseFloat($('#ppn').val()) || 0;
-                const ppn_decimal = ppn / 100;
-                const hargapokok = subtotal / (1 + ppn_decimal);
-                const nilaippn = subtotal - hargapokok;
+                // Calculate row totals
+                const subtotal = totalQty * price;
                 const discountAmount = subtotal * (discount / 100);
-                const total = subtotal - discountAmount;
+                const totalAfterDiscount = subtotal - discountAmount;
 
-                row.find('.total-input').val(total.toFixed(0));
-
+                // Store data for PPN calculation
+                row.data('subtotal', subtotal);
                 row.data('discountAmount', discountAmount);
-                row.data('nilaippn', nilaippn); // Simpan nilaippn di data-row
+                row.data('totalAfterDiscount', totalAfterDiscount);
+
+                // Update total price field
+                row.find('.total-input').val(totalAfterDiscount.toFixed(0));
             }
 
             function updateTotals() {
                 let subtotal = 0;
                 let totalDiscount = 0;
-                let totalPPN = 0;
-                let totalFinal = 0;
+                let totalAfterDiscount = 0;
 
+                // Get current PPN rate
+                const ppnRate = parseFloat($('#ppn').val()) || 0;
+
+                // Calculate subtotals from each row
                 $('.item-row').each(function() {
-                    const qty = parseFloat($(this).find('.qty-input').val()) || 0;
-                    const price = parseFloat($(this).find('.price-input').val()) || 0;
-                    const discount = parseFloat($(this).find('.discount-input').val()) || 0;
-                    const total = parseFloat($(this).find('.total-input').val()) || 0;
-
-                    const rowSubtotal = qty * price;
-                    const rowDiscount = rowSubtotal * (discount / 100);
-
-                    subtotal += rowSubtotal;
+                    subtotal += $(this).data('subtotal') || 0;
                     totalDiscount += $(this).data('discountAmount') || 0;
-                    totalFinal += total;
-                    totalPPN += $(this).data('nilaippn') || 0; // Ambil nilaippn
+                    totalAfterDiscount += $(this).data('totalAfterDiscount') || 0;
                 });
 
-                const dpp = totalFinal - totalPPN;
+                // Calculate PPN amount based on the rate
+                const ppnAmount = totalAfterDiscount * (ppnRate / 100);
 
-                updateDisplayValue('DPP', dpp);
+                // Calculate final total
+                const grandTotal = totalAfterDiscount + ppnAmount;
+
+                // Update the display values
+                updateDisplayValue('DPP', totalAfterDiscount);
                 updateDisplayValue('Diskon', totalDiscount);
-                updateDisplayValue('VAT/PPN', totalPPN);
-                updateDisplayValue('Total', totalFinal);
+                updateDisplayValue('VAT/PPN', ppnAmount);
+                updateDisplayValue('Total', grandTotal);
 
-                $('#tax_amount').val(totalPPN);
-                $('#total_amount').val(totalFinal);
+                // Update hidden inputs for form submission
+                $('#tax_amount').val(ppnAmount.toFixed(0));
+                $('#total_amount').val(grandTotal.toFixed(0));
             }
 
             function updateDisplayValue(label, value) {
                 $('tr.fw-bold').each(function() {
-                    if ($(this).find('td:eq(1)').text().trim() === label) {
-                        $(this).find('td:eq(1)').next().text(formatNumber(value));
+                    const tdLabel = $(this).find('td:eq(1)');
+                    if (tdLabel.text().trim() === label) {
+                        $(this).find('td:eq(2)').text(formatNumber(value));
                     }
                 });
             }
@@ -475,8 +496,11 @@
                 });
             }
 
+            // Initialize calculations on page load
+            $('.item-row').each(function() {
+                calculateRowTotal($(this));
+            });
             updateTotals();
-
         });
     </script>
 @endpush
