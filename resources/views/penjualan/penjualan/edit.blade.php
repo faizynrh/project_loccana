@@ -85,8 +85,28 @@
 
                                     <label for="pembayaran" class="form-label fw-bold mt-2 mb-1 small">Term
                                         Pembayaran</label>
-                                    <input type="text" class="form-control" id="custom_payment_term"
-                                        value="{{ $data->data[0]->term_of_payment }}">
+                                    @php
+                                        $terms = [
+                                            'Cash' => 'Cash',
+                                            '15 Hari' => '15 Hari',
+                                            '30 Hari' => '30 Hari',
+                                            '45 Hari' => '45 Hari',
+                                            '60 Hari' => '60 Hari',
+                                            '90 Hari' => '90 Hari',
+                                            'lainnya' => 'Lainnya',
+                                        ];
+                                        $selectedTerm = $data->data[0]->term_of_payment ?? null;
+                                    @endphp
+
+                                    <select id="pembayaran" class="form-select" name="term_of_payment" required>
+                                        @foreach ($terms as $value => $label)
+                                            <option value="{{ $value }}"
+                                                {{ $selectedTerm == $value ? 'selected' : '' }}>{{ $label }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    <input type="text" class="form-control mt-2 hidden" id="custom_payment_term"
+                                        placeholder="Masukkan jumlah hari">
                                     <label for="ppn" class="form-label fw-bold mt-2 mb-1 small">PPN</label>
                                     <input type="number" class="form-control" id="ppn" name="tax_rate"
                                         value="{{ $data->data[0]->tax_rate }}" required>
@@ -353,22 +373,28 @@
                 return `
             <tr style="border-bottom: 2px solid #000" class="item-row">
                 <td colspan="2">
-                    <select class="form-select item-select" id="item_id_${rowCount}" name="items[${rowCount}][item_id]" required>
-                        ${itemOptions}
-                    </select>
-                    <input type="hidden" name="items[${rowCount}][uom_id]" class="uom-input">
+                   <select class="form-select" name="items[${rowCount}][item_id]" required>
+                    <option value="" selected disabled>Pilih Item</option>
+                    @foreach ($items->data->items ?? [] as $option)
+                        <option value="{{ $option->id }}" data-uom="{{ $option->unit_of_measure_id }}">
+                            {{ $option->sku }} - {{ $option->name }}
+                        </option>
+                    @endforeach
+                </select>
+                <input type="hidden" name="items[${rowCount}][uom_id]" class="uom-input">
+                <input type="hidden" name="items[${rowCount}][po_detail_id]" class="po-detail-id">
                 </td>
                 <td>
                     <input type="text" name="items[${rowCount}][notes]" class="form-control notes-input">
                 </td>
                 <td>
-                    <input type="number" name="items[${rowCount}][box_quantity]" class="form-control box-qty-input" value="1" min="0">
+                    <input type="number" name="items[${rowCount}][box_quantity]" class="form-control box-qty-input"  min="0">
                 </td>
                 <td>
-                    <input type="number" name="items[${rowCount}][per_box_quantity]" class="form-control qty-input" value="1" min="0">
+                    <input type="number" name="items[${rowCount}][per_box_quantity]" class="form-control qty-input"  min="0">
                 </td>
                 <td>
-                    <input type="number" name="items[${rowCount}][quantity]" class="form-control total-qty bg-body-secondary" value="1" min="0" readonly>
+                    <input type="number" name="items[${rowCount}][quantity]" class="form-control total-qty bg-body-secondary"  min="0" readonly>
                 </td>
                 <td>
                     <input type="number" name="items[${rowCount}][unit_price]" class="form-control price-input" value="0" min="0">

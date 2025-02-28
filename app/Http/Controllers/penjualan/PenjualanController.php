@@ -220,7 +220,7 @@ class PenjualanController extends Controller
                 'items' => $items,
             ];
             $apiResponse = storeApi(env('PENJUALAN_URL'), $data);
-            dd($apiResponse->json(), $data);
+            // dd($apiResponse->json(), $data);
             if ($apiResponse->successful()) {
                 // Session::put('last_po_code', $request->input('code'));
                 return redirect()->route('penjualan.index')
@@ -263,9 +263,7 @@ class PenjualanController extends Controller
         $company_id = 2;
         $customer = 'true';
         $suplier = 'false';
-        $data = [
-            'company_id' => 2
-        ];
+
 
         $partnerResponse = fectApi(env('LIST_PARTNER') . '/' . $company_id . '/' . $suplier . '/' . $customer);
         $gudangResponse = fectApi(env('LIST_GUDANG') . '/' . $company_id);
@@ -300,7 +298,65 @@ class PenjualanController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        try {
+            $itemsRequest = $request->input('items');
+            $warehouseId = isset($itemsRequest[0]['warehouse_id']) ? (int) $itemsRequest[0]['warehouse_id'] : 0;
+
+            $items = [];
+            foreach ($itemsRequest as $itemData) {
+                $entry = [
+                    // 'sales_order_id' => 1,
+                    'item_id' => (int) ($itemData['item_id'] ?? 0),
+                    'quantity' => (int) ($itemData['quantity'] ?? 0),
+                    'mutation_date' => now(),
+                    'mutation_id' => 11,
+                    'mutation_reason' => 'penjualan',
+                    'unit_price' => (float) ($itemData['unit_price'] ?? 0),
+                    'box_quantity' => $itemData['box_quantity'],
+                    'per_box_quantity' => $itemData['per_box_quantity'] ?? 0,
+                    'discount' => $itemData['discount'] ?? 0,
+                    'notes' => ($itemData['notes'] ?? ''),
+                    // 'mutation_id' => $itemData['notes'] ?? 0,
+                    'uom_id' => (int) ($itemData['uom_id'] ?? 0),
+                    'warehouse_id' => $warehouseId,
+                    'sales_order_details_id' => 3
+                ];
+
+                $items[] = $entry;
+            }
+
+            $data = [
+                "sales_id" => 1,
+                // "order_number" => $request->input('order_number' ?? 1),
+                "order_date" => $request->input('order_date'),
+                "delivery_date" => $request->input('delivery_date'),
+                'partner_id' => $request->input('partner_id'),
+                'term_of_payment' => $request->input('term_of_payment'),
+                'total_amount' => (float) $request->input('total_amount'),
+                'coa_id' => 999,
+                'payment_coa' => 0,
+                'currency_id' => $request->input('currency_id'),
+                'tax_rate' => $request->input('tax_rate'),
+                'tax_amount' => (float) $request->input('tax_amount'),
+                'sequence_number' => 10,
+                'status' => 'konfirmasi',
+                'description' => $request->input('description'),
+                // 'company_id' => 2,
+                'warehouse_id' => $warehouseId,
+                'items' => $items,
+            ];
+            $apiResponse = updateApi(env('PENJUALAN_URL') . '/' . $id, $data);
+            // dd($data, $apiResponse->json());
+            if ($apiResponse->successful()) {
+                // Session::put('last_po_code', $request->input('code'));
+                return redirect()->route('penjualan.index')
+                    ->with('success', $apiResponse->json()['message']);
+            } else {
+                return back()->withErrors($apiResponse->json()['message']);
+            }
+        } catch (\Exception $e) {
+            return back()->withErrors($e->getMessage());
+        }
     }
 
     /**
@@ -317,6 +373,40 @@ class PenjualanController extends Controller
                 return back()->withErrors(
                     $apiResponse->json()['message']
                 );
+            }
+        } catch (\Exception $e) {
+            return back()->withErrors($e->getMessage());
+        }
+    }
+    public function vapprove($id)
+    {
+        try {
+            $apiResponse = fectApi(env('PENJUALAN_URL') . '/' . $id);
+            if ($apiResponse->successful()) {
+                $data = json_decode($apiResponse->body());
+                // dd($data);
+                return view('penjualan.penjualan.approve', compact('data'));
+            } else {
+                return back()->withErrors('Gagal mengambil data item: ' . $apiResponse->status());
+            }
+        } catch (\Exception $e) {
+            return back()->withErrors($e->getMessage());
+        }
+    }
+
+    public function approve(Request $request, $id)
+    {
+        try {
+            $data = [
+                'status' => 'Approve'
+            ];
+            // dd($data);
+            $apiResponse = updateApi(env('PENJUALAN_URL') . '/approve/' . $id, $data);
+            // dd($apiResponse);
+            if ($apiResponse->successful()) {
+                return redirect()->route('penjualan.index')->with('success', $apiResponse->json()['message']);
+            } else {
+                return back()->withErrors($apiResponse->json()['message']);
             }
         } catch (\Exception $e) {
             return back()->withErrors($e->getMessage());
