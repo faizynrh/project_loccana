@@ -35,18 +35,19 @@
         .info-container {
             width: 100%;
             margin-bottom: 15px;
+
         }
 
         .left-info {
             float: left;
             width: 60%;
+            max-width: 350px;
         }
 
         .right-info {
             float: right;
             width: 35%;
             border: 1px solid #000;
-            padding: 5px;
         }
 
         table {
@@ -64,6 +65,7 @@
         th,
         td {
             padding: 5px;
+            padding-right: 10px;
             text-align: center;
         }
 
@@ -121,17 +123,15 @@
             <div>CV. Pusaka Agro Indo Brebes</div>
             <div>JL. Stasiun Rt. 06 Rw. 01 Cigedog Kec. Kersana Brebes</div>
         </div>
-        <div class="clearfix" style="float: right">
+        <div class="clearfix" style="float: right; margin-top: -95px">
             <strong>FAKTUR</strong>
             <div>No.Faktur: 20250266</div>
             <div>Tanggal: 2025-02-25</div>
+            <div>Alamat pengiriman:</div> JL. Stasiun Rt. 06 Rw. 01 Cigedog Kec. Kersana Brebes<br>
+            <div>Phone:</div> 0283-889156/889255/087829001955
         </div>
     </div>
 
-    <div class="clearfix">
-        <strong>Alamat pengiriman:</strong> JL. Stasiun Rt. 06 Rw. 01 Cigedog Kec. Kersana Brebes<br>
-        <strong>Phone:</strong> 0283-889156/889255/087829001955
-    </div>
 
     <table>
         <thead style=" border: 1px solid #000;">
@@ -216,16 +216,13 @@
             <div>CV. Pusaka Agro Indo Brebes</div>
             <div>JL. Stasiun Rt. 06 Rw. 01 Cigedog Kec. Kersana Brebes</div>
         </div>
-        <div class="clearfix" style="float: right">
+        <div class="clearfix" style="float: right ; margin-top: -95px">
             <strong>DO</strong>
             <div>No.Faktur: 20250266</div>
             <div>Tanggal: 2025-02-25</div>
+            <div>Alamat pengiriman:</div> JL. Stasiun Rt. 06 Rw. 01 Cigedog Kec. Kersana Brebes<br>
+            <div>Phone:</div> 0283-889156/889255/087829001955
         </div>
-    </div>
-
-    <div class="clearfix">
-        <strong>Alamat pengiriman:</strong> JL. Stasiun Rt. 06 Rw. 01 Cigedog Kec. Kersana Brebes<br>
-        <strong>Phone:</strong> 0283-889156/889255/087829001955
     </div>
 
     <table>
