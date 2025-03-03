@@ -1,15 +1,13 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 
 <head>
     <meta charset="UTF-8">
     <title>Faktur PT. ENDIRA ALDA</title>
-
     <style>
         @page {
             size: landscape;
         }
-
 
         body {
             font-family: Arial, sans-serif;
@@ -30,12 +28,9 @@
             font-weight: bold;
         }
 
-
-
         .info-container {
             width: 100%;
             margin-bottom: 15px;
-
         }
 
         .left-info {
@@ -44,10 +39,23 @@
             max-width: 350px;
         }
 
-        .right-info {
+        .right-info-table {
             float: right;
-            width: 35%;
-            border: 1px solid #000;
+            max-width: 500px;
+        }
+
+        /* Kelas untuk mengatur margin atas berbeda tiap halaman */
+        .mt-faktur {
+            margin-top: -115px;
+        }
+
+        .mt-do {
+            margin-top: -95px;
+        }
+
+        /* Aturan khusus untuk tabel di kontainer informasi kanan */
+        .right-info-table table td {
+            text-align: left;
         }
 
         table {
@@ -56,21 +64,15 @@
             margin-top: 20px;
         }
 
-        /* table,
         th,
         td {
-            border: 0px solid #000;
-        } */
-
-        th,
-        td {
-            padding: 5px;
-            padding-right: 10px;
+            padding: 5px 10px 5px 5px;
             text-align: center;
         }
 
         th {
             background-color: #f2f2f2;
+            border: 1px solid #000;
         }
 
         .total-section {
@@ -90,11 +92,9 @@
         }
 
         .signature-line {
-            margin-top: 50px;
+            margin: 50px auto 0 auto;
             border-top: 1px solid #000;
             width: 80%;
-            margin-left: auto;
-            margin-right: auto;
         }
 
         .clearfix:after {
@@ -123,18 +123,37 @@
             <div>CV. Pusaka Agro Indo Brebes</div>
             <div>JL. Stasiun Rt. 06 Rw. 01 Cigedog Kec. Kersana Brebes</div>
         </div>
-        <div class="clearfix" style="float: right; margin-top: -95px">
-            <strong>FAKTUR</strong>
-            <div>No.Faktur: 20250266</div>
-            <div>Tanggal: 2025-02-25</div>
-            <div>Alamat pengiriman:</div> JL. Stasiun Rt. 06 Rw. 01 Cigedog Kec. Kersana Brebes<br>
-            <div>Phone:</div> 0283-889156/889255/087829001955
+        <div class="right-info-table mt-faktur">
+            <table>
+                <tr>
+                    <td colspan="3" style="text-align:left; font-weight:bold;">FAKTUR</td>
+                </tr>
+                <tr>
+                    <td>No.Faktur</td>
+                    <td>:</td>
+                    <td>20250266</td>
+                </tr>
+                <tr>
+                    <td>Tanggal</td>
+                    <td>:</td>
+                    <td>2025-02-25</td>
+                </tr>
+                <tr>
+                    <td>Alamat pengiriman</td>
+                    <td>:</td>
+                    <td>JL. Stasiun Rt. 06 Rw. 01 Cigedog Kec. Kersana Brebes</td>
+                </tr>
+                <tr>
+                    <td>Phone</td>
+                    <td>:</td>
+                    <td>0283-889156/889255/087829001955</td>
+                </tr>
+            </table>
         </div>
     </div>
 
-
     <table>
-        <thead style=" border: 1px solid #000;">
+        <thead>
             <tr>
                 <th>No.</th>
                 <th>Kode</th>
@@ -147,7 +166,7 @@
                 <th>Jumlah Rp</th>
             </tr>
         </thead>
-        <tbody style="border-bottom: 1px solid #000">
+        <tbody>
             <tr>
                 <td>1</td>
                 <td>BAI0706</td>
@@ -159,7 +178,7 @@
                 <td>14.850,00</td>
                 <td>106.920.000,00</td>
             </tr>
-            <tr>
+            <tr style="border-bottom: 1px solid #000">
                 <td>2</td>
                 <td>BAI0705</td>
                 <td>Fastac 15 EC 250.00 ml</td>
@@ -174,13 +193,13 @@
     </table>
 
     <div class="total-section">
-        <div><strong>Total Rp</strong> 114.516.000,00</div>
-        <div><strong>Total Exc Rp</strong> 103.167.567,57</div>
-        <div><strong>DPP Rp</strong> 94.570.270,27</div>
-        <div><strong>PPN Rp</strong> 11.348.432,43</div>
+        <div style="padding: 10px"><strong>Total Rp</strong> 114.516.000,00</div>
+        <div style="padding: 10px"><strong>Total Exc Rp</strong> 103.167.567,57</div>
+        <div style="padding: 10px"><strong>DPP Rp</strong> 94.570.270,27</div>
+        <div style="padding: 10px"><strong>PPN Rp</strong> 11.348.432,43</div>
     </div>
 
-    <div class="signature-section">
+    <div class="signature-section" style="margin-top:-180px">
         <table>
             <tr>
                 <td>
@@ -197,8 +216,6 @@
                 </td>
             </tr>
         </table>
-
-
     </div>
 
     <div class="page-break"></div>
@@ -216,17 +233,37 @@
             <div>CV. Pusaka Agro Indo Brebes</div>
             <div>JL. Stasiun Rt. 06 Rw. 01 Cigedog Kec. Kersana Brebes</div>
         </div>
-        <div class="clearfix" style="float: right ; margin-top: -95px">
-            <strong>DO</strong>
-            <div>No.Faktur: 20250266</div>
-            <div>Tanggal: 2025-02-25</div>
-            <div>Alamat pengiriman:</div> JL. Stasiun Rt. 06 Rw. 01 Cigedog Kec. Kersana Brebes<br>
-            <div>Phone:</div> 0283-889156/889255/087829001955
+        <div class="right-info-table mt-do">
+            <table>
+                <tr>
+                    <td colspan="3" style="text-align:left; font-weight:bold;">DO</td>
+                </tr>
+                <tr>
+                    <td>No.Faktur</td>
+                    <td>:</td>
+                    <td>20250266</td>
+                </tr>
+                <tr>
+                    <td>Tanggal</td>
+                    <td>:</td>
+                    <td>2025-02-25</td>
+                </tr>
+                <tr>
+                    <td>Alamat pengiriman</td>
+                    <td>:</td>
+                    <td>JL. Stasiun Rt. 06 Rw. 01 Cigedog Kec. Kersana Brebes</td>
+                </tr>
+                <tr>
+                    <td>Phone</td>
+                    <td>:</td>
+                    <td>0283-889156/889255/087829001955</td>
+                </tr>
+            </table>
         </div>
     </div>
 
     <table>
-        <thead style=" border: 1px solid #000;">
+        <thead>
             <tr>
                 <th>No.</th>
                 <th>Kode</th>
@@ -238,7 +275,7 @@
                 <th>Liter/Kg</th>
             </tr>
         </thead>
-        <tbody style="border-bottom: 1px solid #000">
+        <tbody>
             <tr>
                 <td>1</td>
                 <td>BAI0706</td>
@@ -249,7 +286,7 @@
                 <td>7.200,00</td>
                 <td>720,00</td>
             </tr>
-            <tr>
+            <tr style="border-bottom: 1px solid #000">
                 <td>2</td>
                 <td>BAI0705</td>
                 <td>Fastac 15 EC 250.00 ml</td>
@@ -303,7 +340,7 @@
     </div>
 
     <table>
-        <thead style="border: 1px solid #000">
+        <thead>
             <tr>
                 <th>No.</th>
                 <th>Customer</th>
@@ -316,7 +353,7 @@
                 <th>Liter/Kg</th>
             </tr>
         </thead>
-        <tbody style="border-bottom: 1px solid #000">
+        <tbody>
             <tr>
                 <td>1</td>
                 <td>CV. Pusaka Agro Indo Brebes</td>
@@ -328,7 +365,7 @@
                 <td>7.200,00</td>
                 <td>720,00</td>
             </tr>
-            <tr>
+            <tr style="border-bottom: 1px solid #000">
                 <td>2</td>
                 <td>CV. Pusaka Agro Indo Brebes</td>
                 <td>Brebes</td>
