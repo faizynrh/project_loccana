@@ -149,14 +149,9 @@
                                 return;
                             }
 
-                            const orderDate = new Date(response.order_date);
-                            const formattedDate = orderDate.getFullYear() + '-' +
-                                (orderDate.getMonth() + 1).toString().padStart(2, '0') + '-' +
-                                orderDate.getDate().toString().padStart(2, '0');
-
                             $('#id_po').val(response.id_po);
                             $('#number_po').val(response.number_po);
-                            $('#order_date').val(formattedDate);
+                            $('#order_date').val(formatDate(response.order_date));
                             $('#partner_name').val(response.partner_name);
                             $('#address').val(response.address);
                             $('#description').val(response.description);
