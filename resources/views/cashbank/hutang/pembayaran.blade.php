@@ -72,7 +72,9 @@
                                     <button type="submit" class="btn btn-primary">Cari</button>
                                 </form>
                             </div>
-                            <a href="/hutang" class="btn btn-secondary me-2 fw-bold text-end">Kembali</a>
+                            <a href="{{ route('hutang.index') }}" class="btn btn-secondary me-3 fw-bold text-end">
+                                <i class="bi bi-arrow-left-circle"></i> Kembali
+                            </a>
                         </div>
                     </div>
                     <div class="card-body">

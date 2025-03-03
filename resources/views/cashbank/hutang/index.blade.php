@@ -34,9 +34,6 @@
                     <div class="card-header">
                         <div class="d-flex justify-content-between align-items-center">
                             <div class="d-flex align-items-center">
-                                <a href="{{ route('hutang.pembayaran') }}" class="btn btn-primary me-2 fw-bold">
-                                    <i class="bi bi-cash-stack"></i> Pembayaran
-                                </a>
                                 <form id="searchForm" class="d-flex align-items-center gap-2">
                                     @csrf
                                     <select id="yearSelect" class="form-select me-2" name="year" style="width: auto;">
@@ -71,6 +68,9 @@
                                     <button type="submit" class="btn btn-primary">Cari</button>
                                 </form>
                             </div>
+                            <a href="{{ route('hutang.pembayaran') }}" class="btn btn-primary me-2 fw-bold text-end">
+                                <i class="bi bi-cash-stack"></i> Pembayaran
+                            </a>
                         </div>
                     </div>
                     <div class="card-body">
