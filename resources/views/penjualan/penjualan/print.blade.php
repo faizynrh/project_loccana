@@ -1,15 +1,13 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 
 <head>
     <meta charset="UTF-8">
     <title>Faktur PT. ENDIRA ALDA</title>
-
     <style>
         @page {
             size: landscape;
         }
-
 
         body {
             font-family: Arial, sans-serif;
@@ -30,8 +28,6 @@
             font-weight: bold;
         }
 
-
-
         .info-container {
             width: 100%;
             margin-bottom: 15px;
@@ -40,13 +36,26 @@
         .left-info {
             float: left;
             width: 60%;
+            max-width: 350px;
         }
 
-        .right-info {
+        .right-info-table {
             float: right;
-            width: 35%;
-            border: 1px solid #000;
-            padding: 5px;
+            max-width: 500px;
+        }
+
+        /* Kelas untuk mengatur margin atas berbeda tiap halaman */
+        .mt-faktur {
+            margin-top: -115px;
+        }
+
+        .mt-do {
+            margin-top: -95px;
+        }
+
+        /* Aturan khusus untuk tabel di kontainer informasi kanan */
+        .right-info-table table td {
+            text-align: left;
         }
 
         table {
@@ -55,20 +64,15 @@
             margin-top: 20px;
         }
 
-        /* table,
         th,
         td {
-            border: 0px solid #000;
-        } */
-
-        th,
-        td {
-            padding: 5px;
+            padding: 5px 10px 5px 5px;
             text-align: center;
         }
 
         th {
             background-color: #f2f2f2;
+            border: 1px solid #000;
         }
 
         .total-section {
@@ -88,11 +92,9 @@
         }
 
         .signature-line {
-            margin-top: 50px;
+            margin: 50px auto 0 auto;
             border-top: 1px solid #000;
             width: 80%;
-            margin-left: auto;
-            margin-right: auto;
         }
 
         .clearfix:after {
@@ -118,23 +120,40 @@
     <div class="info-container clearfix">
         <div class="left-info">
             <strong>Pembeli</strong>
-            <div>CV. Pusaka Agro Indo Brebes</div>
+            <div>{{ $data['data'][0]['partner_name'] }}</div>
             <div>JL. Stasiun Rt. 06 Rw. 01 Cigedog Kec. Kersana Brebes</div>
         </div>
-        <div class="clearfix" style="float: right">
-            <strong>FAKTUR</strong>
-            <div>No.Faktur: 20250266</div>
-            <div>Tanggal: 2025-02-25</div>
+        <div class="right-info-table mt-faktur">
+            <table>
+                <tr>
+                    <td colspan="3" style="text-align:left; font-weight:bold;">FAKTUR</td>
+                </tr>
+                <tr>
+                    <td>No.Faktur</td>
+                    <td>:</td>
+                    <td>{{ $data['data'][0]['order_number'] ?? '' }}</td>
+                </tr>
+                <tr>
+                    <td>Tanggal</td>
+                    <td>:</td>
+                    <td>{{ $data['data'][0]['order_date'] ?? '' }}</td>
+                </tr>
+                <tr>
+                    <td>Alamat pengiriman</td>
+                    <td>:</td>
+                    <td>JL. Stasiun Rt. 06 Rw. 01 Cigedog Kec. Kersana Brebes</td>
+                </tr>
+                <tr>
+                    <td>Phone</td>
+                    <td>:</td>
+                    <td>{{ $data['data'][0]['contact_info'] ?? '' }}</td>
+                </tr>
+            </table>
         </div>
-    </div>
-
-    <div class="clearfix">
-        <strong>Alamat pengiriman:</strong> JL. Stasiun Rt. 06 Rw. 01 Cigedog Kec. Kersana Brebes<br>
-        <strong>Phone:</strong> 0283-889156/889255/087829001955
     </div>
 
     <table>
-        <thead style=" border: 1px solid #000;">
+        <thead>
             <tr>
                 <th>No.</th>
                 <th>Kode</th>
@@ -147,40 +166,31 @@
                 <th>Jumlah Rp</th>
             </tr>
         </thead>
-        <tbody style="border-bottom: 1px solid #000">
-            <tr>
-                <td>1</td>
-                <td>BAI0706</td>
-                <td>Fastac 15 EC 100.00 ml</td>
-                <td>150</td>
-                <td>0</td>
-                <td>@ 48</td>
-                <td>7.200,00</td>
-                <td>14.850,00</td>
-                <td>106.920.000,00</td>
-            </tr>
-            <tr>
-                <td>2</td>
-                <td>BAI0705</td>
-                <td>Fastac 15 EC 250.00 ml</td>
-                <td>10</td>
-                <td>0</td>
-                <td>@ 24</td>
-                <td>240,00</td>
-                <td>31.650,00</td>
-                <td>7.596.000,00</td>
-            </tr>
+        <tbody>
+            @foreach ($data['data'] as $item)
+                <tr>
+                    <td>{{ $loop->iteration }}</td>
+                    <td>{{ $item['item_code'] }}</td>
+                    <td>{{ $item['item_name'] }}</td>
+                    <td>{{ $item['box_quantity'] }}</td>
+                    <td>{{ $item['qty_in_pcs'] }}</td>
+                    <td>{{ $item['per_box_quantity'] }}</td>
+                    <td>{{ $item['quantity'] }}</td>
+                    <td>{{ $item['unit_price'] }}</td>
+                    <td>{{ $item['total_price'] }}</td>
+                </tr>
+            @endforeach
         </tbody>
     </table>
 
-    <div class="total-section">
-        <div><strong>Total Rp</strong> 114.516.000,00</div>
-        <div><strong>Total Exc Rp</strong> 103.167.567,57</div>
-        <div><strong>DPP Rp</strong> 94.570.270,27</div>
-        <div><strong>PPN Rp</strong> 11.348.432,43</div>
+    <div class="total-section" style="border-top: 1px solid #000 ">
+        <div style="padding: 10px"><strong>DPP Rp</strong> 94.570.270,27</div>
+        <div style="padding: 10px"><strong>Diskon </strong>Rp 103.167.567,57</div>
+        <div style="padding: 10px"><strong>PPN </strong>Rp 11.348.432,43</div>
+        <div style="padding: 10px"><strong>Total </strong>Rp 114.516.000,00</div>
     </div>
 
-    <div class="signature-section">
+    <div class="signature-section" style="margin-top:-180px">
         <table>
             <tr>
                 <td>
@@ -191,14 +201,12 @@
                 </td>
                 <td>
                     <div class="signature-box">
-                        <div>CV. Pusaka Agro Indo Brebes,</div>
+                        <div>{{ $data['data'][0]['partner_name'] }},</div>
                         <div class="signature-line"></div>
                     </div>
                 </td>
             </tr>
         </table>
-
-
     </div>
 
     <div class="page-break"></div>
@@ -213,23 +221,40 @@
     <div class="info-container clearfix">
         <div class="left-info">
             <strong>Pembeli</strong>
-            <div>CV. Pusaka Agro Indo Brebes</div>
+            <div>{{ $data['data'][0]['partner_name'] }}</div>
             <div>JL. Stasiun Rt. 06 Rw. 01 Cigedog Kec. Kersana Brebes</div>
         </div>
-        <div class="clearfix" style="float: right">
-            <strong>DO</strong>
-            <div>No.Faktur: 20250266</div>
-            <div>Tanggal: 2025-02-25</div>
+        <div class="right-info-table mt-do">
+            <table>
+                <tr>
+                    <td colspan="3" style="text-align:left; font-weight:bold;">DO</td>
+                </tr>
+                <tr>
+                    <td>No.Faktur</td>
+                    <td>:</td>
+                    <td>{{ $data['data'][0]['order_number'] }}</td>
+                </tr>
+                <tr>
+                    <td>Tanggal</td>
+                    <td>:</td>
+                    <td>{{ $data['data'][0]['order_date'] }}</td>
+                </tr>
+                <tr>
+                    <td>Alamat pengiriman</td>
+                    <td>:</td>
+                    <td>JL. Stasiun Rt. 06 Rw. 01 Cigedog Kec. Kersana Brebes</td>
+                </tr>
+                <tr>
+                    <td>Phone</td>
+                    <td>:</td>
+                    <td>{{ $data['data'][0]['contact_info'] ?? '' }}</td>
+                </tr>
+            </table>
         </div>
-    </div>
-
-    <div class="clearfix">
-        <strong>Alamat pengiriman:</strong> JL. Stasiun Rt. 06 Rw. 01 Cigedog Kec. Kersana Brebes<br>
-        <strong>Phone:</strong> 0283-889156/889255/087829001955
     </div>
 
     <table>
-        <thead style=" border: 1px solid #000;">
+        <thead>
             <tr>
                 <th>No.</th>
                 <th>Kode</th>
@@ -241,28 +266,20 @@
                 <th>Liter/Kg</th>
             </tr>
         </thead>
-        <tbody style="border-bottom: 1px solid #000">
-            <tr>
-                <td>1</td>
-                <td>BAI0706</td>
-                <td>Fastac 15 EC 100.00 ml</td>
-                <td>150</td>
-                <td>0</td>
-                <td>@ 48</td>
-                <td>7.200,00</td>
-                <td>720,00</td>
-            </tr>
-            <tr>
-                <td>2</td>
-                <td>BAI0705</td>
-                <td>Fastac 15 EC 250.00 ml</td>
-                <td>10</td>
-                <td>0</td>
-                <td>@ 24</td>
-                <td>240,00</td>
-                <td>60,00</td>
-            </tr>
-            <tr>
+        <tbody>
+            @foreach ($data['data'] as $item)
+                <tr>
+                    <td>{{ $loop->iteration }}</td>
+                    <td>{{ $item['item_code'] }}</td>
+                    <td>{{ $item['item_name'] }}</td>
+                    <td>{{ $item['box_quantity'] }}</td>
+                    <td>{{ $item['qty_in_pcs'] }}</td>
+                    <td>{{ $item['per_box_quantity'] }}</td>
+                    <td>{{ $item['quantity'] }}</td>
+                    <td>720,00</td>
+                </tr>
+            @endforeach
+            <tr style="border-top: 1px solid #000">
                 <td colspan="3">Jumlah</td>
                 <td>160</td>
                 <td>0</td>
@@ -302,11 +319,13 @@
 
     <!-- PERMINTAAN BARANG PAGE -->
     <div class="header">
-        <div>Permintaan Barang 2025-02-25 No.Faktur 20250266</div>
+        <div>Permintaan Barang {{ $data['data'][0]['order_date'] }} </div>
+        <div style="text-align: right"> No.Faktur {{ $data['data'][0]['order_number'] }}
+        </div>
     </div>
 
     <table>
-        <thead style="border: 1px solid #000">
+        <thead>
             <tr>
                 <th>No.</th>
                 <th>Customer</th>
@@ -319,30 +338,21 @@
                 <th>Liter/Kg</th>
             </tr>
         </thead>
-        <tbody style="border-bottom: 1px solid #000">
-            <tr>
-                <td>1</td>
-                <td>CV. Pusaka Agro Indo Brebes</td>
-                <td>Brebes</td>
-                <td>Fastac 15 EC 100.00 ml</td>
-                <td>150,00</td>
-                <td>0,00</td>
-                <td>7.200,00</td>
-                <td>7.200,00</td>
-                <td>720,00</td>
-            </tr>
-            <tr>
-                <td>2</td>
-                <td>CV. Pusaka Agro Indo Brebes</td>
-                <td>Brebes</td>
-                <td>Fastac 15 EC 250.00 ml</td>
-                <td>10,00</td>
-                <td>0,00</td>
-                <td>240,00</td>
-                <td>240,00</td>
-                <td>60,00</td>
-            </tr>
-            <tr>
+        <tbody>
+            @foreach ($data['data'] as $item)
+                <tr>
+                    <td>{{ $loop->iteration }}</td>
+                    <td>{{ $item['partner_name'] }}</td>
+                    <td>Brebes</td>
+                    <td>{{ $item['item_name'] }}</td>
+                    <td>150,00</td>
+                    <td>{{ $item['box_quantity'] }}</td>
+                    <td>{{ $item['qty_in_pcs'] }}</td>
+                    <td>{{ $item['quantity'] }}</td>
+                    <td>720,00</td>
+                </tr>
+            @endforeach
+            <tr style="border-top: 1px solid #000">
                 <td colspan="4">Jumlah</td>
                 <td>160,00</td>
                 <td>0,00</td>

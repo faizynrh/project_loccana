@@ -466,4 +466,5 @@ class PenjualanController extends Controller
             return back()->withErrors($e->getMessage());
         }
     }
+
 }

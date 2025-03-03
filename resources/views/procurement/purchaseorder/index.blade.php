@@ -52,7 +52,6 @@
                                         <option value="0" {{ request('month') == 'all' ? 'selected' : '' }}>ALL
                                         </option>
                                         @php
-                                            $currentMonth = now()->month;
                                             $months = [
                                                 1 => 'Januari',
                                                 2 => 'Februari',
@@ -75,6 +74,8 @@
                                             </option>
                                         @endforeach
                                     </select>
+                                    <!-- Tombol Cari untuk menerapkan filter berdasarkan tahun dan bulan -->
+                                    <button type="button" id="filterButton" class="btn btn-primary fw-bold">Cari</button>
                                 </div>
                             </form>
                         </div>
@@ -104,48 +105,12 @@
         </div>
     </div>
 @endsection
+
 @push('scripts')
     <script>
         $(document).ready(function() {
-            $('#filterForm').on('submit', function(e) {
-                e.preventDefault();
-
-                const dataTable = $('#tablepurchaseorder').DataTable();
-
-                // Get the total number of rows that match the search criteria
-                // This gets the full count, not just what's visible on the current page
-                const totalFilteredEntries = dataTable.page.info().recordsDisplay;
-
-                // Get the total number of rows without filtering
-                const totalEntries = dataTable.page.info().recordsTotal;
-
-                if (!$('#total_entries').length) {
-                    $(this).append('<input type="hidden" id="total_entries" name="total_entries">');
-                }
-                $('#total_entries').val(totalFilteredEntries);
-
-                // Add total entries as well (optional)
-                if (!$('#total_all_entries').length) {
-                    $(this).append('<input type="hidden" id="total_all_entries" name="total_all_entries">');
-                }
-                $('#total_all_entries').val(totalEntries);
-
-                this.submit();
-            });
-
-            function reloadTable() {
-                var month = $('#monthSelect').val();
-                var year = $('#yearSelect').val();
-                $('#tablepurchaseorder').DataTable().ajax.reload();
-            }
-            $('#monthSelect').change(function() {
-                reloadTable();
-            });
-
-            $('#yearSelect').change(function() {
-                reloadTable();
-            });
-            $('#tablepurchaseorder').DataTable({
+            // Inisialisasi DataTable
+            var dataTable = $('#tablepurchaseorder').DataTable({
                 serverSide: true,
                 processing: true,
                 ajax: {
@@ -173,9 +138,7 @@
                         }
                     },
                     {
-                        data: 'po_code',
-                        // data: null,
-                        // defaultContent: ''
+                        data: 'po_code'
                     },
                     {
                         data: 'name'
@@ -185,20 +148,18 @@
                         render: function(data) {
                             if (data) {
                                 var date = new Date(data);
-                                return date.getFullYear() + '-' + (date.getMonth() + 1).toString()
-                                    .padStart(2, '0') + '-' + date.getDate().toString().padStart(2,
-                                        '0');
+                                return date.getFullYear() + '-' +
+                                    (date.getMonth() + 1).toString().padStart(2, '0') + '-' +
+                                    date.getDate().toString().padStart(2, '0');
                             }
                             return data;
                         }
                     },
                     {
                         data: 'total_amount'
-                        //     data: null,
-                        //     defaultContent: ''
                     },
                     {
-                        data: 'term_of_payment',
+                        data: 'term_of_payment'
                     },
                     {
                         data: 'status',
@@ -206,12 +167,11 @@
                         render: function(data, type, row) {
                             let statusClass = '';
                             let statusLabel = data;
-
                             if (data.toLowerCase() === 'konfirmasi') {
                                 statusClass = 'btn btn-warning btn-sm';
                                 statusLabel = `<a href="/purchase_order/approve/${row.id}" class="text-dark text-decoration-none" title="Klik untuk Approve">
-                                <span class="${statusClass}">${data}</span>
-                           </a>`;
+                                    <span class="${statusClass}">${data}</span>
+                                </a>`;
                             } else if (data.toLowerCase() === 'reject') {
                                 statusClass = 'badge bg-danger cursor-not-allowed';
                             } else if (data.toLowerCase() === 'approve') {
@@ -224,9 +184,7 @@
                     {
                         data: null,
                         render: function(data, type, row) {
-                            let actionButtons = `
-
-        `;
+                            let actionButtons = ``;
                             actionButtons += row.status.toLowerCase() === 'konfirmasi' ? `
                                 <div class="btn-group dropdown me-1 mb-1">
                                     <button type="button" class="btn btn-outline-danger rounded-3 dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-reference="parent">
@@ -237,11 +195,11 @@
                                             <i class="bi bi-eye text-primary"></i>
                                             Detail
                                         </a>
-                                       <a href="/purchase_order/print/${row.id}"  class="dropdown-item" target="_blank" title="Print">
+                                        <a href="/purchase_order/print/${row.id}" class="dropdown-item" target="_blank" title="Print">
                                             <i class="bi bi-printer text-warning"></i>
                                             Print PDF
                                         </a>
-                                        <a href="/purchase_order/excel/detail/${row.id}"  class="dropdown-item" title="Print">
+                                        <a href="/purchase_order/excel/detail/${row.id}" class="dropdown-item" title="Print">
                                             <i class="bi bi-file-earmark-excel text-success"></i>
                                             Print Excel
                                         </a>
@@ -250,7 +208,7 @@
                                             <i class="bi bi-pencil text-info"></i>
                                             Edit
                                         </a>
-                                       <form action="/purchase_order/delete/${row.id}" method="POST" id="delete${row.id}" style="display:inline;">
+                                        <form action="/purchase_order/delete/${row.id}" method="POST" id="delete${row.id}" style="display:inline;">
                                             @csrf
                                             @method('DELETE')
                                             <button type="button" class="dropdown-item" title="Hapus" onclick="confirmDelete(${row.id})">
@@ -260,8 +218,8 @@
                                         </form>
                                     </div>
                                 </div>
-        ` :
-                                ` <div class="btn-group dropdown me-1 mb-1">
+                            ` : `
+                                <div class="btn-group dropdown me-1 mb-1">
                                     <button type="button" class="btn btn-outline-danger rounded-3 dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-reference="parent">
                                         <span class="sr-only"><i class="bi bi-list-task"></i></span>
                                     </button>
@@ -270,11 +228,11 @@
                                             <i class="bi bi-eye text-primary"></i>
                                             Detail
                                         </a>
-                                       <a href="/purchase_order/print/${row.id}"  class="dropdown-item" target="_blank" title="Print">
+                                        <a href="/purchase_order/print/${row.id}" class="dropdown-item" target="_blank" title="Print">
                                             <i class="bi bi-printer text-warning"></i>
                                             Print PDF
                                         </a>
-                                        <a href="/purchase_order/excel/detail/${row.id}"  class="dropdown-item" title="Print">
+                                        <a href="/purchase_order/excel/detail/${row.id}" class="dropdown-item" title="Print">
                                             <i class="bi bi-file-earmark-excel text-success"></i>
                                             Print Excel
                                         </a>
@@ -283,7 +241,7 @@
                                             <i class="bi bi-pencil"></i>
                                             Edit
                                         </a>
-                                       <form action="/purchase_order/delete/${row.id}" method="POST" id="delete${row.id}" style="display:inline;">
+                                        <form action="/purchase_order/delete/${row.id}" method="POST" id="delete${row.id}" style="display:inline;">
                                             @csrf
                                             @method('DELETE')
                                             <button type="button" class="dropdown-item disabled" title="Hapus" onclick="confirmDelete(${row.id})">
@@ -293,11 +251,37 @@
                                         </form>
                                     </div>
                                 </div>
-                `;
+                            `;
                             return `<div class="d-flex">${actionButtons}</div>`;
                         }
                     }
                 ]
+            });
+
+            // Hapus event on change pada select tahun dan bulan agar tidak reload otomatis
+            // Tambahkan event handler untuk tombol "Cari" untuk menerapkan filter berdasarkan tahun dan bulan
+            $('#filterButton').on('click', function() {
+                dataTable.ajax.reload();
+            });
+
+            // Saat form Export disubmit, tambahkan informasi total record ke dalam form
+            $('#filterForm').on('submit', function(e) {
+                e.preventDefault();
+
+                const totalFilteredEntries = dataTable.page.info().recordsDisplay;
+                const totalEntries = dataTable.page.info().recordsTotal;
+
+                if (!$('#total_entries').length) {
+                    $(this).append('<input type="hidden" id="total_entries" name="total_entries">');
+                }
+                $('#total_entries').val(totalFilteredEntries);
+
+                if (!$('#total_all_entries').length) {
+                    $(this).append('<input type="hidden" id="total_all_entries" name="total_all_entries">');
+                }
+                $('#total_all_entries').val(totalEntries);
+
+                this.submit();
             });
         });
     </script>

@@ -47,10 +47,8 @@
                                     @endfor
                                 </select>
                                 <select id="monthSelect" class="form-select me-2" name="month" style="width: auto;">
-                                    <option value="0" {{ request('month') == 'all' ? 'selected' : '' }}>ALL
-                                    </option>
+                                    <option value="0" {{ request('month') == 'all' ? 'selected' : '' }}>ALL</option>
                                     @php
-                                        $currentMonth = now()->month;
                                         $months = [
                                             1 => 'Januari',
                                             2 => 'Februari',
@@ -73,8 +71,9 @@
                                         </option>
                                     @endforeach
                                 </select>
+                                <!-- Tombol filter, hanya memicu reload tabel ketika ditekan -->
+                                <button type="button" id="filterButton" class="btn btn-primary fw-bold">Cari</button>
                             </div>
-
                         </div>
                         <div class="text-end">
                             <h6 class="fw-bold">Total Per Bulan</h6>
@@ -103,22 +102,12 @@
         </div>
     </div>
 @endsection
+
 @push('scripts')
     <script>
         $(document).ready(function() {
-            function reloadTable() {
-                var month = $('#monthSelect').val();
-                var year = $('#yearSelect').val();
-                $('#tablepenjualan').DataTable().ajax.reload();
-            }
-            $('#monthSelect').change(function() {
-                reloadTable();
-            });
-
-            $('#yearSelect').change(function() {
-                reloadTable();
-            });
-            $('#tablepenjualan').DataTable({
+            // Inisialisasi DataTable dan simpan dalam variabel
+            var dataTable = $('#tablepenjualan').DataTable({
                 serverSide: true,
                 processing: true,
                 ajax: {
@@ -147,8 +136,6 @@
                     },
                     {
                         data: 'order_number'
-                        // data: null,
-                        // defaultContent: ''
                     },
                     {
                         data: 'partner_name'
@@ -158,23 +145,21 @@
                         render: function(data) {
                             if (data) {
                                 var date = new Date(data);
-                                return date.getFullYear() + '-' + (date.getMonth() + 1).toString()
-                                    .padStart(2, '0') + '-' + date.getDate().toString().padStart(2,
-                                        '0');
+                                return date.getFullYear() + '-' +
+                                    (date.getMonth() + 1).toString().padStart(2, '0') + '-' +
+                                    date.getDate().toString().padStart(2, '0');
                             }
                             return data;
                         }
                     },
                     {
                         data: 'total_amount'
-                        //     data: null,
-                        //     defaultContent: ''
                     },
                     {
-                        data: 'term_of_payment',
+                        data: 'term_of_payment'
                     },
                     {
-                        data: 'sales',
+                        data: 'sales'
                     },
                     {
                         data: 'status',
@@ -182,7 +167,6 @@
                         render: function(data, type, row) {
                             let statusClass = '';
                             let statusLabel = data;
-
                             if (data.toLowerCase() === 'approve') {
                                 statusClass = 'badge bg-warning';
                                 statusLabel = `<a href="/penjualan/approve/${row.id}" class="text-dark text-decoration-none" title="Klik untuk Approve">
@@ -200,73 +184,75 @@
                     {
                         data: null,
                         render: function(data, type, row) {
-                            let actionButtons = `
-
-                        `;
+                            let actionButtons = ``;
                             actionButtons += row.status.toLowerCase() === 'approve' ? `
-                                                <div class="btn-group dropdown me-1 mb-1">
-                                                    <button type="button" class="btn btn-outline-danger rounded-3 dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-reference="parent">
-                                                        <span class="sr-only"><i class="bi bi-list-task"></i></span>
-                                                    </button>
-                                                    <div class="dropdown-menu">
-                                                        <a href="/penjualan/detail/${row.id}" class="dropdown-item" title="Detail">
-                                                            <i class="bi bi-eye text-primary"></i>
-                                                            Detail
-                                                        </a>
-                                                       <a href="/penjualan/print/${row.id}"  class="dropdown-item" target="_blank" title="Print">
-                                                            <i class="bi bi-printer text-warning"></i>
-                                                            Print PDF
-                                                        </a>
-                                                        <div class="dropdown-divider"></div>
-                                                        <a href="/penjualan/edit/${row.id}" class="dropdown-item" title="Edit">
-                                                            <i class="bi bi-pencil text-info"></i>
-                                                            Edit
-                                                        </a>
-                                                       <form action="/penjualan/delete/${row.id}" method="POST" id="delete${row.id}" style="display:inline;">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                            <button type="button" class="dropdown-item" title="Hapus" onclick="confirmDelete(${row.id})">
-                                                                <i class="bi bi-trash text-danger"></i>
-                                                                Delete
-                                                            </button>
-                                                        </form>
-                                                    </div>
-                                                </div>
-                        ` :
-                                ` <div class="btn-group dropdown me-1 mb-1">
-                                                  <div class="btn-group dropdown me-1 mb-1">
-                                                    <button type="button" class="btn btn-outline-danger rounded-3 dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-reference="parent">
-                                                        <span class="sr-only"><i class="bi bi-list-task"></i></span>
-                                                    </button>
-                                                    <div class="dropdown-menu">
-                                                        <a href="/penjualan/detail/${row.id}" class="dropdown-item" title="Detail">
-                                                            <i class="bi bi-eye text-primary"></i>
-                                                            Detail
-                                                        </a>
-                                                       <a href="/penjualan/print/${row.id}"  class="dropdown-item" target="_blank" title="Print">
-                                                            <i class="bi bi-printer text-warning"></i>
-                                                            Print PDF
-                                                        </a>
-                                                        <div class="dropdown-divider"></div>
-                                                        <a href="/penjualan/edit/${row.id}" class="dropdown-item" title="Edit">
-                                                            <i class="bi bi-pencil text-info"></i>
-                                                            Edit
-                                                        </a>
-                                                       <form action="/penjualan/delete/${row.id}" method="POST" id="delete${row.id}" style="display:inline;">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                            <button type="button" class="dropdown-item" title="Hapus" onclick="confirmDelete(${row.id})">
-                                                                <i class="bi bi-trash text-danger"></i>
-                                                                Delete
-                                                            </button>
-                                                        </form>
-                                                    </div>
-                                                </div>
-                                `;
+                                <div class="btn-group dropdown me-1 mb-1">
+                                    <button type="button" class="btn btn-outline-danger rounded-3 dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-reference="parent">
+                                        <span class="sr-only"><i class="bi bi-list-task"></i></span>
+                                    </button>
+                                    <div class="dropdown-menu">
+                                        <a href="/penjualan/detail/${row.id}" class="dropdown-item" title="Detail">
+                                            <i class="bi bi-eye text-primary"></i>
+                                            Detail
+                                        </a>
+                                        <a href="/penjualan/print/${row.id}" class="dropdown-item" target="_blank" title="Print">
+                                            <i class="bi bi-printer text-warning"></i>
+                                            Print PDF
+                                        </a>
+                                        <div class="dropdown-divider"></div>
+                                        <a href="/penjualan/edit/${row.id}" class="dropdown-item" title="Edit">
+                                            <i class="bi bi-pencil text-info"></i>
+                                            Edit
+                                        </a>
+                                        <form action="/penjualan/delete/${row.id}" method="POST" id="delete${row.id}" style="display:inline;">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="button" class="dropdown-item" title="Hapus" onclick="confirmDelete(${row.id})">
+                                                <i class="bi bi-trash text-danger"></i>
+                                                Delete
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            ` : `
+                                <div class="btn-group dropdown me-1 mb-1">
+                                    <button type="button" class="btn btn-outline-danger rounded-3 dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-reference="parent">
+                                        <span class="sr-only"><i class="bi bi-list-task"></i></span>
+                                    </button>
+                                    <div class="dropdown-menu">
+                                        <a href="/penjualan/detail/${row.id}" class="dropdown-item" title="Detail">
+                                            <i class="bi bi-eye text-primary"></i>
+                                            Detail
+                                        </a>
+                                        <a href="/penjualan/print/${row.id}" class="dropdown-item" target="_blank" title="Print">
+                                            <i class="bi bi-printer text-warning"></i>
+                                            Print PDF
+                                        </a>
+                                        <div class="dropdown-divider"></div>
+                                        <a href="/penjualan/edit/${row.id}" class="dropdown-item" title="Edit">
+                                            <i class="bi bi-pencil text-info"></i>
+                                            Edit
+                                        </a>
+                                        <form action="/penjualan/delete/${row.id}" method="POST" id="delete${row.id}" style="display:inline;">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="button" class="dropdown-item" title="Hapus" onclick="confirmDelete(${row.id})">
+                                                <i class="bi bi-trash text-danger"></i>
+                                                Delete
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            `;
                             return `<div class="d-flex">${actionButtons}</div>`;
                         }
                     }
                 ]
+            });
+
+            // Hapus event on change pada select, gunakan tombol "Cari" untuk memicu reload tabel
+            $('#filterButton').on('click', function() {
+                dataTable.ajax.reload();
             });
         });
     </script>
