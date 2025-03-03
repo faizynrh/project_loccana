@@ -2,14 +2,13 @@
 
 use App\Http\Controllers\penjualan\PenjualanController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\masterdata\CoaController;
+use App\Http\Controllers\masterdata\COAController;
 use App\Http\Controllers\masterdata\UomController;
 use App\Http\Controllers\masterdata\ItemController;
 use App\Http\Controllers\masterdata\PriceController;
 use App\Http\Controllers\masterdata\GudangController;
 use App\Http\Controllers\authentication\ShowDashboard;
 use App\Http\Controllers\procurement\ReportController;
-use App\Http\Controllers\procurement\ReturnController;
 use App\Http\Controllers\authentication\AuthController;
 use App\Http\Controllers\cashbank\HutangController;
 use App\Http\Controllers\inventory\ReportController as InventoryReportController;
@@ -25,7 +24,6 @@ use App\Http\Controllers\penjualan\DasarPenjualanController;
 use App\Http\Controllers\penjualan\InvoicePenjualanController;
 use App\Http\Controllers\penjualan\RangePriceController;
 use App\Http\Controllers\penjualan\ReportPenjualanController;
-use App\Http\Controllers\penjualan\ReturnController as PenjualanReturnController;
 use App\Http\Controllers\penjualan\ReturnPenjualanController;
 use App\Http\Controllers\procurement\PurchaseOrderController;
 use App\Http\Controllers\procurement\DasarPembelianController;
@@ -121,14 +119,14 @@ Route::middleware('auth.login')->group(
 
         // COA
         Route::prefix('/coa')->name('coa.')->group(function () {
-            Route::get('/', [CoaController::class, 'index'])->name('index');
-            Route::get('/ajax', [CoaController::class, 'ajax'])->name('ajax');
-            Route::get('/detail/{id}', [CoaController::class, 'show'])->name('detail');
-            Route::get('/add', [CoaController::class, 'create'])->name('create');
-            Route::post('/add', [CoaController::class, 'store'])->name('store');
-            Route::delete('/delete/{id}', [CoaController::class, 'destroy'])->name('destroy');
-            Route::get('/edit/{id}', [CoaController::class, 'edit'])->name('edit');
-            Route::put('/update/{id}', [CoaController::class, 'update'])->name('update');
+            Route::get('/', [COAController::class, 'index'])->name('index');
+            Route::get('/ajax', [COAController::class, 'ajax'])->name('ajax');
+            Route::get('/detail/{id}', [COAController::class, 'show'])->name('detail');
+            Route::get('/add', [COAController::class, 'create'])->name('create');
+            Route::post('/add', [COAController::class, 'store'])->name('store');
+            Route::delete('/delete/{id}', [COAController::class, 'destroy'])->name('destroy');
+            Route::get('/edit/{id}', [COAController::class, 'edit'])->name('edit');
+            Route::put('/update/{id}', [COAController::class, 'update'])->name('update');
         });
 
         //GUDANG

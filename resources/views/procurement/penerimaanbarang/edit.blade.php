@@ -35,16 +35,16 @@
                             dengan benar.</h6>
                     </div>
                     <div class="card-body">
-                                                @include('alert.alert')
-                        <form action="{{ route('penerimaan_barang.update', $data->data[0]->id_receive) }}" method="POST"
-                            id="editForm">
+                        @include('alert.alert')
+                        <form action="{{ route('penerimaan_barang.update', $data->data[0]->id_item_receipt) }}"
+                            method="POST" id="editForm">
                             @csrf
                             @method('PUT')
                             <div class="row mb-3">
                                 <div class="col-md-6">
                                     <label for="nomorInvoice" class="form-label fw-bold mt-2 mb-1 small">No. PO</label>
                                     <input type="text" class="form-control bg-body-secondary"
-                                        value="{{ $data->data[0]->number_po }}" id="nomorInvoice"
+                                        value="{{ $data->data[0]->code }}" id="nomorInvoice"
                                         placeholder="Kode Purchase Order" readonly>
                                     <label for="nomorInvoice" class="form-label fw-bold mt-2 mb-1 small">Tanggal</label>
                                     <input type="date" class="form-control bg-body-secondary" id="nomorInvoice"
@@ -53,9 +53,9 @@
                                     <label for="nomorInvoice" class="form-label fw-bold mt-2 mb-1 small">Principal</label>
                                     <input type="text" class="form-control bg-body-secondary" id="nomorInvoice"
                                         value="{{ $data->data[0]->partner_name }}" placeholder="Principal" readonly>
-                                    <label for="shipFrom" class="form-label fw-bold mt-2 mb-1 small">Alamat</label>
-                                    <textarea class="form-control bg-body-secondary" id="shipFrom" placeholder="Alamat Principal" rows="4" readonly>{{ $data->data[0]->address }}</textarea>
-                                    <label for="nomorInvoice" class="form-label fw-bold mt-2 mb-1 small">Att</label>
+                                    {{-- <label for="shipFrom" class="form-label fw-bold mt-2 mb-1 small">Alamat</label>
+                                    <textarea class="form-control bg-body-secondary" id="shipFrom" placeholder="Alamat Principal" rows="4" readonly>{{ $data->data[0]->address }}</textarea> --}}
+                                    {{-- <label for="nomorInvoice" class="form-label fw-bold mt-2 mb-1 small">Att</label>
                                     <input type="text" class="form-control bg-body-secondary" id="nomorInvoice"
                                         value="{{ $data->data[0]->description }}" placeholder="Att" readonly>
                                     <label for="nomorInvoice" class="form-label fw-bold mt-2 mb-1 small">No.
@@ -64,7 +64,7 @@
                                         value="{{ $data->data[0]->phone }}" placeholder="Telephone" readonly>
                                     <label for="nomorInvoice" class="form-label fw-bold mt-2 mb-1 small">Fax</label>
                                     <input type="text" class="form-control bg-body-secondary" id="nomorInvoice"
-                                        value="{{ $data->data[0]->fax }}" placeholder="Fax" readonly>
+                                        value="{{ $data->data[0]->fax }}" placeholder="Fax" readonly> --}}
                                 </div>
                                 <div class="col-md-6">
                                     <label for="nomorInvoice" class="form-label fw-bold mt-2 mb-1 small">No DO</label>
@@ -73,18 +73,23 @@
                                     <label for="nomorInvoice" class="form-label fw-bold mt-2 mb-1 small">Tanggal
                                         DO</label>
                                     <input type="date" class="form-control" name="receipt_date"
-                                        value="{{ \Carbon\Carbon::parse($data->data[0]->receive_date)->format('Y-m-d') }}">
+                                        value="{{ \Carbon\Carbon::parse($data->data[0]->receipt_date)->format('Y-m-d') }}">
                                     <label for="nomorInvoice" class="form-label fw-bold mt-2 mb-1 small">Angkutan</label>
                                     <input type="text" class="form-control" name="shipment_info"
-                                        value="{{ $data->data[0]->shipment }}" placeholder="Angkutan">
+                                        value="{{ $data->data[0]->shipment_info }}" placeholder="Angkutan">
                                     <label for="nomorInvoice" class="form-label fw-bold mt-2 mb-1 small">No
                                         Polisi</label>
                                     <input type="text" class="form-control" name="plate_number"
                                         value="{{ $data->data[0]->plate_number }}" placeholder="No Polisi">
                                     <label for="nomorInvoice" class="form-label fw-bold mt-2 mb-1 small">Gudang</label>
                                     <input type="text" class="form-control bg-body-secondary"
-                                        value="{{ $data->data[0]->gudang }}" id="nomorInvoice"
-                                        placeholder="Gudang Utama" readonly>
+                                        value="{{ $data->data[0]->gudang }}" readonly>
+                                    {{-- <select id="gudang" class="form-control" disabled required>
+                                        <option value="" selected disabled>Pilih Gudang</option>
+                                        @foreach ($gudang as $item)
+                                            <option value="{{ $item['id'] }}">{{ $item['name'] }}</option>
+                                        @endforeach
+                                    </select> --}}
                                 </div>
                             </div>
                             <div class="p-2">
@@ -93,7 +98,7 @@
                             <table class="table mt-3">
                                 <thead>
                                     <tr style="border-bottom: 3px solid #000;">
-                                        <th style="width: 90px">Kode</th>
+                                        <th>Kode</th>
                                         <th>Order (Kg/Lt)</th>
                                         <th>Sisa (Kg/Lt)</th>
                                         <th>Diterima</th>
@@ -109,57 +114,57 @@
                                     @foreach ($data->data as $index => $item)
                                         <tr style="border-bottom: 2px solid #000;">
                                             <td>
-                                                <input type="hidden" name="item_id[{{ $index }}]"
+                                                <input type="hidden" name="items[{{ $index }}][item_id]"
                                                     value="{{ $item->item_id }}">
-                                                <input type="hidden" name="warehouse_id[{{ $index }}]"
+                                                <input type="hidden" name="items[{{ $index }}][warehouse_id]"
                                                     value="{{ $item->warehouse_id }}">
-                                                <input type="hidden" name="id_item_receipt_detail[{{ $index }}]"
+                                                <input type="hidden"
+                                                    name="items[{{ $index }}][id_item_receipt_detail]"
                                                     value="{{ $item->id_item_receipt_detail }}">
-                                                <textarea type="text" class="form-control w-100" readonly rows="3">{{ $item->item_code }}</textarea>
+                                                <textarea class="form-control w-100" readonly rows="3">{{ $item->item_code }}-{{ $item->item_name }}</textarea>
                                             </td>
                                             <td>
                                                 <input type="text" class="form-control bg-body-secondary"
-                                                    name="item_order_qty[{{ $index }}]" id="qty_order"
-                                                    value="{{ $item->item_order_qty }}" readonly>
+                                                    name="items[{{ $index }}][item_order_qty]"
+                                                    value="{{ $item->jumlah_order }}" readonly>
                                             </td>
                                             <td>
                                                 <input type="text" class="form-control bg-body-secondary"
-                                                    name="qty_balance[{{ $index }}]" id="qty_balance"
-                                                    value="{{ $item->qty_balance }}" readonly>
+                                                    name="items[{{ $index }}][qty_balance]"
+                                                    value="{{ $item->jumlah_sisa }}" readonly>
                                             </td>
                                             <td>
                                                 <input type="text" class="form-control bg-body-secondary"
-                                                    name="quantity_received[{{ $index }}]" id="quantity_received"
-                                                    value="{{ $item->qty_receipt }}" readonly>
+                                                    name="items[{{ $index }}][quantity_received]"
+                                                    value="{{ $item->quantity_received }}" readonly>
                                             </td>
                                             <td>
                                                 <input type="number" class="form-control"
-                                                    name="qty[{{ $index }}]" id="qty"
-                                                    value="{{ $item->qty }}" min="0">
+                                                    name="items[{{ $index }}][qty]"
+                                                    value="{{ $item->quantity_received }}" min="0">
                                             </td>
                                             <td>
                                                 <input type="number" class="form-control"
-                                                    name="quantity_rejected[{{ $index }}]" value="0"
+                                                    name="items[{{ $index }}][quantity_rejected]" value="0"
                                                     min="0">
                                             </td>
                                             <td>
                                                 <input type="number" class="form-control"
-                                                    name="qty_bonus[{{ $index }}]" value="{{ $item->qty_bonus }}"
-                                                    min="0">
+                                                    name="items[{{ $index }}][qty_bonus]"
+                                                    value="{{ $item->qty_bonus }}" min="0">
                                             </td>
                                             <td>
                                                 <input type="number" class="form-control"
-                                                    name="qty_titip[{{ $index }}]" value="{{ $item->qty_titip }}"
-                                                    min="0">
+                                                    name="items[{{ $index }}][qty_titip]"
+                                                    value="{{ $item->qty_titip }}" min="0">
                                             </td>
                                             <td>
                                                 <input type="number" class="form-control"
-                                                    name="qty_diskon[{{ $index }}]" value="{{ $item->discount }}"
-                                                    id="qty_discount" min="0">
+                                                    name="items[{{ $index }}][discount]"
+                                                    value="{{ $item->qty_diskon }}" min="0">
                                             </td>
                                             <td>
-                                                <input type="text" class="form-control" placeholder="Note"
-                                                    name="notes[{{ $index }}]" value="{{ $item->description }}">
+                                                <textarea class="form-control" placeholder="Note" name="items[{{ $index }}][notes]">{{ $item->deskripsi_item }}</textarea>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -214,9 +219,8 @@
                 let newBalance = itemOrderQty - qtyInput;
                 qtyBalanceField.val(newBalance);
 
-                // Menghitung qty_receipt berdasarkan qty_order dikurangi qty yang diinput
                 let newQtyReceived = itemOrderQty - newBalance;
-                qtyReceivedField.val(newQtyReceived); // Update qty_received field
+                qtyReceivedField.val(newQtyReceived);
 
                 console.log(newQtyReceived);
             });

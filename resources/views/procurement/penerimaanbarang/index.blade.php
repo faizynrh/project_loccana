@@ -81,14 +81,31 @@
                                         <th>Tanggal Diterima</th>
                                         <th>Nama Principal</th>
                                         <th>Harga</th>
-                                        <th>Diskon</th>
                                         <th>Total Harga</th>
+                                        <th>Qty Bonus</th>
                                         <th>Item Diterima</th>
                                         <th>Status</th>
                                         <th>Deskripsi</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
+                                {{-- <thead>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Tanggal Order</th>
+                                        <th>Nomor PO</th>
+                                        <th>No DO</th>
+                                        <th>Tanggal Diterima</th>
+                                        <th>Nama Principal</th>
+                                        <th>Item Diterima</th>
+                                        <th>Qty Bonus</th>
+                                        <th>Harga</th>
+                                        <th>Total Harga</th>
+                                        <th>Deskripsi</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead> --}}
+
                             </table>
                         </div>
                     </div>
@@ -140,15 +157,14 @@
                                 if (data) {
                                     var date = new Date(data);
                                     return (
-                                        date.getDate().toString().padStart(2, '0') +
-                                        '-' +
+                                        date.getFullYear() + '-' +
                                         (date.getMonth() + 1).toString().padStart(2, '0') +
                                         '-' +
-                                        date.getFullYear()
+                                        date.getDate().toString().padStart(2, '0')
                                     );
                                 }
                                 return data;
-                            },
+                            }
                         },
                         {
                             data: 'number_po'
@@ -159,35 +175,21 @@
                                 if (data) {
                                     var date = new Date(data);
                                     return (
-                                        date.getDate().toString().padStart(2, '0') +
-                                        '-' +
+                                        date.getFullYear() + '-' +
                                         (date.getMonth() + 1).toString().padStart(2, '0') +
                                         '-' +
-                                        date.getFullYear()
+                                        date.getDate().toString().padStart(2, '0')
                                     );
                                 }
                                 return data;
-                            },
+                            }
+
                         },
                         {
                             data: 'name'
                         },
                         {
                             data: 'total_receive_price',
-                            render: function(data) {
-                                if (data) {
-                                    return new Intl.NumberFormat('id-ID', {
-                                        style: 'currency',
-                                        currency: 'IDR',
-                                        minimumFractionDigits: 2,
-                                        maximumFractionDigits: 2
-                                    }).format(data);
-                                }
-                                return data;
-                            }
-                        },
-                        {
-                            data: 'qty_bonus',
                             render: function(data) {
                                 if (data) {
                                     return new Intl.NumberFormat('id-ID', {
@@ -213,6 +215,9 @@
                                 }
                                 return data;
                             }
+                        },
+                        {
+                            data: 'qty_bonus'
                         },
                         {
                             data: 'qty_receipt'
