@@ -32,34 +32,38 @@
                         <div class="d-flex justify-content-between align-items-center">
                             <div class="d-flex align-items-center">
                                 <a href="/invoice_penjualan/add" class="btn btn-primary me-2 fw-bold">+ Tambah Invoice</a>
-                                <select id="statusSelect" class="form-select me-2" name="status" style="width: auto;">
-                                    <option value="semua">Semua Invoice</option>
-                                    <option value="paid">Sudah Lunas</option>
-                                    <option value="unpaid">Belum Lunas</option>
-                                </select>
-                                <select id="yearSelect" class="form-select me-2" name="year" style="width: auto;">
-                                    @php
-                                        $currentYear = Carbon\Carbon::now()->year;
-                                    @endphp
-                                    @for ($year = $currentYear; $year >= 2019; $year--)
-                                        <option value="{{ $year }}"
-                                            {{ $year == request('year') ? 'selected' : '' }}>
-                                            {{ $year }}
-                                        </option>
-                                    @endfor
-                                </select>
-                                <select id="monthSelect" class="form-select me-2" name="month" style="width: auto;">
-                                    <option value="0">ALL</option>
-                                    @php
-                                        $currentMonth = Carbon\Carbon::now()->month;
-                                    @endphp
-                                    @foreach (['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'] as $index => $monthName)
-                                        <option value="{{ $index + 1 }}"
-                                            {{ request('month') == strval($index + 1) || $currentMonth == $index + 1 ? 'selected' : '' }}>
-                                            {{ $monthName }}
-                                        </option>
-                                    @endforeach
-                                </select>
+                                <form id="searchForm" class="d-flex align-items-center gap-2">
+                                    @csrf
+                                    <select id="statusSelect" class="form-select me-2" name="status" style="width: auto;">
+                                        <option value="semua">Semua Invoice</option>
+                                        <option value="paid">Sudah Lunas</option>
+                                        <option value="unpaid">Belum Lunas</option>
+                                    </select>
+                                    <select id="yearSelect" class="form-select me-2" name="year" style="width: auto;">
+                                        @php
+                                            $currentYear = Carbon\Carbon::now()->year;
+                                        @endphp
+                                        @for ($year = $currentYear; $year >= 2019; $year--)
+                                            <option value="{{ $year }}"
+                                                {{ $year == request('year') ? 'selected' : '' }}>
+                                                {{ $year }}
+                                            </option>
+                                        @endfor
+                                    </select>
+                                    <select id="monthSelect" class="form-select me-2" name="month" style="width: auto;">
+                                        <option value="0">ALL</option>
+                                        @php
+                                            $currentMonth = Carbon\Carbon::now()->month;
+                                        @endphp
+                                        @foreach (['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'] as $index => $monthName)
+                                            <option value="{{ $index + 1 }}"
+                                                {{ request('month') == strval($index + 1) || $currentMonth == $index + 1 ? 'selected' : '' }}>
+                                                {{ $monthName }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    <button type="submit" class="btn btn-primary">Cari</button>
+                                </form>
                             </div>
                             <div class="text-end">
                                 <h6 class="fw-bold">Total Per Bulan</h6>
@@ -96,7 +100,9 @@
     <script>
         $(document).ready(function() {
             function initializeTable() {
-                $('#tableinvoicepenjualan').DataTable().destroy();
+                if ($.fn.DataTable.isDataTable('#tableinvoicepenjualan')) {
+                    $('#tableinvoicepenjualan').DataTable().destroy();
+                }
                 $('#tableinvoicepenjualan').DataTable({
                     serverSide: true,
                     processing: true,
@@ -203,21 +209,10 @@
 
             initializeTable();
 
-            $('#statusSelect, #monthSelect, #yearSelect').change(function() {
-                initializeTable();
+            $('#searchForm').submit(function(e) {
+                e.preventDefault();
+                initializeTable()
             });
-
-            function formatRupiah(angka) {
-                if (angka) {
-                    return new Intl.NumberFormat('id-ID', {
-                        style: 'currency',
-                        currency: 'IDR',
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 2
-                    }).format(angka);
-                }
-                return angka;
-            }
         });
     </script>
 @endpush

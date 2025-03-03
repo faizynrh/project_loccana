@@ -46,10 +46,12 @@ class PenerimaanBarangController extends Controller
             return response()->json(['error' => $e->getMessage()]);
         }
     }
+
     public function index(Request $request)
     {
         return view('procurement.penerimaanbarang.index');
     }
+
     public function getPoDetails(Request $request, $id)
     {
         try {
@@ -62,6 +64,7 @@ class PenerimaanBarangController extends Controller
                     $items[] = [
                         'item_id' => $item->item_id,
                         'item_code' => $item->item_code,
+                        'item_name' => $item->item_name,
                         'base_qty' => $item->base_qty,
                         'qty_balance' => $item->qty_balance,
                         'qty' => $item->qty,
@@ -71,6 +74,7 @@ class PenerimaanBarangController extends Controller
                 }
                 return response()->json([
                     'id_po' => $data->data[0]->id_po,
+                    'number_po' => $data->data[0]->number_po,
                     'order_date' => $data->data[0]->order_date,
                     'partner_name' => $data->data[0]->partner_name,
                     'address' => $data->data[0]->address,
@@ -86,6 +90,7 @@ class PenerimaanBarangController extends Controller
             return response()->json(['error' => $e->getMessage()]);
         }
     }
+
     public function create()
     {
         $company_id = 2;
@@ -115,8 +120,8 @@ class PenerimaanBarangController extends Controller
                 foreach ($request->items as $item) {
                     $dataitems[] = [
                         'item_id' => $item['item_id'],
-                        'quantity_rejected' => $item['qty_reject'],
                         'quantity_received' => $item['qty_received'],
+                        'quantity_rejected' => $item['qty_reject'],
                         'notes' => $item['item_description'],
                         'qty_titip' => $item['qty_titip'],
                         'qty_diskon' => $item['discount'],
@@ -127,15 +132,15 @@ class PenerimaanBarangController extends Controller
             }
 
             $data = [
-                'purchase_order_id' => $request->purchase_order_id,
+                'purchase_order_id' => $request->id_po,
                 'do_number' => $request->do_number,
                 'receipt_date' => $request->receipt_date,
                 'shipment_info' => $request->shipment_info,
                 'plate_number' => $request->plate_number,
-                'received_by' => $request->input('received_by', 0),
+                'received_by' => 1,
                 'status' => "received",
                 'company_id' => $request->input('company_id', 2),
-                'is_deleted' => 'true',
+                'is_deleted' => "false",
                 'items' => $dataitems
             ];
 
@@ -150,6 +155,7 @@ class PenerimaanBarangController extends Controller
             return back()->withErrors($e->getMessage());
         }
     }
+
     public function show($id)
     {
         try {
@@ -165,6 +171,7 @@ class PenerimaanBarangController extends Controller
             return back()->withErrors($e->getMessage());
         }
     }
+
     public function edit($id)
     {
         try {
@@ -172,7 +179,6 @@ class PenerimaanBarangController extends Controller
 
             if ($apiResponse->successful()) {
                 $data = json_decode($apiResponse->body());
-                // dd($data);
                 return view('procurement.penerimaanbarang.edit', compact('data'));
             } else {
                 return back()->withErrors($apiResponse->json()['message']);
@@ -185,19 +191,19 @@ class PenerimaanBarangController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            $items = [];
-            if ($request->has('item_id')) {
-                foreach ($request->input('item_id') as $index => $itemId) {
-                    $items[] = [
-                        'item_id' => $itemId,
-                        'item_receipt_details_id' => $request->input('id_item_receipt_detail')[$index],
-                        'quantity_received' => $request->input('qty')[$index],
-                        'quantity_rejected' => $request->input('quantity_rejected')[$index],
-                        'notes' => $request->input('notes')[$index],
-                        'qty_titip' => $request->input('qty_titip')[$index],
-                        'qty_diskon' => $request->input('qty_diskon')[$index],
-                        'qty_bonus' => $request->input('qty_bonus')[$index],
-                        'warehouse_id' => $request->input('warehouse_id')[$index],
+            $dataitems = [];
+            if ($request->has('items')) {
+                foreach ($request->items as $item) {
+                    $dataitems[] = [
+                        'item_id' => $item['item_id'],
+                        'item_receipt_details_id' => $item['id_item_receipt_detail'],
+                        'quantity_received' => $item['qty'],
+                        'quantity_rejected' => $item['quantity_rejected'],
+                        'notes' => $item['notes'],
+                        'qty_titip' => $item['qty_titip'],
+                        'qty_diskon' => $item['discount'],
+                        'qty_bonus' => $item['qty_bonus'],
+                        'warehouse_id' => $item['warehouse_id'],
                     ];
                 }
             }
@@ -206,9 +212,9 @@ class PenerimaanBarangController extends Controller
                 'receipt_date' => $request->receipt_date,
                 'shipment_info' => $request->shipment_info,
                 'plate_number' => $request->plate_number,
-                'received_by' => $request->input('received_by', 1),
+                'received_by' => $request->input('received_by', default: 1),
                 'status' => "received",
-                'items' => $items,
+                'items' => $dataitems,
             ];
             $apiResponse = updateApi(env('PENERIMAAN_BARANG_URL') . '/' . $id, $data);
             if ($apiResponse->successful()) {
@@ -220,6 +226,7 @@ class PenerimaanBarangController extends Controller
             return back()->withErrors($e->getMessage());
         }
     }
+
     public function destroy($id)
     {
         try {

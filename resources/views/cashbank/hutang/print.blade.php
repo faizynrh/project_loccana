@@ -13,21 +13,17 @@
         }
 
         .header {
-            text-align: left;
-            margin-bottom: 10px;
-        }
-
-        .company-name {
-            font-weight: bold;
-            font-size: 14px;
-        }
-
-        .title {
             text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .header .company-name {
+            font-size: 20px;
             font-weight: bold;
-            font-size: 14px;
-            margin: 10px 0;
-            border-bottom: 1px solid black;
+        }
+
+        .header .about {
+            font-size: 15px;
         }
 
         .info-table {
@@ -54,22 +50,21 @@
         .purchase-table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 10px;
+            margin-top: 10px;
         }
 
         .payment-table th,
         .payment-table td,
         .purchase-table th,
         .purchase-table td {
-            border: 1px solid black;
-            padding: 4px;
-            text-align: left;
+            border: 1px solid #000;
+            padding: 5px;
+            text-align: center;
         }
 
         .payment-table th,
         .purchase-table th {
             background-color: #f2f2f2;
-            font-weight: bold;
         }
 
         .total-row td {
@@ -78,11 +73,12 @@
 
         .section-label {
             font-weight: bold;
-            margin: 5px 0;
+            margin: 3px 0;
+            margin-top: 20px;
         }
 
         .signatures {
-            margin-top: 100px;
+            margin-top: 10px;
             text-align: center;
             page-break-inside: avoid;
         }
@@ -90,32 +86,19 @@
         .signature-table td {
             padding-top: 50px;
         }
-
-        .footer {
-            margin-top: 15px;
-            /* font-size: 10px; */
-            text-align: left;
-        }
-
-        .right-align {
-            text-align: right;
-        }
-
-        .center-align {
-            text-align: center;
-        }
     </style>
 </head>
 
 <body>
     <div class="header">
         <div class="company-name">PT. ENDIRA ALDA</div>
-        <div>JL. Sangkuriang No.38-A</div>
-        <div>Cimahi - 40511</div>
-        <div>NPWP: 01.555.161.7.428.000</div>
+        <div class="about">JL. Sangkuriang No.38-A Cimahi 40511</div>
+        <div class="about">NPWP: 01.555.161.7.428.000</div>
     </div>
 
-    <div class="title">SLIP KAS / BANK KELUAR</div>
+    <hr style="margin-top: 20px">
+    <h2 style="text-align: center;">SLIP KAS / BANK KELUAR</h2>
+
 
     <table class="info-table">
         <tr>
@@ -131,7 +114,7 @@
         <tr>
             <td class="info-label">Ref</td>
             <td class="info-separator">:</td>
-            <td>K20250042</td>
+            <td>{{ $datas[0]->payment_number }}</td>
         </tr>
         <tr>
             <td class="info-label">Supplier</td>
@@ -199,30 +182,11 @@
                 </tr>
             @endforeach
             <tr class="total-row">
-                <td colspan="5">Total:</td>
+                <td colspan="5">Total</td>
                 <td class="right-align amount">{{ number_format($totalAmount, 2, ',', '.') }}</td>
             </tr>
         </tbody>
     </table>
-
-    {{-- <div class="signatures">
-        <div class="signature-box">
-            <div>Mengetahui,</div>
-            <div class="signature-line">__________</div>
-        </div>
-        <div class="signature-box">
-            <div>Membayar,</div>
-            <div class="signature-line">__________</div>
-        </div>
-        <div class="signature-box">
-            <div>Menerima,</div>
-            <div class="signature-line">__________</div>
-        </div>
-        <div class="signature-box">
-            <div>Verifikasi,</div>
-            <div class="signature-line">__________</div>
-        </div>
-    </div> --}}
 
     <div class="signatures">
         <table class="signature-table" width="100%" style="border-collapse: collapse; border: none;">
@@ -241,13 +205,11 @@
         </table>
     </div>
 
-    <div class="footer">
+    <div class="footer" style="margin-top: 10px;">
         <h5>
             Dicetak Pada : {{ \Carbon\Carbon::now()->format('Y-m-d H:i:s') }}
         </h5>
     </div>
 </body>
-<script src="{{ asset('assets/js/jquery-3.7.1.js') }}"></script>
-<script></script>
 
 </html>

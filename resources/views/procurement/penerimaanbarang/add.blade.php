@@ -41,15 +41,18 @@
                                     <select class="form-control" id="satuan" name="item_category_id" required>
                                         <option value="" selected disabled>Pilih PO</option>
                                         @foreach ($po as $item)
-                                            <option value="{{ $item['po_id'] }}">[{{ $item['code'] }}] {{ $item['name'] }}
+                                            <option value="{{ $item['po_id'] }}">[{{ $item['code'] }}]
+                                                {{ $item['name'] }}
                                             </option>
                                         @endforeach
                                     </select>
                                     <label class="form-label fw-bold mt-2 mb-1 small">Kode</label>
-                                    <input type="text" class="form-control bg-body-secondary" id="po_id"
+                                    <input type="text" class="form-control bg-body-secondary" id="number_po"
                                         name="purchase_order_id" placeholder="Kode Purchase Order" readonly>
+                                    <input type="hidden" class="form-control bg-body-secondary" name="id_po"
+                                        id="id_po">
                                     <label class="form-label fw-bold mt-2 mb-1 small">Tanggal</label>
-                                    <input type="text" class="form-control bg-body-secondary" id="order_date" readonly>
+                                    <input type="date" class="form-control bg-body-secondary" id="order_date" readonly>
                                     <label class="form-label fw-bold mt-2 mb-1 small">Principal</label>
                                     <input type="text" class="form-control bg-body-secondary" id="partner_name"
                                         placeholder="Principal" readonly>
@@ -93,7 +96,7 @@
                             <table class="table mt-3">
                                 <thead>
                                     <tr style="border-bottom: 3px solid #000;">
-                                        <th width="90px">Kode</th>
+                                        <th>Kode</th>
                                         <th>Order (Kg/Lt)</th>
                                         <th>Sisa (Kg/Lt)</th>
                                         <th>Diterima</th>
@@ -126,7 +129,6 @@
     <script>
         $(document).ready(function() {
             $('#gudang').prop('disabled', true);
-            $('#tableBody').hide();
 
             $('#satuan').on('change', function() {
                 const po_id = $(this).val();
@@ -147,12 +149,9 @@
                                 return;
                             }
 
-                            const orderDate = new Date(response.order_date);
-                            const formattedDate = orderDate.getFullYear() + '-' + (orderDate
-                                .getMonth() + 1) + '-' + (orderDate.getDate());
-
-                            $('#po_id').val(response.id_po);
-                            $('#order_date').val(formattedDate);
+                            $('#id_po').val(response.id_po);
+                            $('#number_po').val(response.number_po);
+                            $('#order_date').val(formatDate(response.order_date));
                             $('#partner_name').val(response.partner_name);
                             $('#address').val(response.address);
                             $('#description').val(response.description);
@@ -172,17 +171,17 @@
                                                             <td>
                                                                 <input type="hidden" id="item_id" name="items[${index}][item_id]" value="${item.item_id}">
                                                                 <input type="hidden" id="warehouse_id" name="items[${index}][warehouse_id]" value="${item.warehouse_id}">
-                                                                <textarea type="text" class="form-control w-100" name="items[${index}][item_code]" readonly rows="3">${item.item_code}</textarea>
+                                                                <textarea type="text" class="form-control bg-body-secondary" name="items[${index}][item_code]" readonly rows="3">[${item.item_code}] ${item.item_name}</textarea>
                                                             </td>
                                                             <td><input type="number" class="form-control bg-body-secondary order_qty" name="items[${index}][base_qty]" value="${item.base_qty}" readonly></td>
                                                             <td><input type="number" class="form-control bg-body-secondary qty_balance" name="items[${index}][qty_balance]" value="${item.qty_balance}" readonly></td>
                                                             <td><input type="number" class="form-control bg-body-secondary diterima" name="items[${index}][qty]" value="${item.qty}" readonly></td>
-                                                            <td><input type="number" class="form-control qty_received" id="qty_received" name="items[${index}][qty_received]" value="0" min="1" required></td>
+                                                            <td><input type="number" class="form-control qty_received" id="qty_received" name="items[${index}][qty_received]" value="0" min="0" required></td>
                                                             <td><input type="number" class="form-control qty_reject" id="qty_reject" name="items[${index}][qty_reject]" value="0" min="0" required></td>
                                                             <td><input type="number" class="form-control qty_bonus" id="qty_bonus" name="items[${index}][qty_bonus]" value="0" min="0" required></td>
                                                             <td><input type="number" class="form-control qty_titip" id="qty_titip" name="items[${index}][qty_titip]" value="0" min="0" required></td>
                                                             <td><input type="number" class="form-control discount" id="discount" name="items[${index}][discount]" value="0" min="0" required></td>
-                                                            <td><input type="text" class="form-control" placeholder="Note" name="items[${index}][item_description]" value="${item.item_description}"></td>
+                                                            <td><textarea class="form-control" placeholder="Note" name="items[${index}][item_description]" required>${item.item_description}</textarea></td>
                                                         </tr>
                                                         `;
                                     tableBody.append(row);
@@ -220,18 +219,12 @@
                                         });
                                 });
                             } else {
-                                tableBody.parent('table').hide();
-                                $('#rejectButton').hide();
-                                $('#submitButton').hide();
                                 Swal.fire('Peringatan', 'Tidak ada item untuk PO ini',
                                     'warning');
                             }
                         },
                         error: function(xhr, status, error) {
                             Swal.fire('Error', 'Gagal mengambil detail PO', 'error');
-                            $('#tableBody').hide();
-                            $('#rejectButton').hide();
-                            $('#submitButton').hide();
                             $('#gudang').prop('disabled', true);
                         },
                         complete: function() {
@@ -240,10 +233,6 @@
                     });
                 } else {
                     $('#gudang').prop('disabled', true);
-                    $('#tableBody').hide();
-                    $('#rejectButton').hide();
-                    $('#submitButton').hide();
-
                 }
             });
         });

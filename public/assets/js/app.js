@@ -7818,3 +7818,16 @@ function formatRupiah(angka) {
     }
     return angka;
 }
+
+function formatDate(data) {
+    if (!data) return data;
+
+    var date = new Date(data);
+    return (
+        date.getFullYear() +
+        "-" +
+        (date.getMonth() + 1).toString().padStart(2, "0") +
+        "-" +
+        date.getDate().toString().padStart(2, "0")
+    );
+}

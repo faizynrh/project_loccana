@@ -38,36 +38,43 @@
                         <div class="d-flex justify-content-between align-items-center">
                             <div class="d-flex align-items-center">
                                 <a href="/hutang/pembayaran/add" class="btn btn-primary me-2 fw-bold">+ Pembayaran</a>
-                                <select id="yearSelect" class="form-select me-2" name="year" style="width: auto;">
-                                    @php
-                                        $currentYear = Carbon\Carbon::now()->year;
-                                    @endphp
-                                    @for ($year = $currentYear; $year >= 2019; $year--)
-                                        <option value="{{ $year }}"
-                                            {{ $year == request('year') ? 'selected' : '' }}>
-                                            {{ $year }}
+                                <form id="searchForm" class="d-flex align-items-center gap-2">
+                                    @csrf
+                                    <select id="yearSelect" class="form-select me-2" name="year" style="width: auto;">
+                                        @php
+                                            $currentYear = Carbon\Carbon::now()->year;
+                                        @endphp
+                                        @for ($year = $currentYear; $year >= 2019; $year--)
+                                            <option value="{{ $year }}"
+                                                {{ $year == request('year') ? 'selected' : '' }}>
+                                                {{ $year }}
+                                            </option>
+                                        @endfor
+                                    </select>
+                                    <select id="monthSelect" class="form-select me-2" name="month" style="width: auto;">
+                                        <option value="0" {{ request('month') == 'all' ? 'selected' : '' }}>ALL
                                         </option>
-                                    @endfor
-                                </select>
-                                <select id="monthSelect" class="form-select me-2" name="month" style="width: auto;">
-                                    <option value="0" {{ request('month') == 'all' ? 'selected' : '' }}>ALL</option>
-                                    @php
-                                        $currentMonth = Carbon\Carbon::now()->month;
-                                    @endphp
-                                    @foreach (['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'] as $index => $monthName)
-                                        <option value="{{ $index + 1 }}"
-                                            {{ request('month') == strval($index + 1) || $currentMonth == $index + 1 ? 'selected' : '' }}>
-                                            {{ $monthName }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                                <select id="statusSelect" class="form-select me-2" name="status" style="width: auto;">
-                                    <option value="semua" selected>Semua</option>
-                                    <option value="lunas">Sudah Dibayar</option>
-                                    <option value="konfirmasi">Konfirmasi</option>
-                                </select>
+                                        @php
+                                            $currentMonth = Carbon\Carbon::now()->month;
+                                        @endphp
+                                        @foreach (['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'] as $index => $monthName)
+                                            <option value="{{ $index + 1 }}"
+                                                {{ request('month') == strval($index + 1) || $currentMonth == $index + 1 ? 'selected' : '' }}>
+                                                {{ $monthName }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    <select id="statusSelect" class="form-select me-2" name="status" style="width: auto;">
+                                        <option value="semua" selected>Semua</option>
+                                        <option value="lunas">Sudah Dibayar</option>
+                                        <option value="konfirmasi">Konfirmasi</option>
+                                    </select>
+                                    <button type="submit" class="btn btn-primary">Cari</button>
+                                </form>
                             </div>
-                            <a href="/hutang" class="btn btn-secondary me-2 fw-bold text-end">Kembali</a>
+                            <a href="{{ route('hutang.index') }}" class="btn btn-secondary me-3 fw-bold text-end">
+                                <i class="bi bi-arrow-left-circle"></i> Kembali
+                            </a>
                         </div>
                     </div>
                     <div class="card-body">
@@ -98,6 +105,10 @@
     <script>
         $(document).ready(function() {
             function initializeTable() {
+                if ($.fn.DataTable.isDataTable('#tablepembayaranhutang')) {
+                    $('#tablepembayaranhutang').DataTable().destroy();
+                }
+
                 $('#tablepembayaranhutang').DataTable({
                     serverSide: true,
                     processing: true,
@@ -192,10 +203,11 @@
                     ]
                 });
             };
-            initializeTable();
-            $('#statusSelect, #monthSelect, #yearSelect').change(function() {
-                $('#tablepembayaranhutang').DataTable().destroy();
-                initializeTable();
+            initializeTable()
+
+            $('#searchForm').submit(function(e) {
+                e.preventDefault();
+                initializeTable()
             });
         });
     </script>

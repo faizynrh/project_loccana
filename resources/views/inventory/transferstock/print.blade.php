@@ -9,7 +9,8 @@
             body {
                 font-family: Arial, sans-serif;
                 font-size: 12px;
-                line-height: 1.4;
+                margin: 0;
+                padding: 10px;
             }
 
             .header {
@@ -26,29 +27,45 @@
                 font-size: 15px;
             }
 
-            .section {
+            .info-table {
+                width: 100%;
                 margin-bottom: 10px;
+                border-collapse: collapse;
             }
 
-            table {
+            .info-table td {
+                padding: 2px;
+                border: none;
+                vertical-align: top;
+            }
+
+            .info-label {
+                width: 150px;
+            }
+
+            .info-separator {
+                width: 10px;
+            }
+
+            .table-data {
                 width: 100%;
                 border-collapse: collapse;
-                margin-top: 10px;
+                margin-top: 20px;
             }
 
-            th,
-            td {
+            .table-data th,
+            .table-data td {
                 border: 1px solid #000;
                 padding: 5px;
                 text-align: center;
             }
 
-            th {
-                background-color: #d3d3d3;
+            .table-data th {
+                background-color: #f2f2f2;
             }
 
             .signatures {
-                margin-top: 100px;
+                margin-top: 10px;
                 text-align: center;
                 page-break-inside: avoid;
             }
@@ -62,29 +79,37 @@
     <body>
         <div class="header">
             <div class="company-name">PT. ENDIRA ALDA</div>
-            <div class="about">JL. Sangkuriang No.38-A</div>
+            <div class="about">JL. Sangkuriang No.38-A Cimahi 40511</div>
             <div class="about">NPWP: 01.555.161.7.428.000</div>
         </div>
 
         <hr style="margin-top: 20px">
         <h2 style="text-align: center;">LAPORAN TRANSFER STOCK</h2>
 
-        <div class="section" style="margin-bottom: 30px; display: flex; flex-direction: column; gap: 5px;">
-            <div><span style="font-weight: bold; width: 200px; display: inline-block;">Tanggal Transfer Stock</span> :
-                <span>{{ $datas[0]->transfer_date }}</span>
-            </div>
-            <div><span style="font-weight: bold; width: 200px; display: inline-block;">Keterangan</span> :
-                <span>{{ $datas[0]->transfer_reason }}</span>
-            </div>
-            <div><span style="font-weight: bold; width: 200px; display: inline-block;">Gudang Asal</span> :
-                <span>{{ $datas[0]->gudang_asal }}</span>
-            </div>
-            <div><span style="font-weight: bold; width: 200px; display: inline-block;">Gudang Tujuan</span> :
-                <span>{{ $datas[0]->gudang_tujuan }}</span>
-            </div>
-        </div>
+        <table class="info-table">
+            <tr>
+                <td class="info-label">Tanggal Transfer Stock</td>
+                <td class="info-separator">:</td>
+                <td>{{ $datas[0]->transfer_date }}</td>
+            </tr>
+            <tr>
+                <td class="info-label">Keterangan</td>
+                <td class="info-separator">:</td>
+                <td>{{ $datas[0]->transfer_reason }}</td>
+            </tr>
+            <tr>
+                <td class="info-label">Gudang Asal</td>
+                <td class="info-separator">:</td>
+                <td>{{ $datas[0]->gudang_asal }}</td>
+            </tr>
+            <tr>
+                <td class="info-label">Gudang Tujuan</td>
+                <td class="info-separator">:</td>
+                <td>{{ $datas[0]->gudang_tujuan }}</td>
+            </tr>
+        </table>
 
-        <table>
+        <table class="table-data">
             <thead>
                 <tr>
                     <th>Gudang Asal</th>
@@ -124,6 +149,12 @@
                     <td style="border: none; padding-top: 50px; text-align: center;">_______________</td>
                 </tr>
             </table>
+        </div>
+
+        <div class="footer" style="margin-top: 10px;">
+            <h5>
+                Dicetak Pada : {{ \Carbon\Carbon::now()->format('Y-m-d H:i:s') }}
+            </h5>
         </div>
     </body>
 

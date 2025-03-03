@@ -42,6 +42,7 @@ class ItemController extends Controller
             }
         }
     }
+
     public function index(Request $request)
     {
         return view('masterdata.item.index');

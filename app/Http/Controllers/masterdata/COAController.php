@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 
-class CoaController extends Controller
+class COAController extends Controller
 {
     public function ajax(Request $request)
     {
@@ -42,6 +42,7 @@ class CoaController extends Controller
             }
         }
     }
+
     public function index(Request $request)
     {
         return view('masterdata.coa.index');
