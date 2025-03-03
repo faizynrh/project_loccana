@@ -140,12 +140,11 @@ class PenerimaanBarangController extends Controller
                 'received_by' => 1,
                 'status' => "received",
                 'company_id' => $request->input('company_id', 2),
-                'is_deleted' => "true",
+                'is_deleted' => "false",
                 'items' => $dataitems
             ];
 
             $apiResponse = storeApi(env('PENERIMAAN_BARANG_URL'), $data);
-            dd($apiResponse->json(), $data);
             if ($apiResponse->successful()) {
                 return redirect()->route('penerimaan_barang.index')
                     ->with('success', $apiResponse->json()['message']);
