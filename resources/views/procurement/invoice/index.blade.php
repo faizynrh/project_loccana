@@ -32,34 +32,38 @@
                         <div class="d-flex justify-content-between align-items-center">
                             <div class="d-flex align-items-center">
                                 <a href="/invoice_pembelian/add" class="btn btn-primary me-2 fw-bold">+ Tambah Invoice</a>
-                                <select id="statusSelect" class="form-select me-2" name="status" style="width: auto;">
-                                    <option value="all">Semua Invoice</option>
-                                    <option value="paid">Sudah Lunas</option>
-                                    <option value="unpaid">Belum Lunas</option>
-                                </select>
-                                <select id="yearSelect" class="form-select me-2" name="year" style="width: auto;">
-                                    @php
-                                        $currentYear = Carbon\Carbon::now()->year;
-                                    @endphp
-                                    @for ($year = $currentYear; $year >= 2019; $year--)
-                                        <option value="{{ $year }}"
-                                            {{ $year == request('year') ? 'selected' : '' }}>
-                                            {{ $year }}
-                                        </option>
-                                    @endfor
-                                </select>
-                                <select id="monthSelect" class="form-select me-2" name="month" style="width: auto;">
-                                    <option value="0">ALL</option>
-                                    @php
-                                        $currentMonth = Carbon\Carbon::now()->month;
-                                    @endphp
-                                    @foreach (['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'] as $index => $monthName)
-                                        <option value="{{ $index + 1 }}"
-                                            {{ request('month') == strval($index + 1) || $currentMonth == $index + 1 ? 'selected' : '' }}>
-                                            {{ $monthName }}
-                                        </option>
-                                    @endforeach
-                                </select>
+                                <form id="searchForm" class="d-flex align-items-center gap-2">
+                                    @csrf
+                                    <select id="statusSelect" class="form-select me-2" name="status" style="width: auto;">
+                                        <option value="all">Semua Invoice</option>
+                                        <option value="paid">Sudah Lunas</option>
+                                        <option value="unpaid">Belum Lunas</option>
+                                    </select>
+                                    <select id="yearSelect" class="form-select me-2" name="year" style="width: auto;">
+                                        @php
+                                            $currentYear = Carbon\Carbon::now()->year;
+                                        @endphp
+                                        @for ($year = $currentYear; $year >= 2019; $year--)
+                                            <option value="{{ $year }}"
+                                                {{ $year == request('year') ? 'selected' : '' }}>
+                                                {{ $year }}
+                                            </option>
+                                        @endfor
+                                    </select>
+                                    <select id="monthSelect" class="form-select me-2" name="month" style="width: auto;">
+                                        <option value="0">ALL</option>
+                                        @php
+                                            $currentMonth = Carbon\Carbon::now()->month;
+                                        @endphp
+                                        @foreach (['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'] as $index => $monthName)
+                                            <option value="{{ $index + 1 }}"
+                                                {{ request('month') == strval($index + 1) || $currentMonth == $index + 1 ? 'selected' : '' }}>
+                                                {{ $monthName }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    <button type="submit" class="btn btn-primary">Cari</button>
+                                </form>
                             </div>
                             <div class="text-end">
                                 <h6 class="fw-bold">Total Per Bulan</h6>
@@ -95,10 +99,10 @@
 @push('scripts')
     <script>
         $(document).ready(function() {
-            var lastMonth = $('#monthSelect').val();
-            var lastYear = $('#yearSelect').val();
-
             function initializeTable() {
+                if ($.fn.DataTable.isDataTable('#tableinvoice')) {
+                    $('#tableinvoice').DataTable().destroy();
+                }
                 $('#tableinvoice').DataTable({
                     serverSide: true,
                     processing: true,
@@ -106,9 +110,9 @@
                         url: '{{ route('invoice_pembelian.ajax') }}',
                         type: 'GET',
                         data: function(d) {
-                            d.status = status;
-                            d.month = lastMonth;
-                            d.year = lastYear;
+                            d.status = $('#statusSelect').val();
+                            d.month = $('#monthSelect').val();
+                            d.year = $('#yearSelect').val();
                         },
                         dataSrc: function(response) {
                             if (response.mtd !== undefined) {
@@ -223,33 +227,10 @@
                 });
             }
             initializeTable();
-            var lastStatus = $('#statusSelect').val();
 
-            $('#statusSelect').change(function() {
-                var status = $(this).val();
-                if (status !== lastStatus) {
-                    lastStatus = status;
-                    $('#tableinvoice').DataTable().ajax.reload(null,
-                        false);
-                }
-            });
-
-            var lastbulan = $('#monthSelect').val();
-            $('#monthSelect').change(function() {
-                var month = $('#monthSelect').val();
-                if (month !== lastbulan) {
-                    lastbulan = month;
-                    $('#tableinvoice').DataTable().ajax.reload();
-                }
-            });
-            var lasttahun = $('#yearSelect').val();
-
-            $('#yearSelect').change(function() {
-                var year = $('#yearSelect').val();
-                if (year !== lasttahun) {
-                    lasttahun = year;
-                    $('#tableinvoice').DataTable().ajax.reload();
-                }
+            $('#searchForm').submit(function(e) {
+                e.preventDefault();
+                initializeTable()
             });
         });
     </script>
