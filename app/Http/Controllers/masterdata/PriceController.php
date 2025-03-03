@@ -5,8 +5,6 @@ namespace App\Http\Controllers\masterdata;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-
-
 class PriceController extends Controller
 {
     public function ajax(Request $request)
@@ -47,7 +45,6 @@ class PriceController extends Controller
     {
         return view('masterdata.price.index');
     }
-
     public function edit($id)
     {
         try {
@@ -58,7 +55,6 @@ class PriceController extends Controller
             return back()->withErrors($e->getMessage());
         }
     }
-
     public function update(Request $request, $id)
     {
         try {
@@ -79,7 +75,6 @@ class PriceController extends Controller
             return back()->withErrors($e->getMessage());
         }
     }
-
     public function approve(Request $request, $id)
     {
         try {

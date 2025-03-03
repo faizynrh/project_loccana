@@ -2,12 +2,8 @@
 
 namespace App\Http\Controllers\masterdata;
 
-use App\Helpers\Helpers;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Http;
-
 
 class GudangController extends Controller
 {
@@ -46,6 +42,7 @@ class GudangController extends Controller
             }
         }
     }
+
     public function index(Request $request)
     {
         return view('masterdata.gudang.index');
@@ -55,6 +52,7 @@ class GudangController extends Controller
     {
         return view('masterdata.gudang.ajax.add');
     }
+
     public function store(Request $request)
     {
         try {
@@ -76,6 +74,7 @@ class GudangController extends Controller
             return back()->withErrors($e->getMessage());
         }
     }
+
     public function edit($id)
     {
         try {
@@ -86,6 +85,7 @@ class GudangController extends Controller
             return back()->withErrors($e->getMessage());
         }
     }
+
     public function update(Request $request, string $id)
     {
         try {
@@ -107,6 +107,7 @@ class GudangController extends Controller
             return back()->withErrors($e->getMessage());
         }
     }
+
     public function destroy(string $id)
     {
         try {

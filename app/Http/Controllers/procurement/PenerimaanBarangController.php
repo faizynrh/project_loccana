@@ -46,10 +46,12 @@ class PenerimaanBarangController extends Controller
             return response()->json(['error' => $e->getMessage()]);
         }
     }
+
     public function index(Request $request)
     {
         return view('procurement.penerimaanbarang.index');
     }
+
     public function getPoDetails(Request $request, $id)
     {
         try {
@@ -88,6 +90,7 @@ class PenerimaanBarangController extends Controller
             return response()->json(['error' => $e->getMessage()]);
         }
     }
+
     public function create()
     {
         $company_id = 2;
@@ -153,6 +156,7 @@ class PenerimaanBarangController extends Controller
             return back()->withErrors($e->getMessage());
         }
     }
+
     public function show($id)
     {
         try {
@@ -168,6 +172,7 @@ class PenerimaanBarangController extends Controller
             return back()->withErrors($e->getMessage());
         }
     }
+
     public function edit($id)
     {
         try {
@@ -186,7 +191,6 @@ class PenerimaanBarangController extends Controller
 
     public function update(Request $request, $id)
     {
-        // dd($request->all());
         try {
             $dataitems = [];
             if ($request->has('items')) {
@@ -223,6 +227,7 @@ class PenerimaanBarangController extends Controller
             return back()->withErrors($e->getMessage());
         }
     }
+
     public function destroy($id)
     {
         try {

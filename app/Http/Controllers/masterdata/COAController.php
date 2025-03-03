@@ -42,6 +42,7 @@ class COAController extends Controller
             }
         }
     }
+
     public function index(Request $request)
     {
         return view('masterdata.coa.index');
