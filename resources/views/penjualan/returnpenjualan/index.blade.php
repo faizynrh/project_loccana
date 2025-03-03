@@ -32,29 +32,33 @@
                             <div class="d-flex align-items-center">
                                 <a href="/return_penjualan/add" class="btn btn-primary me-2 fw-bold">+ Tambah
                                     Return</a>
-                                <select id="yearSelect" class="form-select me-2" name="year" style="width: auto;">
-                                    @php
-                                        $currentYear = Carbon\Carbon::now()->year;
-                                    @endphp
-                                    @for ($year = $currentYear; $year >= 2019; $year--)
-                                        <option value="{{ $year }}"
-                                            {{ $year == request('year') ? 'selected' : '' }}>
-                                            {{ $year }}
-                                        </option>
-                                    @endfor
-                                </select>
-                                <select id="monthSelect" class="form-select me-2" name="month" style="width: auto;">
-                                    <option value="0">ALL</option>
-                                    @php
-                                        $currentMonth = Carbon\Carbon::now()->month;
-                                    @endphp
-                                    @foreach (['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'] as $index => $monthName)
-                                        <option value="{{ $index + 1 }}"
-                                            {{ request('month') == strval($index + 1) || $currentMonth == $index + 1 ? 'selected' : '' }}>
-                                            {{ $monthName }}
-                                        </option>
-                                    @endforeach
-                                </select>
+                                <form id="searchForm" class="d-flex align-items-center gap-2">
+                                    @csrf
+                                    <select id="yearSelect" class="form-select me-2" name="year" style="width: auto;">
+                                        @php
+                                            $currentYear = Carbon\Carbon::now()->year;
+                                        @endphp
+                                        @for ($year = $currentYear; $year >= 2019; $year--)
+                                            <option value="{{ $year }}"
+                                                {{ $year == request('year') ? 'selected' : '' }}>
+                                                {{ $year }}
+                                            </option>
+                                        @endfor
+                                    </select>
+                                    <select id="monthSelect" class="form-select me-2" name="month" style="width: auto;">
+                                        <option value="0">ALL</option>
+                                        @php
+                                            $currentMonth = Carbon\Carbon::now()->month;
+                                        @endphp
+                                        @foreach (['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'] as $index => $monthName)
+                                            <option value="{{ $index + 1 }}"
+                                                {{ request('month') == strval($index + 1) || $currentMonth == $index + 1 ? 'selected' : '' }}>
+                                                {{ $monthName }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    <button type="submit" class="btn btn-primary">Cari</button>
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -171,12 +175,11 @@
                 });
             }
 
-            // Panggil pertama kali
-            initializeTable();
+            initializeTable()
 
-            // Refresh tabel saat bulan atau tahun diubah
-            $('#monthSelect, #yearSelect').change(function() {
-                initializeTable();
+            $('#searchForm').submit(function(e) {
+                e.preventDefault();
+                initializeTable()
             });
         });
     </script>
