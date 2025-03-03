@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\cashbank;
 
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 
@@ -107,9 +108,6 @@ class HutangController extends Controller
         }
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function pembayaran()
     {
         return view('cashbank.hutang.pembayaran');
@@ -130,9 +128,6 @@ class HutangController extends Controller
         }
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function create(Request $request)
     {
         $companyid = 2;
@@ -170,7 +165,6 @@ class HutangController extends Controller
 
     public function store(Request $request)
     {
-        // dd($request->all());
         try {
             $items = [];
             if ($request->has('items')) {
@@ -250,7 +244,6 @@ class HutangController extends Controller
 
     public function update(Request $request, string $id)
     {
-        // dd($request->all());
         try {
             $items = [];
             if ($request->has('items')) {
@@ -276,7 +269,6 @@ class HutangController extends Controller
                 'items' => $items
             ];
             $apiResponse = updateApi(env('HUTANG_URL') . '/' . $id, $data);
-            // dd($apiResponse->json(), $data);
             if ($apiResponse->successful()) {
                 return redirect()->route('hutang.pembayaran')
                     ->with('success', $apiResponse->json()['message']);
@@ -294,7 +286,6 @@ class HutangController extends Controller
             $apiResponse = fectApi(env('HUTANG_URL') . '/' . $id);
             if ($apiResponse->successful()) {
                 $data = json_decode($apiResponse->body());
-                // dd($data);
                 return view('cashbank.hutang.approve', compact('data'));
             } else {
                 return back()->withErrors($apiResponse->json()['message']);
@@ -346,6 +337,33 @@ class HutangController extends Controller
                 return redirect()->route('hutang.pembayaran')->with('success', $apiResponse->json()['message']);
             } else {
                 return back()->withErrors($apiResponse->json()['message']);
+            }
+        } catch (\Exception $e) {
+            return back()->withErrors($e->getMessage());
+        }
+    }
+    public function print($id)
+    {
+        try {
+            $apiResponse = fectApi(env('HUTANG_URL') . '/' . $id);
+
+            if ($apiResponse->successful()) {
+                $data = json_decode($apiResponse->body());
+                $datas = $data->data;
+
+                // Inisialisasi totalAmount
+                $totalAmount = 0;
+
+                // Looping untuk menjumlahkan semua amount
+                foreach ($datas as $item) {
+                    $totalAmount += $item->amount; // Pastikan dikonversi ke angka
+                }
+                // dd($datas);
+                // Kirim totalAmount ke tampilan
+                $pdf = Pdf::loadView('cashbank.hutang.print', compact('datas', 'totalAmount'));
+                return $pdf->stream('Transfer Stok.pdf');
+            } else {
+                return back()->withErrors($apiResponse->status());
             }
         } catch (\Exception $e) {
             return back()->withErrors($e->getMessage());

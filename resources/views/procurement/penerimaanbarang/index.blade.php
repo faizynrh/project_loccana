@@ -11,9 +11,6 @@
                 <div class="row">
                     <div class="col-12 col-md-6 order-md-1 order-last">
                         <h3>Penerimaan Barang</h3>
-                        {{-- <p class="text-subtitle text-muted">
-                            Easily manage and adjust product prices.
-                        </p> --}}
                     </div>
                     <div class="col-12 col-md-6 order-md-2 order-first">
                         <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
@@ -34,31 +31,36 @@
                     <div class="card-header">
                         <div class="d-flex justify-content-between align-items-center">
                             <div class="d-flex align-items-center">
-                                <a href="/penerimaan_barang/add" class="btn btn-primary me-2 fw-bold">+ Penerimaan
+                                <a href="/penerimaan_barang/add" class="btn btn-primary fw-bold me-2">+ Penerimaan
                                     Barang</a>
-                                <select id="yearSelect" class="form-select me-2" name="year" style="width: auto;">
-                                    @php
-                                        $currentYear = Carbon\Carbon::now()->year;
-                                    @endphp
-                                    @for ($year = $currentYear; $year >= 2019; $year--)
-                                        <option value="{{ $year }}"
-                                            {{ $year == request('year') ? 'selected' : '' }}>
-                                            {{ $year }}
+                                <form id="searchForm" class="d-flex align-items-center gap-2">
+                                    @csrf
+                                    <select id="yearSelect" class="form-select" name="year" style="width: auto;">
+                                        @php
+                                            $currentYear = Carbon\Carbon::now()->year;
+                                        @endphp
+                                        @for ($year = $currentYear; $year >= 2019; $year--)
+                                            <option value="{{ $year }}"
+                                                {{ $year == request('year') ? 'selected' : '' }}>
+                                                {{ $year }}
+                                            </option>
+                                        @endfor
+                                    </select>
+                                    <select id="monthSelect" class="form-select" name="month" style="width: auto;">
+                                        <option value="0" {{ request('month') == 'all' ? 'selected' : '' }}>ALL
                                         </option>
-                                    @endfor
-                                </select>
-                                <select id="monthSelect" class="form-select me-2" name="month" style="width: auto;">
-                                    <option value="0" {{ request('month') == 'all' ? 'selected' : '' }}>ALL</option>
-                                    @php
-                                        $currentMonth = Carbon\Carbon::now()->month;
-                                    @endphp
-                                    @foreach (['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'] as $index => $monthName)
-                                        <option value="{{ $index + 1 }}"
-                                            {{ request('month') == strval($index + 1) || $currentMonth == $index + 1 ? 'selected' : '' }}>
-                                            {{ $monthName }}
-                                        </option>
-                                    @endforeach
-                                </select>
+                                        @php
+                                            $currentMonth = Carbon\Carbon::now()->month;
+                                        @endphp
+                                        @foreach (['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'] as $index => $monthName)
+                                            <option value="{{ $index + 1 }}"
+                                                {{ request('month') == strval($index + 1) || $currentMonth == $index + 1 ? 'selected' : '' }}>
+                                                {{ $monthName }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    <button type="submit" class="btn btn-primary">Cari</button>
+                                </form>
                             </div>
                             <div class="text-end">
                                 <h6 class="fw-bold">Total Per Bulan</h6>
@@ -98,10 +100,10 @@
 @push('scripts')
     <script>
         $(document).ready(function() {
-            var lastMonth = $('#monthSelect').val();
-            var lastYear = $('#yearSelect').val();
-
             function initializeTable() {
+                if ($.fn.DataTable.isDataTable('#tabelpenerimaan')) {
+                    $('#tabelpenerimaan').DataTable().destroy();
+                }
                 $('#tabelpenerimaan').DataTable({
                     serverSide: true,
                     processing: true,
@@ -109,8 +111,8 @@
                         url: '{{ route('penerimaan_barang.ajax') }}',
                         type: 'GET',
                         data: function(d) {
-                            d.month = lastMonth;
-                            d.year = lastYear;
+                            d.month = $('#monthSelect').val();
+                            d.year = $('#yearSelect').val();
                         },
                         dataSrc: function(response) {
                             if (response.mtd && response.mtd.mtd_item_receive !== undefined) {
@@ -246,25 +248,13 @@
                     ]
                 });
             }
-            initializeTable();
-            $('#monthSelect').change(function() {
-                var month = $('#monthSelect').val();
-                if (month !== lastMonth) {
-                    lastMonth = month;
-                    $('#tabelpenerimaan').DataTable().ajax.reload();
-                }
-                console.log(month);
+
+            initializeTable()
+
+            $('#searchForm').submit(function(e) {
+                e.preventDefault();
+                initializeTable()
             });
-            $('#yearSelect').change(function() {
-                var year = $('#yearSelect').val();
-                if (year !== lastYear) {
-                    lastYear = year;
-                    $('#tabelpenerimaan').DataTable().ajax.reload();
-                }
-                console.log(year);
-            });
-            console.log(lastMonth);
-            console.log(lastYear);
         });
     </script>
 @endpush
