@@ -204,11 +204,11 @@
                         <option value="lorem">lorem</option>
                         ${invoiceData.map(inv =>
                             `<option value="${inv.id_invoice}"
-                                                                                                        data-nilai="${inv.nilai}"
-                                                                                                        data-sisa="${inv.sisa}"
-                                                                                                        data-jatuhtempo="${inv.jatuh_tempo}">
-                                                                                                        ${inv.invoice_number}
-                                                                                                    </option>`).join('')}
+                                                                                                            data-nilai="${inv.nilai}"
+                                                                                                            data-sisa="${inv.sisa}"
+                                                                                                            data-jatuhtempo="${inv.jatuh_tempo}">
+                                                                                                            ${inv.invoice_number}
+                                                                                                        </option>`).join('')}
                     </select>
                     <input type="hidden" class="form-control" name="items[${index}][id_payment_detail]" value="0">
                 </td>

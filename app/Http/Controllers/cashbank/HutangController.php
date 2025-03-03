@@ -351,15 +351,11 @@ class HutangController extends Controller
                 $data = json_decode($apiResponse->body());
                 $datas = $data->data;
 
-                // Inisialisasi totalAmount
                 $totalAmount = 0;
 
-                // Looping untuk menjumlahkan semua amount
                 foreach ($datas as $item) {
-                    $totalAmount += $item->amount; // Pastikan dikonversi ke angka
+                    $totalAmount += $item->amount;
                 }
-                // dd($datas);
-                // Kirim totalAmount ke tampilan
                 $pdf = Pdf::loadView('cashbank.hutang.print', compact('datas', 'totalAmount'));
                 return $pdf->stream('Transfer Stok.pdf');
             } else {
