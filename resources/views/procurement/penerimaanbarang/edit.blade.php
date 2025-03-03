@@ -125,22 +125,23 @@
                                             </td>
                                             <td>
                                                 <input type="text" class="form-control bg-body-secondary"
-                                                    name="items[{{ $index }}][item_order_qty]"
+                                                    name="items[{{ $index }}][item_order_qty]" id="qty_order"
                                                     value="{{ $item->jumlah_order }}" readonly>
                                             </td>
                                             <td>
                                                 <input type="text" class="form-control bg-body-secondary"
-                                                    name="items[{{ $index }}][qty_balance]"
+                                                    name="items[{{ $index }}][qty_balance]" id="qty_balance"
                                                     value="{{ $item->jumlah_sisa }}" readonly>
                                             </td>
                                             <td>
                                                 <input type="text" class="form-control bg-body-secondary"
                                                     name="items[{{ $index }}][quantity_received]"
-                                                    value="{{ $item->quantity_received }}" readonly>
+                                                    id="quantity_received" value="{{ $item->quantity_received }}"
+                                                    readonly>
                                             </td>
                                             <td>
                                                 <input type="number" class="form-control"
-                                                    name="items[{{ $index }}][qty]"
+                                                    name="items[{{ $index }}][qty]" id="qty"
                                                     value="{{ $item->quantity_received }}" min="0">
                                             </td>
                                             <td>

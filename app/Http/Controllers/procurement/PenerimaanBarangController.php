@@ -145,7 +145,7 @@ class PenerimaanBarangController extends Controller
             ];
 
             $apiResponse = storeApi(env('PENERIMAAN_BARANG_URL'), $data);
-
+            dd($apiResponse->json(), $data);
             if ($apiResponse->successful()) {
                 return redirect()->route('penerimaan_barang.index')
                     ->with('success', $apiResponse->json()['message']);

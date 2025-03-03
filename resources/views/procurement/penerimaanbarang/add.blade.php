@@ -176,7 +176,7 @@
                                                             <td><input type="number" class="form-control bg-body-secondary order_qty" name="items[${index}][base_qty]" value="${item.base_qty}" readonly></td>
                                                             <td><input type="number" class="form-control bg-body-secondary qty_balance" name="items[${index}][qty_balance]" value="${item.qty_balance}" readonly></td>
                                                             <td><input type="number" class="form-control bg-body-secondary diterima" name="items[${index}][qty]" value="${item.qty}" readonly></td>
-                                                            <td><input type="number" class="form-control qty_received" id="qty_received" name="items[${index}][qty_received]" value="0" min="1" required></td>
+                                                            <td><input type="number" class="form-control qty_received" id="qty_received" name="items[${index}][qty_received]" value="0" min="0" required></td>
                                                             <td><input type="number" class="form-control qty_reject" id="qty_reject" name="items[${index}][qty_reject]" value="0" min="0" required></td>
                                                             <td><input type="number" class="form-control qty_bonus" id="qty_bonus" name="items[${index}][qty_bonus]" value="0" min="0" required></td>
                                                             <td><input type="number" class="form-control qty_titip" id="qty_titip" name="items[${index}][qty_titip]" value="0" min="0" required></td>
