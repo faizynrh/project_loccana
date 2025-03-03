@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\penjualan;
 
 use App\Http\Controllers\Controller;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -407,6 +408,59 @@ class PenjualanController extends Controller
                 return redirect()->route('penjualan.index')->with('success', $apiResponse->json()['message']);
             } else {
                 return back()->withErrors($apiResponse->json()['message']);
+            }
+        } catch (\Exception $e) {
+            return back()->withErrors($e->getMessage());
+        }
+    }
+
+    public function print($id)
+    {
+        try {
+            $apiResponse = fectApi(env('PENJUALAN_URL') . '/' . $id);
+
+            if ($apiResponse->successful()) {
+                $responseData = json_decode($apiResponse->body(), true);
+
+                $subtotal = 0;
+                $total_discount = 0;
+                // dd($responseData);
+
+                if (isset($responseData['data']) && is_array($responseData['data'])) {
+                    foreach ($responseData['data'] as $item) {
+                        if (isset($item['qty']) && isset($item['unit_price'])) {
+                            $subtotal += $item['qty'] * $item['unit_price'];
+                            // Pastikan item memiliki field discount sebelum menghitung
+                            $discount_percentage = isset($item['discount']) ? $item['discount'] : 0;
+                            $total_discount += ($item['qty'] * $item['unit_price']) * ($discount_percentage / 100);
+                        }
+                    }
+                }
+
+                // $taxable = $subtotal - $total_discount;
+
+                // $ppn_rate = $responseData['data'][0]['ppn'];
+                // $ppn = ($taxable * $ppn_rate) / 100;
+                // $total = $taxable + $ppn;
+
+                $viewData = [
+                    'data' => $responseData,
+                    'sub_total' => $subtotal,
+                    'discount' => $total_discount,
+                    // 'taxable' => $taxable,
+                    // 'vat' => $ppn,
+                    // 'total' => $total,
+                    'notes' => $responseData['notes'] ?? '',
+                    'purchase_date' => $responseData['purchase_date'] ?? date('Y-m-d'),
+                    'approved_by' => $responseData['approved_by'] ?? '',
+                    'checked_by' => $responseData['checked_by'] ?? '',
+                    'ordered_by' => $responseData['ordered_by'] ?? ''
+                ];
+
+                $pdf = Pdf::loadView('penjualan.penjualan.print', $viewData);
+                return $pdf->stream('invoice.pdf');
+            } else {
+                return back()->withErrors('Gagal mengambil data item: ' . $apiResponse->status());
             }
         } catch (\Exception $e) {
             return back()->withErrors($e->getMessage());

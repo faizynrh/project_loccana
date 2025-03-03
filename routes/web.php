@@ -307,6 +307,7 @@ Route::middleware('auth.login')->group(
             Route::put('/update/{id}', [PenjualanController::class, 'update'])->name('update');
             Route::get('/approve/{id}', [PenjualanController::class, 'vapprove'])->name('vapprove');
             Route::put('/approve/{id}', [PenjualanController::class, 'approve'])->name('approve');
+            Route::get('/print/{id}', [PenjualanController::class, 'print'])->name('print');
             // Route::get('/getgudang/{id}', [PenjualanController::class, 'getGudang'])->name('getgudang');
         });
 
