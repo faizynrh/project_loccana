@@ -424,37 +424,67 @@ class PenjualanController extends Controller
 
                 $subtotal = 0;
                 $total_discount = 0;
-                // dd($responseData);
+                $total_ppn = 0;
+                $total_final = 0;
+
+                // Initialize totals array for columns that need summation
+                $totals = [
+                    'box_quantity' => 0,
+                    'qty_in_pcs' => 0,
+                    'per_box_quantity' => 0,
+                    'quantity' => 0,
+                    'liter_kg' => 0,
+                    'pack_quantity' => 0
+                ];
 
                 if (isset($responseData['data']) && is_array($responseData['data'])) {
                     foreach ($responseData['data'] as $item) {
-                        if (isset($item['qty']) && isset($item['unit_price'])) {
-                            $subtotal += $item['qty'] * $item['unit_price'];
-                            // Pastikan item memiliki field discount sebelum menghitung
-                            $discount_percentage = isset($item['discount']) ? $item['discount'] : 0;
-                            $total_discount += ($item['qty'] * $item['unit_price']) * ($discount_percentage / 100);
+                        // Calculate financial totals
+                        if (isset($item['quantity']) && isset($item['unit_price'])) {
+                            $box_qty = $item['box_quantity'] ?? 0;
+                            $qty = $item['quantity'] ?? 0;
+                            $total_qty = $box_qty + $qty;
+
+                            $subtotal_item = $total_qty * $item['unit_price'];
+                            $discount_percentage = $item['discount'] ?? 0;
+                            $discount_amount = $subtotal_item * ($discount_percentage / 100);
+
+                            $ppn_rate = $item['tax_rate'] ?? 0;
+                            $ppn_decimal = $ppn_rate / 100;
+                            $hargapokok = $subtotal_item / (1 + $ppn_decimal);
+                            $nilaippn = $subtotal_item - $hargapokok;
+
+                            $total = $subtotal_item - $discount_amount;
+
+                            $subtotal += $subtotal_item;
+                            $total_discount += $discount_amount;
+                            $total_ppn += $nilaippn;
+                            $total_final += $total;
                         }
+
+                        // Calculate column totals
+                        $totals['box_quantity'] += $item['box_quantity'] ?? 0;
+                        $totals['qty_in_pcs'] += $item['qty_in_pcs'] ?? 0;
+                        $totals['per_box_quantity'] += $item['per_box_quantity'] ?? 0;
+                        $totals['quantity'] += $item['quantity'] ?? 0;
+                        $totals['liter_kg'] += isset($item['liter_kg']) ? (float) str_replace(',', '.', $item['liter_kg']) : 0;
+                        $totals['pack_quantity'] += $item['pack_quantity'] ?? 0;
                     }
                 }
 
-                // $taxable = $subtotal - $total_discount;
+                // Format the liter_kg total with comma as decimal separator
+                $totals['liter_kg'] = number_format($totals['liter_kg'], 2, ',', '.');
 
-                // $ppn_rate = $responseData['data'][0]['ppn'];
-                // $ppn = ($taxable * $ppn_rate) / 100;
-                // $total = $taxable + $ppn;
+                $dpp = $total_final - $total_ppn;
 
                 $viewData = [
                     'data' => $responseData,
                     'sub_total' => $subtotal,
                     'discount' => $total_discount,
-                    // 'taxable' => $taxable,
-                    // 'vat' => $ppn,
-                    // 'total' => $total,
-                    'notes' => $responseData['notes'] ?? '',
-                    'purchase_date' => $responseData['purchase_date'] ?? date('Y-m-d'),
-                    'approved_by' => $responseData['approved_by'] ?? '',
-                    'checked_by' => $responseData['checked_by'] ?? '',
-                    'ordered_by' => $responseData['ordered_by'] ?? ''
+                    'dpp' => $dpp,
+                    'vat' => $total_ppn,
+                    'total' => $total_final,
+                    'totals' => $totals
                 ];
 
                 $pdf = Pdf::loadView('penjualan.penjualan.print', $viewData);

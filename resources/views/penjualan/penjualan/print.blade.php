@@ -173,9 +173,9 @@
                     <td>{{ $item['item_code'] }}</td>
                     <td>{{ $item['item_name'] }}</td>
                     <td>{{ $item['box_quantity'] }}</td>
-                    <td>{{ $item['qty_in_pcs'] }}</td>
-                    <td>{{ $item['per_box_quantity'] }}</td>
                     <td>{{ $item['quantity'] }}</td>
+                    <td>{{ $item['per_box_quantity'] }}</td>
+                    <td></td>
                     <td>{{ $item['unit_price'] }}</td>
                     <td>{{ $item['total_price'] }}</td>
                 </tr>
@@ -184,10 +184,10 @@
     </table>
 
     <div class="total-section" style="border-top: 1px solid #000 ">
-        <div style="padding: 10px"><strong>DPP Rp</strong> 94.570.270,27</div>
-        <div style="padding: 10px"><strong>Diskon </strong>Rp 103.167.567,57</div>
-        <div style="padding: 10px"><strong>PPN </strong>Rp 11.348.432,43</div>
-        <div style="padding: 10px"><strong>Total </strong>Rp 114.516.000,00</div>
+        <div style="padding: 10px"><strong>DPP Rp</strong> {{ number_format($dpp, 0, ',', '.') }}</div>
+        <div style="padding: 10px"><strong>Diskon </strong>Rp {{ number_format($discount, 0, ',', '.') }}</div>
+        <div style="padding: 10px"><strong>PPN </strong>Rp {{ number_format($vat, 0, ',', '.') }}</div>
+        <div style="padding: 10px"><strong>Total </strong>Rp {{ number_format($total, 0, ',', '.') }}</div>
     </div>
 
     <div class="signature-section" style="margin-top:-180px">
@@ -273,19 +273,19 @@
                     <td>{{ $item['item_code'] }}</td>
                     <td>{{ $item['item_name'] }}</td>
                     <td>{{ $item['box_quantity'] }}</td>
-                    <td>{{ $item['qty_in_pcs'] }}</td>
-                    <td>{{ $item['per_box_quantity'] }}</td>
                     <td>{{ $item['quantity'] }}</td>
-                    <td>720,00</td>
+                    <td>{{ $item['per_box_quantity'] }}</td>
+                    <td></td>
+                    <td>{{ $item['liter_kg'] ?? '0,00' }}</td>
                 </tr>
             @endforeach
             <tr style="border-top: 1px solid #000">
                 <td colspan="3">Jumlah</td>
-                <td>160</td>
-                <td>0</td>
+                <td>{{ $totals['box_quantity'] }}</td>
+                <td>{{ $totals['quantity'] }}</td>
+                <td>{{ $totals['per_box_quantity'] }}</td>
                 <td></td>
-                <td>7.440,00</td>
-                <td>780,00</td>
+                <td>{{ $totals['liter_kg'] }}</td>
             </tr>
         </tbody>
     </table>
@@ -345,20 +345,20 @@
                     <td>{{ $item['partner_name'] }}</td>
                     <td>Brebes</td>
                     <td>{{ $item['item_name'] }}</td>
-                    <td>150,00</td>
+                    <td>{{ $item['pack_quantity'] ?? '0,00' }}</td>
                     <td>{{ $item['box_quantity'] }}</td>
-                    <td>{{ $item['qty_in_pcs'] }}</td>
                     <td>{{ $item['quantity'] }}</td>
-                    <td>720,00</td>
+                    <td></td>
+                    <td>{{ $item['liter_kg'] ?? '0,00' }}</td>
                 </tr>
             @endforeach
             <tr style="border-top: 1px solid #000">
                 <td colspan="4">Jumlah</td>
-                <td>160,00</td>
-                <td>0,00</td>
-                <td>7.440,00</td>
-                <td>7.440,00</td>
-                <td>780,00</td>
+                <td>{{ $totals['pack_quantity'] }}</td>
+                <td>{{ $totals['box_quantity'] }}</td>
+                <td></td>
+                <td>{{ $totals['quantity'] }}</td>
+                <td>{{ $totals['liter_kg'] }}</td>
             </tr>
         </tbody>
     </table>

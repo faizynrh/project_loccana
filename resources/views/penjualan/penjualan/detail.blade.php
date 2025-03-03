@@ -120,11 +120,11 @@
                                                 value="{{ $item->box_quantity }}">
                                         </td>
                                         <td>
-                                            <input type="number" readonly name="items[0][per_box_quantity]"
+                                            <input type="number" readonly name="items[0][quantity]"
                                                 class="form-control qty-input" min="0"
-                                                value="{{ $item->per_box_quantity }}">
+                                                value="{{ $item->quantity }}">
                                         <td>
-                                            <input type="number" name="items[0][quantity]"
+                                            <input type="number" name=""
                                                 class="form-control total-qty bg-body-secondary" min="0" readonly>
                                         </td>
                                         <td>
