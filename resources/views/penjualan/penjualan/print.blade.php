@@ -120,7 +120,7 @@
     <div class="info-container clearfix">
         <div class="left-info">
             <strong>Pembeli</strong>
-            <div>CV. Pusaka Agro Indo Brebes</div>
+            <div>{{ $data['data'][0]['partner_name'] }}</div>
             <div>JL. Stasiun Rt. 06 Rw. 01 Cigedog Kec. Kersana Brebes</div>
         </div>
         <div class="right-info-table mt-faktur">
@@ -131,12 +131,12 @@
                 <tr>
                     <td>No.Faktur</td>
                     <td>:</td>
-                    <td>20250266</td>
+                    <td>{{ $data['data'][0]['order_number'] ?? '' }}</td>
                 </tr>
                 <tr>
                     <td>Tanggal</td>
                     <td>:</td>
-                    <td>2025-02-25</td>
+                    <td>{{ $data['data'][0]['order_date'] ?? '' }}</td>
                 </tr>
                 <tr>
                     <td>Alamat pengiriman</td>
@@ -146,7 +146,7 @@
                 <tr>
                     <td>Phone</td>
                     <td>:</td>
-                    <td>0283-889156/889255/087829001955</td>
+                    <td>{{ $data['data'][0]['contact_info'] ?? '' }}</td>
                 </tr>
             </table>
         </div>
@@ -167,36 +167,27 @@
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td>1</td>
-                <td>BAI0706</td>
-                <td>Fastac 15 EC 100.00 ml</td>
-                <td>150</td>
-                <td>0</td>
-                <td>@ 48</td>
-                <td>7.200,00</td>
-                <td>14.850,00</td>
-                <td>106.920.000,00</td>
-            </tr>
-            <tr style="border-bottom: 1px solid #000">
-                <td>2</td>
-                <td>BAI0705</td>
-                <td>Fastac 15 EC 250.00 ml</td>
-                <td>10</td>
-                <td>0</td>
-                <td>@ 24</td>
-                <td>240,00</td>
-                <td>31.650,00</td>
-                <td>7.596.000,00</td>
-            </tr>
+            @foreach ($data['data'] as $item)
+                <tr>
+                    <td>{{ $loop->iteration }}</td>
+                    <td>{{ $item['item_code'] }}</td>
+                    <td>{{ $item['item_name'] }}</td>
+                    <td>{{ $item['box_quantity'] }}</td>
+                    <td>{{ $item['qty_in_pcs'] }}</td>
+                    <td>{{ $item['per_box_quantity'] }}</td>
+                    <td>{{ $item['quantity'] }}</td>
+                    <td>{{ $item['unit_price'] }}</td>
+                    <td>{{ $item['total_price'] }}</td>
+                </tr>
+            @endforeach
         </tbody>
     </table>
 
-    <div class="total-section">
-        <div style="padding: 10px"><strong>Total Rp</strong> 114.516.000,00</div>
-        <div style="padding: 10px"><strong>Total Exc Rp</strong> 103.167.567,57</div>
+    <div class="total-section" style="border-top: 1px solid #000 ">
         <div style="padding: 10px"><strong>DPP Rp</strong> 94.570.270,27</div>
-        <div style="padding: 10px"><strong>PPN Rp</strong> 11.348.432,43</div>
+        <div style="padding: 10px"><strong>Diskon </strong>Rp 103.167.567,57</div>
+        <div style="padding: 10px"><strong>PPN </strong>Rp 11.348.432,43</div>
+        <div style="padding: 10px"><strong>Total </strong>Rp 114.516.000,00</div>
     </div>
 
     <div class="signature-section" style="margin-top:-180px">
@@ -210,7 +201,7 @@
                 </td>
                 <td>
                     <div class="signature-box">
-                        <div>CV. Pusaka Agro Indo Brebes,</div>
+                        <div>{{ $data['data'][0]['partner_name'] }},</div>
                         <div class="signature-line"></div>
                     </div>
                 </td>
@@ -230,7 +221,7 @@
     <div class="info-container clearfix">
         <div class="left-info">
             <strong>Pembeli</strong>
-            <div>CV. Pusaka Agro Indo Brebes</div>
+            <div>{{ $data['data'][0]['partner_name'] }}</div>
             <div>JL. Stasiun Rt. 06 Rw. 01 Cigedog Kec. Kersana Brebes</div>
         </div>
         <div class="right-info-table mt-do">
@@ -241,12 +232,12 @@
                 <tr>
                     <td>No.Faktur</td>
                     <td>:</td>
-                    <td>20250266</td>
+                    <td>{{ $data['data'][0]['order_number'] }}</td>
                 </tr>
                 <tr>
                     <td>Tanggal</td>
                     <td>:</td>
-                    <td>2025-02-25</td>
+                    <td>{{ $data['data'][0]['order_date'] }}</td>
                 </tr>
                 <tr>
                     <td>Alamat pengiriman</td>
@@ -256,7 +247,7 @@
                 <tr>
                     <td>Phone</td>
                     <td>:</td>
-                    <td>0283-889156/889255/087829001955</td>
+                    <td>{{ $data['data'][0]['contact_info'] ?? '' }}</td>
                 </tr>
             </table>
         </div>
@@ -276,27 +267,19 @@
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td>1</td>
-                <td>BAI0706</td>
-                <td>Fastac 15 EC 100.00 ml</td>
-                <td>150</td>
-                <td>0</td>
-                <td>@ 48</td>
-                <td>7.200,00</td>
-                <td>720,00</td>
-            </tr>
-            <tr style="border-bottom: 1px solid #000">
-                <td>2</td>
-                <td>BAI0705</td>
-                <td>Fastac 15 EC 250.00 ml</td>
-                <td>10</td>
-                <td>0</td>
-                <td>@ 24</td>
-                <td>240,00</td>
-                <td>60,00</td>
-            </tr>
-            <tr>
+            @foreach ($data['data'] as $item)
+                <tr>
+                    <td>{{ $loop->iteration }}</td>
+                    <td>{{ $item['item_code'] }}</td>
+                    <td>{{ $item['item_name'] }}</td>
+                    <td>{{ $item['box_quantity'] }}</td>
+                    <td>{{ $item['qty_in_pcs'] }}</td>
+                    <td>{{ $item['per_box_quantity'] }}</td>
+                    <td>{{ $item['quantity'] }}</td>
+                    <td>720,00</td>
+                </tr>
+            @endforeach
+            <tr style="border-top: 1px solid #000">
                 <td colspan="3">Jumlah</td>
                 <td>160</td>
                 <td>0</td>
@@ -336,7 +319,9 @@
 
     <!-- PERMINTAAN BARANG PAGE -->
     <div class="header">
-        <div>Permintaan Barang 2025-02-25 No.Faktur 20250266</div>
+        <div>Permintaan Barang {{ $data['data'][0]['order_date'] }} </div>
+        <div style="text-align: right"> No.Faktur {{ $data['data'][0]['order_number'] }}
+        </div>
     </div>
 
     <table>
@@ -354,29 +339,20 @@
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td>1</td>
-                <td>CV. Pusaka Agro Indo Brebes</td>
-                <td>Brebes</td>
-                <td>Fastac 15 EC 100.00 ml</td>
-                <td>150,00</td>
-                <td>0,00</td>
-                <td>7.200,00</td>
-                <td>7.200,00</td>
-                <td>720,00</td>
-            </tr>
-            <tr style="border-bottom: 1px solid #000">
-                <td>2</td>
-                <td>CV. Pusaka Agro Indo Brebes</td>
-                <td>Brebes</td>
-                <td>Fastac 15 EC 250.00 ml</td>
-                <td>10,00</td>
-                <td>0,00</td>
-                <td>240,00</td>
-                <td>240,00</td>
-                <td>60,00</td>
-            </tr>
-            <tr>
+            @foreach ($data['data'] as $item)
+                <tr>
+                    <td>{{ $loop->iteration }}</td>
+                    <td>{{ $item['partner_name'] }}</td>
+                    <td>Brebes</td>
+                    <td>{{ $item['item_name'] }}</td>
+                    <td>150,00</td>
+                    <td>{{ $item['box_quantity'] }}</td>
+                    <td>{{ $item['qty_in_pcs'] }}</td>
+                    <td>{{ $item['quantity'] }}</td>
+                    <td>720,00</td>
+                </tr>
+            @endforeach
+            <tr style="border-top: 1px solid #000">
                 <td colspan="4">Jumlah</td>
                 <td>160,00</td>
                 <td>0,00</td>
