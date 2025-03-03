@@ -67,7 +67,7 @@
                                         <option value="giro"
                                             {{ $data->data[0]->payment_type == 'giro' ? 'selected' : '' }}>Giro</option>
                                         <option value="bonus"
-                                            {{ $data->data[0]->payment_type == 'pemasukan' ? 'selected' : '' }}>Bonus
+                                            {{ $data->data[0]->payment_type == 'bonus' ? 'selected' : '' }}>Bonus
                                         </option>
                                         <option value="komisi"
                                             {{ $data->data[0]->payment_type == 'komisi' ? 'selected' : '' }}>Komisi
@@ -89,11 +89,11 @@
                                                 {{ $coa->account_name }}</option>
                                         @endforeach
                                     </select>
-                                    <label class="form-label fw-bold mt-2 mb-1 small">Tanggal Terbit</label>
+                                    {{-- <label class="form-label fw-bold mt-2 mb-1 small">Tanggal Terbit</label>
                                     <input type="date" class="form-control"
                                         value="{{ $data->data[0]->published_date }}">
                                     <label class="form-label fw-bold mt-2 mb-1 small">Jatuh Tempo</label>
-                                    <input type="date" class="form-control" value="{{ $data->data[0]->due_date }}">
+                                    <input type="date" class="form-control" value="{{ $data->data[0]->due_date }}"> --}}
                                     <label class="form-label fw-bold mt-2 mb-1 small">Keterangan</label>
                                     <textarea class="form-control" rows="4">{{ $data->data[0]->keterangan }}</textarea>
                                     <input type="hidden" class="form-control" id="total_amount" name="total_amount">
@@ -145,8 +145,7 @@
                                             </td>
                                             <td>
                                                 <input type="text" class="form-control bg-body-secondary"
-                                                    name="items[0][jatuhtempo]" value="{{ $item->due_date_inv }}"
-                                                    disabled>
+                                                    name="items[0][jatuhtempo]" value="{{ $item->due_date_inv }}" disabled>
                                             </td>
                                             <td>
                                                 <input type="number" class="form-control" name="items[0][amount_paid]"
@@ -200,15 +199,13 @@
                     <select class="form-select w-auto invoice-select"
                         name="items[${index}][invoice]" required>
                         <option value="" selected disabled>Pilih Invoice</option>
-                        <option value="tes">tes</option>
-                        <option value="lorem">lorem</option>
                         ${invoiceData.map(inv =>
                             `<option value="${inv.id_invoice}"
-                                                                                                            data-nilai="${inv.nilai}"
-                                                                                                            data-sisa="${inv.sisa}"
-                                                                                                            data-jatuhtempo="${inv.jatuh_tempo}">
-                                                                                                            ${inv.invoice_number}
-                                                                                                        </option>`).join('')}
+                                                                                                                            data-nilai="${inv.nilai}"
+                                                                                                                            data-sisa="${inv.sisa}"
+                                                                                                                            data-jatuhtempo="${inv.jatuh_tempo}">
+                                                                                                                            ${inv.invoice_number}
+                                                                                                                        </option>`).join('')}
                     </select>
                     <input type="hidden" class="form-control" name="items[${index}][id_payment_detail]" value="0">
                 </td>
@@ -232,9 +229,9 @@
             </tr>`
             };
 
-            // function canAddRow() {
-            //     return $('.invoice-select').length < invoiceData.length;
-            // }
+            function canAddRow() {
+                return $('.invoice-select').length < invoiceData.length;
+            }
 
             function updateInvoiceDropdowns() {
                 let selectedValues = new Set();
@@ -258,15 +255,15 @@
             $(document).on('click', '#add-row', function(e) {
                 e.preventDefault();
 
-                // if (!canAddRow()) {
-                //     Swal.fire({
-                //         title: 'Peringatan',
-                //         text: 'Jumlah baris sudah mencapai maksimum jumlah invoice yang tersedia!',
-                //         icon: 'warning',
-                //         confirmButtonText: 'Oke'
-                //     });
-                //     return;
-                // }
+                if (!canAddRow()) {
+                    Swal.fire({
+                        title: 'Peringatan',
+                        text: 'Jumlah baris sudah mencapai maksimum jumlah invoice yang tersedia!',
+                        icon: 'warning',
+                        confirmButtonText: 'Oke'
+                    });
+                    return;
+                }
 
                 $('#loading-overlay').fadeIn();
 
