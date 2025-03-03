@@ -155,16 +155,7 @@
                         {
                             data: 'order_date',
                             render: function(data) {
-                                if (data) {
-                                    var date = new Date(data);
-                                    return (
-                                        date.getFullYear() + '-' +
-                                        (date.getMonth() + 1).toString().padStart(2, '0') +
-                                        '-' +
-                                        date.getDate().toString().padStart(2, '0')
-                                    );
-                                }
-                                return data;
+                                return formatDate(data);
                             }
                         },
                         {
@@ -173,18 +164,8 @@
                         {
                             data: 'receipt_date',
                             render: function(data) {
-                                if (data) {
-                                    var date = new Date(data);
-                                    return (
-                                        date.getFullYear() + '-' +
-                                        (date.getMonth() + 1).toString().padStart(2, '0') +
-                                        '-' +
-                                        date.getDate().toString().padStart(2, '0')
-                                    );
-                                }
-                                return data;
+                                return formatDate(data);
                             }
-
                         },
                         {
                             data: 'name'
@@ -192,29 +173,13 @@
                         {
                             data: 'total_receive_price',
                             render: function(data) {
-                                if (data) {
-                                    return new Intl.NumberFormat('id-ID', {
-                                        style: 'currency',
-                                        currency: 'IDR',
-                                        minimumFractionDigits: 2,
-                                        maximumFractionDigits: 2
-                                    }).format(data);
-                                }
-                                return data;
+                                return formatRupiah(data);
                             }
                         },
                         {
                             data: 'total_po',
                             render: function(data) {
-                                if (data) {
-                                    return new Intl.NumberFormat('id-ID', {
-                                        style: 'currency',
-                                        currency: 'IDR',
-                                        minimumFractionDigits: 2,
-                                        maximumFractionDigits: 2
-                                    }).format(data);
-                                }
-                                return data;
+                                return formatRupiah(data);
                             }
                         },
                         {
