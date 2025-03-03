@@ -166,7 +166,7 @@
                     <a href="/hutang/pembayaran/detail_pembayaran/${row.transaksi_id}" class="dropdown-item" title="Detail">
                         <i class="bi bi-eye text-primary"></i> Detail
                     </a>
-                    <a href="/penerimaan_barang/print/${row.transaksi_id}" class="dropdown-item" target="_blank" title="Print PDF">
+                    <a href="/hutang/pembayaran/print/${row.transaksi_id}" class="dropdown-item" target="_blank" title="Print PDF">
                         <i class="bi bi-printer text-warning"></i> Print PDF
                     </a>
                     <div class="dropdown-divider"></div>

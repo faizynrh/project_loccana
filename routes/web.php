@@ -374,6 +374,7 @@ Route::middleware('auth.login')->group(
             Route::put('/pembayaran/reject/{id}', [HutangController::class, 'reject'])->name('reject');
             Route::get('/pembayaran/detail_pembayaran/{id}', [HutangController::class, 'showpembayaran'])->name('detail');
             Route::delete('/pembayaran/delete/{id}', [HutangController::class, 'destroy'])->name('destroy');
+            Route::get('/pembayaran/print/{id}', [HutangController::class, 'print'])->name('print');
         });
     }
 
