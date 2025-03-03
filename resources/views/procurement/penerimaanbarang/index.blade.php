@@ -132,15 +132,16 @@
                             d.year = $('#yearSelect').val();
                         },
                         dataSrc: function(response) {
-                            if (response.mtd && response.mtd.mtd_item_receive !== undefined) {
+                            if (response.mtd !== undefined) {
                                 const formattedNumber = new Intl.NumberFormat('id-ID', {
                                     minimumFractionDigits: 2,
                                     maximumFractionDigits: 2
-                                }).format(response.mtd.mtd_item_receive);
+                                }).format(response.mtd);
                                 $('#totalPerBulan').html('Rp ' + formattedNumber);
                             }
                             return response.data;
                         }
+
                     },
                     columns: [{
                             data: null,
