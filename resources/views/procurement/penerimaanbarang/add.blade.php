@@ -38,9 +38,8 @@
                                     @csrf
                                     <label class="form-label fw-bold mt-2 mb-1 small">No.
                                         PO</label>
-                                    <select class="form-control" id="satuan" name="item_category_id">
+                                    <select class="form-control" id="satuan" name="item_category_id" required>
                                         <option value="" selected disabled>Pilih PO</option>
-                                        <option value="7">ID 7</option>
                                         @foreach ($po as $item)
                                             <option value="{{ $item['po_id'] }}">[{{ $item['code'] }}] {{ $item['name'] }}
                                             </option>
@@ -55,8 +54,7 @@
                                     <input type="text" class="form-control bg-body-secondary" id="partner_name"
                                         placeholder="Principal" readonly>
                                     <label for="shipFrom" class="form-label fw-bold mt-2 mb-1 small">Alamat</label>
-                                    <textarea class="form-control bg-body-secondary" id="address"
-                                        placeholder="Alamat Principal" rows="4" readonly></textarea>
+                                    <textarea class="form-control bg-body-secondary" id="address" placeholder="Alamat Principal" rows="4" readonly></textarea>
                                     <label class="form-label fw-bold mt-2 mb-1 small">Att</label>
                                     <input type="text" class="form-control bg-body-secondary" id="description"
                                         placeholder="Att" readonly>
@@ -64,15 +62,16 @@
                                     <input type="text" class="form-control bg-body-secondary" id="phone"
                                         placeholder="Telephone" readonly>
                                     <label class="form-label fw-bold mt-2 mb-1 small">Fax</label>
-                                    <input type="text" class="form-control bg-body-secondary" id="fax" placeholder="Fax"
-                                        readonly>
+                                    <input type="text" class="form-control bg-body-secondary" id="fax"
+                                        placeholder="Fax" readonly>
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label fw-bold mt-2 mb-1 small">No DO</label>
                                     <input type="text" class="form-control" id="do_number" name="do_number"
                                         placeholder="No DO" required>
                                     <label class="form-label fw-bold mt-2 mb-1 small">Tanggal DO</label>
-                                    <input type="date" class="form-control" id="receive_date" name="receipt_date" required>
+                                    <input type="date" class="form-control" id="receive_date" name="receipt_date"
+                                        required>
                                     <label class="form-label fw-bold mt-2 mb-1 small">Angkutan</label>
                                     <input type="text" class="form-control" id="shipment" name="shipment_info"
                                         placeholder="Angkutan" required>
@@ -125,13 +124,11 @@
 @endsection
 @push('scripts')
     <script>
-        $(document).ready(function () {
+        $(document).ready(function() {
             $('#gudang').prop('disabled', true);
             $('#tableBody').hide();
-            $('#rejectButton').hide();
-            $('#submitButton').hide();
 
-            $('#satuan').on('change', function () {
+            $('#satuan').on('change', function() {
                 const po_id = $(this).val();
                 const url = '{{ route('penerimaan_barang.getdetails', ':po_id') }}'.replace(':po_id',
                     po_id);
@@ -144,15 +141,15 @@
                         url: url,
                         type: 'GET',
                         dataType: 'json',
-                        success: function (response) {
+                        success: function(response) {
                             if (response.error) {
                                 Swal.fire('Error', response.error, 'error');
                                 return;
                             }
 
                             const orderDate = new Date(response.order_date);
-                            const formattedDate = (orderDate.getDate()) + '-' + (orderDate
-                                .getMonth() + 1) + '-' + orderDate.getFullYear();
+                            const formattedDate = orderDate.getFullYear() + '-' + (orderDate
+                                .getMonth() + 1) + '-' + (orderDate.getDate());
 
                             $('#po_id').val(response.id_po);
                             $('#order_date').val(formattedDate);
@@ -167,10 +164,7 @@
                             tableBody.empty();
                             if (response.items && response.items.length > 0) {
                                 tableBody.show();
-                                $('#rejectButton').show();
-                                $('#submitButton').show();
-
-                                response.items.forEach(function (item, index) {
+                                response.items.forEach(function(item, index) {
                                     const qty_balance = item.qty_balance;
 
                                     const row = `
@@ -194,7 +188,7 @@
                                     tableBody.append(row);
 
                                     tableBody.find('.qty_received').last().on('input',
-                                        function () {
+                                        function() {
                                             const qty_received = $(this).val();
 
                                             if (parseFloat(qty_received) >
@@ -205,23 +199,23 @@
                                                 $(this).val("");
                                                 $(this).closest('tr').find(
                                                     '.qty_balance').val(item
-                                                        .qty_balance);
+                                                    .qty_balance);
                                                 return;
                                             }
                                             const new_balance_qty = parseFloat(
                                                 qty_balance) - parseFloat(
-                                                    qty_received);
+                                                qty_received);
 
                                             if (qty_received === 0 ||
                                                 qty_received === null ||
                                                 qty_received === '') {
                                                 $(this).closest('tr').find(
                                                     '.qty_balance').val(item
-                                                        .qty_balance);
+                                                    .qty_balance);
                                             } else {
                                                 $(this).closest('tr').find(
                                                     '.qty_balance').val(
-                                                        new_balance_qty);
+                                                    new_balance_qty);
                                             }
                                         });
                                 });
@@ -233,14 +227,14 @@
                                     'warning');
                             }
                         },
-                        error: function (xhr, status, error) {
+                        error: function(xhr, status, error) {
                             Swal.fire('Error', 'Gagal mengambil detail PO', 'error');
                             $('#tableBody').hide();
                             $('#rejectButton').hide();
                             $('#submitButton').hide();
                             $('#gudang').prop('disabled', true);
                         },
-                        complete: function () {
+                        complete: function() {
                             $('#loading-overlay').fadeOut();
                         }
                     });

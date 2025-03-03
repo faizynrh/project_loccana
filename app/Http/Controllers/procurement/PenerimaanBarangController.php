@@ -22,7 +22,7 @@ class PenerimaanBarangController extends Controller
                 'year' => $year,
                 'limit' => $length,
                 'offset' => $start,
-                'company_id' => 0,
+                'company_id' => 2,
             ];
 
             $apiResponse = storeApi(env('PENERIMAAN_BARANG_URL') . '/lists', $requestbody);
