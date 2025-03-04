@@ -136,7 +136,6 @@ class StockInTransitController extends Controller
             $apiResponse = storeApi(env('STOCK_IN_TRANSIT_URL') . '/lists', $requestbody);
             if ($apiResponse->successful()) {
                 $data = $apiResponse->json()['data']['table'] ?? [];
-                // dd($data);
                 if (empty($data)) {
                     return back()->with('error', 'Tidak ada data untuk diexport.');
                 }

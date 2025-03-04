@@ -168,7 +168,6 @@ class InvoiceController extends Controller
     {
         try {
             $apiResponse = fectApi(env('INVOICE_URL') . '/' . $id);
-            // dd($apiResponse->json());
             if ($apiResponse->successful()) {
                 $data = json_decode($apiResponse->body());
                 return view('procurement.invoice.edit', compact('data'));
@@ -182,7 +181,6 @@ class InvoiceController extends Controller
 
     public function update(Request $request, $id)
     {
-        // dd($request->all());
         try {
             $items = [];
             if ($request->has('item_id')) {

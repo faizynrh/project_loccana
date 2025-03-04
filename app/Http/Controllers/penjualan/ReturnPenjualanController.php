@@ -55,7 +55,6 @@ class ReturnPenjualanController extends Controller
     {
         try {
             $apiResponse = fectApi(env('INVOICE_PENJUALAN_URL') . '/' . $id);
-            // dd($apiResponse->json());
             $items = [];
             if ($apiResponse->successful()) {
                 $data = json_decode($apiResponse->body());
@@ -94,7 +93,6 @@ class ReturnPenjualanController extends Controller
         $invoiceResponse = fectApi(env('LIST_INVOICE_PENJUALAN') . '/' . $company_id);
         if ($invoiceResponse->successful()) {
             $data = json_decode($invoiceResponse->body());
-            // dd($data);
             return view('penjualan.returnpenjualan.add', compact('data'));
         } else {
             return back()->withErrors($invoiceResponse->json()['message']);
