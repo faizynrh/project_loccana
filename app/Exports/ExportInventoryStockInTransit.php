@@ -17,7 +17,6 @@ class ExportInventoryStockInTransit implements WithTitle, WithStyles
         $this->data = $data;
         $this->start_date = $start_date;
         $this->end_date = $end_date;
-        // dd($this->data);
     }
 
     public function styles(Worksheet $sheet)

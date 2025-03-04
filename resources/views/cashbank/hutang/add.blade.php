@@ -289,7 +289,6 @@
                 fetchInvoices(principalId, function(options, availableCount) {
                     // Hitung jumlah baris yang sudah ada (tidak termasuk footer rows)
                     const currentRowCount = $('#tableBody tr').not('#add-button-row, #total-row').length;
-                    console.log(principalId);
                     // Cek apakah sudah mencapai batas maksimum invoice
                     if (currentRowCount >= availableCount) {
                         Swal.fire({

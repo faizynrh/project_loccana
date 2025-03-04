@@ -222,8 +222,6 @@
 
                 let newQtyReceived = itemOrderQty - newBalance;
                 qtyReceivedField.val(newQtyReceived);
-
-                console.log(newQtyReceived);
             });
 
             $('#submitButton').click(function(event) {

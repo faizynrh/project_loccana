@@ -149,7 +149,6 @@
                     principal_name: principalName,
                     total_entries: recordsDisplay
                 }).toString();
-                console.log(formData);
                 window.location.href = "/report_penjualan/export-excel?" + formData;
             });
 

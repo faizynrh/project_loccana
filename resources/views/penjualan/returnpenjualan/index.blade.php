@@ -103,7 +103,6 @@
                         data: function(d) {
                             d.month = $('#monthSelect').val();
                             d.year = $('#yearSelect').val();
-                            console.log(d);
                         },
                     },
                     columns: [{

@@ -66,7 +66,6 @@ class TransferStockController extends Controller
             $item = json_decode($itemResponse->body());
             $gudangs = $gudang->data;
             $items = $item->data->items;
-            // dd($gudangs, $items);
             return view('inventory.transferstock.add', compact('gudangs', 'items'));
         } else {
             return redirect()->route('stock_gudang.index')->withErrors(

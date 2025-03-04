@@ -69,6 +69,7 @@
 
         .total-row td {
             font-weight: bold;
+            /* border: none; */
         }
 
         .section-label {
@@ -124,7 +125,7 @@
         <tr>
             <td class="info-label">Currency</td>
             <td class="info-separator">:</td>
-            <td>Rp. : Kurs : 1</td>
+            <td>Rp. : Kurs : {{ $datas[0]->rate }}</td>
         </tr>
     </table>
 
@@ -145,14 +146,14 @@
                 <td>{{ $datas[0]->payment_type }}</td>
                 <td>{{ $datas[0]->coa_name }}</td>
                 <td>{{ $datas[0]->due_date }}</td>
-                <td class="right-align amount">{{ number_format($totalAmount, 2, ',', '.') }}</td>
-                <td class="right-align amount">{{ number_format($totalAmount, 2, ',', '.') }}</td>
+                <td class="right-align amount">Rp. {{ number_format($totalAmount, 2, ',', '.') }}</td>
+                <td class="right-align amount">Rp. {{ number_format($totalAmount, 2, ',', '.') }}</td>
                 <td></td>
             </tr>
-            <tr class="total-row">
+            <tr class="total-row" style="border: none;">
                 <td colspan="3">Total Pembayaran</td>
-                <td class="right-align amount">{{ number_format($totalAmount, 2, ',', '.') }}</td>
-                <td class="right-align amount">{{ number_format($totalAmount, 2, ',', '.') }}</td>
+                <td class="right-align amount">Rp. {{ number_format($totalAmount, 2, ',', '.') }}</td>
+                <td class="right-align amount">Rp. {{ number_format($totalAmount, 2, ',', '.') }}</td>
                 <td></td>
             </tr>
         </tbody>
@@ -175,15 +176,16 @@
                 <tr>
                     <td>{{ $item->invoice_number }}</td>
                     <td>Rp.</td>
-                    <td class="center-align">1</td>
+                    <td class="center-align">{{ $item->rate }}</td>
                     <td>{{ $item->due_date_inv }}</td>
-                    <td class="right-align">{{ number_format($item->nilai, 2, ',', '.') }}</td>
-                    <td class="right-align total">{{ number_format($item->amount, 2, ',', '.') }}</td>
+                    <td class="right-align">Rp. {{ number_format($item->nilai, 2, ',', '.') }}</td>
+                    <td class="right-align total">Rp. {{ number_format($item->amount, 2, ',', '.') }}</td>
                 </tr>
             @endforeach
             <tr class="total-row">
                 <td colspan="5">Total</td>
-                <td class="right-align amount">{{ number_format($totalAmount, 2, ',', '.') }}</td>
+                <td class="amount">Rp.
+                    {{ number_format($totalAmount, 2, ',', '.') }}</td>
             </tr>
         </tbody>
     </table>
@@ -211,5 +213,6 @@
         </h5>
     </div>
 </body>
+
 
 </html>

@@ -148,9 +148,6 @@
 
                             d.start_date = start_date;
                             d.end_date = end_date;
-
-                            console.log('Start Date:', start_date);
-                            console.log('End Date:', end_date);
                         }
                     },
                     columns: [{

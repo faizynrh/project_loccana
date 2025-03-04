@@ -16,7 +16,6 @@ class ExportInventoryReport implements WithTitle, WithStyles
     public function __construct($data, $principalname = '', $start_date = '', $end_date = '')
     {
         $this->data = $data;
-        // dd($this->data->data->table);
         $this->principalname = $principalname;
         $this->start_date = $start_date;
         $this->end_date = $end_date;

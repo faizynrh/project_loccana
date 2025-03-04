@@ -218,8 +218,6 @@ class HutangController extends Controller
                 $partner = json_decode($partnerResponse->body());
                 $coa = json_decode($coaResponse->body());
                 $invoice = json_decode($invoiceResponse->body());
-                // dd([$data, $partner, $coa, $invoice]);
-                // dd($data);
                 return view('cashbank.hutang.edit', compact('data', 'partner', 'coa', 'invoice'));
             } else {
                 $errors = [];
@@ -350,7 +348,6 @@ class HutangController extends Controller
             if ($apiResponse->successful()) {
                 $data = json_decode($apiResponse->body());
                 $datas = $data->data;
-
                 $totalAmount = 0;
 
                 foreach ($datas as $item) {

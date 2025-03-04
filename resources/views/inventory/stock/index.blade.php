@@ -128,8 +128,6 @@
                             d.start_date = start_date;
                             d.end_date = end_date;
 
-                            // console.log('Start Date:', start_date);
-                            // console.log('End Date:', end_date);
                         }
                     },
                     columns: [{
@@ -206,18 +204,6 @@
                     e.preventDefault();
                     table.ajax.reload();
                 });
-
-
-                function updateModal(modalId, title, content, sizeClass) {
-                    let modalDialog = $(`${modalId} .modal-dialog`);
-                    modalDialog.removeClass('modal-full modal-xl modal-lg modal-md').addClass(sizeClass);
-
-                    $(`${modalId} .modal-title`).text(title);
-                    $(`${modalId} .modal-body`).html(content);
-
-                    let myModal = new bootstrap.Modal(document.getElementById(modalId.substring(1)));
-                    myModal.show();
-                }
 
                 $(document).on('click', '.btn-mutasi', function(e) {
                     e.preventDefault();
