@@ -53,10 +53,12 @@
                                     <label for="customer" class="form-label fw-bold mt-2 mb-1 small">Customer</label>
                                     <select class="form-select" id="partner_id" name="partner_id" required>
                                         <option value="" selected disabled>Pilih Customer</option>
-                                        @foreach ($partner as $item)
-                                            <option value="{{ $item['id'] }}">{{ $item['name'] }}</option>
+                                        @foreach ($partner->data as $item)
+                                            <option value="{{ $item->id }}">{{ $item->name }}</option>
                                         @endforeach
                                     </select>
+
+
                                     <label for="description" class="form-label fw-bold mt-2 mb-1 small">Keterangan</label>
                                     <textarea class="form-control" rows="5" id="description" name="description"></textarea>
                                     {{-- <label for="status" class="form-label fw-bold mt-2 mb-1 small">Status</label> --}}
@@ -68,8 +70,8 @@
                                     <label for="gudang" class="form-label fw-bold mt-2 mb-1 small">Gudang</label>
                                     <select class="form-select" id="gudang" name="items[0][warehouse_id]" required>
                                         <option value="" selected disabled>Pilih Gudang</option>
-                                        @foreach ($gudang as $items)
-                                            <option value="{{ $items['id'] }}">{{ $items['name'] }}</option>
+                                        @foreach ($gudang->data as $items)
+                                            <option value="{{ $items->id }}">{{ $items->name }}</option>
                                         @endforeach
                                     </select>
 

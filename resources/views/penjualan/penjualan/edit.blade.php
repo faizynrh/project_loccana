@@ -57,10 +57,10 @@
                                     <label for="customer" class="form-label fw-bold mt-2 mb-1 small">Customer</label>
                                     <select class="form-select" id="partner_id" name="partner_id" required>
                                         <option value="" selected disabled>Pilih Partner</option>
-                                        @foreach ($partner as $item)
-                                            <option value="{{ $item['id'] }}"
-                                                {{ $data->data[0]->partner_id == $item['id'] ? 'selected' : '' }}>
-                                                {{ $item['name'] }}
+                                        @foreach ($partner->data as $item)
+                                            <option value="{{ $item->id }}"
+                                                {{ $data->data[0]->partner_id == $item->id ? 'selected' : '' }}>
+                                                {{ $item->name }}
                                             </option>
                                         @endforeach
                                     </select>
@@ -71,12 +71,14 @@
                                     <input type="hidden" class="form-control" id="currency_id" name="currency_id"
                                         value="1">
                                 </div>
+                                {{-- @dd($gudang) --}}
                                 <div class="col-md-6">
                                     <label for="gudang" class="form-label fw-bold mt-2 mb-1 small">Gudang</label>
                                     <select class="form-select" id="gudang" name="items[0][warehouse_id]" required>
                                         <option value="" selected disabled>Pilih Gudang</option>
-                                        @foreach ($gudang as $warehouse)
-                                            <option value="{{ $warehouse['id'] }}">{{ $warehouse['name'] }}</option>
+                                        @foreach ($gudang->data as $warehouse)
+                                            <option value="{{ $warehouse->id }}">{{ $warehouse->name }}
+                                            </option>
                                         @endforeach
                                     </select>
 

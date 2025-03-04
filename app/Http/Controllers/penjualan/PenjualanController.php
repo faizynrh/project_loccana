@@ -109,8 +109,9 @@ class PenjualanController extends Controller
         $gudangResponse = fectApi(env('LIST_GUDANG') . '/' . $company_id);
 
         if ($partnerResponse->successful() && $gudangResponse->successful()) {
-            $partner = $partnerResponse->json()['data'];
-            $gudang = $gudangResponse->json()['data'];
+            $partner = json_decode($partnerResponse->getbody()->getContents(), false);
+            $gudang = json_decode($gudangResponse->getbody()->getContents(), false);
+
             // $poCode = $this->generatePOCode();
             return view('penjualan.penjualan.add', compact('partner', 'gudang', ));
         } else {
@@ -125,25 +126,7 @@ class PenjualanController extends Controller
         }
 
     }
-    // protected function getgudang($company_id)
-    // {
-    //     $apiUrl = env('LIST_GUDANG');
-    //     $response = storeApi($apiUrl, ['company_id' => $company_id]);
 
-    //     if ($response->successful()) {
-    //         $warehouses = $response->json()['data'] ?? [];
-
-    //         return response()->json([
-    //             'success' => true,
-    //             'data' => $warehouses
-    //         ]);
-    //     }
-
-    //     return response()->json([
-    //         'success' => false,
-    //         'data' => []
-    //     ]);
-    // }
     protected function getItemsList($company_id)
     {
         $apiUrl = env('LIST_ITEMS');
@@ -272,8 +255,8 @@ class PenjualanController extends Controller
         $itemsResponse = storeApi(env('LIST_ITEMS'), ['company_id' => $company_id]);
 
         if ($partnerResponse->successful() && $gudangResponse->successful() && $apiResponse->successful() && $itemsResponse->successful()) {
-            $partner = $partnerResponse->json()['data'];
-            $gudang = $gudangResponse->json()['data'];
+            $partner = json_decode($partnerResponse->getbody()->getContents(), false);
+            $gudang = json_decode($gudangResponse->getbody()->getContents(), false);
             $data = json_decode($apiResponse->getbody()->getContents(), false);
             $items = json_decode($itemsResponse->getbody()->getContents(), false);
             // dd($items, $data, $partner, $gudang);
