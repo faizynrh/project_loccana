@@ -350,7 +350,7 @@ class HutangController extends Controller
             if ($apiResponse->successful()) {
                 $data = json_decode($apiResponse->body());
                 $datas = $data->data;
-
+                // dd($data);
                 $totalAmount = 0;
 
                 foreach ($datas as $item) {
