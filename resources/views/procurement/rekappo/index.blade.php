@@ -146,7 +146,6 @@
                         status: status,
                         total_entries: recordsDisplay
                     }).toString();
-                    console.log(formData);
                     window.location.href = "/rekap_po/export-excel?" + formData;
                 });
 

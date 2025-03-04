@@ -134,7 +134,6 @@
                         //
                     },
                     success: function(response) {
-                        console.log(response);
                         updateModal('#modal-example', 'Tambah Item', response,
                             'modal-lg');
                     },

@@ -122,7 +122,6 @@
                         //
                     },
                     success: function(response) {
-                        console.log(response);
                         updateModal('#modal-example', 'Tambah COA', response,
                             'modal-lg');
                     },

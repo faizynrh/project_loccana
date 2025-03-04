@@ -121,9 +121,6 @@
                             d.end_date = end_date;
                             d.warehouseid = warehouseid;
 
-                            console.log('Start Date:', start_date);
-                            console.log('End Date:', end_date);
-                            console.log('Gudang:', warehouseid);
                         }
                     },
                     columns: [{

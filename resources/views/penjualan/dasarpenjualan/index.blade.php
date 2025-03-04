@@ -3,20 +3,20 @@
     @push('styles')
         <style>
             /* #tabledasarpenjualan thead tr:first-child th {
-                                        position: sticky;
-                                        background: white;
-                                        z-index: 0;
-                                        border-bottom: 2px solid #ddd;
-                                    }
+                                                position: sticky;
+                                                background: white;
+                                                z-index: 0;
+                                                border-bottom: 2px solid #ddd;
+                                            }
 
-                                    #tabledasarpenjualan thead tr:first-child th {
-                                        top: 0;
-                                    }
+                                            #tabledasarpenjualan thead tr:first-child th {
+                                                top: 0;
+                                            }
 
-                                    .table-responsive {
-                                        max-height: 50px;
-                                        overflow-y: auto;
-                                    } */
+                                            .table-responsive {
+                                                max-height: 50px;
+                                                overflow-y: auto;
+                                            } */
         </style>
     @endpush
     <div id="main-content">
@@ -125,7 +125,6 @@
                     principal_name: principalName,
                     total_entries: recordsDisplay
                 }).toString();
-                console.log(formData);
                 window.location.href = "/dasar_penjualan/export-excel?" + formData;
             });
 

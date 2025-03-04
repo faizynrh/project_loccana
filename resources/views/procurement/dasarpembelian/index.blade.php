@@ -105,7 +105,6 @@
                     principal_name: principalName,
                     total_entries: recordsDisplay
                 }).toString();
-                console.log(formData);
                 window.location.href = "/dasar_pembelian/export-excel?" + formData;
             });
 

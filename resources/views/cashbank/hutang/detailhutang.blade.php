@@ -175,7 +175,6 @@ NPWP: 01.555.161.7.428.000
                 let discountAmount = (totalPrice * discount) / 100;
 
                 subtotal += totalPrice;
-                console.log(subtotal);
                 totalDiscount += discountAmount;
             });
 
