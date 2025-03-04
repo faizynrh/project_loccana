@@ -155,14 +155,12 @@
 @push('scripts')
     <script>
         $(document).ready(function() {
-            // Core variables
             const state = {
                 itemIndex: 1,
                 initialPrincipal: $('#principal').val(),
                 selectedInvoices: new Set()
             };
 
-            // Centralized HTML templates for reuse
             const templates = {
                 tableRow: (index, options) => `
                                     <tr style="border-bottom: 2px solid #000;">
@@ -207,7 +205,6 @@
             </tr>`
             };
 
-            // Core functions
             function fetchInvoices(principalId, callback, excludeSelected = true) {
                 if (!principalId) return;
 
@@ -224,7 +221,6 @@
                         let options = '<option value="" disabled selected>Pilih Invoice</option>';
 
                         if (response && response.length > 0) {
-                            // Filter invoices if needed
                             availableInvoices = excludeSelected ?
                                 response.filter(invoice => !state.selectedInvoices.has(invoice
                                     .id_invoice.toString())) :
@@ -257,15 +253,12 @@
             }
 
             function resetTable(principalId) {
-                // Reset state
                 state.selectedInvoices.clear();
                 state.itemIndex = 1;
 
-                // Reset HTML
                 const initialOptions = '<option value="" disabled selected>Pilih Invoice</option>';
                 $('#tableBody').html(templates.tableRow(0, initialOptions) + templates.footerRows);
 
-                // Fetch fresh invoice data
                 fetchInvoices(principalId, function(options) {
                     $('.item-select').html(options);
                 }, false);
@@ -276,7 +269,6 @@
                 if (!principalId) return;
 
                 fetchInvoices(principalId, function(options) {
-                    // Only update empty dropdowns
                     $('.item-select').each(function() {
                         if (!$(this).val()) {
                             $(this).html(options);
@@ -287,9 +279,7 @@
 
             function handleRowAddition(principalId) {
                 fetchInvoices(principalId, function(options, availableCount) {
-                    // Hitung jumlah baris yang sudah ada (tidak termasuk footer rows)
                     const currentRowCount = $('#tableBody tr').not('#add-button-row, #total-row').length;
-                    // Cek apakah sudah mencapai batas maksimum invoice
                     if (currentRowCount >= availableCount) {
                         Swal.fire({
                             title: 'Peringatan',
@@ -310,10 +300,8 @@
                         return;
                     }
 
-                    // Remove footer rows temporarily
                     $('#add-button-row, #total-row').remove();
 
-                    // Add new row and restore footer
                     $('#tableBody').append(
                         templates.tableRow(state.itemIndex, options) +
                         templates.footerRows
@@ -323,7 +311,6 @@
                 });
             }
 
-            // Event handlers
             $('#principal').change(function() {
                 const principalId = $(this).val();
                 if (principalId !== state.initialPrincipal) {
@@ -337,18 +324,15 @@
                 const row = $(this).closest('tr');
                 const invoiceId = selectedOption.val();
 
-                // Track selected invoice
                 if (invoiceId) {
                     state.selectedInvoices.add(invoiceId.toString());
                 }
 
-                // Fill row data
                 row.find('input[name*="[nilai]"]').val(selectedOption.data('nilai') || 0);
                 row.find('input[name*="[sisa]"]').val(selectedOption.data('sisa') || 0);
                 row.find('input[name*="[jatuhtempo]"]').val(selectedOption.data('jatuhtempo') || '');
                 row.find('input[name*="[amount_paid]"]').val(selectedOption.data('sisa') || 0);
 
-                // Update other dropdowns
                 updateAllDropdowns();
             });
 
@@ -379,17 +363,14 @@
                 const row = $(this).closest('tr');
                 const selectedValue = row.find('.item-select').val();
 
-                // Pastikan tidak menghapus baris pertama
                 if (row.is(':first-child')) {
-                    return; // Mencegah penghapusan baris pertama
+                    return;
                 }
 
-                // Remove dari daftar selectedInvoices jika ada value yang dipilih
                 if (selectedValue) {
                     state.selectedInvoices.delete(selectedValue.toString());
                 }
 
-                // Hapus baris dan perbarui dropdown
                 row.remove();
                 updateAllDropdowns();
             });
@@ -430,7 +411,6 @@
 
             updateTotalRemaining();
 
-            // Initialization
             const initialPrincipalId = $('#principal').val();
             if (initialPrincipalId) {
                 fetchInvoices(initialPrincipalId, function(options) {

@@ -193,7 +193,6 @@
 
             });
 
-            // Event untuk menghapus baris
             $(document).on('click', '.remove-row', function(e) {
                 e.preventDefault();
                 $(this).closest('tr').remove();
