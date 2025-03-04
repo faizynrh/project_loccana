@@ -157,7 +157,10 @@
                         }
                     },
                     {
-                        data: 'total_amount'
+                        data: 'total_amount',
+                        render: function(data, type, row) {
+                            return formatRupiah(data);
+                        }
                     },
                     {
                         data: 'term_of_payment'
