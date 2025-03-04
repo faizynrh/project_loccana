@@ -47,7 +47,8 @@
                                     @endfor
                                 </select>
                                 <select id="monthSelect" class="form-select me-2" name="month" style="width: auto;">
-                                    <option value="0" {{ request('month') == 'all' ? 'selected' : '' }}>ALL</option>
+                                    <option value="0" {{ request('month') == 'all' ? 'selected' : '' }}>ALL
+                                    </option>
                                     @php
                                         $months = [
                                             1 => 'Januari',
@@ -63,10 +64,11 @@
                                             11 => 'November',
                                             12 => 'Desember',
                                         ];
+                                        $currentMonth = Carbon\Carbon::now()->month;
                                     @endphp
                                     @foreach ($months as $num => $name)
                                         <option value="{{ $num }}"
-                                            {{ request('month') == (string) $num ? 'selected' : '' }}>
+                                            {{ request('month') == strval($num) || $currentMonth == $num ? 'selected' : '' }}>
                                             {{ $name }}
                                         </option>
                                     @endforeach
@@ -191,23 +193,23 @@
                                         <span class="sr-only"><i class="bi bi-list-task"></i></span>
                                     </button>
                                     <div class="dropdown-menu">
-                                        <a href="/penjualan/detail/${row.id}" class="dropdown-item" title="Detail">
+                                        <a href="/penjualan/detail/${row.id_penjualan}" class="dropdown-item" title="Detail">
                                             <i class="bi bi-eye text-primary"></i>
                                             Detail
                                         </a>
-                                        <a href="/penjualan/print/${row.id}" class="dropdown-item" target="_blank" title="Print">
+                                        <a href="/penjualan/print/${row.id_penjualan}" class="dropdown-item" target="_blank" title="Print">
                                             <i class="bi bi-printer text-warning"></i>
                                             Print PDF
                                         </a>
                                         <div class="dropdown-divider"></div>
-                                        <a href="/penjualan/edit/${row.id}" class="dropdown-item" title="Edit">
+                                        <a href="/penjualan/edit/${row.id_penjualan}" class="dropdown-item" title="Edit">
                                             <i class="bi bi-pencil text-info"></i>
                                             Edit
                                         </a>
-                                        <form action="/penjualan/delete/${row.id}" method="POST" id="delete${row.id}" style="display:inline;">
+                                        <form action="/penjualan/delete/${row.id_penjualan}" method="POST" id="delete${row.id_penjualan}" style="display:inline;">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="button" class="dropdown-item" title="Hapus" onclick="confirmDelete(${row.id})">
+                                            <button type="button" class="dropdown-item" title="Hapus" onclick="confirmDelete(${row.id_penjualan})">
                                                 <i class="bi bi-trash text-danger"></i>
                                                 Delete
                                             </button>
@@ -220,23 +222,23 @@
                                         <span class="sr-only"><i class="bi bi-list-task"></i></span>
                                     </button>
                                     <div class="dropdown-menu">
-                                        <a href="/penjualan/detail/${row.id}" class="dropdown-item" title="Detail">
+                                        <a href="/penjualan/detail/${row.id_penjualan}" class="dropdown-item" title="Detail">
                                             <i class="bi bi-eye text-primary"></i>
                                             Detail
                                         </a>
-                                        <a href="/penjualan/print/${row.id}" class="dropdown-item" target="_blank" title="Print">
+                                        <a href="/penjualan/print/${row.id_penjualan}" class="dropdown-item" target="_blank" title="Print">
                                             <i class="bi bi-printer text-warning"></i>
                                             Print PDF
                                         </a>
                                         <div class="dropdown-divider"></div>
-                                        <a href="/penjualan/edit/${row.id}" class="dropdown-item" title="Edit">
+                                        <a href="/penjualan/edit/${row.id_penjualan}" class="dropdown-item" title="Edit">
                                             <i class="bi bi-pencil text-info"></i>
                                             Edit
                                         </a>
-                                        <form action="/penjualan/delete/${row.id}" method="POST" id="delete${row.id}" style="display:inline;">
+                                        <form action="/penjualan/delete/${row.id_penjualan}" method="POST" id="delete${row.id_penjualan}" style="display:inline;">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="button" class="dropdown-item" title="Hapus" onclick="confirmDelete(${row.id})">
+                                            <button type="button" class="dropdown-item" title="Hapus" onclick="confirmDelete(${row.id_penjualan})">
                                                 <i class="bi bi-trash text-danger"></i>
                                                 Delete
                                             </button>

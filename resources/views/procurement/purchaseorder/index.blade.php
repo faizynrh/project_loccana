@@ -66,15 +66,16 @@
                                                 11 => 'November',
                                                 12 => 'Desember',
                                             ];
+                                            $currentMonth = Carbon\Carbon::now()->month;
                                         @endphp
                                         @foreach ($months as $num => $name)
                                             <option value="{{ $num }}"
-                                                {{ request('month') == (string) $num ? 'selected' : '' }}>
+                                                {{ request('month') == strval($num) || $currentMonth == $num ? 'selected' : '' }}>
                                                 {{ $name }}
                                             </option>
                                         @endforeach
                                     </select>
-                                    <!-- Tombol Cari untuk menerapkan filter berdasarkan tahun dan bulan -->
+
                                     <button type="button" id="filterButton" class="btn btn-primary fw-bold">Cari</button>
                                 </div>
                             </form>
