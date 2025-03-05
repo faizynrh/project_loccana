@@ -57,7 +57,7 @@
                                             <option value="{{ $item->id }}">{{ $item->name }}</option>
                                         @endforeach
                                     </select>
-                                    <label for="contact" class="form-label fw-bold mt-2 mb-1 small">Phone</label>
+                                    <label for="contact" class="form-label fw-bold mt-2 mb-1 small">No Telp</label>
                                     <input type="text" class="form-control bg-body-secondary" id="contact"
                                         name="contact_info" readonly>
                                     <label for="description" class="form-label fw-bold mt-2 mb-1 small">Keterangan</label>

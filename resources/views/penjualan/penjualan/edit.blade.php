@@ -64,6 +64,9 @@
                                             </option>
                                         @endforeach
                                     </select>
+                                    <label for="contact" class="form-label fw-bold mt-2 mb-1 small">No Telp</label>
+                                    <input type="text" class="form-control bg-body-secondary" id="contact"
+                                        name="contact_info" readonly>
                                     <label for="description" class="form-label fw-bold mt-2 mb-1 small">Keterangan</label>
                                     <textarea class="form-control" rows="5" id="description" name="description">{{ $data->data[0]->description }}</textarea>
                                     {{-- <label for="status" class="form-label fw-bold mt-2 mb-1 small">Status</label> --}}
@@ -74,7 +77,7 @@
                                 {{-- @dd($gudang) --}}
                                 <div class="col-md-6">
                                     <label for="gudang" class="form-label fw-bold mt-2 mb-1 small">Gudang</label>
-                                    <select class="form-select" id="gudang" name="items[0][warehouse_id]" required>
+                                    <select class="form-select" id="warehouse" name="items[0][warehouse_id]" required>
                                         <option value="" selected disabled>Pilih Gudang</option>
                                         @foreach ($gudang->data as $warehouse)
                                             <option value="{{ $warehouse->id }}">{{ $warehouse->name }}
@@ -83,7 +86,7 @@
                                     </select>
 
                                     <label for="ship" class="form-label fw-bold mt-2 mb-1 small">Ship From :</label>
-                                    <textarea class="form-control bg-body-secondary" rows="5" id="ship" name="ship" required></textarea>
+                                    <textarea class="form-control bg-body-secondary" rows="5" id="ship" name="ship" readonly></textarea>
 
                                     <label for="pembayaran" class="form-label fw-bold mt-2 mb-1 small">Term
                                         Pembayaran</label>
@@ -151,6 +154,7 @@
                                                     </option>
                                                 @endforeach
                                             </select>
+
                                             <input type="hidden" name="items[{{ $index }}][uom_id]"
                                                 class="uom-input"
                                                 value="{{ collect($items->data->items)->firstWhere('id', $item->item_id)->unit_of_measure_id ?? '' }}">
@@ -433,6 +437,59 @@
                 }
             });
 
+            $('#partner_id').on('change', function() {
+                var poId = $(this).val();
+                $('#loading-overlay').fadeIn();
+                if (poId) {
+                    var companyId = 2;
+
+                    $.ajax({
+                        url: '/penjualan/getDetailCustomer/' + poId,
+                        type: 'GET',
+                        dataType: 'json',
+                        success: function(response) {
+                            if (response.contact_info) {
+                                $('#contact').val(response.contact_info); // Isi input contact
+                            } else {
+                                $('#contact').val('Data tidak tersedia');
+                            }
+                            $('#loading-overlay').fadeOut();
+                        },
+                        error: function(xhr, status, error) {
+                            Swal.fire('Error', 'Gagal mengambil data customer', 'error');
+                            $('#contact').val('Gagal mengambil data');
+                            $('#loading-overlay').fadeOut();
+                        }
+                    });
+                }
+            });
+
+            $('#warehouse').on('change', function() {
+                var warehouseId = $(this).val();
+                $('#loading-overlay').fadeIn();
+                if (warehouseId) {
+                    // Ambil detail customer (contact_info)
+                    $.ajax({
+                        url: '/penjualan/getDetailWarehouse/' + warehouseId,
+                        type: 'GET',
+                        dataType: 'json',
+                        success: function(response) {
+                            if (response.location) {
+                                $('#ship').val(response.location); // Isi input contact
+                            } else {
+                                $('#ship').val('Data tidak tersedia');
+                            }
+                            $('#loading-overlay').fadeOut();
+                        },
+                        error: function(xhr, status, error) {
+                            Swal.fire('Error', 'Gagal mengambil data gudang', 'error');
+                            $('#ship').val('Gagal mengambil data');
+                            $('#loading-overlay').fadeOut();
+                        }
+                    });
+                }
+            });
+
             // Fix calculation logic for rows and make it work in realtime
             $(document).on('input', '.box-qty-input, .qty-input, .price-input, .discount-input', function() {
                 var row = $(this).closest('tr');
@@ -449,8 +506,8 @@
             });
 
             function calculateRowTotal(row) {
-                const boxQty = parseFloat(row.find('.box-qty-input').val()) || 0;
-                const perBoxQty = parseFloat(row.find('.qty-input').val()) || 0;
+                const boxqty = parseFloat(row.find('.box-qty-input').val()) || 0;
+                const qty = parseFloat(row.find('.qty-input').val()) || 0;
                 const price = parseFloat(row.find('.price-input').val()) || 0;
                 let discount = parseFloat(row.find('.discount-input').val()) || 0;
 
@@ -459,53 +516,54 @@
                     row.find('.discount-input').val(100);
                 }
 
-                const totalQty = boxQty + perBoxQty;
-                row.find('.total-qty').val(totalQty.toFixed(0));
 
-                // Calculate row totals
-                const subtotal = totalQty * price;
+                const totalqty = boxqty + qty;
+                row.find('.total-qty').val(totalqty.toFixed(0));
+
+                const subtotal = totalqty * price;
+                const ppn = parseFloat($('#ppn').val()) || 0;
+                const ppn_decimal = ppn / 100;
+                const hargapokok = subtotal / (1 + ppn_decimal);
+                const nilaippn = subtotal - hargapokok;
                 const discountAmount = subtotal * (discount / 100);
-                const totalAfterDiscount = subtotal - discountAmount;
+                const total = subtotal - discountAmount;
 
-                // Store data for PPN calculation
-                row.data('subtotal', subtotal);
+                row.find('.total-input').val(total.toFixed(0));
+
                 row.data('discountAmount', discountAmount);
-                row.data('totalAfterDiscount', totalAfterDiscount);
-
-                // Update total price field
-                row.find('.total-input').val(totalAfterDiscount.toFixed(0));
+                row.data('nilaippn', nilaippn); // Simpan nilaippn di data-row
             }
 
             function updateTotals() {
                 let subtotal = 0;
                 let totalDiscount = 0;
-                let totalAfterDiscount = 0;
+                let totalPPN = 0;
+                let totalFinal = 0;
 
-                // Get current PPN rate
-                const ppnRate = parseFloat($('#ppn').val()) || 0;
-
-                // Calculate subtotals from each row
                 $('.item-row').each(function() {
-                    subtotal += $(this).data('subtotal') || 0;
+                    const qty = parseFloat($(this).find('.qty-input').val()) || 0;
+                    const price = parseFloat($(this).find('.price-input').val()) || 0;
+                    const discount = parseFloat($(this).find('.discount-input').val()) || 0;
+                    const total = parseFloat($(this).find('.total-input').val()) || 0;
+
+                    const rowSubtotal = qty * price;
+                    const rowDiscount = rowSubtotal * (discount / 100);
+
+                    subtotal += rowSubtotal;
                     totalDiscount += $(this).data('discountAmount') || 0;
-                    totalAfterDiscount += $(this).data('totalAfterDiscount') || 0;
+                    totalFinal += total;
+                    totalPPN += $(this).data('nilaippn') || 0; // Ambil nilaippn
                 });
 
-                // Calculate PPN amount based on the rate
-                const ppnAmount = totalAfterDiscount * (ppnRate / 100);
+                const dpp = totalFinal - totalPPN;
 
-                // Calculate final total
-                const grandTotal = totalAfterDiscount + ppnAmount;
-
-                // Update the display values
-                updateDisplayValue('DPP', totalAfterDiscount);
+                updateDisplayValue('DPP', dpp);
                 updateDisplayValue('Diskon', totalDiscount);
-                updateDisplayValue('VAT/PPN', ppnAmount);
-                updateDisplayValue('Total', grandTotal);
+                updateDisplayValue('VAT/PPN', totalPPN);
+                updateDisplayValue('Total', totalFinal);
 
-                // Update hidden inputs for form submission
-                $('#tax_amount').val(ppnAmount.toFixed(0));
-                $('#total_amount').val(grandTotal.toFixed(0));
+                $('#tax_amount').val(totalPPN);
+                $('#total_amount').val(totalFinal);
             }
 
             function updateDisplayValue(label, value) {
@@ -524,7 +582,6 @@
                 });
             }
 
-            // Initialize calculations on page load
             $('.item-row').each(function() {
                 calculateRowTotal($(this));
             });

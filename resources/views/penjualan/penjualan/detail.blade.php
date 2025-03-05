@@ -53,6 +53,9 @@
                                 <label for="customer" class="form-label fw-bold mt-2 mb-1 small">Customer</label>
                                 <input type="text" name="partner_name" value="{{ $data->data[0]->partner_name }}"
                                     id="" class="form-control" readonly>
+                                <label for="contact" class="form-label fw-bold mt-2 mb-1 small">No Telp</label>
+                                <input type="text" class="form-control bg-body-secondary" id="contact"
+                                    name="contact_info" readonly>
                                 <label for="description" class="form-label fw-bold mt-2 mb-1 small">Keterangan</label>
                                 <textarea class="form-control" readonly rows="5" id="description" name="description">{{ $data->data[0]->description }}</textarea>
                                 {{-- <label for="status" class="form-label fw-bold mt-2 mb-1 small">Status</label> --}}
@@ -206,6 +209,33 @@
                     totalDiscount += $(this).data('discountAmount') || 0;
                     totalPPN += $(this).data('nilaippn') || 0;
                     totalFinal += total;
+                });
+
+                $('#partner_id').on('change', function() {
+                    var poId = $(this).val();
+                    $('#loading-overlay').fadeIn();
+                    if (poId) {
+                        $.ajax({
+                            url: '/penjualan/getDetailCustomer/' + poId,
+                            type: 'GET',
+                            dataType: 'json',
+                            success: function(response) {
+                                if (response.contact_info) {
+                                    $('#contact').val(response
+                                        .contact_info); // Isi input contact
+                                } else {
+                                    $('#contact').val('Data tidak tersedia');
+                                }
+                                $('#loading-overlay').fadeOut();
+                            },
+                            error: function(xhr, status, error) {
+                                Swal.fire('Error', 'Gagal mengambil data customer',
+                                    'error');
+                                $('#contact').val('Gagal mengambil data');
+                                $('#loading-overlay').fadeOut();
+                            }
+                        });
+                    }
                 });
 
                 const dpp = totalFinal - totalPPN;
