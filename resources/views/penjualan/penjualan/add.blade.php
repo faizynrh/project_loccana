@@ -57,8 +57,9 @@
                                             <option value="{{ $item->id }}">{{ $item->name }}</option>
                                         @endforeach
                                     </select>
-
-
+                                    <label for="contact" class="form-label fw-bold mt-2 mb-1 small">Phone</label>
+                                    <input type="text" class="form-control bg-body-secondary" id="contact"
+                                        name="contact_info" readonly>
                                     <label for="description" class="form-label fw-bold mt-2 mb-1 small">Keterangan</label>
                                     <textarea class="form-control" rows="5" id="description" name="description"></textarea>
                                     {{-- <label for="status" class="form-label fw-bold mt-2 mb-1 small">Status</label> --}}
@@ -68,7 +69,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <label for="gudang" class="form-label fw-bold mt-2 mb-1 small">Gudang</label>
-                                    <select class="form-select" id="gudang" name="items[0][warehouse_id]" required>
+                                    <select class="form-select" id="warehouse" name="items[0][warehouse_id]" required>
                                         <option value="" selected disabled>Pilih Gudang</option>
                                         @foreach ($gudang->data as $items)
                                             <option value="{{ $items->id }}">{{ $items->name }}</option>
@@ -247,26 +248,76 @@
             });
             $('#partner_id').on('change', function() {
                 var poId = $(this).val();
-                // console.log('Selected poId:', poId);
-
+                $('#loading-overlay').fadeIn();
                 if (poId) {
                     var companyId = 2;
+
+                    // Ambil daftar item
                     $.ajax({
                         url: '/purchase_order/getItemsList/' + companyId,
                         type: 'GET',
                         dataType: 'json',
                         success: function(response) {
                             updateAllItemSelects(response.items);
+                            $('#loading-overlay').fadeOut();
                         },
                         error: function(xhr, status, error) {
                             Swal.fire('Error', 'Gagal mengambil data item', 'error');
                             $('.item-select').html(
                                 '<option value="" disabled selected>Tidak ada item tersedia</option>'
                             );
+                            $('#loading-overlay').fadeOut();
+                        }
+                    });
+
+
+                    $.ajax({
+                        url: '/penjualan/getDetailCustomer/' + poId,
+                        type: 'GET',
+                        dataType: 'json',
+                        success: function(response) {
+                            if (response.contact_info) {
+                                $('#contact').val(response.contact_info); // Isi input contact
+                            } else {
+                                $('#contact').val('Data tidak tersedia');
+                            }
+                            $('#loading-overlay').fadeOut();
+                        },
+                        error: function(xhr, status, error) {
+                            Swal.fire('Error', 'Gagal mengambil data customer', 'error');
+                            $('#contact').val('Gagal mengambil data');
+                            $('#loading-overlay').fadeOut();
                         }
                     });
                 }
             });
+
+            $('#warehouse').on('change', function() {
+                var warehouseId = $(this).val();
+                $('#loading-overlay').fadeIn();
+                if (warehouseId) {
+                    // Ambil detail customer (contact_info)
+                    $.ajax({
+                        url: '/penjualan/getDetailWarehouse/' + warehouseId,
+                        type: 'GET',
+                        dataType: 'json',
+                        success: function(response) {
+                            if (response.location) {
+                                $('#ship').val(response.location); // Isi input contact
+                            } else {
+                                $('#ship').val('Data tidak tersedia');
+                            }
+                            $('#loading-overlay').fadeOut();
+                        },
+                        error: function(xhr, status, error) {
+                            Swal.fire('Error', 'Gagal mengambil data gudang', 'error');
+                            $('#ship').val('Gagal mengambil data');
+                            $('#loading-overlay').fadeOut();
+                        }
+                    });
+                }
+            });
+
 
             function updateAllItemSelects(items) {
                 var options = '<option value="" disabled selected>--Pilih Item--</option>';
@@ -293,19 +344,15 @@
                 const row = $(this).closest('tr');
 
                 if (itemId) {
-                    // Make an AJAX request to get the stock information
                     $.ajax({
                         url: '/penjualan/getStock/' + itemId,
                         type: 'GET',
                         dataType: 'json',
                         success: function(response) {
-                            // Display stock information below the quantity input
                             const stockInfo = response.stock ? response.stock : 0;
 
-                            // Remove existing stock info if any
                             row.find('.stock-info').remove();
 
-                            // Add stock info after the box quantity input
                             row.find('input[name$="[box_quantity]"]').parent().append(
                                 `<div class="stock-info text-danger small mt-1">Stock: ${stockInfo}</div>`
                             );

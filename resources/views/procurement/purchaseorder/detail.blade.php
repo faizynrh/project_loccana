@@ -216,7 +216,6 @@
         $(document).ready(function() {
             $('#partner_id').on('change', function() {
                 var poId = $(this).val();
-                console.log('Selected poId:', poId);
 
                 if (poId) {
                     var companyId = 2;
@@ -225,7 +224,7 @@
                         type: 'GET',
                         dataType: 'json',
                         success: function(response) {
-                            console.log('Items response:', response);
+                            ,
                             updateAllItemSelects(response.items);
                         },
                         error: function(xhr, status, error) {

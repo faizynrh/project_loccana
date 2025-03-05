@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Log;
 use Symfony\Component\HttpFoundation\Session\Session;
 
 class PenjualanController extends Controller
@@ -125,6 +126,46 @@ class PenjualanController extends Controller
             return back()->withErrors($errors);
         }
 
+    }
+
+
+
+    protected function getDetailCustomer($id)
+    {
+        try {
+            $contact_info = fectApi(env('PARTNER_URL') . '/' . $id);
+
+            if ($contact_info->successful()) {
+                $contact = json_decode($contact_info->getbody()->getContents(), false);
+
+                return response()->json([
+                    'contact_info' => $contact->data->contact_info ?? null
+                ]);
+            } else {
+                return response()->json(['message' => 'Gagal mengambil data'], 500);
+            }
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Terjadi kesalahan pada server'], 500);
+        }
+    }
+
+    protected function getDetailWarehouse($id)
+    {
+        try {
+            $warehouseResponse = fectApi(env('GUDANG_URL') . '/' . $id);
+
+            if ($warehouseResponse->successful()) {
+                $warehouse = json_decode($warehouseResponse->getbody()->getContents(), false);
+
+                return response()->json([
+                    'location' => $warehouse->data->location ?? null
+                ]);
+            } else {
+                return response()->json(['message' => 'Gagal mengambil data'], 500);
+            }
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Terjadi kesalahan pada server'], 500);
+        }
     }
 
     protected function getItemsList($company_id)

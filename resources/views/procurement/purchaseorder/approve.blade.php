@@ -218,7 +218,7 @@
                         type: 'GET',
                         dataType: 'json',
                         success: function(response) {
-                            // console.log('Items response:', response);
+
                             updateAllItemSelects(response.items);
                         },
                         error: function(xhr, status, error) {
