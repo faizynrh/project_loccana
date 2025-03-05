@@ -77,7 +77,6 @@
                                         value="1">
                                     <input type="hidden" class="form-control" id="currency_id" name="currency_id"
                                         value="1">
-
                                 </div>
                                 <div class="col-md-6">
                                     <label for="gudang" class="form-label fw-bold mt-2 mb-1 small">Gudang</label>
@@ -264,7 +263,7 @@
                         }
                     });
                     $.ajax({
-                        url: '/penjualan/getDetailCustomer/' + poId,
+                        url: '/purchase_order/getDetailPrinciple/' + poId,
                         type: 'GET',
                         dataType: 'json',
                         success: function(response) {
@@ -289,7 +288,7 @@
                 if (warehouseId) {
                     // Ambil detail customer (contact_info)
                     $.ajax({
-                        url: '/penjualan/getDetailWarehouse/' + warehouseId,
+                        url: '/purchase_order/getDetailWarehouse/' + warehouseId,
                         type: 'GET',
                         dataType: 'json',
                         success: function(response) {

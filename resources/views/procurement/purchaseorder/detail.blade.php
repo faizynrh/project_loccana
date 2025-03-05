@@ -62,21 +62,11 @@
                                     readonly id="order_date" name="order_date" disabled>
 
                                 <label for="principal" class="form-label fw-bold mt-2 mb-1 small">Principle</label>
-                                {{-- <select class="form-control" id="partner_id" name="partner_id" disabled>
-                                        @if (isset($partner->data))
-                                            @foreach ($partner->data as $item)
-                                                <option value="{{ $item->id }}">
-                                                    {{ isset($data->data->id) && $data->data->id == $item->partner_id ? 'selected' : '' }}{{ $item->partner_name }}
-                                                </option>
-                                            @endforeach
-                                        @else
-                                            <option value="">Data tidak tersedia</option>
-                                        @endif
-
-                                    </select> --}}
-
                                 <input type="text" class="form-control" value="{{ $data->data[0]->partner_name }}"
                                     id="status" name="status" disabled>
+                                <label for="contact" class="form-label fw-bold mt-2 mb-1 small">No Telp</label>
+                                <input type="text" class="form-control bg-body-secondary" id="contact"
+                                    name="contact_info" readonly>
 
                                 {{-- <label for="status" class="form-label fw-bold mt-2 mb-1 small">Status</label> --}}
                                 <input type="hidden" class="form-control" value="" id="status" name="status"
@@ -214,29 +204,28 @@
         });
 
         $(document).ready(function() {
-            $('#partner_id').on('change', function() {
-                var poId = $(this).val();
+            var poId = '{{ $data->data[0]->partner_id }}'; // Ambil ID dari data yang ada
 
-                if (poId) {
-                    var companyId = 2;
-                    $.ajax({
-                        url: '/purchase_order/getItemsList/' + companyId,
-                        type: 'GET',
-                        dataType: 'json',
-                        success: function(response) {
-                            ,
-                            updateAllItemSelects(response.items);
-                        },
-                        error: function(xhr, status, error) {
-                            console.error('Items AJAX error:', error);
-                            Swal.fire('Error', 'Gagal mengambil data item', 'error');
-                            $('.item-select').html(
-                                '<option value="" disabled selected>Tidak ada item tersedia</option>'
-                            );
+            if (poId) {
+                $.ajax({
+                    url: '/purchase_order/getDetailPrinciple/' + poId,
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function(response) {
+                        if (response.contact_info) {
+                            $('#contact').val(response.contact_info); // Isi input contact otomatis
+                        } else {
+                            $('#contact').val('Data tidak tersedia');
                         }
-                    });
-                }
-            });
+                    },
+                    error: function(xhr, status, error) {
+                        Swal.fire('Error', 'Gagal mengambil data customer', 'error');
+                        $('#contact').val('Gagal mengambil data');
+                    }
+                });
+            }
+
+
 
             function updateAllItemSelects(items) {
                 var options = '<option value="" disabled selected>--Pilih Item--</option>';
