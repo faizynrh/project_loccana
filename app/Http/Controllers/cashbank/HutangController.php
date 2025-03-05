@@ -155,7 +155,7 @@ class HutangController extends Controller
 
     public function getinvoice($id)
     {
-        $apiResponse = fectApi(env('LIST_INVOICE_BAYAR') . '/' . $id); // Panggil API eksternal
+        $apiResponse = fectApi(env('LIST_INVOICE_BAYAR') . '/' . $id);
         if ($apiResponse->successful()) {
             return response()->json($apiResponse->json()['data']);
         } else {
@@ -349,7 +349,6 @@ class HutangController extends Controller
                 $data = json_decode($apiResponse->body());
                 $datas = $data->data;
                 $totalAmount = 0;
-
                 foreach ($datas as $item) {
                     $totalAmount += $item->amount;
                 }

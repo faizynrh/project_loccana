@@ -182,7 +182,6 @@ NPWP: 01.555.161.7.428.000
             let vat = (taxable * taxRate) / 100;
             let totalAmount = taxable + vat;
 
-            // Fungsi untuk format Rupiah
             function formatRupiah(angka) {
                 if (angka) {
                     return new Intl.NumberFormat('id-ID', {
