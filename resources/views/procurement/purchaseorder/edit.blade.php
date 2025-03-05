@@ -60,15 +60,13 @@
                                             </option>
                                         @endforeach
                                     </select>
+                                    <label for="contact" class="form-label fw-bold mt-2 mb-1 small">No Telp</label>
+                                    <input type="text" class="form-control bg-body-secondary" id="contact"
+                                        name="contact_info" readonly>
                                     <input type="hidden" class="form-control" id="requested_by" name="requested_by"
                                         value="1">
                                     <input type="hidden" class="form-control" id="currency_id" name="currency_id"
                                         value="1">
-                                </div>
-                                <div class="col-md-6">
-                                    <label for="ppn" class="form-label fw-bold mt-2 mb-1 small">VAT/PPN</label>
-                                    <input type="text" class="form-control" id="ppn" name="ppn"
-                                        value="{{ $data->data[0]->ppn }}" required>
                                     <label for="pembayaran" class="form-label fw-bold mt-2 mb-1 small">Term
                                         Pembayaran</label>
                                     @php
@@ -93,11 +91,8 @@
                                     </select>
                                     <input type="text" class="form-control mt-2 hidden" id="custom_payment_term"
                                         placeholder="Masukkan jumlah hari">
-
-
-                                    <label for="description" class="form-label fw-bold mt-2 mb-1 small">Keterangan</label>
-                                    <textarea class="form-control" rows="5" id="description" name="description">{{ $data->data[0]->description ?? '' }}</textarea>
-
+                                </div>
+                                <div class="col-md-6">
                                     <label for="gudang" class="form-label fw-bold mt-2 mb-1 small">Gudang</label>
                                     <select class="form-select" id="gudang" name="items[0][warehouse_id]" required>
                                         <option value="" selected disabled>Pilih Gudang</option>
@@ -108,9 +103,15 @@
                                             </option>
                                         @endforeach
                                     </select>
+                                    <label for="ship" class="form-label fw-bold mt-2 mb-1 small">Ship From :</label>
+                                    <textarea class="form-control bg-body-secondary" rows="5" id="ship" name="ship" readonly></textarea>
+                                    <label for="ppn" class="form-label fw-bold mt-2 mb-1 small">VAT/PPN</label>
+                                    <input type="text" class="form-control" id="ppn" name="ppn"
+                                        value="{{ $data->data[0]->ppn }}" required>
+                                    <label for="description" class="form-label fw-bold mt-2 mb-1 small">Keterangan</label>
+                                    <textarea class="form-control" rows="5" id="description" name="description">{{ $data->data[0]->description ?? '' }}</textarea>
                                 </div>
                             </div>
-
                             <div class="p-2">
                                 <h5 class="fw-bold">Items</h5>
                             </div>
@@ -251,6 +252,7 @@
     <script>
         $(document).ready(function() {
             // Handle custom payment term
+
             $('#pembayaran').on('change', function() {
                 const selectedValue = $(this).val();
                 const customInput = $('#custom_payment_term');
@@ -334,6 +336,81 @@
         </tr>
     `;
                 $(newRow).insertBefore('#tableBody tr:last');
+            });
+            $(document).ready(function() {
+                var poId = '{{ $data->data[0]->partner_id }}';
+                var warehouseId = $('#gudang').val();
+
+                // Fungsi ambil data principle
+                function getDetailPrinciple(poId) {
+                    if (poId) {
+                        $('#loading-overlay').fadeIn();
+                        $.ajax({
+                            url: '/purchase_order/getDetailPrinciple/' + poId,
+                            type: 'GET',
+                            dataType: 'json',
+                            success: function(response) {
+                                if (response.contact_info) {
+                                    $('#contact').val(response
+                                        .contact_info); // Isi input contact otomatis
+                                } else {
+                                    $('#contact').val('Data tidak tersedia');
+                                }
+                                $('#loading-overlay').fadeOut();
+
+                            },
+                            error: function(xhr, status, error) {
+                                Swal.fire('Error', 'Gagal mengambil data customer', 'error');
+                                $('#contact').val('Gagal mengambil data');
+                                $('#loading-overlay').fadeOut();
+
+                            }
+
+                        });
+                    }
+                }
+
+                // Fungsi ambil data warehouse
+                function getDetailWarehouse(warehouseId) {
+                    if (warehouseId) {
+                        $('#loading-overlay').fadeIn();
+                        $.ajax({
+                            url: '/purchase_order/getDetailWarehouse/' + warehouseId,
+                            type: 'GET',
+                            dataType: 'json',
+                            success: function(response) {
+                                if (response.location) {
+                                    $('#ship').val(response
+                                        .location); // Isi input ship otomatis
+                                } else {
+                                    $('#ship').val('Data tidak tersedia');
+                                }
+                                $('#loading-overlay').fadeOut();
+                            },
+                            error: function(xhr, status, error) {
+                                Swal.fire('Error', 'Gagal mengambil data gudang', 'error');
+                                $('#ship').val('Gagal mengambil data');
+                                $('#loading-overlay').fadeOut();
+                            }
+                        });
+                    }
+                }
+
+                // Panggil fungsi otomatis saat halaman dimuat
+                getDetailPrinciple(poId);
+                getDetailWarehouse(warehouseId);
+
+                // Kalau partner_id berubah, update contact
+                $('#partner_id').on('change', function() {
+                    var newPoId = $(this).val();
+                    getDetailPrinciple(newPoId);
+                });
+
+                // Kalau gudang berubah, update ship
+                $('#gudang').on('change', function() {
+                    var newWarehouseId = $(this).val();
+                    getDetailWarehouse(newWarehouseId);
+                });
             });
 
             // Remove row

@@ -12,7 +12,7 @@
             <div class="page-title">
                 <div class="row">
                     <div class="col-12 col-md-6 order-md-1 order-last">
-                        <h3>Approve Purchase Order</h3>
+                        <h3>Detail Purchase Order</h3>
                     </div>
                     <div class="col-12 col-md-6 order-md-2 order-first">
                         <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
@@ -21,7 +21,7 @@
                                     <a href="/purchase_order">Purchase Order</a>
                                 </li>
                                 <li class="breadcrumb-item active" aria-current="page">
-                                    Approve Purchase Order
+                                    Detail Purchase Order
                                 </li>
                             </ol>
                         </nav>
@@ -34,6 +34,23 @@
                         <h4 class="card-title"> Form detail purchase order</h4>
                     </div>
                     <div class="card-body">
+                        @if (session('success'))
+                            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                {{ session('success') }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                    aria-label="Close"></button>
+                            </div>
+                        @endif
+
+                        @if ($errors->any())
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                @foreach ($errors->all() as $error)
+                                    <p>{{ $error }}</p>
+                                @endforeach
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                    aria-label="Close"></button>
+                            </div>
+                        @endif
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <label for="code" class="form-label fw-bold mt-2 mb-1 small">Kode</label>
@@ -42,17 +59,21 @@
                                 <label for="tanggal" class="form-label fw-bold mt-2 mb-1 small">Tanggal</label>
                                 <input type="text" class="form-control"
                                     value="{{ \Carbon\Carbon::parse($data->data[0]->order_date)->format('Y-m-d') }}"
-                                    readonly" id="order_date" name="order_date" disabled>
+                                    readonly id="order_date" name="order_date" disabled>
 
                                 <label for="principal" class="form-label fw-bold mt-2 mb-1 small">Principle</label>
-
                                 <input type="text" class="form-control" value="{{ $data->data[0]->partner_name }}"
                                     id="status" name="status" disabled>
-
                                 <label for="contact" class="form-label fw-bold mt-2 mb-1 small">No Telp</label>
                                 <input type="text" class="form-control bg-body-secondary" id="contact"
                                     name="contact_info" readonly>
 
+                                <label for="pembayaran" class="form-label fw-bold mt-2 mb-1 small">Term
+                                    Pembayaran</label>
+                                <input type="text" class="form-control" value="{{ $data->data[0]->term_of_payment }}"
+                                    id="term_of_payment" name="term_of_payment" disabled>
+
+                                {{-- <label for="status" class="form-label fw-bold mt-2 mb-1 small">Status</label> --}}
                                 <input type="hidden" class="form-control" value="" id="status" name="status"
                                     disabled>
                                 <input type="hidden" class="form-control" id="requested_by" name="requested_by"
@@ -61,22 +82,27 @@
                                     value="1">
                             </div>
                             <div class="col-md-6">
+                                <label for="gudang" class="form-label fw-bold mt-2 mb-1 small">Gudang</label>
+                                <select class="form-control" id="gudang" name="items[0][warehouse_id]" disabled>
+                                    <option value="" selected disabled>Pilih Gudang</option>
+                                    @foreach ($gudang->data as $item)
+                                        <option value="{{ $item->id }}"
+                                            {{ $data->data[0]->warehouse_id == $item->id ? 'selected' : '' }}>
+                                            {{ $item->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                <label for="ship" class="form-label fw-bold mt-2 mb-1 small">Ship From :</label>
+                                <textarea class="form-control bg-body-secondary" rows="5" id="ship" name="ship" readonly></textarea>
                                 <label for="ppn" class="form-label fw-bold mt-2 mb-1 small">VAT/PPN</label>
-                                <input type="text" class="form-control" value="{{ $data->data[0]->ppn }}" id="ppn"
-                                    name="ppn" disabled>
+                                <input type="text" class="form-control" value="{{ $data->data[0]->ppn }}"
+                                    id="ppn" name="ppn" disabled>
 
-                                <label for="pembayaran" class="form-label fw-bold mt-2 mb-1 small">Term
-                                    Pembayaran</label>
-                                <input type="text" class="form-control" value="{{ $data->data[0]->term_of_payment }}"
-                                    id="ppn" name="term_of_payment" disabled>
+
 
                                 <label for="description" class="form-label fw-bold mt-2 mb-1 small">Keterangan</label>
                                 <textarea class="form-control" rows="5" id="description" name="description" disabled>{{ $data->data[0]->description ?? '' }}</textarea>
 
-                                {{-- <label for="gudang" class="form-label fw-bold mt-2 mb-1 small">Gudang</label> --}}
-                                <input type="hidden" class="form-control" id="gudang" name="items[0][warehouse_id]"
-                                    disabled>
-                                </input>
                             </div>
                         </div>
                         <div class="p-2">
@@ -99,7 +125,8 @@
                                 @foreach ($data->data as $item)
                                     <tr style="border-bottom: 2px solid #000" class="item-row">
                                         <td colspan="2">
-                                            <input type="text" value="{{ $item->item_code }}" disabled
+                                            <input type="text"
+                                                value="{{ $item->item_code }} - {{ $item->item_name }}" disabled
                                                 class="form-control"> <input type="hidden" name="items[0][uom_id]"
                                                 class="uom-input">
                                         </td>
@@ -188,7 +215,6 @@
                                 </table>
                             </div>
                         </div>
-
                     </div>
                 </div>
             </section>
@@ -213,6 +239,8 @@
 
         $(document).ready(function() {
             var poId = '{{ $data->data[0]->partner_id }}';
+            var warehouseId = $('#gudang').val();
+
 
             if (poId) {
                 $.ajax({
@@ -231,8 +259,28 @@
                         $('#contact').val('Gagal mengambil data');
                     }
                 });
-            };
-
+            }
+            if (warehouseId) {
+                $('#loading-overlay').fadeIn();
+                $.ajax({
+                    url: '/purchase_order/getDetailWarehouse/' + warehouseId,
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function(response) {
+                        if (response.location) {
+                            $('#ship').val(response.location); // Isi input ship otomatis
+                        } else {
+                            $('#ship').val('Data tidak tersedia');
+                        }
+                        $('#loading-overlay').fadeOut();
+                    },
+                    error: function(xhr, status, error) {
+                        Swal.fire('Error', 'Gagal mengambil data gudang', 'error');
+                        $('#ship').val('Gagal mengambil data');
+                        $('#loading-overlay').fadeOut();
+                    }
+                });
+            }
 
             function updateAllItemSelects(items) {
                 var options = '<option value="" disabled selected>--Pilih Item--</option>';
@@ -246,7 +294,6 @@
                 }
 
                 $('#tableBody').data('current-items', items);
-
                 $('.item-select').html(options);
             }
 
@@ -288,9 +335,10 @@
                     <button type="button" class="btn btn-danger btn-sm remove-row">X</button>
                 </td>
             </tr>
-        `;
+            `;
             }
 
+            // Set nilai UOM ketika item dipilih
             $(document).on('change', '.item-select', function() {
                 const selectedUOM = $(this).find(':selected').data('uom');
                 $(this).siblings('.uom-input').val(selectedUOM);
@@ -311,12 +359,14 @@
                 }
             });
 
+            // Setiap kali terjadi perubahan (meski pada form detail inputnya disabled, perhitungan manual tetap bekerja bila diaktifkan)
             $(document).on('input', '.qty-input, .price-input, .discount-input', function() {
                 var row = $(this).closest('tr');
                 calculateRowTotal(row);
                 updateTotals();
             });
 
+            // Fungsi untuk menghitung total per baris
             function calculateRowTotal(row) {
                 const qty = parseFloat(row.find('.qty-input').val()) || 0;
                 const price = parseFloat(row.find('.price-input').val()) || 0;
@@ -339,6 +389,8 @@
                 let totalDiscount = 0;
 
                 $('.item-row').each(function() {
+                    calculateRowTotal($(this));
+
                     const qty = parseFloat($(this).find('.qty-input').val()) || 0;
                     const price = parseFloat($(this).find('.price-input').val()) || 0;
                     const discount = parseFloat($(this).find('.discount-input').val()) || 0;
@@ -365,6 +417,7 @@
                 $('#total_amount').val(finalTotal);
             }
 
+            // Fungsi untuk menampilkan nilai di footer tabel
             function updateDisplayValue(label, value) {
                 $('tr.fw-bold').each(function() {
                     if ($(this).find('td:eq(1)').text().trim() === label) {

@@ -280,13 +280,17 @@ class PurchaseOrderController extends Controller
     public function show(string $id)
     {
         //
+        $company_id = 2;
         try {
             $apiResponse = fectApi(env('PO_URL') . '/' . $id);
+            $gudangResponse = fectApi(env('LIST_GUDANG') . '/' . $company_id);
             if ($apiResponse->successful()) {
                 $data = json_decode($apiResponse->body());
+                $gudang = json_decode($gudangResponse->getbody()->getContents(), false);
+
 
                 // dd($data);
-                return view('procurement.purchaseorder.detail', compact('data'));
+                return view('procurement.purchaseorder.detail', compact('data', 'gudang'));
             } else {
                 return back()->withErrors('Gagal mengambil data item: ' . $apiResponse->status());
             }
@@ -391,12 +395,17 @@ class PurchaseOrderController extends Controller
     }
     public function vapprove(string $id)
     {
+        $company_id = 2;
         try {
             $apiResponse = fectApi(env('PO_URL') . '/' . $id);
+            $gudangResponse = fectApi(env('LIST_GUDANG') . '/' . $company_id);
+
             if ($apiResponse->successful()) {
                 $data = json_decode($apiResponse->body());
+                $gudang = json_decode($gudangResponse->getbody()->getContents(), false);
+
                 // dd($data);
-                return view('procurement.purchaseorder.approve', compact('data'));
+                return view('procurement.purchaseorder.approve', compact('data', 'gudang'));
             } else {
                 return back()->withErrors('Gagal mengambil data item: ' . $apiResponse->status());
             }

@@ -68,6 +68,11 @@
                                 <input type="text" class="form-control bg-body-secondary" id="contact"
                                     name="contact_info" readonly>
 
+                                <label for="pembayaran" class="form-label fw-bold mt-2 mb-1 small">Term
+                                    Pembayaran</label>
+                                <input type="text" class="form-control" value="{{ $data->data[0]->term_of_payment }}"
+                                    id="term_of_payment" name="term_of_payment" disabled>
+
                                 {{-- <label for="status" class="form-label fw-bold mt-2 mb-1 small">Status</label> --}}
                                 <input type="hidden" class="form-control" value="" id="status" name="status"
                                     disabled>
@@ -77,22 +82,27 @@
                                     value="1">
                             </div>
                             <div class="col-md-6">
+                                <label for="gudang" class="form-label fw-bold mt-2 mb-1 small">Gudang</label>
+                                <select class="form-control" id="gudang" name="items[0][warehouse_id]" disabled>
+                                    <option value="" selected disabled>Pilih Gudang</option>
+                                    @foreach ($gudang->data as $item)
+                                        <option value="{{ $item->id }}"
+                                            {{ $data->data[0]->warehouse_id == $item->id ? 'selected' : '' }}>
+                                            {{ $item->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                <label for="ship" class="form-label fw-bold mt-2 mb-1 small">Ship From :</label>
+                                <textarea class="form-control bg-body-secondary" rows="5" id="ship" name="ship" readonly></textarea>
                                 <label for="ppn" class="form-label fw-bold mt-2 mb-1 small">VAT/PPN</label>
-                                <input type="text" class="form-control" value="{{ $data->data[0]->ppn }}" id="ppn"
-                                    name="ppn" disabled>
+                                <input type="text" class="form-control" value="{{ $data->data[0]->ppn }}"
+                                    id="ppn" name="ppn" disabled>
 
-                                <label for="pembayaran" class="form-label fw-bold mt-2 mb-1 small">Term
-                                    Pembayaran</label>
-                                <input type="text" class="form-control" value="{{ $data->data[0]->term_of_payment }}"
-                                    id="term_of_payment" name="term_of_payment" disabled>
+
 
                                 <label for="description" class="form-label fw-bold mt-2 mb-1 small">Keterangan</label>
                                 <textarea class="form-control" rows="5" id="description" name="description" disabled>{{ $data->data[0]->description ?? '' }}</textarea>
 
-                                {{-- <label for="gudang" class="form-label fw-bold mt-2 mb-1 small">Gudang</label> --}}
-                                <input type="hidden" class="form-control" id="gudang" name="items[0][warehouse_id]"
-                                    disabled>
-                                </input>
                             </div>
                         </div>
                         <div class="p-2">
@@ -115,9 +125,10 @@
                                 @foreach ($data->data as $item)
                                     <tr style="border-bottom: 2px solid #000" class="item-row">
                                         <td colspan="2">
-                                            <input type="text" value="{{ $item->item_code }} - {{ $item->item_name }}"
-                                                disabled class="form-control"> <input type="hidden"
-                                                name="items[0][uom_id]" class="uom-input">
+                                            <input type="text"
+                                                value="{{ $item->item_code }} - {{ $item->item_name }}" disabled
+                                                class="form-control"> <input type="hidden" name="items[0][uom_id]"
+                                                class="uom-input">
                                         </td>
                                         <td>
                                             <input type="number" name="items[0][quantity]"
@@ -204,7 +215,9 @@
         });
 
         $(document).ready(function() {
-            var poId = '{{ $data->data[0]->partner_id }}'; // Ambil ID dari data yang ada
+            var poId = '{{ $data->data[0]->partner_id }}';
+            var warehouseId = $('#gudang').val();
+
 
             if (poId) {
                 $.ajax({
@@ -224,8 +237,27 @@
                     }
                 });
             }
-
-
+            if (warehouseId) {
+                $('#loading-overlay').fadeIn();
+                $.ajax({
+                    url: '/purchase_order/getDetailWarehouse/' + warehouseId,
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function(response) {
+                        if (response.location) {
+                            $('#ship').val(response.location); // Isi input ship otomatis
+                        } else {
+                            $('#ship').val('Data tidak tersedia');
+                        }
+                        $('#loading-overlay').fadeOut();
+                    },
+                    error: function(xhr, status, error) {
+                        Swal.fire('Error', 'Gagal mengambil data gudang', 'error');
+                        $('#ship').val('Gagal mengambil data');
+                        $('#loading-overlay').fadeOut();
+                    }
+                });
+            }
 
             function updateAllItemSelects(items) {
                 var options = '<option value="" disabled selected>--Pilih Item--</option>';
