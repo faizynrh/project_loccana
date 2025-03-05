@@ -60,25 +60,11 @@
                                     <label for="contact" class="form-label fw-bold mt-2 mb-1 small">No Telp</label>
                                     <input type="text" class="form-control bg-body-secondary" id="contact"
                                         name="contact_info" readonly>
-                                    <label for="description" class="form-label fw-bold mt-2 mb-1 small">Keterangan</label>
-                                    <textarea class="form-control" rows="5" id="description" name="description"></textarea>
+
                                     {{-- <label for="status" class="form-label fw-bold mt-2 mb-1 small">Status</label> --}}
                                     <input type="hidden" class="form-control" id="status" name="status">
                                     <input type="hidden" class="form-control" id="currency_id" name="currency_id"
                                         value="1">
-                                </div>
-                                <div class="col-md-6">
-                                    <label for="gudang" class="form-label fw-bold mt-2 mb-1 small">Gudang</label>
-                                    <select class="form-select" id="warehouse" name="items[0][warehouse_id]" required>
-                                        <option value="" selected disabled>Pilih Gudang</option>
-                                        @foreach ($gudang->data as $items)
-                                            <option value="{{ $items->id }}">{{ $items->name }}</option>
-                                        @endforeach
-                                    </select>
-
-                                    <label for="ship" class="form-label fw-bold mt-2 mb-1 small">Ship From :</label>
-                                    <textarea class="form-control bg-body-secondary" rows="5" id="ship" name="ship" readonly></textarea>
-
                                     <label for="pembayaran" class="form-label fw-bold mt-2 mb-1 small">Term
                                         Pembayaran</label>
                                     <select id="pembayaran" class="form-select" name="term_of_payment" required>
@@ -92,8 +78,22 @@
                                     </select>
                                     <input type="text" class="form-control mt-2 hidden" id="custom_payment_term"
                                         placeholder="Masukkan jumlah hari">
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="gudang" class="form-label fw-bold mt-2 mb-1 small">Gudang</label>
+                                    <select class="form-select" id="warehouse" name="items[0][warehouse_id]" required>
+                                        <option value="" selected disabled>Pilih Gudang</option>
+                                        @foreach ($gudang->data as $items)
+                                            <option value="{{ $items->id }}">{{ $items->name }}</option>
+                                        @endforeach
+                                    </select>
+
+                                    <label for="ship" class="form-label fw-bold mt-2 mb-1 small">Ship From :</label>
+                                    <textarea class="form-control bg-body-secondary" rows="5" id="ship" name="ship" readonly></textarea>
                                     <label for="ppn" class="form-label fw-bold mt-2 mb-1 small">PPN</label>
                                     <input type="number" class="form-control" id="ppn" name="tax_rate" required>
+                                    <label for="description" class="form-label fw-bold mt-2 mb-1 small">Keterangan</label>
+                                    <textarea class="form-control" rows="5" id="description" name="description"></textarea>
                                 </div>
                             </div>
                             <div class="p-2">
@@ -317,7 +317,6 @@
                     });
                 }
             });
-
 
             function updateAllItemSelects(items) {
                 var options = '<option value="" disabled selected>--Pilih Item--</option>';

@@ -56,12 +56,14 @@
                                 <label for="contact" class="form-label fw-bold mt-2 mb-1 small">No Telp</label>
                                 <input type="text" class="form-control bg-body-secondary" id="contact"
                                     name="contact_info" readonly>
-                                <label for="description" class="form-label fw-bold mt-2 mb-1 small">Keterangan</label>
-                                <textarea class="form-control" readonly rows="5" id="description" name="description">{{ $data->data[0]->description }}</textarea>
                                 {{-- <label for="status" class="form-label fw-bold mt-2 mb-1 small">Status</label> --}}
                                 <input type="hidden" class="form-control" id="status" name="status">
                                 <input type="hidden" class="form-control" id="currency_id" name="currency_id"
                                     value="1">
+                                <label for="pembayaran" class="form-label fw-bold mt-2 mb-1 small">Term
+                                    Pembayaran</label>
+                                <input type="text" class="form-control" id="custom_payment_term"
+                                    value="{{ $data->data[0]->term_of_payment }}" readonly>
                             </div>
                             <div class="col-md-6">
                                 {{-- <label for="gudang" class="form-label fw-bold mt-2 mb-1 small">Gudang</label>
@@ -74,14 +76,11 @@
 
                                 <label for="ship" class="form-label fw-bold mt-2 mb-1 small">Ship From :</label>
                                 <textarea class="form-control bg-body-secondary" rows="5" id="ship" name="ship" readonly></textarea>
-
-                                <label for="pembayaran" class="form-label fw-bold mt-2 mb-1 small">Term
-                                    Pembayaran</label>
-                                <input type="text" class="form-control" id="custom_payment_term"
-                                    value="{{ $data->data[0]->term_of_payment }}" readonly>
                                 <label for="ppn" class="form-label fw-bold mt-2 mb-1 small">PPN</label>
                                 <input type="number" class="form-control" id="ppn" name="tax_rate"
                                     value="{{ $data->data[0]->tax_rate }}" readonly>
+                                <label for="description" class="form-label fw-bold mt-2 mb-1 small">Keterangan</label>
+                                <textarea class="form-control" readonly rows="5" id="description" name="description">{{ $data->data[0]->description }}</textarea>
                             </div>
                         </div>
                         <div class="p-2">

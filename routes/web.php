@@ -186,6 +186,8 @@ Route::middleware('auth.login')->group(
             Route::get('/', [PurchaseOrderController::class, 'index'])->name('index');
             Route::get('/generate-po-code', [PurchaseOrderController::class, 'generatePOCode']);
             Route::get('/detailspurchase/{id_po}', [PurchaseOrderController::class, 'getPurchaseOrderDetails'])->name('getpurchasedetails');
+            Route::get('/getDetailPrinciple/{id}', [PurchaseOrderController::class, 'getDetailPrinciple'])->name('getDetailPrinciple');
+            Route::get('/getDetailWarehouse/{id}', [PurchaseOrderController::class, 'getDetailWarehouse'])->name('getDetailWarehouse');
             Route::get('/add', [PurchaseOrderController::class, 'create'])->name('create');
             Route::get('/ajax', [PurchaseOrderController::class, 'ajaxpo'])->name('ajax');
             Route::post('/add', [PurchaseOrderController::class, 'store'])->name('store');

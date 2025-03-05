@@ -42,6 +42,43 @@ class PurchaseOrderController extends Controller
             ], 500);
         }
     }
+    protected function getDetailWarehouse($id)
+    {
+        try {
+            $warehouseResponse = fectApi(env('GUDANG_URL') . '/' . $id);
+
+            if ($warehouseResponse->successful()) {
+                $warehouse = json_decode($warehouseResponse->getbody()->getContents(), false);
+
+                return response()->json([
+                    'location' => $warehouse->data->location ?? null
+                ]);
+            } else {
+                return response()->json(['message' => 'Gagal mengambil data'], 500);
+            }
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Terjadi kesalahan pada server'], 500);
+        }
+    }
+    protected function getDetailPrinciple($id)
+    {
+        try {
+            $contact_info = fectApi(env('PARTNER_URL') . '/' . $id);
+
+            if ($contact_info->successful()) {
+                $contact = json_decode($contact_info->getbody()->getContents(), false);
+
+                return response()->json([
+                    'contact_info' => $contact->data->contact_info ?? null
+                ]);
+            } else {
+                return response()->json(['message' => 'Gagal mengambil data'], 500);
+            }
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Terjadi kesalahan pada server'], 500);
+        }
+    }
+
     public function print($id)
     {
         try {
