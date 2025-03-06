@@ -101,7 +101,7 @@
                             return `
                                             <div class="text-center">
                                                         <button type="button" class="btn btn-sm btn-warning me-2 btn-edit-range_price"
-                                                            data-id="${row.item_id}"
+                                                            data-id="${row.id}"
                                                             title="Edit">
                                                             <i class="bi bi-pencil"></i>
                                                         </button>

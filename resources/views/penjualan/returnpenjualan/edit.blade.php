@@ -29,8 +29,8 @@
                 <div class="card">
                     <div class="card-body">
                         @include('alert.alert')
-                        <form action="{{ route('return_penjualan.update', $data->data[0]->sales_invoice_id) }}"
-                            method="POST" id="editForm">
+                        <form action="{{ route('return_penjualan.update', $data->data[0]->id_return) }}" method="POST"
+                            id="editForm">
                             @csrf
                             @method('PUT')
                             <div class="row mb-3">
@@ -104,7 +104,7 @@ NPWP: 01.555.161.7.428.000</textarea>
                                         <tr style="border-bottom: 2px solid #000;">
                                             <td>
                                                 <input type="hidden" name="sales_order_detail_id[{{ $index }}]"
-                                                    value="{{ $item->sales_order_detail }}">
+                                                    value="{{ $item->sales_order_detail_id }}">
                                                 <input type="hidden"
                                                     name="selling_return_detail_id[{{ $index }}]"
                                                     value="{{ $item->selling_return_detail_id }}">
