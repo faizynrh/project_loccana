@@ -228,7 +228,7 @@
                                                 class="form-control bg-body-secondary total-input" readonly>
                                         </td>
                                         <td> <button type="button" class="btn btn-danger btn-sm remove-row"
-                                                disabled>X</button>
+                                                disabled>-</button>
                                         </td>
                                     </tr>
                                     <tr style="border-bottom: 2px solid #000;">
@@ -284,14 +284,6 @@
 @push('scripts')
     <script>
         $(document).ready(function() {
-            $(document).on('change', '.item-select', function() {
-                const totalItems = $('.item-select option').length - 1; // Kurangi 1 buat option kosong
-                const selectedItems = $('.item-select').map(function() {
-                    return $(this).val();
-                }).get().filter(item => item !== '').length;
-
-                $('#add-row').prop('disabled', selectedItems >= totalItems);
-            });
 
 
             $('#pembayaran').on('change', function() {
@@ -331,6 +323,7 @@
                 value = value.replace(' Hari', '');
                 $(this).val(value);
             });
+
 
             $('#partner_id').on('change', function() {
                 var poId = $(this).val();
@@ -439,6 +432,7 @@
                 const itemSku = selectedOption.data('sku');
                 const itemName = selectedOption.data('item');
                 const row = $(this).closest('tr');
+
 
                 if (itemId) {
                     let isDuplicate = false;
@@ -604,8 +598,8 @@
                 <td colspan="2">
                     <input type="number" name="items[${rowCount}][total_price]" class="form-control bg-body-secondary total-input" readonly>
                 </td>
-                <td class="text-center">
-                    <button type="button" class="btn btn-danger btn-sm remove-row">X</button>
+                <td>
+                    <button type="button" class="btn btn-danger btn-sm remove-row">-</button>
                 </td>
             </tr>
         `;
