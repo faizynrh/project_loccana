@@ -69,27 +69,27 @@ Route::middleware('auth.login')->group(
         // ==========================================MASTERDATA========================================
 
         // ITEM
-        Route::prefix('/item')->name('item.')->group(function () {
-            Route::get('/', [ItemController::class, 'index'])->name('index');
-            Route::get('/ajax', [ItemController::class, 'ajax'])->name('ajax');
-            Route::get('/add', [ItemController::class, 'create'])->name('create');
-            Route::post('/add', [ItemController::class, 'store'])->name('store');
-            Route::delete('/delete/{id}', [ItemController::class, 'destroy'])->name('destroy');
-            Route::get('/edit/{id}', [ItemController::class, 'edit'])->name('edit');
-            Route::put('/update/{id}', [ItemController::class, 'update'])->name('update');
-            Route::get('/detail/{id}', [ItemController::class, 'show'])->name('detail');
-        });
+        // Route::prefix('/item')->name('item.')->group(function () {
+        //     Route::get('/', [ItemController::class, 'index'])->name('index');
+        //     Route::get('/ajax', [ItemController::class, 'ajax'])->name('ajax');
+        //     Route::get('/add', [ItemController::class, 'create'])->name('create');
+        //     Route::post('/add', [ItemController::class, 'store'])->name('store');
+        //     Route::delete('/delete/{id}', [ItemController::class, 'destroy'])->name('destroy');
+        //     Route::get('/edit/{id}', [ItemController::class, 'edit'])->name('edit');
+        //     Route::put('/update/{id}', [ItemController::class, 'update'])->name('update');
+        //     Route::get('/detail/{id}', [ItemController::class, 'show'])->name('detail');
+        // });
 
-        Route::prefix('/item')->name('item.')->controller(ItemController::class)->group(function () {
-            Route::get('/', 'index')->name('index');
-            Route::get('/ajax', 'ajax')->name('ajax');
-            Route::get('/add', 'create')->name('create');
-            Route::post('/add', 'store')->name('store');
-            Route::get('/edit/{id}', 'edit')->name('edit');
-            Route::put('/update/{id}', 'update')->name('update');
-            Route::get('/detail/{id}', 'show')->name('detail');
-            Route::delete('/delete/{id}', 'destroy')->name('destroy');
-        });
+        // Route::prefix('/item')->name('item.')->controller(ItemController::class)->group(function () {
+        //     Route::get('/', 'index')->name('index');
+        //     Route::get('/ajax', 'ajax')->name('ajax');
+        //     Route::get('/add', 'create')->name('create');
+        //     Route::post('/add', 'store')->name('store');
+        //     Route::get('/edit/{id}', 'edit')->name('edit');
+        //     Route::put('/update/{id}', 'update')->name('update');
+        //     Route::get('/detail/{id}', 'show')->name('detail');
+        //     Route::delete('/delete/{id}', 'destroy')->name('destroy');
+        // });
 
         Route::resource('item', ItemController::class)->except(['show']);
         Route::get('item/detail/{id}', [ItemController::class, 'show'])->name('item.detail');
