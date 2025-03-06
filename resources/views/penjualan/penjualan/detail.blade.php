@@ -37,32 +37,32 @@
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <label for="code" class="form-label fw-bold mt-2 mb-1 small">Nomor Penjualan</label>
-                                <input type="text" class="form-control bg-body-secondary" id="code"
+                                <input type="text" class="form-control bg-body-secondary " id="code"
                                     name="order_number" placeholder="Nomor Penjualan" value="" readonly>
-                                <label for="tanggal" class="form-label fw-bold mt-2 mb-1 small">Tanggal Order</label>
-                                <input type="text" class="form-control" id="order_date"
+                                <label for="tanggal" class="form-label fw-bold mt-2 mb-1 small ">Tanggal Order</label>
+                                <input type="text" class="form-control bg-body-secondary" id="order_date"
                                     value="{{ \Carbon\Carbon::parse($data->data[0]->order_date)->format('Y-m-d') }}"
                                     name="delivery_date" readonly>
 
                                 <label for="tanggal" class="form-label fw-bold mt-2 mb-1 small">Tanggal
                                     Pengiriman</label>
-                                <input type="text" class="form-control" id="tanggal_pengiriman"
+                                <input type="text" class="form-control bg-body-secondary " id="tanggal_pengiriman"
                                     value="{{ \Carbon\Carbon::parse($data->data[0]->delivery_date)->format('Y-m-d') }}"
                                     name="delivery_date" readonly>
 
                                 <label for="customer" class="form-label fw-bold mt-2 mb-1 small">Customer</label>
                                 <input type="text" name="partner_name" value="{{ $data->data[0]->partner_name }}"
-                                    id="" class="form-control" readonly>
+                                    id="" class="form-control bg-body-secondary" readonly>
                                 <label for="contact" class="form-label fw-bold mt-2 mb-1 small">No Telp</label>
-                                <input type="text" class="form-control bg-body-secondary" id="contact"
+                                <input type="text" class="form-control bg-body-secondary " id="contact"
                                     name="contact_info" readonly>
                                 {{-- <label for="status" class="form-label fw-bold mt-2 mb-1 small">Status</label> --}}
-                                <input type="hidden" class="form-control" id="status" name="status">
-                                <input type="hidden" class="form-control" id="currency_id" name="currency_id"
-                                    value="1">
+                                <input type="hidden" class="form-control bg-body-secondary" id="status" name="status">
+                                <input type="hidden" class="form-control bg-body-secondary" id="currency_id"
+                                    name="currency_id" value="1">
                                 <label for="pembayaran" class="form-label fw-bold mt-2 mb-1 small">Term
                                     Pembayaran</label>
-                                <input type="text" class="form-control" id="custom_payment_term"
+                                <input type="text" class="form-control bg-body-secondary" id="custom_payment_term"
                                     value="{{ $data->data[0]->term_of_payment }}" readonly>
                             </div>
                             <div class="col-md-6">
@@ -75,12 +75,12 @@
                                 </select> --}}
 
                                 <label for="ship" class="form-label fw-bold mt-2 mb-1 small">Ship From :</label>
-                                <textarea class="form-control bg-body-secondary" rows="5" id="ship" name="ship" readonly></textarea>
+                                <textarea class="form-control bg-body-secondary " rows="5" id="ship" name="ship" readonly></textarea>
                                 <label for="ppn" class="form-label fw-bold mt-2 mb-1 small">PPN</label>
-                                <input type="number" class="form-control" id="ppn" name="tax_rate"
+                                <input type="number" class="form-control bg-body-secondary" id="ppn" name="tax_rate"
                                     value="{{ $data->data[0]->tax_rate }}" readonly>
                                 <label for="description" class="form-label fw-bold mt-2 mb-1 small">Keterangan</label>
-                                <textarea class="form-control" readonly rows="5" id="description" name="description">{{ $data->data[0]->description }}</textarea>
+                                <textarea class="form-control bg-body-secondary" readonly rows="5" id="description" name="description">{{ $data->data[0]->description }}</textarea>
                             </div>
                         </div>
                         <div class="p-2">
@@ -99,7 +99,7 @@
                                     <th style="width: 30px">Diskon (%)</th>
                                     <th style="width: 70px">Total</th>
                                     <th style="width: 30px"></th>
-                                    <th style="width: 30px">aksi</th>
+                                    <th style="width: 30px"></th>
                                 </tr>
                             </thead>
                             @foreach ($data->data as $item)
@@ -108,40 +108,41 @@
                                         <td colspan="2">
                                             <input type="text" name="items[0][uom_name]"
                                                 value="{{ $item->item_code }} - {{ $item->item_name }}"
-                                                class="form-control box-qty-input" readonly>
+                                                class="form-control bg-body-secondary box-qty-input" readonly>
 
                                             <input type="hidden" readonly name="items[0][uom_id]" class="uom-input">
                                         </td>
                                         <td>
                                             <input type="text" readonly name="items[0][notes]"
-                                                class="form-control notes-input">
+                                                class="form-control bg-body-secondary notes-input">
                                         </td>
                                         <td>
                                             <input type="number" readonly name="items[0][box_quantity]"
-                                                class="form-control box-qty-input" min="0"
+                                                class="form-control bg-body-secondary box-qty-input" min="0"
                                                 value="{{ $item->box_quantity }}">
                                         </td>
                                         <td>
                                             <input type="number" readonly name="items[0][quantity]"
-                                                class="form-control qty-input" min="0"
+                                                class="form-control bg-body-secondary qty-input" min="0"
                                                 value="{{ $item->quantity }}">
                                         <td>
                                             <input type="number" name=""
-                                                class="form-control total-qty bg-body-secondary" min="0" readonly>
+                                                class="form-control bg-body-secondary total-qty bg-body-secondary"
+                                                min="0" readonly>
                                         </td>
                                         <td>
                                             <input type="number" readonly name="items[0][unit_price]"
-                                                class="form-control price-input" value="{{ $item->unit_price }}"
-                                                min="0">
+                                                class="form-control bg-body-secondary price-input"
+                                                value="{{ $item->unit_price }}" min="0">
                                         </td>
                                         <td>
                                             <input type="number" readonly name="items[0][discount]"
-                                                class="form-control discount-input" value="{{ $item->discount }}"
-                                                min="0" max="100">
+                                                class="form-control bg-body-secondary discount-input"
+                                                value="{{ $item->discount }}" min="0" max="100">
                                         </td>
                                         <td colspan="2">
                                             <input type="number" name="items[0][total_price]"
-                                                class="form-control bg-body-secondary total-input" readonly
+                                                class="form-control bg-body-secondary  total-input" readonly
                                                 value="{{ $item->total_price }}">
                                         </td>
                                         <td></td>
@@ -210,27 +211,48 @@
                     totalFinal += total;
                 });
 
-                $('#partner_id').on('change', function() {
-                    var poId = $(this).val();
-                    $('#loading-overlay').fadeIn();
+                $(document).ready(function() {
+                    var poId = '{{ $data->data[0]->partner_id }}';
+                    var warehouseId = $('#gudang').val();
+
                     if (poId) {
                         $.ajax({
-                            url: '/penjualan/getDetailCustomer/' + poId,
+                            url: '/purchase_order/getDetailPrinciple/' + poId,
                             type: 'GET',
                             dataType: 'json',
                             success: function(response) {
                                 if (response.contact_info) {
                                     $('#contact').val(response
-                                        .contact_info); // Isi input contact
+                                        .contact_info); // Isi input contact otomatis
                                 } else {
                                     $('#contact').val('Data tidak tersedia');
                                 }
-                                $('#loading-overlay').fadeOut();
                             },
                             error: function(xhr, status, error) {
                                 Swal.fire('Error', 'Gagal mengambil data customer',
                                     'error');
                                 $('#contact').val('Gagal mengambil data');
+                            }
+                        });
+                    }
+                    if (warehouseId) {
+                        $('#loading-overlay').fadeIn();
+                        $.ajax({
+                            url: '/purchase_order/getDetailWarehouse/' + warehouseId,
+                            type: 'GET',
+                            dataType: 'json',
+                            success: function(response) {
+                                if (response.location) {
+                                    $('#ship').val(response
+                                        .location); // Isi input ship otomatis
+                                } else {
+                                    $('#ship').val('Data tidak tersedia');
+                                }
+                                $('#loading-overlay').fadeOut();
+                            },
+                            error: function(xhr, status, error) {
+                                Swal.fire('Error', 'Gagal mengambil data gudang', 'error');
+                                $('#ship').val('Gagal mengambil data');
                                 $('#loading-overlay').fadeOut();
                             }
                         });
@@ -238,7 +260,6 @@
                 });
 
                 const dpp = totalFinal - totalPPN;
-
                 updateDisplayValue('DPP', dpp);
                 updateDisplayValue('Diskon', totalDiscount);
                 updateDisplayValue('VAT/PPN', totalPPN);
@@ -271,7 +292,6 @@
                 const total = subtotal - discountAmount;
 
                 row.find('.total-input').val(total.toFixed(0));
-
                 row.data('discountAmount', discountAmount);
                 row.data('nilaippn', nilaippn);
             };
@@ -291,11 +311,13 @@
                 });
             };
 
-            $(document).on('input change', '.box-qty-input, .qty-input, .price-input, .discount-input', function() {
-                const row = $(this).closest('tr');
-                calculateRowTotal(row);
-                updateTotals();
-            });
+            $(document).on('input change',
+                '.box-qty-input, .qty-input, .price-input, .discount-input',
+                function() {
+                    const row = $(this).closest('tr');
+                    calculateRowTotal(row);
+                    updateTotals();
+                });
 
             updateTotals();
         });

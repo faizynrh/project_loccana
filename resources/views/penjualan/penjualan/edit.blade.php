@@ -135,7 +135,7 @@
                                         <th style="width: 30px">Diskon (%)</th>
                                         <th style="width: 70px">Total</th>
                                         <th style="width: 30px"></th>
-                                        <th style="width: 30px">aksi</th>
+                                        <th style="width: 30px"></th>
                                     </tr>
                                 </thead>
                                 {{-- @php
@@ -295,6 +295,49 @@
                 value = value.replace(' Hari', '');
                 $(this).val(value);
             });
+            var poId = '{{ $data->data[0]->partner_id }}';
+            var warehouseId = $('#gudang').val();
+
+
+            if (poId) {
+                $.ajax({
+                    url: '/purchase_order/getDetailPrinciple/' + poId,
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function(response) {
+                        if (response.contact_info) {
+                            $('#contact').val(response.contact_info); // Isi input contact otomatis
+                        } else {
+                            $('#contact').val('Data tidak tersedia');
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        Swal.fire('Error', 'Gagal mengambil data customer', 'error');
+                        $('#contact').val('Gagal mengambil data');
+                    }
+                });
+            }
+            if (warehouseId) {
+                $('#loading-overlay').fadeIn();
+                $.ajax({
+                    url: '/purchase_order/getDetailWarehouse/' + warehouseId,
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function(response) {
+                        if (response.location) {
+                            $('#ship').val(response.location); // Isi input ship otomatis
+                        } else {
+                            $('#ship').val('Data tidak tersedia');
+                        }
+                        $('#loading-overlay').fadeOut();
+                    },
+                    error: function(xhr, status, error) {
+                        Swal.fire('Error', 'Gagal mengambil data gudang', 'error');
+                        $('#ship').val('Gagal mengambil data');
+                        $('#loading-overlay').fadeOut();
+                    }
+                });
+            }
 
             // Item selection related functions
             function updateAllItemSelects(items) {

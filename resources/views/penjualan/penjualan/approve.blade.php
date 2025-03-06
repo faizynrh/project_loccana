@@ -101,7 +101,7 @@
                                         <th style="width: 30px">Diskon (%)</th>
                                         <th style="width: 70px">Total</th>
                                         <th style="width: 30px"></th>
-                                        <th style="width: 30px">aksi</th>
+                                        <th style="width: 30px"></th>
                                     </tr>
                                 </thead>
                                 @foreach ($data->data as $item)
