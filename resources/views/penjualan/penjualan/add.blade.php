@@ -2,33 +2,89 @@
 @section('content')
     @push('styles')
         <style>
+            /* Make form elements align properly */
             .hidden {
                 display: none !important;
             }
 
-            /* Add styles for better alignment */
-            .form-control,
-            .form-select {
-                height: 38px;
-                vertical-align: middle;
-            }
 
-            .stock-info {
-                display: block;
-                margin-top: 3px;
-                font-size: 0.8rem;
-            }
 
-            /* Ensure consistent table cell heights */
+            /* Align table cells vertically */
             #transaction-table td {
-                vertical-align: top;
+                vertical-align: middle;
                 padding: 8px 4px;
             }
 
-            /* Alert styling */
-            .stock-warning {
-                color: #dc3545;
-                font-weight: bold;
+            /* Properly align form controls in table */
+            #transaction-table input,
+            #transaction-table select {
+                width: 100%;
+            }
+
+            /* Stock info styling */
+            .item-row td {
+                padding-bottom: 40px;
+                /* Tambah lebih banyak padding */
+            }
+
+
+            /* Fixed width for specific columns */
+            #transaction-table th:nth-child(1),
+            #transaction-table td:nth-child(1) {
+                width: 140px;
+            }
+
+            #transaction-table th:nth-child(3),
+            #transaction-table td:nth-child(3) {
+                width: 105px;
+            }
+
+            #transaction-table th:nth-child(4),
+            #transaction-table td:nth-child(4) {
+                width: 80px;
+            }
+
+            #transaction-table th:nth-child(5),
+            #transaction-table td:nth-child(5) {
+                width: 45px;
+            }
+
+            #transaction-table th:nth-child(6),
+            #transaction-table td:nth-child(6) {
+                width: 70px;
+            }
+
+            #transaction-table th:nth-child(7),
+            #transaction-table td:nth-child(7) {
+                width: 100px;
+            }
+
+            #transaction-table th:nth-child(8),
+            #transaction-table td:nth-child(8) {
+                width: 30px;
+            }
+
+            #transaction-table th:nth-child(9),
+            #transaction-table td:nth-child(9) {
+                width: 70px;
+            }
+
+            /* Ensure items maintain proper spacing even with stock info */
+            .item-row td {
+                position: relative;
+                padding-bottom: 20px;
+                /* Add extra padding to accommodate stock info */
+            }
+
+            .stock-info {
+                position: relative;
+                bottom: 2px;
+                left: 4px;
+            }
+
+            /* Make number inputs more readable */
+            input[type="number"] {
+                text-align: right;
             }
         </style>
     @endpush
@@ -137,7 +193,7 @@
                                         <th style="width: 30px">Diskon (%)</th>
                                         <th style="width: 70px">Total</th>
                                         <th style="width: 30px"></th>
-                                        <th style="width: 30px">aksi</th>
+                                        <th style="width: 30px"></th>
                                     </tr>
                                 </thead>
                                 <tbody id="tableBody">
@@ -152,29 +208,29 @@
                                             <input type="hidden" class="pcs-per-box" value="0">
                                         </td>
                                         <td>
-                                            <input type="text" name="items[0][notes]"
-                                                class="form-control notes-input">
+                                            <input type="text" name="items[0][notes]" class="form-control notes-input"
+                                                disabled>
                                         </td>
                                         <td>
                                             <input type="number" name="items[0][box_quantity]"
-                                                class="form-control box-qty-input" min="0">
-                                            <div class="stock-info-container"></div>
+                                                class="form-control box-qty-input" min="0" disabled>
+                                            <div class="stock"></div>
                                         </td>
                                         <td>
                                             <input type="number" name="items[0][per_box_quantity]"
-                                                class="form-control qty-input" min="0">
+                                                class="form-control qty-input" min="0" disabled>
                                         <td>
                                             <input type="number" name="items[0][quantity]"
                                                 class="form-control total-qty bg-body-secondary" min="0" readonly>
                                         </td>
                                         <td>
                                             <input type="number" name="items[0][unit_price]"
-                                                class="form-control price-input" value="0" min="0">
+                                                class="form-control price-input" value="0" min="0" disabled>
                                         </td>
                                         <td>
                                             <input type="number" name="items[0][discount]"
                                                 class="form-control discount-input" value="0" min="0"
-                                                max="100">
+                                                max="100" disabled>
                                         </td>
                                         <td colspan="2">
                                             <input type="number" name="items[0][total_price]"
@@ -235,16 +291,6 @@
 @push('scripts')
     <script>
         $(document).ready(function() {
-            // SweetAlert for stock warnings
-            function showStockWarning(message) {
-                Swal.fire({
-                    title: 'Peringatan Stok',
-                    text: message,
-                    icon: 'warning',
-                    confirmButtonText: 'Mengerti'
-                });
-            }
-
             $('#pembayaran').on('change', function() {
                 const selectedValue = $(this).val();
                 const customInput = $('#custom_payment_term');
@@ -264,7 +310,6 @@
 
             $('#custom_payment_term').on('input', function() {
                 let value = $(this).val();
-                // Remove any non-numeric characters
                 value = value.replace(/[^\d]/g, '');
                 if (value) {
                     $(this).val(value);
@@ -280,7 +325,6 @@
 
             $('#custom_payment_term').on('focus', function() {
                 let value = $(this).val();
-                // Remove "Hari" when focusing on the input
                 value = value.replace(' Hari', '');
                 $(this).val(value);
             });
@@ -291,7 +335,6 @@
                 if (poId) {
                     var companyId = 2;
 
-                    // Ambil daftar item
                     $.ajax({
                         url: '/purchase_order/getItemsList/' + companyId,
                         type: 'GET',
@@ -309,14 +352,13 @@
                         }
                     });
 
-
                     $.ajax({
                         url: '/penjualan/getDetailCustomer/' + poId,
                         type: 'GET',
                         dataType: 'json',
                         success: function(response) {
                             if (response.contact_info) {
-                                $('#contact').val(response.contact_info); // Isi input contact
+                                $('#contact').val(response.contact_info);
                             } else {
                                 $('#contact').val('Data tidak tersedia');
                             }
@@ -335,14 +377,13 @@
                 var warehouseId = $(this).val();
                 $('#loading-overlay').fadeIn();
                 if (warehouseId) {
-                    // Ambil detail customer (contact_info)
                     $.ajax({
                         url: '/penjualan/getDetailWarehouse/' + warehouseId,
                         type: 'GET',
                         dataType: 'json',
                         success: function(response) {
                             if (response.location) {
-                                $('#ship').val(response.location); // Isi input contact
+                                $('#ship').val(response.location);
                             } else {
                                 $('#ship').val('Data tidak tersedia');
                             }
@@ -357,74 +398,161 @@
                 }
             });
 
+            let selectedItems = [];
+
             function updateAllItemSelects(items) {
                 var options = '<option value="" disabled selected>--Pilih Item--</option>';
                 if (items && items.length > 0) {
                     items.forEach(function(item) {
                         options +=
-                            `<option value="${item.id}" data-uom="${item.unit_of_measure_id}">${item.sku} - ${item.name}</option>`;
+                            `<option value="${item.id}" data-uom="${item.unit_of_measure_id}" data-sku="${item.sku}">${item.sku} - ${item.name}</option>`;
                     });
                 } else {
                     options = '<option value="" disabled selected>Tidak ada item tersedia</option>';
                 }
 
                 $('#tableBody').data('current-items', items);
-
                 $('.item-select').html(options);
+
+                $('.item-row').each(function() {
+                    disableRowInputs($(this));
+                });
+            }
+
+            function disableRowInputs(row) {
+                row.find('.notes-input, .box-qty-input, .qty-input, .price-input, .discount-input').prop('disabled',
+                    true);
+            }
+
+            function enableRowInputs(row) {
+                row.find('.notes-input, .box-qty-input, .qty-input, .price-input, .discount-input').prop('disabled',
+                    false);
             }
 
             $(document).on('change', '.item-select', function() {
-                const selectedUOM = $(this).find(':selected').data('uom');
-                $(this).siblings('.uom-input').val(selectedUOM);
-
-                // Get the item ID from the selected option
+                const selectedOption = $(this).find(':selected');
+                const selectedUOM = selectedOption.data('uom');
                 const itemId = $(this).val();
+                const itemSku = selectedOption.data('sku');
                 const row = $(this).closest('tr');
 
                 if (itemId) {
-                    $.ajax({
-                        url: '/penjualan/getStock/' + itemId,
-                        type: 'GET',
-                        dataType: 'json',
-                        success: function(response) {
-                            const stockInfo = response.stock ? response.stock : 0;
-                            const pcsPerBox = response.pcs_per_box ? response.pcs_per_box : 0;
+                    let isDuplicate = false;
+                    let duplicateRow = null;
 
-                            // Store values in hidden fields for later use
-                            row.find('.item-stock').val(stockInfo);
-                            row.find('.pcs-per-box').val(pcsPerBox);
-
-                            // Clear any existing stock info
-                            row.find('.stock-info-container').empty();
-
-                            // Add stock info in a separate container for better alignment
-                            row.find('.stock-info-container').html(
-                                `<div class="stock-info">Stock: ${stockInfo} | PCS per Box: ${pcsPerBox}</div>`
-                            );
-
-                            // Auto-fill the qty_input with pcs_per_box value
-                            row.find('.qty-input').val(pcsPerBox);
-
-                            // Recalculate totals after filling the qty
-                            calculateRowTotal(row);
-                            updateTotals();
-                        },
-                        error: function(xhr, status, error) {
-                            console.error('Error fetching stock information:', error);
-
-                            // Remove existing stock info and show error
-                            row.find('.stock-info-container').empty();
-                            row.find('.stock-info-container').html(
-                                '<div class="stock-info text-danger">Stock: Tidak dapat diambil</div>'
-                            );
+                    $('.item-select').not(this).each(function() {
+                        if ($(this).val() === itemId) {
+                            isDuplicate = true;
+                            duplicateRow = $(this).closest('tr');
+                            return false;
                         }
                     });
+
+                    if (isDuplicate) {
+                        const duplicateIndex = duplicateRow.index() + 1;
+                        const currentIndex = row.index() + 1;
+
+                        Swal.fire({
+                            title: 'Item Duplikat',
+                            text: `Item "${itemSku}" sudah dipilih pada baris ke-${duplicateIndex}. Pilih item yang berbeda.`,
+                            icon: 'warning',
+                            confirmButtonText: 'OK'
+                        });
+
+                        const previousItemId = row.data('prev-item-id');
+                        if (previousItemId) {
+                            $(this).val(previousItemId);
+                        } else {
+                            $(this).val('');
+                        }
+
+                        return;
+                    }
+
+                    row.data('prev-item-id', itemId);
+
+                    $(this).siblings('.uom-input').val(selectedUOM);
+
+                    row.data('item-id', itemId);
+
+                    enableRowInputs(row);
+
+                    fetchStockInformation(itemId, row);
                 } else {
-                    // If no item is selected, remove any existing stock info
-                    row.find('.stock-info-container').empty();
+                    row.data('item-id', null);
+                    row.data('prev-item-id', null);
+                    disableRowInputs(row);
+                    row.find('.stock-info').remove();
                 }
             });
 
+            $(document).on('focus', '.item-select', function() {
+                const currentValue = $(this).val();
+                $(this).closest('tr').data('prev-item-id', currentValue);
+            });
+
+            function fetchStockInformation(itemId, row) {
+                $.ajax({
+                    url: '/penjualan/getStock/' + itemId,
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function(response) {
+                        const stockInfo = response.stock ? response.stock : 0;
+                        const pcsPerBox = response.pcs_per_box ? response.pcs_per_box : 0;
+
+                        row.find('.stock-info').remove();
+
+                        row.data('stock', stockInfo);
+                        row.data('pcs-per-box', pcsPerBox);
+
+                        row.find('input[name$="[box_quantity]"]').parent().append(
+                            `<div class="stock-info text-danger small mt-1">Stock: ${stockInfo} | PCS per Box: ${pcsPerBox}</div>`
+                        );
+
+                        if (pcsPerBox > 0) {
+                            const maxBoxes = Math.floor(stockInfo / pcsPerBox);
+                            row.find('.box-qty-input').attr('max', maxBoxes);
+                        }
+
+                        row.find('.qty-input').attr('max', stockInfo);
+
+                        row.find('.qty-input').val(pcsPerBox);
+
+                        if (!row.find('.box-qty-input').val()) {
+                            row.find('.box-qty-input').val(1);
+                        }
+
+                        calculateRowTotal(row);
+                        updateTotals();
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error fetching stock information:', error);
+
+                        row.find('.stock-info').remove();
+                        row.find('input[name$="[box_quantity]"]').parent().append(
+                            '<div class="stock-info text-danger small mt-1">Stock: Unable to fetch</div>'
+                        );
+                    }
+                });
+            }
+
+            function updateItemSelects() {
+                $('.item-select').each(function() {
+                    const rowItemId = $(this).closest('tr').data('item-id');
+                    const select = $(this);
+
+                    if (rowItemId) return;
+
+                    select.find('option').each(function() {
+                        const optionValue = $(this).val();
+                        if (optionValue && selectedItems.some(item => item.id === optionValue)) {
+                            $(this).hide();
+                        } else {
+                            $(this).show();
+                        }
+                    });
+                });
+            }
 
             function createNewRow(rowCount) {
                 const currentItems = $('#tableBody').data('current-items');
@@ -432,55 +560,70 @@
 
                 if (currentItems && currentItems.length > 0) {
                     currentItems.forEach(function(item) {
-                        itemOptions +=
-                            `<option value="${item.id}" data-uom="${item.unit_of_measure_id}">${item.sku} - ${item.name}</option>`;
+                        const isSelected = selectedItems.some(selectedItem => selectedItem.id === item.id);
+                        if (!isSelected) {
+                            itemOptions +=
+                                `<option value="${item.id}" data-uom="${item.unit_of_measure_id}" data-sku="${item.sku}">${item.sku} - ${item.name}</option>`;
+                        }
                     });
                 } else {
-                    itemOptions =
-                        '<option value="" disabled selected>Pilih Customer Dahulu</option>';
+                    itemOptions = '<option value="" disabled selected>Pilih Customer Dahulu</option>';
                 }
 
                 return `
-                    <tr style="border-bottom: 2px solid #000" class="item-row">
-                        <td colspan="2">
-                            <select class="form-select item-select" name="items[${rowCount}][item_id]">
-                                ${itemOptions}
-                            </select>
-                            <input type="hidden" name="items[${rowCount}][uom_id]" class="uom-input">
-                            <input type="hidden" class="item-stock" value="0">
-                            <input type="hidden" class="pcs-per-box" value="0">
-                        </td>
-                        <td>
-                            <input type="text" name="items[${rowCount}][notes]" class="form-control notes-input">
-                        </td>
-                        <td>
-                            <input type="number" name="items[${rowCount}][box_quantity]" class="form-control box-qty-input" value="1" min="0">
-                            <div class="stock-info-container"></div>
-                        </td>
-                        <td>
-                            <input type="number" name="items[${rowCount}][per_box_quantity]" class="form-control qty-input" value="1" min="0">
-                        </td>
-                        <td>
-                            <input type="number" name="items[${rowCount}][quantity]" class="form-control total-qty bg-body-secondary" value="1" min="0" readonly>
-                        </td>
-                        <td>
-                            <input type="number" name="items[${rowCount}][unit_price]" class="form-control price-input" value="0" min="0">
-                        </td>
-                        <td>
-                            <input type="number" name="items[${rowCount}][discount]" class="form-control discount-input" value="0" min="0" max="100">
-                        </td>
-                        <td colspan="2">
-                            <input type="number" name="items[${rowCount}][total_price]" class="form-control bg-body-secondary total-input" readonly>
-                        </td>
-                        <td class="text-center">
-                            <button type="button" class="btn btn-danger btn-sm remove-row">X</button>
-                        </td>
-                    </tr>
-                `;
+            <tr style="border-bottom: 2px solid #000" class="item-row">
+                <td colspan="2">
+                    <select class="form-select item-select" name="items[${rowCount}][item_id]">
+                        ${itemOptions}
+                    </select>
+                    <input type="hidden" name="items[${rowCount}][uom_id]" class="uom-input">
+                </td>
+                <td>
+                    <input type="text" name="items[${rowCount}][notes]" class="form-control notes-input" disabled>
+                </td>
+                <td>
+                    <input type="number" name="items[${rowCount}][box_quantity]" class="form-control box-qty-input" value="0" min="0" disabled>
+                </td>
+                <td>
+                    <input type="number" name="items[${rowCount}][per_box_quantity]" class="form-control qty-input" value="0" min="0" disabled>
+                </td>
+                <td>
+                    <input type="number" name="items[${rowCount}][quantity]" class="form-control total-qty bg-body-secondary" value="0" min="0" readonly>
+                </td>
+                <td>
+                    <input type="number" name="items[${rowCount}][unit_price]" class="form-control price-input" value="0" min="0" disabled>
+                </td>
+                <td>
+                    <input type="number" name="items[${rowCount}][discount]" class="form-control discount-input" value="0" min="0" max="100" disabled>
+                </td>
+                <td colspan="2">
+                    <input type="number" name="items[${rowCount}][total_price]" class="form-control bg-body-secondary total-input" readonly>
+                </td>
+                <td class="text-center">
+                    <button type="button" class="btn btn-danger btn-sm remove-row">X</button>
+                </td>
+            </tr>
+        `;
             }
 
             $('#add-row').on('click', function(e) {
                 e.preventDefault();
+
+                let allItemsSelected = true;
+                $('.item-row').each(function() {
+                    if (!$(this).find('.item-select').val()) {
+                        allItemsSelected = false;
+                        return false;
+                    }
+                });
+
+                if (!allItemsSelected) {
+                    Swal.fire('Perhatian',
+                        'Pilih item pada baris yang sudah ada sebelum menambahkan baris baru', 'warning'
+                    );
+                    return;
+                }
+
                 const rowCount = $('.item-row').length;
                 const newRowHtml = createNewRow(rowCount);
                 $(newRowHtml).insertBefore('#tableBody tr:last');
@@ -489,57 +632,51 @@
 
             $(document).on('click', '.remove-row', function() {
                 if ($('.item-row').length > 1) {
-                    $(this).closest('tr').remove();
+                    const row = $(this).closest('tr');
+                    const itemId = row.data('item-id');
+
+                    if (itemId) {
+                        selectedItems = selectedItems.filter(item => item.id !== itemId);
+                    }
+
+                    row.remove();
                     updateTotals();
+                    updateItemSelects();
                 }
             });
 
-            // Handle quantity inputs and check stock
-            $(document).on('input', '.box-qty-input, .qty-input', function() {
+            $(document).on('input', '.box-qty-input, .qty-input, .price-input, .discount-input', function() {
                 var row = $(this).closest('tr');
-                const boxQty = parseFloat(row.find('.box-qty-input').val()) || 0;
-                const qtyPerUnit = parseFloat(row.find('.qty-input').val()) || 0;
-                const pcsPerBox = parseFloat(row.find('.pcs-per-box').val()) || 0;
-                const availableStock = parseFloat(row.find('.item-stock').val()) || 0;
 
-                // New calculation: (box_qty * pcs_per_box) + qty_satuan
-                const totalQty = (boxQty * pcsPerBox) + qtyPerUnit;
-                row.find('.total-qty').val(totalQty.toFixed(0));
+                if ($(this).hasClass('box-qty-input') || $(this).hasClass('qty-input')) {
+                    const boxQty = parseInt(row.find('.box-qty-input').val()) || 0;
+                    const qtyPerBox = parseInt(row.find('.qty-input').val()) || 0;
+                    const pcsPerBox = parseInt(row.data('pcs-per-box')) || 0;
+                    const stockLimit = parseInt(row.data('stock')) || 0;
 
-                // Check if quantity exceeds stock
-                if (totalQty > availableStock) {
-                    // Change the stock info to warning
-                    row.find('.stock-info-container').html(
-                        `<div class="stock-info stock-warning">Stok tidak cukup! (Tersedia: ${availableStock} | Dibutuhkan: ${totalQty})</div>`
-                    );
+                    const totalQty = (boxQty * pcsPerBox) + qtyPerBox;
 
-                    // Show user-friendly alert
-                    showStockWarning(
-                        `Jumlah pesanan untuk item ini (${totalQty}) melebihi stok yang tersedia (${availableStock}).`
-                    );
-                } else {
-                    // Reset to normal stock info display
-                    const pcsPerBox = row.find('.pcs-per-box').val();
-                    row.find('.stock-info-container').html(
-                        `<div class="stock-info">Stock: ${availableStock} | PCS per Box: ${pcsPerBox}</div>`
-                    );
+                    if (totalQty > stockLimit) {
+                        Swal.fire('Perhatian', 'Total quantity melebihi stock yang tersedia', 'warning');
+
+                        if ($(this).hasClass('box-qty-input')) {
+                            const maxBoxes = Math.floor((stockLimit - qtyPerBox) / pcsPerBox);
+                            $(this).val(Math.max(0, maxBoxes));
+                        } else {
+                            const maxUnits = stockLimit - (boxQty * pcsPerBox);
+                            $(this).val(Math.max(0, maxUnits));
+                        }
+                    }
                 }
 
-                // Continue with price calculations
-                calculateRowTotal(row);
-                updateTotals();
-            });
-
-            $(document).on('input', '.price-input, .discount-input', function() {
-                var row = $(this).closest('tr');
                 calculateRowTotal(row);
                 updateTotals();
             });
 
             function calculateRowTotal(row) {
-                const boxQty = parseFloat(row.find('.box-qty-input').val()) || 0;
-                const qtyPerUnit = parseFloat(row.find('.qty-input').val()) || 0;
-                const pcsPerBox = parseFloat(row.find('.pcs-per-box').val()) || 0;
+                const boxQty = parseInt(row.find('.box-qty-input').val()) || 0;
+                const pcsPerBox = parseInt(row.data('pcs-per-box')) || 0;
+                const individualQty = parseInt(row.find('.qty-input').val()) || 0;
                 const price = parseFloat(row.find('.price-input').val()) || 0;
                 let discount = parseFloat(row.find('.discount-input').val()) || 0;
 
@@ -548,8 +685,7 @@
                     row.find('.discount-input').val(100);
                 }
 
-                // Calculate total quantity using the new formula
-                const totalQty = (boxQty * pcsPerBox) + qtyPerUnit;
+                const totalQty = (boxQty * pcsPerBox) + individualQty;
                 row.find('.total-qty').val(totalQty.toFixed(0));
 
                 const subtotal = totalQty * price;
@@ -564,6 +700,7 @@
 
                 row.data('discountAmount', discountAmount);
                 row.data('nilaippn', nilaippn);
+                row.data('subtotal', subtotal);
             }
 
             function updateTotals() {
@@ -573,13 +710,10 @@
                 let totalFinal = 0;
 
                 $('.item-row').each(function() {
-                    const total = parseFloat($(this).find('.total-input').val()) || 0;
-                    const discountAmount = $(this).data('discountAmount') || 0;
-                    const nilaippn = $(this).data('nilaippn') || 0;
-
-                    totalDiscount += discountAmount;
-                    totalPPN += nilaippn;
-                    totalFinal += total;
+                    subtotal += $(this).data('subtotal') || 0;
+                    totalDiscount += $(this).data('discountAmount') || 0;
+                    totalPPN += $(this).data('nilaippn') || 0;
+                    totalFinal += parseFloat($(this).find('.total-input').val()) || 0;
                 });
 
                 const dpp = totalFinal - totalPPN;
@@ -608,39 +742,56 @@
                 });
             }
 
-            // Form submission validation
-            $('#createForm').on('submit', function(e) {
-                let hasStockIssues = false;
+            updateTotals();
+
+            $('#ppn').on('input', function() {
+                const ppnValue = parseFloat($(this).val());
+                if (ppnValue < 0) {
+                    $(this).val(0);
+                } else if (ppnValue > 100) {
+                    $(this).val(100);
+                }
 
                 $('.item-row').each(function() {
-                    const totalQty = parseFloat($(this).find('.total-qty').val()) || 0;
-                    const availableStock = parseFloat($(this).find('.item-stock').val()) || 0;
+                    calculateRowTotal($(this));
+                });
+                updateTotals();
+            });
 
-                    if (totalQty > availableStock) {
-                        hasStockIssues = true;
-                        return false; // break the loop
+            $('#createForm').on('submit', function(e) {
+                let isValid = true;
+                let anyItemSelected = false;
+
+                $('.item-row').each(function() {
+                    if ($(this).find('.item-select').val()) {
+                        anyItemSelected = true;
                     }
                 });
 
-                if (hasStockIssues) {
+                if (!anyItemSelected) {
+                    Swal.fire('Error', 'Pilih minimal satu item untuk melanjutkan', 'error');
+                    isValid = false;
+                }
+
+                if (!$('#partner_id').val()) {
+                    Swal.fire('Error', 'Pilih customer terlebih dahulu', 'error');
+                    isValid = false;
+                }
+
+                if (!$('#warehouse').val()) {
+                    Swal.fire('Error', 'Pilih gudang terlebih dahulu', 'error');
+                    isValid = false;
+                }
+
+                if (!$('#order_date').val() || !$('#tanggal_pengiriman').val()) {
+                    Swal.fire('Error', 'Isi tanggal order dan tanggal pengiriman', 'error');
+                    isValid = false;
+                }
+
+                if (!isValid) {
                     e.preventDefault();
-                    Swal.fire({
-                        title: 'Peringatan Stok',
-                        text: 'Beberapa item melebihi stok yang tersedia. Apakah Anda yakin ingin melanjutkan?',
-                        icon: 'warning',
-                        showCancelButton: true,
-                        confirmButtonText: 'Ya, Lanjutkan',
-                        cancelButtonText: 'Batal'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            // Submit form if confirmed
-                            $(this).off('submit').submit();
-                        }
-                    });
                 }
             });
-
-            updateTotals();
         });
     </script>
 @endpush
