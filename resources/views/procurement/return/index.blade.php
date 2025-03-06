@@ -104,19 +104,16 @@
                         },
                     },
                     columns: [{
-                            data: 'invoice_number'
+                            data: 'invoice'
                         },
                         {
-                            data: 'partner_name'
+                            data: 'principle'
                         },
                         {
-                            data: 'invoice_date',
-                            render: function(data, type, row) {
-                                return formatDate(data);
-                            }
+                            data: 'tgl_return',
                         },
                         {
-                            data: 'sign'
+                            data: 'pengaju'
                         },
                         {
                             data: 'status'
