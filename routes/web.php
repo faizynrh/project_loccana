@@ -68,6 +68,8 @@ Route::middleware('auth.login')->group(
 
         // ==========================================MASTERDATA========================================
 
+        // ITEM
+
         Route::prefix('/item')->name('item.')->controller(ItemController::class)->group(function () {
             Route::get('/', 'index')->name('index');
             Route::get('/ajax', 'ajax')->name('ajax');
@@ -253,134 +255,135 @@ Route::middleware('auth.login')->group(
             Route::get('/mutasi/{id}', 'edit')->name('mutasi');
             Route::post('/addmutasi', 'store')->name('store');
             Route::get('/export-excel', 'exportExcel')->name('exportexcel');
-
-            Route::prefix('/stock_gudang')->name('stock_gudang.')->controller(StockGudangController::class)->group(function () {
-                Route::get('/', 'index')->name('index');
-                Route::get('/ajax', 'ajax')->name('ajax');
-                Route::get('/detail/{id}', 'show')->name('detail');
-            });
-
-            Route::prefix('/stock_in_transit')->name('stock_in_transit.')->controller(StockInTransitController::class)->group(function () {
-                Route::get('/', 'index')->name('index');
-                Route::get('/ajax', 'ajax')->name('ajax');
-                Route::get('/add', 'create')->name('create');
-                Route::post('/store', 'store')->name('store');
-                Route::get('/detail/{id}', 'show')->name('detail');
-                Route::get('/export-excel', 'exportExcel')->name('exportexcel');
-            });
-
-            Route::prefix('/transfer_stock')->name('transfer_stock.')->controller(TransferStockController::class)->group(function () {
-                Route::get('/', 'index')->name('index');
-                Route::get('/ajax', 'ajax')->name('ajax');
-                Route::get('/add', 'create')->name('create');
-                Route::post('/store', 'store')->name('store');
-                Route::get('/edit/{id}', 'edit')->name('edit');
-                Route::put('/update/{id}', 'update')->name('update');
-                Route::get('/detail/{id}', 'show')->name('detail');
-                Route::delete('/delete/{id}', 'destroy')->name('destroy');
-                Route::get('/print/{id}', 'print')->name('print');
-            });
-
-            Route::prefix('/report_persediaan')->name('report_persediaan.')->controller(InventoryReportController::class)->group(function () {
-                Route::get('/', 'index')->name('index');
-                Route::get('/ajax', 'ajax')->name('ajax');
-                Route::get('/export-excel', 'exportExcel')->name('exportexcel');
-            });
-
-
-            // ===================================== PENJUALAN =========================================
-
-            Route::prefix('/penjualan')->name('penjualan.')->controller(PenjualanController::class)->group(function () {
-                Route::get('/', 'index')->name('index');
-                Route::get('/ajax', 'ajaxselling')->name('ajax');
-                Route::get('/add', 'create')->name('create');
-                Route::post('/add', 'store')->name('store');
-                Route::get('/getItemsList/{id}', 'getItemsList')->name('getitem');
-                Route::get('/getDetailCustomer/{id}', 'getDetailCustomer')->name('getDetailCustomer');
-                Route::get('/getDetailWarehouse/{id}', 'getDetailWarehouse')->name('getDetailWarehouse');
-                Route::get('/getStock/{id}', 'getstock')->name('getstock');
-                Route::delete('/delete/{id}', 'destroy')->name('destroy');
-                Route::get('/detail/{id}', 'show')->name('detail');
-                Route::get('/edit/{id}', 'edit')->name('edit');
-                Route::put('/update/{id}', 'update')->name('update');
-                Route::get('/approve/{id}', 'vapprove')->name('vapprove');
-                Route::put('/approve/{id}', 'approve')->name('approve');
-                Route::get('/print/{id}', 'print')->name('print');
-            });
-
-            Route::prefix('/range_price')->name('range_price.')->controller(RangePriceController::class)->group(function () {
-                Route::get('/', 'index')->name('index');
-                Route::get('/ajax', 'ajax')->name('ajax');
-                Route::get('/edit/{id}', 'edit')->name('edit');
-                Route::put('/update/{id}', 'update')->name('update');
-            });
-
-            Route::prefix('/return_penjualan')->name('return_penjualan.')->controller(ReturnPenjualanController::class)->group(function () {
-                Route::get('/', 'index')->name('index');
-                Route::get('/ajax', 'ajax')->name('ajax');
-                Route::get('/add', 'create')->name('create');
-                Route::get('/detail_invoice/{id}', 'getinvoiceDetails')->name('getinvoiceDetails');
-                Route::post('/store', 'store')->name('store');
-                Route::get('/detail/{id}', 'show')->name('detail');
-                Route::get('/edit/{id}', 'edit')->name('edit');
-                Route::put('/update/{id}', 'update')->name('update');
-                Route::delete('/delete/{id}', 'destroy')->name('destroy');
-                Route::get('/approve/{id}', 'detail_approve')->name('detail_approve');
-                Route::put('/approve/{id}', 'approve')->name('approve');
-                Route::put('/reject/{id}', 'reject')->name('reject');
-            });
-
-            Route::prefix('/invoice_penjualan')->name('invoice_penjualan.')->controller(InvoicePenjualanController::class)->group(function () {
-                Route::get('/', 'index')->name('index');
-                Route::get('/ajax', 'ajax')->name('ajax');
-                Route::get('/detail_selling/{id}', 'getdetails')->name('getdetails');
-                Route::get('/add', 'create')->name('create');
-                Route::post('/store', 'store')->name('store');
-                Route::get('/edit/{id}', 'edit')->name('edit');
-                Route::put('/update/{id}', 'update')->name('update');
-                Route::get('/detail/{id}', 'show')->name('detail');
-                Route::delete('/delete/{id}', 'destroy')->name('destroy');
-            });
-
-            Route::prefix('/dasar_penjualan')->name('dasar_penjualan.')->controller(DasarPenjualanController::class)->group(function () {
-                Route::get('/', 'index')->name('index');
-                Route::get('/ajax', 'ajax')->name('ajax');
-                Route::get('/export-excel', 'exportExcel')->name('exportexcel');
-            });
-
-            Route::prefix('/report_penjualan')->name('report_penjualan.')->controller(ReportPenjualanController::class)->group(function () {
-                Route::get('/', 'index')->name('index');
-                Route::get('/ajax', 'ajax')->name('ajax');
-                Route::get('/export-excel', 'exportExcel')->name('exportexcel');
-            });
-
-
-            // ===================================== CASHBANK =========================================
-
-            //Hutang
-            Route::prefix('/hutang')->name('hutang.')->controller(HutangController::class)->group(
-                function () {
-                    Route::get('/', 'index')->name('index');
-                    Route::get('/ajax', 'ajax')->name('ajax');
-                    Route::get('/detail/{id}', 'showhutang')->name('detail');
-                    Route::get('/getinvoice/{id}', 'getinvoice')->name('getinvoice');
-
-                    Route::prefix('/pembayaran')->name('pembayaran.')->group(function () {
-                        Route::get('/', 'pembayaran')->name('index');
-                        Route::get('/ajax', 'ajaxpembayaran')->name('ajax');
-                        Route::get('/add', 'create')->name('create');
-                        Route::post('/store', 'store')->name('store');
-                        Route::get('/edit/{id}', 'edit')->name('edit');
-                        Route::put('/update/{id}', 'update')->name('update');
-                        Route::get('/approve/{id}', 'detail_approve')->name('detail_approve');
-                        Route::put('/approve/{id}', 'approve')->name('approve');
-                        Route::put('/reject/{id}', 'reject')->name('reject');
-                        Route::get('/detail/{id}', 'showpembayaran')->name('detail');
-                        Route::delete('/delete/{id}', 'destroy')->name('destroy');
-                        Route::get('/print/{id}', 'print')->name('print');
-                    });
-                }
-            );
         });
+
+
+        Route::prefix('/stock_gudang')->name('stock_gudang.')->controller(StockGudangController::class)->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/ajax', 'ajax')->name('ajax');
+            Route::get('/detail/{id}', 'show')->name('detail');
+        });
+
+        Route::prefix('/stock_in_transit')->name('stock_in_transit.')->controller(StockInTransitController::class)->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/ajax', 'ajax')->name('ajax');
+            Route::get('/add', 'create')->name('create');
+            Route::post('/store', 'store')->name('store');
+            Route::get('/detail/{id}', 'show')->name('detail');
+            Route::get('/export-excel', 'exportExcel')->name('exportexcel');
+        });
+
+        Route::prefix('/transfer_stock')->name('transfer_stock.')->controller(TransferStockController::class)->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/ajax', 'ajax')->name('ajax');
+            Route::get('/add', 'create')->name('create');
+            Route::post('/store', 'store')->name('store');
+            Route::get('/edit/{id}', 'edit')->name('edit');
+            Route::put('/update/{id}', 'update')->name('update');
+            Route::get('/detail/{id}', 'show')->name('detail');
+            Route::delete('/delete/{id}', 'destroy')->name('destroy');
+            Route::get('/print/{id}', 'print')->name('print');
+        });
+
+        Route::prefix('/report_persediaan')->name('report_persediaan.')->controller(InventoryReportController::class)->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/ajax', 'ajax')->name('ajax');
+            Route::get('/export-excel', 'exportExcel')->name('exportexcel');
+        });
+
+
+        // ===================================== PENJUALAN =========================================
+
+        Route::prefix('/penjualan')->name('penjualan.')->controller(PenjualanController::class)->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/ajax', 'ajaxselling')->name('ajax');
+            Route::get('/add', 'create')->name('create');
+            Route::post('/add', 'store')->name('store');
+            Route::get('/getItemsList/{id}', 'getItemsList')->name('getitem');
+            Route::get('/getDetailCustomer/{id}', 'getDetailCustomer')->name('getDetailCustomer');
+            Route::get('/getDetailWarehouse/{id}', 'getDetailWarehouse')->name('getDetailWarehouse');
+            Route::get('/getStock/{id}', 'getstock')->name('getstock');
+            Route::delete('/delete/{id}', 'destroy')->name('destroy');
+            Route::get('/detail/{id}', 'show')->name('detail');
+            Route::get('/edit/{id}', 'edit')->name('edit');
+            Route::put('/update/{id}', 'update')->name('update');
+            Route::get('/approve/{id}', 'vapprove')->name('vapprove');
+            Route::put('/approve/{id}', 'approve')->name('approve');
+            Route::get('/print/{id}', 'print')->name('print');
+        });
+
+        Route::prefix('/range_price')->name('range_price.')->controller(RangePriceController::class)->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/ajax', 'ajax')->name('ajax');
+            Route::get('/edit/{id}', 'edit')->name('edit');
+            Route::put('/update/{id}', 'update')->name('update');
+        });
+
+        Route::prefix('/return_penjualan')->name('return_penjualan.')->controller(ReturnPenjualanController::class)->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/ajax', 'ajax')->name('ajax');
+            Route::get('/add', 'create')->name('create');
+            Route::get('/detail_invoice/{id}', 'getinvoiceDetails')->name('getinvoiceDetails');
+            Route::post('/store', 'store')->name('store');
+            Route::get('/detail/{id}', 'show')->name('detail');
+            Route::get('/edit/{id}', 'edit')->name('edit');
+            Route::put('/update/{id}', 'update')->name('update');
+            Route::delete('/delete/{id}', 'destroy')->name('destroy');
+            Route::get('/approve/{id}', 'detail_approve')->name('detail_approve');
+            Route::put('/approve/{id}', 'approve')->name('approve');
+            Route::put('/reject/{id}', 'reject')->name('reject');
+        });
+
+        Route::prefix('/invoice_penjualan')->name('invoice_penjualan.')->controller(InvoicePenjualanController::class)->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/ajax', 'ajax')->name('ajax');
+            Route::get('/detail_selling/{id}', 'getdetails')->name('getdetails');
+            Route::get('/add', 'create')->name('create');
+            Route::post('/store', 'store')->name('store');
+            Route::get('/edit/{id}', 'edit')->name('edit');
+            Route::put('/update/{id}', 'update')->name('update');
+            Route::get('/detail/{id}', 'show')->name('detail');
+            Route::delete('/delete/{id}', 'destroy')->name('destroy');
+        });
+
+        Route::prefix('/dasar_penjualan')->name('dasar_penjualan.')->controller(DasarPenjualanController::class)->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/ajax', 'ajax')->name('ajax');
+            Route::get('/export-excel', 'exportExcel')->name('exportexcel');
+        });
+
+        Route::prefix('/report_penjualan')->name('report_penjualan.')->controller(ReportPenjualanController::class)->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/ajax', 'ajax')->name('ajax');
+            Route::get('/export-excel', 'exportExcel')->name('exportexcel');
+        });
+
+        // ===================================== CASHBANK =========================================
+
+        Route::prefix('/hutang')->name('hutang.')->controller(HutangController::class)->group(
+            function () {
+                Route::get('/', 'index')->name('index');
+                Route::get('/ajax', 'ajax')->name('ajax');
+                Route::get('/detail/{id}', 'showhutang')->name('detail');
+                Route::get('/getinvoice/{id}', 'getinvoice')->name('getinvoice');
+
+                Route::prefix('/pembayaran')->name('pembayaran.')->group(function () {
+                    Route::get('/', 'pembayaran')->name('index');
+                    Route::get('/ajax', 'ajaxpembayaran')->name('ajax');
+                    Route::get('/add', 'create')->name('create');
+                    Route::post('/store', 'store')->name('store');
+                    Route::get('/edit/{id}', 'edit')->name('edit');
+                    Route::put('/update/{id}', 'update')->name('update');
+                    Route::get('/approve/{id}', 'detail_approve')->name('detail_approve');
+                    Route::put('/approve/{id}', 'approve')->name('approve');
+                    Route::put('/reject/{id}', 'reject')->name('reject');
+                    Route::get('/detail/{id}', 'showpembayaran')->name('detail');
+                    Route::delete('/delete/{id}', 'destroy')->name('destroy');
+                    Route::get('/print/{id}', 'print')->name('print');
+                });
+            }
+        );
     }
+
+
 );
