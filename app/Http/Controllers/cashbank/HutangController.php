@@ -119,6 +119,7 @@ class HutangController extends Controller
             $apiResponse = fectApi(env('HUTANG_URL') . '/' . $id);
             if ($apiResponse->successful()) {
                 $data = json_decode($apiResponse->body());
+                // dd($data);
                 return view('cashbank.hutang.detailpembayaran', compact('data'));
             } else {
                 return back()->withErrors($apiResponse->json()['message']);

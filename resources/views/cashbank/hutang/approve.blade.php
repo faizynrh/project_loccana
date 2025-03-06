@@ -49,7 +49,7 @@
                                 <label class="form-label fw-bold mt-2 mb-1 small">Cash Account</label>
                                 <input type="text" class="form-control" value="{{ $data->data[0]->coa_name }}" readonly>
                                 <label class="form-label fw-bold mt-2 mb-1 small">Tanggal Terbit</label>
-                                <input type="text" class="form-control" value="{{ $data->data[0]->published_date }}"
+                                <input type="text" class="form-control" value="{{ $data->data[0]->publish_date }}"
                                     readonly>
                                 <label class="form-label fw-bold mt-2 mb-1 small">Jatuh Tempo</label>
                                 <input type="text" class="form-control" value="{{ $data->data[0]->due_date }}" readonly>

@@ -140,7 +140,7 @@
                             }
                         },
                         {
-                            data: 'tgl'
+                            data: 'tanggal'
                         },
                         {
                             data: 'type_akun'
@@ -152,52 +152,58 @@
                                 let statusClass = '';
                                 let statusLabel = data;
 
-                                if (data.toLowerCase() === 'lunas') {
+                                if (data.toLowerCase() === 'pending') {
                                     statusClass = 'btn btn-warning btn-sm ';
                                     statusLabel =
-                                        `<a href="/hutang/pembayaran/approve/${row.transaksi_id}" class="${statusClass}" title="Klik untuk Approve"> ${data}</a>`;
-                                } else if (data.toLowerCase() === '') {
+                                        `<a href="/hutang/pembayaran/approve/${row.transaksi_id}" class="${statusClass}" title="Klik untuk Approve">Konfirmasi</a>`;
+                                } else if (data.toLowerCase() === 'approved') {
                                     statusClass = 'badge bg-success fw-bold';
                                 }
                                 return statusLabel !== data ? statusLabel :
                                     `<span class="${statusClass}">${data}</span>`;
                             }
-
                         },
                         {
                             data: null,
                             render: function(data, type, row) {
-                                let actionButtons = `
-            <div class="btn-group dropdown me-1 mb-1">
-                <button type="button" class="btn btn-outline-danger rounded-3 dropdown-toggle dropdown-toggle-split"
-                        data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-reference="parent">
-                    <span class="sr-only"><i class="bi bi-list-task"></i></span>
-                </button>
-                <div class="dropdown-menu">
-                    <a href="/hutang/pembayaran/detail_pembayaran/${row.transaksi_id}" class="dropdown-item" title="Detail">
-                        <i class="bi bi-eye text-primary"></i> Detail
-                    </a>
-                    <a href="/hutang/pembayaran/print/${row.transaksi_id}" class="dropdown-item" target="_blank" title="Print PDF">
-                        <i class="bi bi-printer text-warning"></i> Print PDF
-                    </a>
-                    <div class="dropdown-divider"></div>
-                    <a href="/hutang/pembayaran/edit/${row.transaksi_id}" class="dropdown-item" title="Edit">
-                        <i class="bi bi-pencil text-info"></i> Edit
-                    </a>
-                    <form action="/hutang/pembayaran/delete/${row.transaksi_id}" method="POST" id="delete${row.transaksi_id}" style="display:inline;">
-                        @csrf
-                        @method('DELETE')
-                        <button type="button" class="dropdown-item" title="Hapus" onclick="confirmDelete(${row.transaksi_id})">
-                            <i class="bi bi-trash text-danger"></i> Delete
-                        </button>
-                    </form>
-                </div>
-            </div>
-        `;
+                                let isApproved = row.status.toLowerCase() ===
+                                    'approved';
+                                let editButton = `
+                                                    <a href="/hutang/pembayaran/edit/${row.transaksi_id}" class="dropdown-item ${isApproved ? 'disabled' : ''}" title="Edit">
+                                                        <i class="bi bi-pencil text-info"></i> Edit
+                                                    </a>`;
 
+                                let deleteButton = `
+                                                    <form action="/hutang/pembayaran/delete/${row.transaksi_id}" method="POST" id="delete${row.transaksi_id}" style="display:inline;">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="button" class="dropdown-item ${isApproved ? 'disabled' : ''}" title="Hapus" onclick="${isApproved ? '' : `confirmDelete(${row.transaksi_id})`}">
+                                                            <i class="bi bi-trash text-danger"></i> Delete
+                                                        </button>
+                                                    </form>`;
+
+                                let actionButtons = `
+                                                    <div class="btn-group dropdown me-1 mb-1">
+                                                        <button type="button" class="btn btn-outline-danger rounded-3 dropdown-toggle dropdown-toggle-split"
+                                                                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-reference="parent">
+                                                            <span class="sr-only"><i class="bi bi-list-task"></i></span>
+                                                        </button>
+                                                        <div class="dropdown-menu">
+                                                            <a href="/hutang/pembayaran/detail_pembayaran/${row.transaksi_id}" class="dropdown-item" title="Detail">
+                                                                <i class="bi bi-eye text-primary"></i> Detail
+                                                            </a>
+                                                            <a href="/hutang/pembayaran/print/${row.transaksi_id}" class="dropdown-item" target="_blank" title="Print PDF">
+                                                                <i class="bi bi-printer text-warning"></i> Print PDF
+                                                            </a>
+                                                            <div class="dropdown-divider"></div>
+                                                            ${editButton}
+                                                            ${deleteButton}
+                                                        </div>
+                                                    </div>`;
                                 return `<div class="d-flex">${actionButtons}</div>`;
                             }
                         }
+
 
 
                     ]

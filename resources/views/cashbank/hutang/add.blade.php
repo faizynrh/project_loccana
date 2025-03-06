@@ -141,8 +141,7 @@
                             <div class="row">
                                 <div class="col-md-12 text-end">
                                     <button type="submit" class="btn btn-primary" id="submitButton">Simpan</button>
-                                    <a href="{{ route('invoice_pembelian.index') }}"
-                                        class="btn btn-secondary ms-2">Batal</a>
+                                    <a href="{{ route('hutang.pembayaran') }}" class="btn btn-secondary ms-2">Batal</a>
                                 </div>
                             </div>
                         </form>
@@ -216,6 +215,7 @@
                     dataType: "json",
                     success: function(response) {
                         $('#loading-overlay').fadeOut();
+                        console.log(response);
 
                         let availableInvoices = [];
                         let options = '<option value="" disabled selected>Pilih Invoice</option>';
