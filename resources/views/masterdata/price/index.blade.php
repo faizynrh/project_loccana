@@ -79,10 +79,16 @@
                         data: 'nama_principal'
                     },
                     {
-                        data: 'harga_pokok'
+                        data: 'harga_pokok',
+                        render: function(data, type, row) {
+                            return formatRupiah(data);
+                        }
                     },
                     {
-                        data: 'harga_beli'
+                        data: 'harga_beli',
+                        render: function(data, type, row) {
+                            return formatRupiah(data);
+                        }
                     },
                     {
                         data: null,
