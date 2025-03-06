@@ -2,33 +2,27 @@
 @section('content')
     @push('styles')
         <style>
-            /* Make form elements align properly */
             .hidden {
                 display: none !important;
             }
 
 
 
-            /* Align table cells vertically */
             #transaction-table td {
                 vertical-align: middle;
                 padding: 8px 4px;
             }
 
-            /* Properly align form controls in table */
             #transaction-table input,
             #transaction-table select {
                 width: 100%;
             }
 
-            /* Stock info styling */
             .item-row td {
                 padding-bottom: 40px;
-                /* Tambah lebih banyak padding */
             }
 
 
-            /* Fixed width for specific columns */
             #transaction-table th:nth-child(1),
             #transaction-table td:nth-child(1) {
                 width: 140px;
@@ -69,11 +63,9 @@
                 width: 70px;
             }
 
-            /* Ensure items maintain proper spacing even with stock info */
             .item-row td {
                 position: relative;
                 padding-bottom: 20px;
-                /* Add extra padding to accommodate stock info */
             }
 
             .stock-info {
@@ -82,7 +74,6 @@
                 left: 4px;
             }
 
-            /* Make number inputs more readable */
             input[type="number"] {
                 text-align: right;
             }
@@ -183,17 +174,17 @@
                             <table class="table mt-3" id="transaction-table">
                                 <thead>
                                     <tr style="border-bottom: 3px solid #000;">
-                                        <th style="width: 140px">Kode</th>
+                                        <th style="width: 190px">Kode</th>
                                         <th style="width: 40px"></th>
                                         <th style="width: 105px">notes</th>
                                         <th style="width: 80px">Qty Box</th>
                                         <th style="width: 45px">Qty Satuan</th>
-                                        <th style="width: 70px">Total Qty</th>
+                                        <th style="width: 90px">Total Qty</th>
                                         <th style="width: 100px">Harga</th>
                                         <th style="width: 30px">Diskon (%)</th>
                                         <th style="width: 70px">Total</th>
                                         <th style="width: 30px"></th>
-                                        <th style="width: 30px"></th>
+                                        <th style="width: 20px"></th>
                                     </tr>
                                 </thead>
                                 <tbody id="tableBody">
@@ -236,7 +227,9 @@
                                             <input type="number" name="items[0][total_price]"
                                                 class="form-control bg-body-secondary total-input" readonly>
                                         </td>
-                                        <td></td>
+                                        <td> <button type="button" class="btn btn-danger btn-sm remove-row"
+                                                disabled>X</button>
+                                        </td>
                                     </tr>
                                     <tr style="border-bottom: 2px solid #000;">
                                         <td colspan="9"></td>
@@ -291,6 +284,16 @@
 @push('scripts')
     <script>
         $(document).ready(function() {
+            $(document).on('change', '.item-select', function() {
+                const totalItems = $('.item-select option').length - 1; // Kurangi 1 buat option kosong
+                const selectedItems = $('.item-select').map(function() {
+                    return $(this).val();
+                }).get().filter(item => item !== '').length;
+
+                $('#add-row').prop('disabled', selectedItems >= totalItems);
+            });
+
+
             $('#pembayaran').on('change', function() {
                 const selectedValue = $(this).val();
                 const customInput = $('#custom_payment_term');
@@ -405,7 +408,7 @@
                 if (items && items.length > 0) {
                     items.forEach(function(item) {
                         options +=
-                            `<option value="${item.id}" data-uom="${item.unit_of_measure_id}" data-sku="${item.sku}">${item.sku} - ${item.name}</option>`;
+                            `<option value="${item.id}" data-uom="${item.unit_of_measure_id}" data-item="${item.name}" data-sku="${item.sku}">${item.sku ?? '-'} - ${item.name ?? '-'}</option>`;
                     });
                 } else {
                     options = '<option value="" disabled selected>Tidak ada item tersedia</option>';
@@ -434,6 +437,7 @@
                 const selectedUOM = selectedOption.data('uom');
                 const itemId = $(this).val();
                 const itemSku = selectedOption.data('sku');
+                const itemName = selectedOption.data('item');
                 const row = $(this).closest('tr');
 
                 if (itemId) {
@@ -454,7 +458,7 @@
 
                         Swal.fire({
                             title: 'Item Duplikat',
-                            text: `Item "${itemSku}" sudah dipilih pada baris ke-${duplicateIndex}. Pilih item yang berbeda.`,
+                            text: `Item "${itemName}" sudah dipilih pada baris ke-${duplicateIndex}. Pilih item yang berbeda.`,
                             icon: 'warning',
                             confirmButtonText: 'OK'
                         });
@@ -506,7 +510,8 @@
                         row.data('pcs-per-box', pcsPerBox);
 
                         row.find('input[name$="[box_quantity]"]').parent().append(
-                            `<div class="stock-info text-danger small mt-1">Stock: ${stockInfo} | PCS per Box: ${pcsPerBox}</div>`
+                            `<div class="stock-info text-danger small mt-1">Stock: ${stockInfo}<br>
+                             PCS per Box: ${pcsPerBox}</div>`
                         );
 
                         if (pcsPerBox > 0) {
@@ -563,7 +568,7 @@
                         const isSelected = selectedItems.some(selectedItem => selectedItem.id === item.id);
                         if (!isSelected) {
                             itemOptions +=
-                                `<option value="${item.id}" data-uom="${item.unit_of_measure_id}" data-sku="${item.sku}">${item.sku} - ${item.name}</option>`;
+                                `<option value="${item.id}" data-uom="${item.unit_of_measure_id}" data-item="${item.name}" data-sku="${item.sku}">${item.sku} - ${item.name}</option>`;
                         }
                     });
                 } else {
