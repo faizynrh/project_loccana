@@ -357,6 +357,7 @@ Route::middleware('auth.login')->group(
 
             // ===================================== CASHBANK =========================================
 
+            //Hutang
             Route::prefix('/hutang')->name('hutang.')->controller(HutangController::class)->group(
                 function () {
                     Route::get('/', 'index')->name('index');
