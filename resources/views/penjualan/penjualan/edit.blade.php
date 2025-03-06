@@ -273,6 +273,8 @@
                 }
             });
 
+
+
             $('#custom_payment_term').on('input', function() {
                 let value = $(this).val();
                 // Remove any non-numeric characters
@@ -295,6 +297,7 @@
                 value = value.replace(' Hari', '');
                 $(this).val(value);
             });
+
             var poId = '{{ $data->data[0]->partner_id }}';
             var warehouseId = $('#gudang').val();
 
@@ -345,7 +348,7 @@
                 if (items && items.length > 0) {
                     items.forEach(function(item) {
                         options +=
-                            `<option value="${item.id}" data-uom="${item.unit_of_measure_id}">${item.sku} - ${item.name}</option>`;
+                            `<option value="${item.id}" data-uom="${item.unit_of_measure_id}">${item.sku ?? '-'} - ${item.name ?? '-'}</option>`;
                     });
                 } else {
                     options = '<option value="" disabled selected>Tidak ada item tersedia</option>';
@@ -361,24 +364,19 @@
                 const selectedUOM = $(this).find(':selected').data('uom');
                 $(this).siblings('.uom-input').val(selectedUOM);
 
-                // Get the item ID from the selected option
                 const itemId = $(this).val();
                 const row = $(this).closest('tr');
 
                 if (itemId) {
-                    // Make an AJAX request to get the stock information
                     $.ajax({
                         url: '/penjualan/getStock/' + itemId,
                         type: 'GET',
                         dataType: 'json',
                         success: function(response) {
-                            // Display stock information below the quantity input
                             const stockInfo = response.stock ? response.stock : 0;
 
-                            // Remove existing stock info if any
                             row.find('.stock-info').remove();
 
-                            // Add stock info after the box quantity input
                             row.find('input[name$="[box_quantity]"]').parent().append(
                                 `<div class="stock-info text-danger small mt-1">Stock: ${stockInfo}</div>`
                             );
@@ -386,7 +384,6 @@
                         error: function(xhr, status, error) {
                             console.error('Error fetching stock information:', error);
 
-                            // Remove existing stock info and show error
                             row.find('.stock-info').remove();
                             row.find('input[name$="[box_quantity]"]').parent().append(
                                 '<div class="stock-info text-danger small mt-1">Stock: Unable to fetch</div>'
@@ -394,19 +391,15 @@
                         }
                     });
                 } else {
-                    // If no item is selected, remove any existing stock info
                     row.find('.stock-info').remove();
                 }
             });
 
-            // Fixed function to create new rows
             function createNewRow(rowCount) {
-                // Get items from the existing select elements
                 let itemOptions = '';
                 const firstSelect = $('.item-select').first();
 
                 if (firstSelect.length > 0) {
-                    // Clone options from the first select element
                     firstSelect.find('option').each(function() {
                         const value = $(this).val();
                         const text = $(this).text();
@@ -463,7 +456,6 @@
         `;
             }
 
-            // Fix add-row button handler
             $('#add-row').on('click', function(e) {
                 e.preventDefault();
                 const rowCount = $('.item-row').length;
@@ -472,7 +464,6 @@
                 updateTotals();
             });
 
-            // Handle remove row
             $(document).on('click', '.remove-row', function() {
                 if ($('.item-row').length > 1) {
                     $(this).closest('tr').remove();
@@ -549,6 +540,8 @@
                 });
                 updateTotals();
             });
+
+
 
             function calculateRowTotal(row) {
                 const boxqty = parseFloat(row.find('.box-qty-input').val()) || 0;
