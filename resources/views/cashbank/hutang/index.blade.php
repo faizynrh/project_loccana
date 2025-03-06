@@ -68,7 +68,7 @@
                                     <button type="submit" class="btn btn-primary">Cari</button>
                                 </form>
                             </div>
-                            <a href="{{ route('hutang.pembayaran') }}" class="btn btn-primary me-2 fw-bold text-end">
+                            <a href="{{ route('hutang.pembayaran.index') }}" class="btn btn-primary me-2 fw-bold text-end">
                                 <i class="bi bi-cash-stack"></i> Pembayaran
                             </a>
                         </div>
@@ -154,7 +154,7 @@
                             render: function(data, type, row) {
                                 return `
                                     <div class="text-center">
-                                        <a href="/hutang/detail_hutang/${row.invoice_id}" class="btn btn-sm btn-info mb-2" title="Detail">
+                                        <a href="/hutang/detail/${row.invoice_id}" class="btn btn-sm btn-info mb-2" title="Detail">
                                             <i class="bi bi-eye"></i>
                                         </a>
                                     </div>
