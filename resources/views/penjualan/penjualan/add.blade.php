@@ -2,71 +2,89 @@
 @section('content')
     @push('styles')
         <style>
+            /* Make form elements align properly */
             .hidden {
                 display: none !important;
             }
 
-            /* Add styles for better alignment */
-            .form-control,
-            .form-select {
-                height: 38px;
-                vertical-align: middle;
-            }
 
-            /* Add these styles to the existing <style> section */
-            .item-row td {
-                vertical-align: top;
+
+            /* Align table cells vertically */
+            #transaction-table td {
+                vertical-align: middle;
                 padding: 8px 4px;
             }
 
-            .item-row input,
-            .item-row select {
-                height: 38px;
+            /* Properly align form controls in table */
+            #transaction-table input,
+            #transaction-table select {
+                width: 100%;
+            }
+
+            /* Stock info styling */
+            .item-row td {
+                padding-bottom: 40px;
+                /* Tambah lebih banyak padding */
+            }
+
+
+            /* Fixed width for specific columns */
+            #transaction-table th:nth-child(1),
+            #transaction-table td:nth-child(1) {
+                width: 140px;
+            }
+
+            #transaction-table th:nth-child(3),
+            #transaction-table td:nth-child(3) {
+                width: 105px;
+            }
+
+            #transaction-table th:nth-child(4),
+            #transaction-table td:nth-child(4) {
+                width: 80px;
+            }
+
+            #transaction-table th:nth-child(5),
+            #transaction-table td:nth-child(5) {
+                width: 45px;
+            }
+
+            #transaction-table th:nth-child(6),
+            #transaction-table td:nth-child(6) {
+                width: 70px;
+            }
+
+            #transaction-table th:nth-child(7),
+            #transaction-table td:nth-child(7) {
+                width: 100px;
+            }
+
+            #transaction-table th:nth-child(8),
+            #transaction-table td:nth-child(8) {
+                width: 30px;
+            }
+
+            #transaction-table th:nth-child(9),
+            #transaction-table td:nth-child(9) {
+                width: 70px;
+            }
+
+            /* Ensure items maintain proper spacing even with stock info */
+            .item-row td {
+                position: relative;
+                padding-bottom: 20px;
+                /* Add extra padding to accommodate stock info */
             }
 
             .stock-info {
-                margin-top: 2px !important;
-                padding: 2px 4px;
-                border-radius: 3px;
-                font-size: 0.75rem;
-                background-color: #f8f9fa;
-                border: 1px solid #e9ecef;
+                position: relative;
+                bottom: 2px;
+                left: 4px;
             }
 
-            #toast-container {
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                z-index: 9999;
-            }
-
-            .toast {
-                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-                opacity: 1 !important;
-                margin-bottom: 10px;
-            }
-
-            .toast-header {
-                padding: 0.5rem 1rem;
-            }
-
-            .toast-body {
-                padding: 0.75rem 1rem;
-            }
-
-            .bg-danger-subtle {
-                background-color: #f8d7da !important;
-                color: #721c24;
-            }
-
-            #transaction-table th {
-                padding: 8px 4px;
-                vertical-align: middle;
-                text-align: center;
-            }
-
-            #transaction-table td input {
-                padding: 0.375rem 0.5rem;
+            /* Make number inputs more readable */
+            input[type="number"] {
+                text-align: right;
             }
         </style>
     @endpush
@@ -102,12 +120,10 @@
                             @csrf
                             <div class="row mb-3">
                                 <div class="col-md-6">
-                                    <label for="code" class="form-label fw-bold mt-2 mb-1 small">Nomor
-                                        Penjualan</label>
+                                    <label for="code" class="form-label fw-bold mt-2 mb-1 small">Nomor Penjualan</label>
                                     <input type="text" class="form-control bg-body-secondary" id="code"
                                         name="order_number" placeholder="Nomor Penjualan" value="">
-                                    <label for="tanggal" class="form-label fw-bold mt-2 mb-1 small">Tanggal
-                                        Order</label>
+                                    <label for="tanggal" class="form-label fw-bold mt-2 mb-1 small">Tanggal Order</label>
                                     <input type="date" class="form-control" id="order_date" name="order_date" required>
 
                                     <label for="tanggal" class="form-label fw-bold mt-2 mb-1 small">Tanggal
@@ -192,29 +208,29 @@
                                             <input type="hidden" class="pcs-per-box" value="0">
                                         </td>
                                         <td>
-                                            <input type="text" name="items[0][notes]"
-                                                class="form-control notes-input">
+                                            <input type="text" name="items[0][notes]" class="form-control notes-input"
+                                                disabled>
                                         </td>
                                         <td>
                                             <input type="number" name="items[0][box_quantity]"
-                                                class="form-control box-qty-input" min="0">
-                                            <div class="stock-info-container"></div>
+                                                class="form-control box-qty-input" min="0" disabled>
+                                            <div class="stock"></div>
                                         </td>
                                         <td>
                                             <input type="number" name="items[0][per_box_quantity]"
-                                                class="form-control qty-input" min="0">
+                                                class="form-control qty-input" min="0" disabled>
                                         <td>
                                             <input type="number" name="items[0][quantity]"
                                                 class="form-control total-qty bg-body-secondary" min="0" readonly>
                                         </td>
                                         <td>
                                             <input type="number" name="items[0][unit_price]"
-                                                class="form-control price-input" value="0" min="0">
+                                                class="form-control price-input" value="0" min="0" disabled>
                                         </td>
                                         <td>
                                             <input type="number" name="items[0][discount]"
                                                 class="form-control discount-input" value="0" min="0"
-                                                max="100">
+                                                max="100" disabled>
                                         </td>
                                         <td colspan="2">
                                             <input type="number" name="items[0][total_price]"
@@ -275,7 +291,6 @@
 @push('scripts')
     <script>
         $(document).ready(function() {
-            // Existing code for payment terms
             $('#pembayaran').on('change', function() {
                 const selectedValue = $(this).val();
                 const customInput = $('#custom_payment_term');
@@ -293,7 +308,6 @@
                 }
             });
 
-            // Existing code for payment term formatting
             $('#custom_payment_term').on('input', function() {
                 let value = $(this).val();
                 value = value.replace(/[^\d]/g, '');
@@ -315,14 +329,12 @@
                 $(this).val(value);
             });
 
-            // Partner selection and item loading
             $('#partner_id').on('change', function() {
                 var poId = $(this).val();
                 $('#loading-overlay').fadeIn();
                 if (poId) {
                     var companyId = 2;
 
-                    // Fetch item list
                     $.ajax({
                         url: '/purchase_order/getItemsList/' + companyId,
                         type: 'GET',
@@ -340,7 +352,6 @@
                         }
                     });
 
-                    // Fetch customer details
                     $.ajax({
                         url: '/penjualan/getDetailCustomer/' + poId,
                         type: 'GET',
@@ -362,7 +373,6 @@
                 }
             });
 
-            // Warehouse selection
             $('#warehouse').on('change', function() {
                 var warehouseId = $(this).val();
                 $('#loading-overlay').fadeIn();
@@ -388,13 +398,14 @@
                 }
             });
 
-            // Update item selects
+            let selectedItems = [];
+
             function updateAllItemSelects(items) {
                 var options = '<option value="" disabled selected>--Pilih Item--</option>';
                 if (items && items.length > 0) {
                     items.forEach(function(item) {
                         options +=
-                            `<option value="${item.id}" data-uom="${item.unit_of_measure_id}">${item.sku} - ${item.name}</option>`;
+                            `<option value="${item.id}" data-uom="${item.unit_of_measure_id}" data-sku="${item.sku}">${item.sku} - ${item.name}</option>`;
                     });
                 } else {
                     options = '<option value="" disabled selected>Tidak ada item tersedia</option>';
@@ -402,69 +413,161 @@
 
                 $('#tableBody').data('current-items', items);
                 $('.item-select').html(options);
+
+                $('.item-row').each(function() {
+                    disableRowInputs($(this));
+                });
             }
 
-            // Item selection handler
-            $(document).on('change', '.item-select', function() {
-                const selectedUOM = $(this).find(':selected').data('uom');
-                $(this).siblings('.uom-input').val(selectedUOM);
+            function disableRowInputs(row) {
+                row.find('.notes-input, .box-qty-input, .qty-input, .price-input, .discount-input').prop('disabled',
+                    true);
+            }
 
+            function enableRowInputs(row) {
+                row.find('.notes-input, .box-qty-input, .qty-input, .price-input, .discount-input').prop('disabled',
+                    false);
+            }
+
+            $(document).on('change', '.item-select', function() {
+                const selectedOption = $(this).find(':selected');
+                const selectedUOM = selectedOption.data('uom');
                 const itemId = $(this).val();
+                const itemSku = selectedOption.data('sku');
                 const row = $(this).closest('tr');
 
                 if (itemId) {
-                    $.ajax({
-                        url: '/penjualan/getStock/' + itemId,
-                        type: 'GET',
-                        dataType: 'json',
-                        success: function(response) {
-                            const stockInfo = response.stock ? response.stock : 0;
-                            const pcsPerBox = response.pcs_per_box ? response.pcs_per_box : 0;
+                    let isDuplicate = false;
+                    let duplicateRow = null;
 
-                            row.find('.stock-info').remove();
-
-                            // Display stock and pcs_per_box info in a more aligned way
-                            row.find('input[name$="[box_quantity]"]').parent().append(
-                                `<div class="stock-info text-primary small mt-1">Stock: ${stockInfo} | PCS per Box: ${pcsPerBox}</div>`
-                            );
-
-                            // Store stock and pcs_per_box data for calculations
-                            row.data('stock', stockInfo);
-                            row.data('pcsPerBox', pcsPerBox);
-
-                            // Auto-fill the qty_input with pcs_per_box value
-                            row.find('.qty-input').val(pcsPerBox);
-
-                            // Recalculate totals
-                            calculateRowTotal(row);
-                            updateTotals();
-                        },
-                        error: function(xhr, status, error) {
-                            console.error('Error fetching stock information:', error);
-                            row.find('.stock-info').remove();
-                            row.find('input[name$="[box_quantity]"]').parent().append(
-                                '<div class="stock-info text-danger small mt-1">Stock: Unable to fetch</div>'
-                            );
+                    $('.item-select').not(this).each(function() {
+                        if ($(this).val() === itemId) {
+                            isDuplicate = true;
+                            duplicateRow = $(this).closest('tr');
+                            return false;
                         }
                     });
+
+                    if (isDuplicate) {
+                        const duplicateIndex = duplicateRow.index() + 1;
+                        const currentIndex = row.index() + 1;
+
+                        Swal.fire({
+                            title: 'Item Duplikat',
+                            text: `Item "${itemSku}" sudah dipilih pada baris ke-${duplicateIndex}. Pilih item yang berbeda.`,
+                            icon: 'warning',
+                            confirmButtonText: 'OK'
+                        });
+
+                        const previousItemId = row.data('prev-item-id');
+                        if (previousItemId) {
+                            $(this).val(previousItemId);
+                        } else {
+                            $(this).val('');
+                        }
+
+                        return;
+                    }
+
+                    row.data('prev-item-id', itemId);
+
+                    $(this).siblings('.uom-input').val(selectedUOM);
+
+                    row.data('item-id', itemId);
+
+                    enableRowInputs(row);
+
+                    fetchStockInformation(itemId, row);
                 } else {
+                    row.data('item-id', null);
+                    row.data('prev-item-id', null);
+                    disableRowInputs(row);
                     row.find('.stock-info').remove();
                 }
             });
 
-            // Create new row with aligned styling
+            $(document).on('focus', '.item-select', function() {
+                const currentValue = $(this).val();
+                $(this).closest('tr').data('prev-item-id', currentValue);
+            });
+
+            function fetchStockInformation(itemId, row) {
+                $.ajax({
+                    url: '/penjualan/getStock/' + itemId,
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function(response) {
+                        const stockInfo = response.stock ? response.stock : 0;
+                        const pcsPerBox = response.pcs_per_box ? response.pcs_per_box : 0;
+
+                        row.find('.stock-info').remove();
+
+                        row.data('stock', stockInfo);
+                        row.data('pcs-per-box', pcsPerBox);
+
+                        row.find('input[name$="[box_quantity]"]').parent().append(
+                            `<div class="stock-info text-danger small mt-1">Stock: ${stockInfo} | PCS per Box: ${pcsPerBox}</div>`
+                        );
+
+                        if (pcsPerBox > 0) {
+                            const maxBoxes = Math.floor(stockInfo / pcsPerBox);
+                            row.find('.box-qty-input').attr('max', maxBoxes);
+                        }
+
+                        row.find('.qty-input').attr('max', stockInfo);
+
+                        row.find('.qty-input').val(pcsPerBox);
+
+                        if (!row.find('.box-qty-input').val()) {
+                            row.find('.box-qty-input').val(1);
+                        }
+
+                        calculateRowTotal(row);
+                        updateTotals();
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error fetching stock information:', error);
+
+                        row.find('.stock-info').remove();
+                        row.find('input[name$="[box_quantity]"]').parent().append(
+                            '<div class="stock-info text-danger small mt-1">Stock: Unable to fetch</div>'
+                        );
+                    }
+                });
+            }
+
+            function updateItemSelects() {
+                $('.item-select').each(function() {
+                    const rowItemId = $(this).closest('tr').data('item-id');
+                    const select = $(this);
+
+                    if (rowItemId) return;
+
+                    select.find('option').each(function() {
+                        const optionValue = $(this).val();
+                        if (optionValue && selectedItems.some(item => item.id === optionValue)) {
+                            $(this).hide();
+                        } else {
+                            $(this).show();
+                        }
+                    });
+                });
+            }
+
             function createNewRow(rowCount) {
                 const currentItems = $('#tableBody').data('current-items');
                 let itemOptions = '<option value="" disabled selected>--Pilih Item--</option>';
 
                 if (currentItems && currentItems.length > 0) {
                     currentItems.forEach(function(item) {
-                        itemOptions +=
-                            `<option value="${item.id}" data-uom="${item.unit_of_measure_id}">${item.sku} - ${item.name}</option>`;
+                        const isSelected = selectedItems.some(selectedItem => selectedItem.id === item.id);
+                        if (!isSelected) {
+                            itemOptions +=
+                                `<option value="${item.id}" data-uom="${item.unit_of_measure_id}" data-sku="${item.sku}">${item.sku} - ${item.name}</option>`;
+                        }
                     });
                 } else {
-                    itemOptions =
-                        '<option value="" disabled selected>Pilih Customer Dahulu</option>';
+                    itemOptions = '<option value="" disabled selected>Pilih Customer Dahulu</option>';
                 }
 
                 return `
@@ -476,22 +579,22 @@
                     <input type="hidden" name="items[${rowCount}][uom_id]" class="uom-input">
                 </td>
                 <td>
-                    <input type="text" name="items[${rowCount}][notes]" class="form-control notes-input">
+                    <input type="text" name="items[${rowCount}][notes]" class="form-control notes-input" disabled>
                 </td>
                 <td>
-                    <input type="number" name="items[${rowCount}][box_quantity]" class="form-control box-qty-input" value="0" min="0">
+                    <input type="number" name="items[${rowCount}][box_quantity]" class="form-control box-qty-input" value="0" min="0" disabled>
                 </td>
                 <td>
-                    <input type="number" name="items[${rowCount}][per_box_quantity]" class="form-control qty-input" value="0" min="0">
+                    <input type="number" name="items[${rowCount}][per_box_quantity]" class="form-control qty-input" value="0" min="0" disabled>
                 </td>
                 <td>
                     <input type="number" name="items[${rowCount}][quantity]" class="form-control total-qty bg-body-secondary" value="0" min="0" readonly>
                 </td>
                 <td>
-                    <input type="number" name="items[${rowCount}][unit_price]" class="form-control price-input" value="0" min="0">
+                    <input type="number" name="items[${rowCount}][unit_price]" class="form-control price-input" value="0" min="0" disabled>
                 </td>
                 <td>
-                    <input type="number" name="items[${rowCount}][discount]" class="form-control discount-input" value="0" min="0" max="100">
+                    <input type="number" name="items[${rowCount}][discount]" class="form-control discount-input" value="0" min="0" max="100" disabled>
                 </td>
                 <td colspan="2">
                     <input type="number" name="items[${rowCount}][total_price]" class="form-control bg-body-secondary total-input" readonly>
@@ -503,92 +606,77 @@
         `;
             }
 
-            // Add row button
             $('#add-row').on('click', function(e) {
                 e.preventDefault();
+
+                let allItemsSelected = true;
+                $('.item-row').each(function() {
+                    if (!$(this).find('.item-select').val()) {
+                        allItemsSelected = false;
+                        return false;
+                    }
+                });
+
+                if (!allItemsSelected) {
+                    Swal.fire('Perhatian',
+                        'Pilih item pada baris yang sudah ada sebelum menambahkan baris baru', 'warning'
+                    );
+                    return;
+                }
+
                 const rowCount = $('.item-row').length;
                 const newRowHtml = createNewRow(rowCount);
                 $(newRowHtml).insertBefore('#tableBody tr:last');
                 updateTotals();
             });
 
-            // Remove row button
             $(document).on('click', '.remove-row', function() {
                 if ($('.item-row').length > 1) {
-                    $(this).closest('tr').remove();
+                    const row = $(this).closest('tr');
+                    const itemId = row.data('item-id');
+
+                    if (itemId) {
+                        selectedItems = selectedItems.filter(item => item.id !== itemId);
+                    }
+
+                    row.remove();
                     updateTotals();
+                    updateItemSelects();
                 }
             });
 
-            // Input change events
             $(document).on('input', '.box-qty-input, .qty-input, .price-input, .discount-input', function() {
                 var row = $(this).closest('tr');
+
+                if ($(this).hasClass('box-qty-input') || $(this).hasClass('qty-input')) {
+                    const boxQty = parseInt(row.find('.box-qty-input').val()) || 0;
+                    const qtyPerBox = parseInt(row.find('.qty-input').val()) || 0;
+                    const pcsPerBox = parseInt(row.data('pcs-per-box')) || 0;
+                    const stockLimit = parseInt(row.data('stock')) || 0;
+
+                    const totalQty = (boxQty * pcsPerBox) + qtyPerBox;
+
+                    if (totalQty > stockLimit) {
+                        Swal.fire('Perhatian', 'Total quantity melebihi stock yang tersedia', 'warning');
+
+                        if ($(this).hasClass('box-qty-input')) {
+                            const maxBoxes = Math.floor((stockLimit - qtyPerBox) / pcsPerBox);
+                            $(this).val(Math.max(0, maxBoxes));
+                        } else {
+                            const maxUnits = stockLimit - (boxQty * pcsPerBox);
+                            $(this).val(Math.max(0, maxUnits));
+                        }
+                    }
+                }
+
                 calculateRowTotal(row);
                 updateTotals();
             });
 
-            // Toast notification for stock warning
-            function showStockWarning(message) {
-                // Create toast container if it doesn't exist
-                if ($('#toast-container').length === 0) {
-                    $('body').append(
-                        '<div id="toast-container" style="position: fixed; top: 20px; right: 20px; z-index: 9999;"></div>'
-                    );
-                }
-
-                // Create unique ID for this toast
-                const toastId = 'toast-' + Date.now();
-
-                // Create toast HTML
-                const toast = `
-        <div id="${toastId}" class="toast show" role="alert" aria-live="assertive" aria-atomic="true" style="min-width: 300px; background-color: #ffecec; border-left: 4px solid #dc3545;">
-            <div class="toast-header bg-danger text-white">
-                <strong class="me-auto">Peringatan Stok</strong>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
-            </div>
-            <div class="toast-body">
-                ${message}
-            </div>
-        </div>
-        `;
-
-                // Add toast to container
-                $('#toast-container').append(toast);
-
-                // Auto-close after 5 seconds
-                setTimeout(function() {
-                    $(`#${toastId}`).fadeOut(function() {
-                        $(this).remove();
-                    });
-                }, 5000);
-
-                // Close when X is clicked
-                $(`#${toastId} .btn-close`).click(function() {
-                    $(`#${toastId}`).fadeOut(function() {
-                        $(this).remove();
-                    });
-                });
-            }
-
-            // Calculate row total with new logic
             function calculateRowTotal(row) {
                 const boxQty = parseInt(row.find('.box-qty-input').val()) || 0;
-                const satuan = parseInt(row.find('.qty-input').val()) || 0;
-                const pcsPerBox = row.data('pcsPerBox') || 0;
-                const stock = row.data('stock') || 0;
-
-                // New calculation: (box_qty * pcs_per_box) + qty_satuan
-                const totalQty = (boxQty * pcsPerBox) + satuan;
-                row.find('.total-qty').val(totalQty.toFixed(0));
-
-                // Check against stock
-                if (totalQty > stock) {
-                    showStockWarning(`Jumlah item melebihi stok tersedia (${stock})!`);
-                    row.find('.total-qty').addClass('bg-danger-subtle');
-                } else {
-                    row.find('.total-qty').removeClass('bg-danger-subtle');
-                }
-
+                const pcsPerBox = parseInt(row.data('pcs-per-box')) || 0;
+                const individualQty = parseInt(row.find('.qty-input').val()) || 0;
                 const price = parseFloat(row.find('.price-input').val()) || 0;
                 let discount = parseFloat(row.find('.discount-input').val()) || 0;
 
@@ -597,21 +685,24 @@
                     row.find('.discount-input').val(100);
                 }
 
+                const totalQty = (boxQty * pcsPerBox) + individualQty;
+                row.find('.total-qty').val(totalQty.toFixed(0));
+
                 const subtotal = totalQty * price;
                 const ppn = parseFloat($('#ppn').val()) || 0;
                 const ppn_decimal = ppn / 100;
-                const hargaPokok = subtotal / (1 + ppn_decimal);
-                const nilaiPpn = subtotal - hargaPokok;
+                const hargapokok = subtotal / (1 + ppn_decimal);
+                const nilaippn = subtotal - hargapokok;
                 const discountAmount = subtotal * (discount / 100);
                 const total = subtotal - discountAmount;
 
                 row.find('.total-input').val(total.toFixed(0));
 
                 row.data('discountAmount', discountAmount);
-                row.data('nilaiPpn', nilaiPpn);
+                row.data('nilaippn', nilaippn);
+                row.data('subtotal', subtotal);
             }
 
-            // Update totals
             function updateTotals() {
                 let subtotal = 0;
                 let totalDiscount = 0;
@@ -619,18 +710,10 @@
                 let totalFinal = 0;
 
                 $('.item-row').each(function() {
-                    const totalQty = parseFloat($(this).find('.total-qty').val()) || 0;
-                    const price = parseFloat($(this).find('.price-input').val()) || 0;
-                    const discount = parseFloat($(this).find('.discount-input').val()) || 0;
-                    const total = parseFloat($(this).find('.total-input').val()) || 0;
-
-                    const rowSubtotal = totalQty * price;
-                    const rowDiscount = rowSubtotal * (discount / 100);
-
-                    subtotal += rowSubtotal;
+                    subtotal += $(this).data('subtotal') || 0;
                     totalDiscount += $(this).data('discountAmount') || 0;
-                    totalFinal += total;
-                    totalPPN += $(this).data('nilaiPpn') || 0;
+                    totalPPN += $(this).data('nilaippn') || 0;
+                    totalFinal += parseFloat($(this).find('.total-input').val()) || 0;
                 });
 
                 const dpp = totalFinal - totalPPN;
@@ -660,6 +743,55 @@
             }
 
             updateTotals();
+
+            $('#ppn').on('input', function() {
+                const ppnValue = parseFloat($(this).val());
+                if (ppnValue < 0) {
+                    $(this).val(0);
+                } else if (ppnValue > 100) {
+                    $(this).val(100);
+                }
+
+                $('.item-row').each(function() {
+                    calculateRowTotal($(this));
+                });
+                updateTotals();
+            });
+
+            $('#createForm').on('submit', function(e) {
+                let isValid = true;
+                let anyItemSelected = false;
+
+                $('.item-row').each(function() {
+                    if ($(this).find('.item-select').val()) {
+                        anyItemSelected = true;
+                    }
+                });
+
+                if (!anyItemSelected) {
+                    Swal.fire('Error', 'Pilih minimal satu item untuk melanjutkan', 'error');
+                    isValid = false;
+                }
+
+                if (!$('#partner_id').val()) {
+                    Swal.fire('Error', 'Pilih customer terlebih dahulu', 'error');
+                    isValid = false;
+                }
+
+                if (!$('#warehouse').val()) {
+                    Swal.fire('Error', 'Pilih gudang terlebih dahulu', 'error');
+                    isValid = false;
+                }
+
+                if (!$('#order_date').val() || !$('#tanggal_pengiriman').val()) {
+                    Swal.fire('Error', 'Isi tanggal order dan tanggal pengiriman', 'error');
+                    isValid = false;
+                }
+
+                if (!isValid) {
+                    e.preventDefault();
+                }
+            });
         });
     </script>
 @endpush
