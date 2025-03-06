@@ -201,7 +201,7 @@
                             data: 'sum_of_ltkg'
                         },
                         {
-                            data: 'sum_of_total_diskon'
+                            data: 'sum_of_total_discount'
                         },
                         {
                             data: 'sum_of_total'

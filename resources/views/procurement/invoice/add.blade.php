@@ -209,7 +209,7 @@
 
             $('#nodo').on('change', function() {
                 const id = $(this).val();
-                const url = '{{ route('invoice.getdetails', ':id') }}'.replace(':id', id);
+                const url = '{{ route('invoice_pembelian.getdetails', ':id') }}'.replace(':id', id);
 
                 if (id) {
                     $('#loading-overlay').fadeIn();

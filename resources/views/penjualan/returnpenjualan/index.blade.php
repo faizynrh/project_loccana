@@ -133,7 +133,7 @@
                                 if (data.toLowerCase() === 'pending') {
                                     statusClass = 'btn btn-warning btn-sm ';
                                     statusLabel =
-                                        `<a href="/return_penjualan/approve/${row.id}" class="${statusClass}" title="Klik untuk Approve"> ${data}</a>`;
+                                        `<a href="/return_penjualan/approve/${row.id_return}" class="${statusClass}" title="Klik untuk Approve"> ${data}</a>`;
                                 } else if (data.toLowerCase() === 'rejected') {
                                     statusClass = 'badge bg-danger fw-bold';
                                 } else if (data.toLowerCase() === 'approved') {
@@ -145,7 +145,6 @@
                                 return statusLabel !== data ? statusLabel :
                                     `<span class="${statusClass}">${data}</span>`;
                             }
-
                         },
 
                         {
@@ -153,16 +152,16 @@
                             render: function(data, type, row) {
                                 return `
                             <div class="d-flex">
-                                <a href="/return_penjualan/detail/${row.id}" class="btn btn-sm btn-info mb-2 me-1" title="Detail">
+                                <a href="/return_penjualan/detail/${row.id_return}" class="btn btn-sm btn-info mb-2 me-1" title="Detail">
                                     <i class="bi bi-eye"></i>
                                 </a>
-                                <a href="/return_penjualan/edit/${row.id}" class="btn btn-sm btn-warning mb-2 me-1" title="Edit" ${row.status === 'paid' ? 'disabled' : ''}>
+                                <a href="/return_penjualan/edit/${row.id_return}" class="btn btn-sm btn-warning mb-2 me-1" title="Edit" ${row.status === 'paid' ? 'disabled' : ''}>
                                     <i class="bi bi-pencil"></i>
                                 </a>
-                                <form action="/return_penjualan/delete/${row.id}" method="POST" id="delete${row.id}" style="display:inline;">
+                                <form action="/return_penjualan/delete/${row.id_return}" method="POST" id="delete${row.id_return}" style="display:inline;">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="button" class="btn btn-sm btn-danger mb-2" title="Hapus" onclick="confirmDelete(${row.id})" ${row.status === 'paid' ? 'disabled' : ''}>
+                                    <button type="button" class="btn btn-sm btn-danger mb-2" title="Hapus" onclick="confirmDelete(${row.id_return})" ${row.status === 'paid' ? 'disabled' : ''}>
                                         <i class="bi bi-trash"></i>
                                     </button>
                                 </form>

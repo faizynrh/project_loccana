@@ -110,7 +110,7 @@
         <tr>
             <td class="info-label">Transaksi</td>
             <td class="info-separator">:</td>
-            <td>{{ $datas[0]->payment_number }}</td>
+            <td>{{ $datas[0]->po_code }}</td>
         </tr>
         <tr>
             <td class="info-label">Ref</td>
@@ -175,7 +175,7 @@
             @foreach ($datas as $item)
                 <tr>
                     <td>{{ $item->invoice_number }}</td>
-                    <td>Rp.</td>
+                    <td>{{ $item->currency_name }}</td>
                     <td class="center-align">{{ $item->rate }}</td>
                     <td>{{ $item->due_date_inv }}</td>
                     <td class="right-align">Rp. {{ number_format($item->nilai, 2, ',', '.') }}</td>
