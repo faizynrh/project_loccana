@@ -242,7 +242,7 @@
                                     <button type="submit" class="btn btn-primary" id="submitButton">Submit</button>
                                     {{-- <button type="button" class="btn btn-danger ms-2" id="rejectButton">Reject</button>
                                     --}}
-                                    <a href="/penjualan" class="btn btn-secondary ms-2">Back</a>
+                                    <a href="/penjualan" class="btn btn-secondary ms-2">Kembali</a>
                                 </div>
                             </div>
                         </form>

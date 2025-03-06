@@ -189,7 +189,7 @@
                                         </form>
                                     </td>
                                     <td>
-                                        <a href="/purchase_order" class="btn btn-secondary ms-2">Back</a>
+                                        <a href="/purchase_order" class="btn btn-secondary ms-2">Kembali</a>
                                     </td>
                                 </tr>
                             </table>

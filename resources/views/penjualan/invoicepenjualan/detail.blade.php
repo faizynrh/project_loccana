@@ -158,7 +158,7 @@ NPWP: 01.555.161.7.428.000
                         </table>
                         <div class="row">
                             <div class="col-md-12 text-end">
-                                <a href="{{ route('invoice_penjualan.index') }}" class="btn btn-primary ms-2">Back</a>
+                                <a href="{{ route('invoice_penjualan.index') }}" class="btn btn-primary ms-2">Kembali</a>
                             </div>
                         </div>
                     </div>

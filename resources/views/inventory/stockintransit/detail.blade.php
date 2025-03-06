@@ -34,7 +34,7 @@
                                 Nama Item
                             </h5>
                             <a href="{{ route('stock_in_transit.index') }}"
-                                class="btn btn-secondary ms-auto text-end">Back</a>
+                                class="btn btn-secondary ms-auto text-end">Kembali</a>
                         </div>
                         <div class="row mb-3">
                             <div class="col-12">

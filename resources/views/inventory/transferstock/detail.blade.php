@@ -86,7 +86,7 @@
                         </div>
                         <div class="row">
                             <div class="col-md-12 text-end">
-                                <a href="/transfer_stock" class="btn btn-secondary ms-2">Back</a>
+                                <a href="/transfer_stock" class="btn btn-secondary ms-2">Kembali</a>
                             </div>
                         </div>
                     </div>

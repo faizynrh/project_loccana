@@ -33,7 +33,7 @@
                             <h5 class="fw-bold d-inline-block border-bottom pb-2 border-3">
                                 {{ $data->data->nama_stock }}
                             </h5>
-                            <a href="{{ route('stock.index') }}" class="btn btn-secondary ms-auto text-end">Back</a>
+                            <a href="{{ route('stock.index') }}" class="btn btn-secondary ms-auto text-end">Kembali</a>
                         </div>
                         <div class="row mb-3">
                             <div class="col-12">

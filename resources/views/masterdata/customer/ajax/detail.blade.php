@@ -50,7 +50,7 @@
                 <div class="modal-footer">
                     <div class="col-md-12 text-end">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
-                            aria-label="Close">Back</button>
+                            aria-label="Close">Kembali</button>
                     </div>
                 </div>
             </div>
