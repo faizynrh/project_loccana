@@ -128,8 +128,6 @@ class PenjualanController extends Controller
 
     }
 
-
-
     protected function getDetailCustomer($id)
     {
         try {
@@ -168,30 +166,20 @@ class PenjualanController extends Controller
         }
     }
 
-    protected function getItemsList($company_id)
-    {
-        $apiUrl = env('LIST_ITEMS');
-        $response = storeApi($apiUrl, ['company_id' => $company_id]);
-
-        if ($response->successful()) {
-            $items = $response->json()['data']['items'] ?? [];
-            $unit_of_measure_id = $response->json()['data']['unit_of_measure_id'] ?? [];
-            $sku = $response->json()['data']['sku'] ?? [];
-            return response()->json(['items' => $items, 'unit_of_measure_id' => $unit_of_measure_id, 'sku' => $sku]);
-        }
-
-        return response()->json(['items' => [], 'unit_of_measure_id' => []]);
-    }
     protected function getstock($id)
     {
         $apiResponse = fectApi(env('STOCK_ITEM') . '/' . $id);
 
         if ($apiResponse->successful()) {
-            $stock = $apiResponse->json()['data']['stock'] ?? [];
-            return response()->json(['stock' => $stock]);
+            $stock = $apiResponse->json()['data'][0]['stock'] ?? 0;
+            $pcsPerBox = $apiResponse->json()['data'][0]['pcs_per_box'] ?? 0;
+            return response()->json([
+                'stock' => $stock,
+                'pcs_per_box' => $pcsPerBox
+            ]);
         }
 
-        return response()->json(['stock' => []]);
+        return response()->json(['stock' => 0, 'pcs_per_box' => 0]);
     }
 
     /**
@@ -467,6 +455,7 @@ class PenjualanController extends Controller
                         if (isset($item['quantity']) && isset($item['unit_price'])) {
                             $box_qty = $item['box_quantity'] ?? 0;
                             $qty = $item['quantity'] ?? 0;
+
                             $total_qty = $box_qty + $qty;
 
                             $subtotal_item = $total_qty * $item['unit_price'];
