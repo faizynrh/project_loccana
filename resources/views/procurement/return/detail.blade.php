@@ -143,7 +143,8 @@
                         </table>
                         <div class="row">
                             <div class="col-md-12 text-end">
-                                <a href="{{ route('return_pembelian.index') }}" class="btn btn-secondary ms-2">Back</a>
+                                <a href="{{ route('return_pembelian.index') }}"
+                                    class="btn btn-secondary ms-2">Kembali</a>
                             </div>
                         </div>
                     </div>

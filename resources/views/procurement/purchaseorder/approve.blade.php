@@ -209,7 +209,7 @@
                                                     onclick="confirmReject('{{ $data->data[0]->id_po }}')">Reject</button>
                                             </form>
                                         </td>
-                                        <td> <a href="/purchase_order" class="btn btn-secondary ms-2">Back</a></td>
+                                        <td> <a href="/purchase_order" class="btn btn-secondary ms-2">Kembali</a></td>
 
                                     </tr>
                                 </table>

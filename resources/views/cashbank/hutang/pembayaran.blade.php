@@ -170,7 +170,7 @@
                                     'approved';
                                 let editButton = `
                                                     <a href="/hutang/pembayaran/edit/${row.transaksi_id}" class="dropdown-item ${isApproved ? 'disabled' : ''}" title="Edit">
-                                                        <i class="bi bi-pencil text-info"></i> Edit
+                                                        <i class="bi bi-pencil ${isApproved ? '' : 'text-info'}"></i> Edit
                                                     </a>`;
 
                                 let deleteButton = `
@@ -178,7 +178,7 @@
                                                         @csrf
                                                         @method('DELETE')
                                                         <button type="button" class="dropdown-item ${isApproved ? 'disabled' : ''}" title="Hapus" onclick="${isApproved ? '' : `confirmDelete(${row.transaksi_id})`}">
-                                                            <i class="bi bi-trash text-danger"></i> Delete
+                                                            <i class="bi bi-trash ${isApproved ? '' : 'text-danger'}"></i> Delete
                                                         </button>
                                                     </form>`;
 

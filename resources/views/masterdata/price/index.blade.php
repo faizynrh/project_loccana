@@ -79,10 +79,16 @@
                         data: 'nama_principal'
                     },
                     {
-                        data: 'harga_pokok'
+                        data: 'harga_pokok',
+                        render: function(data, type, row) {
+                            return formatRupiah(data);
+                        }
                     },
                     {
-                        data: 'harga_beli'
+                        data: 'harga_beli',
+                        render: function(data, type, row) {
+                            return formatRupiah(data);
+                        }
                     },
                     {
                         data: null,
@@ -126,13 +132,13 @@
                         //
                     },
                     success: function(response) {
-                        updateModal('#modal-layout', 'Edit Price', response,
+                        updateModal('#modal-example', 'Edit Price', response,
                             'modal-lg');
                     },
                     error: function(xhr) {
                         let errorMsg = xhr.responseText ||
                             '<p>An error occurred while loading the content.</p>';
-                        $('#content-layout').html(errorMsg);
+                        $('#content-example').html(errorMsg);
                     },
                     complete: function() {
                         $('#loading-overlay').fadeOut();

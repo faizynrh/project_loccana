@@ -31,7 +31,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
-                    aria-label="Close">Back</button>
+                    aria-label="Close">Kembali</button>
             </div>
         </div>
     </div>

@@ -189,7 +189,7 @@
                                 <input type="hidden" name="tax_amount" id="tax_amount" value="0">
                                 <input type="hidden" name="company_id" id="company_id" value="2">
                                 <input type="hidden" name="total_amount" id="total_amount" value="0">
-                                <a href="/purchase_order" class="btn btn-secondary ms-2">Back</a>
+                                <a href="/purchase_order" class="btn btn-secondary ms-2">Kembali</a>
                             </div>
                         </div>
                     </div>

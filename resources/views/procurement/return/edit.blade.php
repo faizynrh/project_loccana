@@ -176,7 +176,7 @@
                                 <div class="col-md-12 text-end">
                                     <button type="submit" class="btn btn-primary" id="submitButton">Simpan</button>
                                     <a href="{{ route('return_pembelian.index') }}"
-                                        class="btn btn-secondary ms-2">Back</a>
+                                        class="btn btn-secondary ms-2">Kembali</a>
                                 </div>
                             </div>
                         </form>

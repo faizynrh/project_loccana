@@ -41,8 +41,7 @@
                                 <label class="form-label fw-bold mt-2 mb-1 small">Principal</label>
                                 <input type="text" class="form-control" id="partner_name" readonly>
                                 <label class="form-label fw-bold mt-2 mb-1 small">Alamat</label>
-                                <textarea class="form-control" rows="4"
-                                    readonly>{{ $data->data[0]->shipment_info }}</textarea>
+                                <textarea class="form-control" rows="4" readonly>{{ $data->data[0]->shipment_info }}</textarea>
                                 <label class="form-label fw-bold mt-2 mb-1 small">Att</label>
                                 <input type="text" class="form-control" readonly>
                                 <label class="form-label fw-bold mt-2 mb-1 small">No. Telp</label>
@@ -155,7 +154,7 @@
                         </table>
                         <div class="row">
                             <div class="col-md-12 text-end">
-                                <a href="{{ route('invoice_pembelian.index') }}" class="btn btn-primary ms-2">Back</a>
+                                <a href="{{ route('invoice_pembelian.index') }}" class="btn btn-primary ms-2">Kembali</a>
                             </div>
                         </div>
                     </div>

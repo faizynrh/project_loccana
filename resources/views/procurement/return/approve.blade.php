@@ -150,7 +150,8 @@
                                     <button type="button" class="btn btn-primary"
                                         onclick="confirmApprove('{{ $data->data[0]->id_return }}')">Setujui</button>
                                 </form>
-                                <a href="{{ route('return_pembelian.index') }}" class="btn btn-secondary ms-2">Back</a>
+                                <a href="{{ route('return_pembelian.index') }}"
+                                    class="btn btn-secondary ms-2">Kembali</a>
                             </div>
                         </div>
                     </div>
