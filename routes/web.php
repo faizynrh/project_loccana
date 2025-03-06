@@ -80,6 +80,21 @@ Route::middleware('auth.login')->group(
             Route::get('/detail/{id}', [ItemController::class, 'show'])->name('detail');
         });
 
+        Route::prefix('/item')->name('item.')->controller(ItemController::class)->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/ajax', 'ajax')->name('ajax');
+            Route::get('/add', 'create')->name('create');
+            Route::post('/add', 'store')->name('store');
+            Route::get('/edit/{id}', 'edit')->name('edit');
+            Route::put('/update/{id}', 'update')->name('update');
+            Route::get('/detail/{id}', 'show')->name('detail');
+            Route::delete('/delete/{id}', 'destroy')->name('destroy');
+        });
+
+        Route::resource('item', ItemController::class)->except(['show']);
+        Route::get('item/detail/{id}', [ItemController::class, 'show'])->name('item.detail');
+        Route::get('item/ajax', [ItemController::class, 'ajax'])->name('item.ajax');
+
         // USER
         Route::prefix('/user')->name('user.')->group(function () {
             Route::get('/', function () {
