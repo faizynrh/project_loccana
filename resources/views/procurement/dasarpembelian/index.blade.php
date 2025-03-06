@@ -158,7 +158,7 @@
                             data: 'partner_name'
                         },
                         {
-                            data: 'qty'
+                            data: 'qty_receive'
                         },
                         {
                             data: 'harga',
