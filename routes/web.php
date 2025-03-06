@@ -67,7 +67,7 @@ Route::middleware('auth.login')->group(
 
 
         // ==========================================MASTERDATA========================================
-    
+
         // ITEM
         Route::prefix('/item')->name('item.')->group(function () {
             Route::get('/', [ItemController::class, 'index'])->name('index');
@@ -105,15 +105,15 @@ Route::middleware('auth.login')->group(
         // UOM
         Route::prefix('/uom')->name('uom.')->group(
             function () {
-            Route::get('/', [UomController::class, 'index'])->name('index');
-            Route::get('/ajax', [UomController::class, 'ajaxuom'])->name('ajax');
-            Route::get('/add', [UomController::class, 'create'])->name('create');
-            Route::post('/add', [UomController::class, 'store'])->name('store');
-            Route::delete('/delete/{id}', [UomController::class, 'destroy'])->name('destroy');
-            Route::get('/edit/{id}', [UomController::class, 'edit'])->name('edit');
-            Route::put('/update/{id}', [UomController::class, 'update'])->name('update');
-            Route::get('/detail/{id}', [UomController::class, 'show'])->name('show');
-        }
+                Route::get('/', [UomController::class, 'index'])->name('index');
+                Route::get('/ajax', [UomController::class, 'ajaxuom'])->name('ajax');
+                Route::get('/add', [UomController::class, 'create'])->name('create');
+                Route::post('/add', [UomController::class, 'store'])->name('store');
+                Route::delete('/delete/{id}', [UomController::class, 'destroy'])->name('destroy');
+                Route::get('/edit/{id}', [UomController::class, 'edit'])->name('edit');
+                Route::put('/update/{id}', [UomController::class, 'update'])->name('update');
+                Route::get('/detail/{id}', [UomController::class, 'show'])->name('show');
+            }
         );
 
 
@@ -167,7 +167,7 @@ Route::middleware('auth.login')->group(
         });
 
         // ===================================== PROCUREMENT =========================================
-    
+
         // PENERIMAAN BARANG
         Route::prefix('/penerimaan_barang')->name('penerimaan_barang.')->group(function () {
             Route::get('/', [PenerimaanBarangController::class, 'index'])->name('index');
@@ -238,6 +238,8 @@ Route::middleware('auth.login')->group(
             Route::put('/update/{id}', [ReturnPembelianController::class, 'update'])->name('update');
             Route::get('/detail/{id}', [ReturnPembelianController::class, 'show'])->name('detail');
             Route::delete('/delete/{id}', [ReturnPembelianController::class, 'destroy'])->name('destroy');
+            Route::get('/approve/{id}', [ReturnPembelianController::class, 'detail_approve'])->name('detail_approve');
+            Route::put('/approve/{id}', [ReturnPembelianController::class, 'approve'])->name('approve');
         });
 
         Route::prefix('/report_pembelian')->name('report_pembelian.')->group(function () {
@@ -248,7 +250,7 @@ Route::middleware('auth.login')->group(
 
 
         // ===================================== INVENTORY =========================================
-    
+
         Route::prefix('/stock')->name('stock.')->group(function () {
             Route::get('/', [StockController::class, 'index'])->name('index');
             Route::get('/ajax', [StockController::class, 'ajax'])->name('ajax');
@@ -293,7 +295,7 @@ Route::middleware('auth.login')->group(
 
 
         // ===================================== PENJUALAN =========================================
-    
+
         Route::prefix('/penjualan')->name('penjualan.')->group(function () {
             Route::get('/', [PenjualanController::class, 'index'])->name('index');
             Route::get('/ajax', [PenjualanController::class, 'ajaxselling'])->name('ajax');
@@ -359,7 +361,7 @@ Route::middleware('auth.login')->group(
         });
 
         // ===================================== CASHBANK =========================================
-    
+
         Route::prefix('/hutang')->name('hutang.')->group(function () {
             Route::get('/ajax', [HutangController::class, 'ajax'])->name('ajax');
             Route::get('/ajaxpembayaran', [HutangController::class, 'ajaxpembayaran'])->name('ajaxpembayaran');

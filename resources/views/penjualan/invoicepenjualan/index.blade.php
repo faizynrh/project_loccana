@@ -154,7 +154,7 @@
                             // },
                         },
                         {
-                            data: null,
+                            data: 'total_amount',
                         },
                         {
                             data: 'sisa',
@@ -179,7 +179,7 @@
                             },
                         },
                         {
-                            data: null,
+                            data: 'status',
                         },
                         {
                             data: null,

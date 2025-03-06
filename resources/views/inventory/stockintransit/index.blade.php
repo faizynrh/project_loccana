@@ -151,19 +151,19 @@
                         }
                     },
                     columns: [{
-                            data: 'item_code'
+                            data: 'kode'
                         },
                         {
-                            data: 'item_name'
+                            data: 'produk'
                         },
                         {
                             data: 'kemasan'
                         },
                         {
-                            data: 'partner_name'
+                            data: 'principal'
                         },
                         {
-                            data: 'box_per_lt_kg'
+                            data: 'box_per_lt'
                         },
                         {
                             data: 'stock_awal_lt'
@@ -184,16 +184,16 @@
                             data: 'return_penerimaan_box'
                         },
                         {
-                            data: 'do_lt_kg'
+                            data: 'do_lt'
                         },
                         {
                             data: 'do_box'
                         },
                         {
-                            data: 'do_return_lt'
+                            data: 'return_do_lt'
                         },
                         {
-                            data: 'do_return_box'
+                            data: 'return_do_box'
                         },
                         {
                             data: 'stock_gudang_lt'

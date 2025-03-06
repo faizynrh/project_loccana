@@ -104,19 +104,40 @@
                         },
                     },
                     columns: [{
-                            data: 'invoice'
+                            data: 'invoice_number'
                         },
                         {
-                            data: 'principle'
+                            data: 'partner_name'
                         },
                         {
-                            data: 'tgl_return',
+                            data: 'return_date',
                         },
                         {
-                            data: 'pengaju'
+                            data: 'sign'
                         },
                         {
-                            data: 'status'
+                            data: 'status',
+                            className: 'text-center',
+                            render: function(data, type, row) {
+                                let statusClass = '';
+                                let statusLabel = data;
+
+                                if (data.toLowerCase() === 'pending') {
+                                    statusClass = 'btn btn-warning btn-sm ';
+                                    statusLabel =
+                                        `<a href="/return_pembelian/approve/${row.id_return}" class="${statusClass}" title="Klik untuk Approve"> ${data}</a>`;
+                                } else if (data.toLowerCase() === 'rejected') {
+                                    statusClass = 'badge bg-danger fw-bold';
+                                } else if (data.toLowerCase() === 'approved') {
+                                    statusClass = 'badge bg-success fw-bold';
+                                } else if (data.toLowerCase() === 'processed') {
+                                    statusClass = 'badge bg-info fw-bold';
+                                }
+
+                                return statusLabel !== data ? statusLabel :
+                                    `<span class="${statusClass}">${data}</span>`;
+                            }
+
                         },
                         {
                             data: null,

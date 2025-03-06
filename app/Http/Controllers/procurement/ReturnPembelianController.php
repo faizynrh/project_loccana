@@ -200,4 +200,36 @@ class ReturnPembelianController extends Controller
             return back()->withErrors($e->getMessage());
         }
     }
+
+    public function detail_approve(string $id)
+    {
+        try {
+            $apiResponse = fectApi(env('RETURN_URL') . '/' . $id);
+
+            if ($apiResponse->successful()) {
+                $data = json_decode($apiResponse->body());
+                return view('procurement.return.approve', compact('data'));
+            } else {
+                return back()->withErrors($apiResponse->json()['message']);
+            }
+        } catch (\Exception $e) {
+            return back()->withErrors($e->getMessage());
+        }
+    }
+    public function approve(Request $request, $id)
+    {
+        try {
+            $data = [
+                'status' => 'Approved'
+            ];
+            $apiResponse = updateApi(env('RETURN_URL') . '/approve/' . $id, $data);
+            if ($apiResponse->successful()) {
+                return redirect()->route('return_pembelian.index')->with('success', $apiResponse->json()['message']);
+            } else {
+                return back()->withErrors($apiResponse->json()['message']);
+            }
+        } catch (\Exception $e) {
+            return back()->withErrors($e->getMessage());
+        }
+    }
 }
