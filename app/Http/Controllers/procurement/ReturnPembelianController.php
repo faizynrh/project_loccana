@@ -33,7 +33,7 @@ class ReturnPembelianController extends Controller
                     'draw' => $request->input('draw'),
                     'recordsTotal' => $data['data']['jumlah_filter'] ?? 0,
                     'recordsFiltered' => $data['data']['jumlah'] ?? 0,
-                    'data' => $data['data'] ?? [],
+                    'data' => $data['data']['table'] ?? [],
                 ]);
             }
             return response()->json([
