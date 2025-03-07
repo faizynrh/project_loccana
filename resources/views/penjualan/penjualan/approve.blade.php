@@ -31,9 +31,6 @@
                 </div>
                 <section class="section">
                     <div class="card">
-                        <div class="card-header">
-                            <h4 class="card-title">Detail Form Penjualan</h4>
-                        </div>
                         <div class="card-body">
                             <div class="row mb-3">
                                 <div class="col-md-6">
@@ -93,7 +90,7 @@
                                     <tr style="border-bottom: 3px solid #000;">
                                         <th style="width: 140px">Kode</th>
                                         <th style="width: 40px"></th>
-                                        <th style="width: 105px">notes</th>
+                                        <th style="width: 105px">Notes</th>
                                         <th style="width: 80px">Qty Box</th>
                                         <th style="width: 45px">Qty Satuan</th>
                                         <th style="width: 70px">Total Qty</th>

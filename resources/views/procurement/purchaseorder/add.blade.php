@@ -18,6 +18,9 @@
                         <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item">
+                                    <a href="/purchase_order">Dashboard</a>
+                                </li>
+                                <li class="breadcrumb-item">
                                     <a href="/purchase_order">Purchase Order</a>
                                 </li>
                                 <li class="breadcrumb-item active" aria-current="page">

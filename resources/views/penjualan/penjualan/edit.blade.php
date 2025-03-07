@@ -30,9 +30,6 @@
             </div>
             <section class="section">
                 <div class="card">
-                    <div class="card-header">
-                        <h4 class="card-title">Edit Form Penjualan</h4>
-                    </div>
                     <div class="card-body">
                         @include('alert.alert')
                         <form id="createForm" method="POST"
@@ -127,7 +124,7 @@
                                     <tr style="border-bottom: 3px solid #000;">
                                         <th style="width: 140px">Kode</th>
                                         <th style="width: 40px"></th>
-                                        <th style="width: 105px">notes</th>
+                                        <th style="width: 105px">Notes</th>
                                         <th style="width: 80px">Qty Box</th>
                                         <th style="width: 45px">Qty Satuan</th>
                                         <th style="width: 70px">Total Qty</th>
@@ -238,10 +235,8 @@
                                     <input type="hidden" name="tax_amount" id="tax_amount" value="0">
                                     <input type="hidden" name="company_id" id="company_id" value="2">
                                     <input type="hidden" name="total_amount" id="total_amount" value="0">
-                                    <button type="submit" class="btn btn-primary" id="submitButton">Submit</button>
-                                    {{-- <button type="button" class="btn btn-danger ms-2" id="rejectButton">Reject</button>
-                                    --}}
-                                    <a href="/penjualan" class="btn btn-secondary ms-2">Kembali</a>
+                                    <button type="submit" class="btn btn-primary" id="submitButton">Simpan</button>
+                                    <a href="/penjualan" class="btn btn-secondary ms-2">Batal</a>
                                 </div>
                             </div>
                         </form>
@@ -377,27 +372,6 @@
                 const itemId = $(this).val();
                 const selectedUOM = $(this).find(':selected').data('uom');
 
-                // Check if item is already selected in another row
-                if (itemId && selectedItems.has(itemId)) {
-                    // Find which row has this item
-                    let duplicateRowIndex = -1;
-                    $('.item-select').not(this).each(function(index) {
-                        if ($(this).val() === itemId) {
-                            duplicateRowIndex = index + 1;
-                            return false; // break the loop
-                        }
-                    });
-
-                    Swal.fire({
-                        title: 'Item Duplikat',
-                        text: `Item ini sudah dipilih di baris ${duplicateRowIndex}. Silahkan pilih item lain.`,
-                        icon: 'warning'
-                    });
-
-                    $(this).val('').trigger('change');
-                    return;
-                }
-
                 // Remove previous item from tracking if there was one
                 const previousItemId = $(this).data('previous-item');
                 if (previousItemId) {
@@ -410,10 +384,8 @@
                     $(this).data('previous-item', itemId);
                 }
 
-                // Update UOM input
                 $(this).siblings('.uom-input').val(selectedUOM);
 
-                // Enable/disable row inputs based on selection
                 toggleRowInputs(row, !!itemId);
 
                 if (itemId) {
@@ -426,15 +398,12 @@
                             const pcsPerBox = response.pcs_per_box ? parseInt(response
                                 .pcs_per_box) : 0;
 
-                            // Remove existing stock info
                             row.find('.stock-info').remove();
 
-                            // Add stock info in a better position
                             row.find('input[name$="[box_quantity]"]').parent().append(
                                 `<div class="stock-info text-danger small mt-1">Stock: ${stockInfo} | Pcs per Box: ${pcsPerBox}</div>`
                             );
 
-                            // Set max attribute for quantity inputs
                             row.find('.box-qty-input').attr('max', stockInfo);
                             row.find('.qty-input').attr('max', stockInfo);
 

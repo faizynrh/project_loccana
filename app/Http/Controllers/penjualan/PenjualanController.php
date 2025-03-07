@@ -15,26 +15,26 @@ class PenjualanController extends Controller
      * Display a listing of the resource.
      */
 
-    public function generatePOCode()
-    {
-        try {
-            $currentYear = Carbon::now()->format('Y');
-            $lastCode = Session::get('last_po_code');
-            if ($lastCode && strpos($lastCode, 'PO' . $currentYear) === 0) {
-                $lastNumber = intval(substr($lastCode, -4));
-                $newNumber = str_pad($lastNumber + 1, 4, '0', STR_PAD_LEFT);
-            } else {
-                $newNumber = '0001';
-            }
-            $poCode = 'PO' . $currentYear . $newNumber;
-            return $poCode;
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Error generating PO code: ' . $e->getMessage()
-            ], 500);
-        }
-    }
+    // public function generatePOCode()
+    // {
+    //     try {
+    //         $currentYear = Carbon::now()->format('Y');
+    //         $lastCode = Session::get('last_po_code');
+    //         if ($lastCode && strpos($lastCode, 'PO' . $currentYear) === 0) {
+    //             $lastNumber = intval(substr($lastCode, -4));
+    //             $newNumber = str_pad($lastNumber + 1, 4, '0', STR_PAD_LEFT);
+    //         } else {
+    //             $newNumber = '0001';
+    //         }
+    //         $poCode = 'PO' . $currentYear . $newNumber;
+    //         return $poCode;
+    //     } catch (\Exception $e) {
+    //         return response()->json([
+    //             'success' => false,
+    //             'message' => 'Error generating PO code: ' . $e->getMessage()
+    //         ], 500);
+    //     }
+    // }
 
     public function ajaxselling(Request $request)
     {
