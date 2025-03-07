@@ -32,62 +32,68 @@
                 <div class="card">
                     <div class="card-body">
                         @include('alert.alert')
-                        <div class="d-flex align-items-center mb-2">
-                            <a href="/purchase_order/add" class="btn btn-primary me-2 fw-bold">+ Tambah Purchase Order</a>
-                            <form action="{{ route('purchaseorder.printexcel') }}" method="GET" id="filterForm">
-                                <div class="d-flex align-items-center">
-                                    <select id="yearSelect" class="form-select me-2" name="year" style="width: auto;">
-                                        @php
-                                            $currentYear = now()->year;
-                                        @endphp
-                                        @for ($year = $currentYear; $year >= 2019; $year--)
-                                            <option value="{{ $year }}"
-                                                {{ $year == request('year') ? 'selected' : '' }}>
-                                                {{ $year }}
+                        <div class="row">
+                            <div class="d-flex align-items-center mb-2">
+                                <a href="/purchase_order/add" class="btn btn-primary me-2 fw-bold">+ Tambah Purchase
+                                    Order</a>
+                                <form action="{{ route('purchaseorder.printexcel') }}" method="GET" id="filterForm">
+                                    <div class="d-flex align-items-center">
+                                        <select id="yearSelect" class="form-select me-2" name="year"
+                                            style="width: auto;">
+                                            @php
+                                                $currentYear = now()->year;
+                                            @endphp
+                                            @for ($year = $currentYear; $year >= 2019; $year--)
+                                                <option value="{{ $year }}"
+                                                    {{ $year == request('year') ? 'selected' : '' }}>
+                                                    {{ $year }}
+                                                </option>
+                                            @endfor
+                                        </select>
+                                        <select id="monthSelect" class="form-select me-2" name="month"
+                                            style="width: auto;">
+                                            <option value="0" {{ request('month') == 'all' ? 'selected' : '' }}>ALL
                                             </option>
-                                        @endfor
-                                    </select>
-                                    <select id="monthSelect" class="form-select me-2" name="month" style="width: auto;">
-                                        <option value="0" {{ request('month') == 'all' ? 'selected' : '' }}>ALL
-                                        </option>
-                                        @php
-                                            $months = [
-                                                1 => 'Januari',
-                                                2 => 'Februari',
-                                                3 => 'Maret',
-                                                4 => 'April',
-                                                5 => 'Mei',
-                                                6 => 'Juni',
-                                                7 => 'Juli',
-                                                8 => 'Agustus',
-                                                9 => 'September',
-                                                10 => 'Oktober',
-                                                11 => 'November',
-                                                12 => 'Desember',
-                                            ];
-                                            $currentMonth = Carbon\Carbon::now()->month;
-                                        @endphp
-                                        @foreach ($months as $num => $name)
-                                            <option value="{{ $num }}"
-                                                {{ request('month') == strval($num) || $currentMonth == $num ? 'selected' : '' }}>
-                                                {{ $name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
+                                            @php
+                                                $months = [
+                                                    1 => 'Januari',
+                                                    2 => 'Februari',
+                                                    3 => 'Maret',
+                                                    4 => 'April',
+                                                    5 => 'Mei',
+                                                    6 => 'Juni',
+                                                    7 => 'Juli',
+                                                    8 => 'Agustus',
+                                                    9 => 'September',
+                                                    10 => 'Oktober',
+                                                    11 => 'November',
+                                                    12 => 'Desember',
+                                                ];
+                                                $currentMonth = Carbon\Carbon::now()->month;
+                                            @endphp
+                                            @foreach ($months as $num => $name)
+                                                <option value="{{ $num }}"
+                                                    {{ request('month') == strval($num) || $currentMonth == $num ? 'selected' : '' }}>
+                                                    {{ $name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
 
-                                    <button type="button" id="filterButton" class="btn btn-primary fw-bold">Cari</button>
+                                        <button type="button" id="filterButton"
+                                            class="btn btn-primary fw-bold">Cari</button>
+                                    </div>
+                                </form>
+                                <div class="text-end ms-auto">
+                                    <h6 class="fw-bold">Total Per Bulan</h6>
+                                    <h4 class="fw-bold" id="totalPerBulan">Rp 0,00</h4>
                                 </div>
-                            </form>
-
-                            <div class="text-end ms-auto">
-                                <h6 class="fw-bold">Total Per Bulan</h6>
-                                <h4 class="fw-bold" id="totalPerBulan">Rp 0,00</h4>
-                                <div class="mt-3 d-flex justify-content-end">
-                                    <button type="submit" class="btn btn-primary me-2 fw-bold">
+                            </div>
+                            <div class="row">
+                                <div class="mt-1 d-flex justify-content-end">
+                                    <button type="submit" class="btn btn-primary fw-bold">
                                         <i class="bi bi-file-earmark-excel"></i> Export Excel
                                     </button>
                                 </div>
-
                             </div>
                         </div>
                         <div class="table-responsive">
