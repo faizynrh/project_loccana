@@ -63,15 +63,15 @@
                                 <table class="table table-striped table-bordered mt-3" id="tabledasarpembelian">
                                     <thead>
                                         <tr>
-                                            <th scope="col">Tanggal</th>
-                                            <th scope="col">Kode</th>
-                                            <th scope="col">Nama Barang</th>
-                                            <th scope="col">Principle</th>
-                                            <th scope="col">Qty</th>
-                                            <th scope="col">Harga</th>
-                                            <th scope="col">Jumlah</th>
-                                            <th scope="col">PPN</th>
-                                            <th scope="col">Jumlah+PPN</th>
+                                            <th>Tanggal</th>
+                                            <th>Kode Barang</th>
+                                            <th>Nama Barang</th>
+                                            <th>Nama Principal</th>
+                                            <th>Qty</th>
+                                            <th>Harga</th>
+                                            <th>Jumlah</th>
+                                            <th>PPN</th>
+                                            <th>Jumlah+PPN</th>
                                         </tr>
                                     </thead>
                                 </table>
@@ -133,20 +133,9 @@
                     },
                     columns: [{
                             data: 'order_date',
-                            render: function(data) {
-                                if (data) {
-                                    var date = new Date(data);
-                                    return (
-                                        date.getDate().toString().padStart(2, '0') +
-                                        '-' +
-                                        (date.getMonth() + 1).toString().padStart(2,
-                                            '0') +
-                                        '-' +
-                                        date.getFullYear()
-                                    );
-                                }
-                                return data;
-                            },
+                            render: function(data, type, row) {
+                                return formatDate(data);
+                            }
                         },
                         {
                             data: 'item_code'
