@@ -80,8 +80,8 @@
                                 <thead>
                                     <tr>
                                         <th>No</th>
-                                        <th>Nomor PO</th>
-                                        <th>Nomor Invoice</th>
+                                        <th>No. PO</th>
+                                        <th>No. Invoice</th>
                                         <th>Nama Principal</th>
                                         <th>Tanggal PO</th>
                                         <th>Total</th>
@@ -135,16 +135,25 @@
                             data: 'partner_name'
                         },
                         {
-                            data: 'order_date'
+                            data: 'order_date',
                         },
                         {
-                            data: 'total'
+                            data: 'total',
+                            render: function(data) {
+                                return formatRupiah(data);
+                            }
                         },
                         {
-                            data: 'sisa'
+                            data: 'sisa',
+                            render: function(data) {
+                                return formatRupiah(data);
+                            }
                         },
                         {
-                            data: 'jatuh_tempo'
+                            data: 'jatuh_tempo',
+                            render: function(data, type, row) {
+                                return formatDate(data);
+                            }
                         },
                         {
                             data: 'status'
