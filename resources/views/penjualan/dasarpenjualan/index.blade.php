@@ -3,20 +3,20 @@
     @push('styles')
         <style>
             /* #tabledasarpenjualan thead tr:first-child th {
-                                                position: sticky;
-                                                background: white;
-                                                z-index: 0;
-                                                border-bottom: 2px solid #ddd;
-                                            }
+                                                                                                                                position: sticky;
+                                                                                                                                background: white;
+                                                                                                                                z-index: 0;
+                                                                                                                                border-bottom: 2px solid #ddd;
+                                                                                                                            }
 
-                                            #tabledasarpenjualan thead tr:first-child th {
-                                                top: 0;
-                                            }
+                                                                                                                            #tabledasarpenjualan thead tr:first-child th {
+                                                                                                                                top: 0;
+                                                                                                                            }
 
-                                            .table-responsive {
-                                                max-height: 50px;
-                                                overflow-y: auto;
-                                            } */
+                                                                                                                            .table-responsive {
+                                                                                                                                max-height: 50px;
+                                                                                                                                overflow-y: auto;
+                                                                                                                            } */
         </style>
     @endpush
     <div id="main-content">
@@ -78,20 +78,21 @@
                                 <table class="table table-striped table-bordered mt-3" id="tabledasarpenjualan">
                                     <thead>
                                         <tr>
-                                            <th>Tgl</th>
-                                            <th>Produk</th>
+                                            <th>Tanggal</th>
+                                            <th>Nama Produk</th>
                                             <th>Customer</th>
-                                            <th>Faktur</th>
-                                            <th>Lt/Kg</th>
-                                            <th>Pcs</th>
-                                            <th>Total</th>
+                                            <th>No. Faktur</th>
+                                            <th>Qty (Lt/Kg)</th>
+                                            <th>Qty (Pcs)</th>
                                             <th>Harga Pokok</th>
                                             <th>Harga per Kemasan</th>
                                             <th>Harga Jual per Kemasan</th>
-                                            <th>Harga Jual Lt/kg</th>
+                                            <th>Harga Jual per Lt/kg</th>
+                                            <th>Total Penjualan</th>
                                             <th>Laba/Rugi per Kemasan</th>
                                             <th>Laba Rugi Per Produk</th>
-                                            <th>Percent</th>
+                                            <th>Persentase</th>
+                                            {{-- <th>Persentase Laba/Rugi (%)</th> --}}
                                         </tr>
                                     </thead>
                                 </table>
@@ -170,28 +171,52 @@
                             data: 'qty_pcs'
                         },
                         {
-                            data: 'total'
+                            data: 'harga_pokok',
+                            render: function(data) {
+                                return formatRupiah(data);
+                            }
                         },
                         {
-                            data: 'harga_pokok'
+                            data: 'harga_perkemasan',
+                            render: function(data) {
+                                return formatRupiah(data);
+                            }
                         },
                         {
-                            data: 'harga_perkemasan'
+                            data: 'harga_jual_perkemasan',
+                            render: function(data) {
+                                return formatRupiah(data);
+                            }
                         },
                         {
-                            data: 'harga_jual_perkemasan'
+                            data: 'harga_jual_lt_kg',
+                            render: function(data) {
+                                return formatRupiah(data);
+                            }
                         },
                         {
-                            data: 'harga_jual_lt_kg'
+                            data: 'total',
+                            render: function(data) {
+                                return formatRupiah(data);
+                            }
                         },
                         {
-                            data: 'laba_rugi_perkemasan'
+                            data: 'laba_rugi_perkemasan',
+                            render: function(data) {
+                                return formatRupiah(data);
+                            }
                         },
                         {
-                            data: 'laba_rugi_perproduk'
+                            data: 'laba_rugi_perproduk',
+                            render: function(data) {
+                                return formatRupiah(data);
+                            }
                         },
                         {
-                            data: 'percent'
+                            data: 'percent',
+                            // render: function(data) {
+                            //     return formatRupiah(data);
+                            // }
                         },
                     ]
                 });

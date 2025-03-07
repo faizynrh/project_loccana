@@ -10,7 +10,7 @@
             <div class="page-title">
                 <div class="row">
                     <div class="col-12 col-md-6 order-md-1 order-last">
-                        <h3>List Hutang</h3>
+                        <h3>List Piutang</h3>
                         {{-- <p class="text-subtitle text-muted">
                             Easily manage and adjust product prices.
                         </p> --}}
@@ -22,7 +22,7 @@
                                     <a href="/dashboard">Dashboard</a>
                                 </li>
                                 <li class="breadcrumb-item active" aria-current="page">
-                                    List Hutang
+                                    List Piutang
                                 </li>
                             </ol>
                         </nav>
@@ -68,7 +68,7 @@
                                     <button type="submit" class="btn btn-primary">Cari</button>
                                 </form>
                             </div>
-                            <a href="{{ route('hutang.pembayaran.index') }}" class="btn btn-primary me-2 fw-bold text-end">
+                            <a href="{{ route('piutang.pembayaran.index') }}" class="btn btn-primary me-2 fw-bold text-end">
                                 <i class="bi bi-cash-stack"></i> Pembayaran
                             </a>
                         </div>
@@ -80,12 +80,11 @@
                                 <thead>
                                     <tr>
                                         <th>No</th>
-                                        <th>No. PO</th>
                                         <th>No. Invoice</th>
-                                        <th>Nama Principal</th>
-                                        <th>Tanggal PO</th>
+                                        <th>Customer</th>
                                         <th>Total</th>
                                         <th>Sisa</th>
+                                        <th>Tanggal</th>
                                         <th>Jatuh Tempo</th>
                                         <th>Status</th>
                                         <th>Action</th>
@@ -100,7 +99,7 @@
     </div>
 @endsection
 @push('scripts')
-    <script>
+    {{-- <script>
         $(document).ready(function() {
             function initializeTable() {
                 if ($.fn.DataTable.isDataTable('#tablehutang')) {
@@ -180,5 +179,5 @@
                 initializeTable()
             });
         });
-    </script>
+    </script> --}}
 @endpush

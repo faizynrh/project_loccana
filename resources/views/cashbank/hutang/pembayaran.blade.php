@@ -84,8 +84,8 @@
                                 <thead>
                                     <tr>
                                         <th>No</th>
-                                        <th>No Transaksi</th>
-                                        <th>Principle</th>
+                                        <th>No. Transaksi</th>
+                                        <th>Nama Principal</th>
                                         <th>Total</th>
                                         <th>Tanggal</th>
                                         <th>Tipe Akun</th>
@@ -166,51 +166,99 @@
                         {
                             data: null,
                             render: function(data, type, row) {
-                                let isApproved = row.status.toLowerCase() ===
-                                    'approved';
+                                let isApproved = row.status.toLowerCase() === 'approved';
+
+                                // Icons with text for better visual hierarchy
+                                let detailButton = `
+            <a href="/hutang/pembayaran/detail/${row.transaksi_id}" class="dropdown-item d-flex align-items-center py-2" title="Detail">
+                <i class="bi bi-eye-fill text-primary me-2"></i>
+                <span>Lihat Detail</span>
+            </a>`;
+
+                                let printButton = `
+            <a href="/hutang/pembayaran/print/${row.transaksi_id}" class="dropdown-item d-flex align-items-center py-2" target="_blank" title="Print PDF">
+                <i class="bi bi-printer-fill text-warning me-2"></i>
+                <span>Cetak PDF</span>
+            </a>`;
+
                                 let editButton = `
-                                                    <a href="/hutang/pembayaran/edit/${row.transaksi_id}" class="dropdown-item ${isApproved ? 'disabled' : ''}" title="Edit">
-                                                        <i class="bi bi-pencil ${isApproved ? '' : 'text-info'}"></i> Edit
-                                                    </a>`;
+            <a href="/hutang/pembayaran/edit/${row.transaksi_id}" class="dropdown-item d-flex align-items-center py-2 ${isApproved ? 'disabled text-muted' : ''}" title="Edit">
+                <i class="bi bi-pencil-fill ${isApproved ? 'text-muted' : 'text-info'} me-2"></i>
+                <span>Edit Data</span>
+            </a>`;
 
                                 let deleteButton = `
-                                                    <form action="/hutang/pembayaran/delete/${row.transaksi_id}" method="POST" id="delete${row.transaksi_id}" style="display:inline;">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        <button type="button" class="dropdown-item ${isApproved ? 'disabled' : ''}" title="Hapus" onclick="${isApproved ? '' : `confirmDelete(${row.transaksi_id})`}">
-                                                            <i class="bi bi-trash ${isApproved ? '' : 'text-danger'}"></i> Delete
-                                                        </button>
-                                                    </form>`;
+            <form action="/hutang/pembayaran/delete/${row.transaksi_id}" method="POST" id="delete${row.transaksi_id}" style="display:inline; width: 100%;">
+                @csrf
+                @method('DELETE')
+                <button type="button" class="dropdown-item d-flex align-items-center py-2 ${isApproved ? 'disabled text-muted' : ''}" title="Hapus" onclick="${isApproved ? '' : `confirmDelete(${row.transaksi_id})`}">
+                    <i class="bi bi-trash-fill ${isApproved ? 'text-muted' : 'text-danger'} me-2"></i>
+                    <span>Hapus Data</span>
+                </button>
+            </form>`;
 
+                                // Improved dropdown with better styling
                                 let actionButtons = `
-                                                    <div class="btn-group dropdown me-1 mb-1">
-                                                        <button type="button" class="btn btn-outline-danger rounded-3 dropdown-toggle dropdown-toggle-split"
-                                                                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-reference="parent">
-                                                            <span class="sr-only"><i class="bi bi-list-task"></i></span>
-                                                        </button>
-                                                        <div class="dropdown-menu">
-                                                            <a href="/hutang/pembayaran/detail/${row.transaksi_id}" class="dropdown-item" title="Detail">
-                                                                <i class="bi bi-eye text-primary"></i> Detail
-                                                            </a>
-                                                            <a href="/hutang/pembayaran/print/${row.transaksi_id}" class="dropdown-item" target="_blank" title="Print PDF">
-                                                                <i class="bi bi-printer text-warning"></i> Print PDF
-                                                            </a>
-                                                            <div class="dropdown-divider"></div>
-                                                            ${editButton}
-                                                            ${deleteButton}
-                                                        </div>
-                                                    </div>`;
-                                return `<div class="d-flex">${actionButtons}</div>`;
+            <div class="dropdown action-dropdown">
+                <button type="button" class="btn btn-sm btn-light border rounded-pill shadow-sm dropdown-toggle px-3"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="bi bi-gear-fill me-1"></i> Aksi
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end shadow border-0" style="min-width: 200px;">
+                    <li class="dropdown-header text-center fw-bold text-uppercase small">Opsi Transaksi</li>
+                    <li>${detailButton}</li>
+                    <li>${printButton}</li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li class="dropdown-header text-center small text-muted">Manajemen Data</li>
+                    <li>${editButton}</li>
+                    <li>${deleteButton}</li>
+                </ul>
+            </div>`;
+
+                                return actionButtons;
                             }
                         }
-
-
-
                     ]
                 });
             };
             initializeTable()
 
+            function confirmDeletePremium(id) {
+                Swal.fire({
+                    title: 'Konfirmasi Penghapusan',
+                    text: 'Apakah Anda yakin ingin menghapus data ini?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Ya, Hapus!',
+                    cancelButtonText: 'Batal',
+                    backdrop: `rgba(0,0,123,0.4)`,
+                    customClass: {
+                        container: 'swal-premium-container',
+                        popup: 'rounded-4 shadow-lg border-0',
+                        title: 'fw-bold',
+                        confirmButton: 'btn btn-danger rounded-pill px-4 py-2',
+                        cancelButton: 'btn btn-outline-secondary rounded-pill px-4 py-2'
+                    },
+                    buttonsStyling: false
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        document.getElementById('delete' + id).submit();
+                    }
+                });
+            }
+
+            // Pastikan tooltip diinisialisasi
+            document.addEventListener('DOMContentLoaded', function() {
+                var tooltipTriggerList = [].slice.call(document.querySelectorAll(
+                    '[data-bs-toggle="tooltip"]'))
+                var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
+                    return new bootstrap.Tooltip(tooltipTriggerEl, {
+                        boundary: document.body
+                    });
+                });
+            });
             $('#searchForm').submit(function(e) {
                 e.preventDefault();
                 initializeTable()
