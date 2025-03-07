@@ -86,24 +86,24 @@
                                     <table class="table table-striped table-bordered mt-3" id="tablerekappo">
                                         <thead>
                                             <tr>
-                                                <th colspan="12" class="text-center">PO</th>
-                                                <th colspan="9" class="text-center">Receiving</th>
+                                                <th colspan="12" class="text-center">Detail PO</th>
+                                                <th colspan="9" class="text-center">Detail Penerimaan</th>
                                             </tr>
                                             <tr>
                                                 <th>No</th>
                                                 <th>Tanggal PO</th>
-                                                <th>Nomor PO</th>
-                                                <th>Principle</th>
+                                                <th>No. PO</th>
+                                                <th>Nama Principal</th>
                                                 <th>Kode Produk</th>
-                                                <th>Produk</th>
+                                                <th>Nama Produk</th>
                                                 <th>Kemasan</th>
-                                                <th>Qlt</th>
-                                                <th>QBox</th>
-                                                <th>Tgl RC</th>
+                                                <th>Qty</th>
+                                                <th>Qty Box</th>
+                                                <th>Tanggal RC</th>
                                                 <th>SJ/SPPB</th>
                                                 <th>Total RC</th>
                                                 <th>Original PO</th>
-                                                <th>Dispro</th>
+                                                <th>Diskon Produk</th>
                                                 <th>Bonus</th>
                                                 <th>Titipan</th>
                                                 <th>Sisa Po</th>
@@ -158,34 +158,34 @@
                     $('#tablerekappo').DataTable().destroy();
                     $('#tablerekappo thead').empty();
                     var header1Html = `
-                            <tr>
-                                <th colspan="12" class="text-center">PO</th>
-                                <th colspan="9" class="text-center">Receiving</th>
-                            </tr>
+                                            <tr>
+                                                <th colspan="12" class="text-center">Detail PO</th>
+                                                <th colspan="9" class="text-center">Detail Penerimaan</th>
+                                            </tr>
                         `;
 
                     var header2Html = `
                             <tr>
-                                <th>No</th>
-                                <th>Tanggal PO</th>
-                                <th>Nomor PO</th>
-                                <th>Principle</th>
-                                <th>Kode Produk</th>
-                                <th>Produk</th>
-                                <th>Kemasan</th>
-                                <th>Qlt</th>
-                                <th>QBox</th>
-                                <th>Tgl RC</th>
-                                <th>SJ/SPPB</th>
-                                <th>Total RC</th>
-                                <th>Original PO</th>
-                                <th>Dispro</th>
-                                <th>Bonus</th>
-                                <th>Titipan</th>
-                                <th>Sisa Po</th>
-                                <th>Sisa Box</th>
-                                <th>Status</th>
-                            </tr>
+                                                <th>No</th>
+                                                <th>Tanggal PO</th>
+                                                <th>No. PO</th>
+                                                <th>Nama Principal</th>
+                                                <th>Kode Produk</th>
+                                                <th>Nama Produk</th>
+                                                <th>Kemasan</th>
+                                                <th>Qty</th>
+                                                <th>Qty Box</th>
+                                                <th>Tanggal RC</th>
+                                                <th>SJ/SPPB</th>
+                                                <th>Total RC</th>
+                                                <th>Original PO</th>
+                                                <th>Diskon Produk</th>
+                                                <th>Bonus</th>
+                                                <th>Titipan</th>
+                                                <th>Sisa Po</th>
+                                                <th>Sisa Box</th>
+                                                <th>Status</th>
+                                            </tr>
                         `;
 
                     $('#tablerekappo thead').html(header2Html);
@@ -216,14 +216,8 @@
                             },
                             {
                                 data: 'order_date',
-                                render: function(data) {
-                                    if (data) {
-                                        var date = new Date(data);
-                                        return date.getDate().toString() + '-' + (date
-                                                .getMonth() + 1).toString() + '-' + date
-                                            .getFullYear();
-                                    }
-                                    return data;
+                                render: function(data, type, row) {
+                                    return formatDate(data);
                                 }
                             },
                             {
@@ -249,15 +243,8 @@
                             },
                             {
                                 data: 'receipt_date',
-                                render: function(data) {
-                                    if (data) {
-                                        var date = new Date(data);
-                                        return date.getDate().toString().padStart(2, '0') +
-                                            '-' + (date.getMonth() + 1).toString().padStart(2,
-                                                '0') +
-                                            '-' + date.getFullYear();
-                                    }
-                                    return data;
+                                render: function(data, type, row) {
+                                    return formatDate(data);
                                 }
                             },
                             {
@@ -312,18 +299,6 @@
                     });
 
                 });
-
-                function formatRupiah(angka) {
-                    if (angka) {
-                        return new Intl.NumberFormat('id-ID', {
-                            style: 'currency',
-                            currency: 'IDR',
-                            minimumFractionDigits: 2,
-                            maximumFractionDigits: 2
-                        }).format(angka);
-                    }
-                    return angka;
-                }
             });
         </script>
     @endpush
