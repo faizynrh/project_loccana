@@ -99,7 +99,7 @@
                                             <th colspan="2" class="text-center">Saldo Akhir</th>
                                         </tr>
                                         <tr>
-                                            <th>Quantity</th>
+                                            <th>Qty</th>
                                             <th>Harga Satuan</th>
                                             <th>Nilai</th>
                                             <th>Pembelian</th>
@@ -112,7 +112,7 @@
                                             <th>Penjualan</th>
                                             <th>Lain-lain</th>
                                             <th>Retur</th>
-                                            <th>Quantity</th>
+                                            <th>Qty</th>
                                             <th>Nilai</th>
                                         </tr>
                                     </thead>
