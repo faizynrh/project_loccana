@@ -28,12 +28,12 @@
             </div>
             <section class="section">
                 <div class="card">
-                    <div class="card-header">
+                    {{-- <div class="card-header">
                         <h6 class="card-title">Harap isi data yang telah ditandai dengan <span
                                 class="text-danger bg-light px-1">*</span>, dan
                             masukkan data
                             dengan benar.</h6>
-                    </div>
+                    </div> --}}
                     <div class="card-body">
                         @include('alert.alert')
                         <form action="{{ route('penerimaan_barang.update', $data->data[0]->id_item_receipt) }}"
@@ -44,8 +44,7 @@
                                 <div class="col-md-6">
                                     <label for="nomorInvoice" class="form-label fw-bold mt-2 mb-1 small">No. PO</label>
                                     <input type="text" class="form-control bg-body-secondary"
-                                        value="{{ $data->data[0]->code }}" id="nomorInvoice"
-                                        placeholder="Kode Purchase Order" readonly>
+                                        value="{{ $data->data[0]->code }}" id="nomorInvoice" placeholder="No. PO" readonly>
                                     <label for="nomorInvoice" class="form-label fw-bold mt-2 mb-1 small">Tanggal</label>
                                     <input type="date" class="form-control bg-body-secondary" id="nomorInvoice"
                                         value="{{ \Carbon\Carbon::parse($data->data[0]->order_date)->format('Y-m-d') }}"
@@ -67,9 +66,9 @@
                                         value="{{ $data->data[0]->fax }}" placeholder="Fax" readonly> --}}
                                 </div>
                                 <div class="col-md-6">
-                                    <label for="nomorInvoice" class="form-label fw-bold mt-2 mb-1 small">No DO</label>
+                                    <label for="nomorInvoice" class="form-label fw-bold mt-2 mb-1 small">No. DO</label>
                                     <input type="text" class="form-control" name="do_number"
-                                        value="{{ $data->data[0]->do_number }}" placeholder="No DO">
+                                        value="{{ $data->data[0]->do_number }}" placeholder="No. DO">
                                     <label for="nomorInvoice" class="form-label fw-bold mt-2 mb-1 small">Tanggal
                                         DO</label>
                                     <input type="date" class="form-control" name="receipt_date"
@@ -77,10 +76,9 @@
                                     <label for="nomorInvoice" class="form-label fw-bold mt-2 mb-1 small">Angkutan</label>
                                     <input type="text" class="form-control" name="shipment_info"
                                         value="{{ $data->data[0]->shipment_info }}" placeholder="Angkutan">
-                                    <label for="nomorInvoice" class="form-label fw-bold mt-2 mb-1 small">No
-                                        Polisi</label>
+                                    <label for="nomorInvoice" class="form-label fw-bold mt-2 mb-1 small">No. Polisi</label>
                                     <input type="text" class="form-control" name="plate_number"
-                                        value="{{ $data->data[0]->plate_number }}" placeholder="No Polisi">
+                                        value="{{ $data->data[0]->plate_number }}" placeholder="No. Polisi">
                                     <label for="nomorInvoice" class="form-label fw-bold mt-2 mb-1 small">Gudang</label>
                                     <input type="text" class="form-control bg-body-secondary"
                                         value="{{ $data->data[0]->gudang }}" readonly>
@@ -92,6 +90,7 @@
                                     </select> --}}
                                 </div>
                             </div>
+                            <hr class="my-4 border-2 border-dark">
                             <div class="p-2">
                                 <h5 class="fw-bold ">Items</h5>
                             </div>
@@ -99,11 +98,11 @@
                                 <thead>
                                     <tr style="border-bottom: 3px solid #000;">
                                         <th>Kode</th>
-                                        <th>Order (Kg/Lt)</th>
-                                        <th>Sisa (Kg/Lt)</th>
-                                        <th>Diterima</th>
-                                        <th>Qty Receipt</th>
-                                        <th>Qty Reject</th>
+                                        <th>Order</th>
+                                        <th>Sisa</th>
+                                        <th>Total Diterima</th>
+                                        <th>Diterima (Qty)</th>
+                                        <th>Ditolak (Qty)</th>
                                         <th>Bonus</th>
                                         <th>Titipan</th>
                                         <th>Diskon</th>
@@ -165,7 +164,7 @@
                                                     value="{{ $item->qty_diskon }}" min="0">
                                             </td>
                                             <td>
-                                                <textarea class="form-control" placeholder="Note" name="items[{{ $index }}][notes]">{{ $item->deskripsi_item }}</textarea>
+                                                <textarea class="form-control" placeholder="Keterangan" name="items[{{ $index }}][notes]">{{ $item->deskripsi_item }}</textarea>
                                             </td>
                                         </tr>
                                     @endforeach

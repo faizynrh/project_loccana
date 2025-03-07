@@ -75,6 +75,23 @@
                                 <thead>
                                     <tr>
                                         <th>No</th>
+                                        <th>No. PO</th>
+                                        <th>No. DO</th>
+                                        <th>Nama Principal</th>
+                                        <th>Tanggal Order</th>
+                                        <th>Tanggal Diterima</th>
+                                        <th>Jumlah Diterima</th>
+                                        <th>Bonus (Qty)</th>
+                                        <th>Harga</th>
+                                        <th>Total Harga</th>
+                                        <th>Status</th>
+                                        <th>Keterangan</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                {{-- <thead>
+                                    <tr>
+                                        <th>No</th>
                                         <th>No DO</th>
                                         <th>Tanggal Order</th>
                                         <th>Nomor PO</th>
@@ -85,22 +102,6 @@
                                         <th>Qty Bonus</th>
                                         <th>Item Diterima</th>
                                         <th>Status</th>
-                                        <th>Deskripsi</th>
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
-                                {{-- <thead>
-                                    <tr>
-                                        <th>No</th>
-                                        <th>Tanggal Order</th>
-                                        <th>Nomor PO</th>
-                                        <th>No DO</th>
-                                        <th>Tanggal Diterima</th>
-                                        <th>Nama Principal</th>
-                                        <th>Item Diterima</th>
-                                        <th>Qty Bonus</th>
-                                        <th>Harga</th>
-                                        <th>Total Harga</th>
                                         <th>Deskripsi</th>
                                         <th>Action</th>
                                     </tr>
@@ -150,7 +151,13 @@
                             }
                         },
                         {
+                            data: 'number_po'
+                        },
+                        {
                             data: 'do_number'
+                        },
+                        {
+                            data: 'name'
                         },
                         {
                             data: 'order_date',
@@ -159,16 +166,16 @@
                             }
                         },
                         {
-                            data: 'number_po'
-                        },
-                        {
                             data: 'receipt_date',
                             render: function(data) {
                                 return formatDate(data);
                             }
                         },
                         {
-                            data: 'name'
+                            data: 'qty_receipt'
+                        },
+                        {
+                            data: 'qty_bonus'
                         },
                         {
                             data: 'total_receive_price',
@@ -181,12 +188,6 @@
                             render: function(data) {
                                 return formatRupiah(data);
                             }
-                        },
-                        {
-                            data: 'qty_bonus'
-                        },
-                        {
-                            data: 'qty_receipt'
                         },
                         {
                             data: 'status'
