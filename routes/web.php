@@ -43,33 +43,24 @@ use App\Http\Controllers\procurement\ReturnPembelianController;
 
 
 
-Route::get('/', function () {
-    return view('home');
-})->name('home');
+Route::view('/', 'home')->name('home');
 
-Route::get('/login', function () {
-    return redirect('/');
+Route::redirect('/login', '/');
+
+Route::prefix('/')->name('oauth.')->group(function () {
+    Route::get('redirect', [AuthController::class, 'redirectToIdentityServer'])->name('redirect');
+    Route::get('callback', [AuthController::class, 'handleCallback'])->name('callback');
+    Route::get('logout', [AuthController::class, 'logout'])->name('logout');
 });
-
-
-Route::get('/redirect', [AuthController::class, 'redirectToIdentityServer'])->name('oauth.redirect');
-Route::get('/callback', [AuthController::class, 'handleCallback'])->name('oauth.callback');
-Route::get('/logout', [AuthController::class, 'logout'])->name('oauth.logout');
-
 
 //MIDDLEWARE
 Route::middleware('auth.login')->group(
     function () {
         Route::get('/dashboard', [ShowDashboard::class, 'showDashboard'])->name('dashboard-dev');
-        Route::get('/profile', function () {
-            return view('profile');
-        });
-
+        Route::view('/profile', 'profile')->name('profile');
 
         // ==========================================MASTERDATA========================================
-
         // ITEM
-
         Route::prefix('/item')->name('item.')->controller(ItemController::class)->group(function () {
             Route::get('/', 'index')->name('index');
             Route::get('/ajax', 'ajax')->name('ajax');
@@ -81,16 +72,11 @@ Route::middleware('auth.login')->group(
             Route::delete('/delete/{id}', 'destroy')->name('destroy');
         });
 
-        Route::prefix('/user')->name('user.')->group(function () {
-            Route::get('/', function () {
-                return view('masterdata.user.index');
-            });
-            Route::get('/add', function () {
-                return view('masterdata.user.add');
-            });
-            Route::get('/edit', function () {
-                return view('masterdata.user.edit');
-            });
+        // USER
+        Route::prefix('user')->name('user.')->group(function () {
+            Route::view('/', 'masterdata.user.index')->name('index');
+            Route::view('/add', 'masterdata.user.add')->name('add');
+            Route::view('/edit', 'masterdata.user.edit')->name('edit');
         });
 
         // PRICE
