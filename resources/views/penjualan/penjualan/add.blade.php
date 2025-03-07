@@ -80,7 +80,7 @@
             <div class="page-title">
                 <div class="row">
                     <div class="col-12 col-md-6 order-md-1 order-last">
-                        <h3>Add Penjualan</h3>
+                        <h3>Tambah Penjualan</h3>
                     </div>
                     <div class="col-12 col-md-6 order-md-2 order-first">
                         <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
@@ -89,7 +89,7 @@
                                     <a href="/penjualan">Penjualan</a>
                                 </li>
                                 <li class="breadcrumb-item active" aria-current="page">
-                                    Add Penjualan
+                                    Tambah Penjualan
                                 </li>
                             </ol>
                         </nav>
@@ -98,9 +98,6 @@
             </div>
             <section class="section">
                 <div class="card">
-                    <div class="card-header">
-                        <h4 class="card-title"> Form Penjualan</h4>
-                    </div>
                     <div class="card-body">
                         @include('alert.alert')
                         <form id="createForm" method="POST" action="{{ route('penjualan.store') }}">
@@ -171,7 +168,7 @@
                                     <tr style="border-bottom: 3px solid #000;">
                                         <th style="width: 190px">Kode</th>
                                         <th style="width: 40px"></th>
-                                        <th style="width: 105px">notes</th>
+                                        <th style="width: 105px">Notes</th>
                                         <th style="width: 80px">Qty Box</th>
                                         <th style="width: 45px">Qty Satuan</th>
                                         <th style="width: 90px">Total Qty</th>
@@ -263,7 +260,7 @@
                                     <input type="hidden" name="tax_amount" id="tax_amount" value="0">
                                     <input type="hidden" name="company_id" id="company_id" value="2">
                                     <input type="hidden" name="total_amount" id="total_amount" value="0">
-                                    <button type="submit" class="btn btn-primary" id="submitButton">Submit</button>
+                                    <button type="submit" class="btn btn-primary" id="submitButton">Simpan</button>
                                     {{-- <button type="button" class="btn btn-danger ms-2" id="rejectButton">Reject</button>
                                     --}}
                                     <a href="/penjualan" class="btn btn-secondary ms-2">Batal</a>
@@ -279,8 +276,6 @@
 @push('scripts')
     <script>
         $(document).ready(function() {
-
-
             $('#pembayaran').on('change', function() {
                 const selectedValue = $(this).val();
                 const customInput = $('#custom_payment_term');
@@ -390,6 +385,7 @@
             });
 
             let selectedItems = [];
+
 
             function updateAllItemSelects(items) {
                 var options = '<option value="" disabled selected>--Pilih Item--</option>';

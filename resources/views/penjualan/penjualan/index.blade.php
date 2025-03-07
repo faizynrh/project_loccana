@@ -12,7 +12,7 @@
             <div class="page-title">
                 <div class="row">
                     <div class="col-12 col-md-6 order-md-1 order-last">
-                        <h3>Penjualan Management</h3>
+                        <h3>Penjualan</h3>
                     </div>
                     <div class="col-12 col-md-6 order-md-2 order-first">
                         <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
@@ -21,7 +21,7 @@
                                     <a href="/dashboard">Dashboard</a>
                                 </li>
                                 <li class="breadcrumb-item active" aria-current="page">
-                                    Penjualan Management
+                                    Penjualan
                                 </li>
                             </ol>
                         </nav>
@@ -73,7 +73,6 @@
                                         </option>
                                     @endforeach
                                 </select>
-                                <!-- Tombol filter, hanya memicu reload tabel ketika ditekan -->
                                 <button type="button" id="filterButton" class="btn btn-primary fw-bold">Cari</button>
                             </div>
                         </div>
