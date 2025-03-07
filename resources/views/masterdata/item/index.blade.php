@@ -38,14 +38,14 @@
                             <table class="table table-striped table-bordered mt-1" id="tableitem">
                                 <thead>
                                     <tr>
-                                        <th scope="col">No</th>
-                                        <th scope="col">Kode Item</th>
-                                        <th scope="col">Nama Item</th>
-                                        <th scope="col">Deskripsi</th>
-                                        <th scope="col">Satuan</th>
-                                        <th scope="col">Principal</th>
-                                        <th scope="col">Status</th>
-                                        <th scope="col">Action</th>
+                                        <th>No</th>
+                                        <th>Kode Item</th>
+                                        <th>Nama Item</th>
+                                        <th>Deskripsi</th>
+                                        <th>Satuan</th>
+                                        <th>Principal</th>
+                                        <th>Status</th>
+                                        <th>Action</th>
                                     </tr>
                                 </thead>
                             </table>

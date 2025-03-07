@@ -21,7 +21,6 @@ class ItemController extends Controller
                 'company_id' => 2
             ];
             $apiResponse = storeApi(env('ITEM_URL') . '/lists', $requestbody);
-
             if ($apiResponse->successful()) {
                 $data = $apiResponse->json();
                 return response()->json([
