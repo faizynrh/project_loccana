@@ -39,9 +39,9 @@
                                         <th>Nama Item</th>
                                         <th>Nama Principal</th>
                                         <th>Harga</th>
-                                        <th>Valid From</th>
-                                        <th>Valid To</th>
-                                        <th>Option</th>
+                                        <th>Berlaku Dari</th>
+                                        <th>Berlaku Sampai</th>
+                                        <th>Action</th>
                                     </tr>
                                 </thead>
                             </table>

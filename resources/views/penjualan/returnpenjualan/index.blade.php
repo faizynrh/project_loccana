@@ -68,12 +68,12 @@
                             <table class="table table-striped table-bordered mt-3" id="tablereturnpenjualan">
                                 <thead>
                                     <tr>
-                                        <th>Nomor</th>
-                                        <th>Customer</th>
+                                        <th>No. Penjualan</th>
                                         <th>Tanggal Penjualan</th>
-                                        <th>Pengaju</th>
+                                        <th>Customer</th>
                                         <th>Jatuh Tempo</th>
                                         <th>Tanggal Retur</th>
+                                        <th>Pengaju</th>
                                         <th>Status</th>
                                         <th>Action</th>
                                     </tr>
@@ -109,19 +109,19 @@
                             data: 'no_selling'
                         },
                         {
-                            data: 'name'
-                        },
-                        {
                             data: 'date_selling'
                         },
                         {
-                            data: 'sign'
+                            data: 'name'
                         },
                         {
                             data: 'due_date'
                         },
                         {
                             data: 'retur_date'
+                        },
+                        {
+                            data: 'sign'
                         },
                         {
                             data: 'status',

@@ -79,19 +79,19 @@
                                 <table class="table table-striped table-bordered mt-3" id="tablestockgudang">
                                     <thead>
                                         <tr>
-                                            <th rowspan="2">Kode</th>
-                                            <th rowspan="2">Produk</th>
+                                            <th rowspan="2">Kode Produk</th>
+                                            <th rowspan="2">Nama Produk</th>
                                             <th rowspan="2">Kemasan</th>
-                                            <th rowspan="2">Principal</th>
-                                            <th rowspan="2">Nama Gudang</th>
-                                            <th colspan="2">Stok Gudang</th>
-                                            <th colspan="2">Stok Akhir (Semua)</th>
+                                            <th rowspan="2">Nama Principal</th>
+                                            <th rowspan="2">Gudang</th>
+                                            <th colspan="2" class="text-center">Stok Gudang</th>
+                                            <th colspan="2" class="text-center">Total Stok (Semua)</th>
                                             <th rowspan="2">Action</th>
                                         </tr>
                                         <tr>
-                                            <th>lt/Kg</th>
+                                            <th>Lt/Kg</th>
                                             <th>Box</th>
-                                            <th>lt/Kg</th>
+                                            <th>Lt/Kg</th>
                                             <th>Box</th>
                                         </tr>
                                     </thead>

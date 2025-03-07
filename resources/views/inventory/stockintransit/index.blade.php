@@ -77,10 +77,10 @@
                                 <table class="table table-striped table-bordered mt-3" id="tablestockintransit">
                                     <thead>
                                         <tr>
-                                            <th rowspan="2">Kode</th>
-                                            <th rowspan="2">Produk</th>
+                                            <th rowspan="2">Kode Produk</th>
+                                            <th rowspan="2">Nama Produk</th>
                                             <th rowspan="2">Kemasan</th>
-                                            <th rowspan="2">Principal</th>
+                                            <th rowspan="2">Nama Principal</th>
                                             <th rowspan="2">Box per LT/KG</th>
                                             <th colspan="2" class="text-center">Stock Awal </th>
                                             <th colspan="4" class="text-center">Penerimaan </th>

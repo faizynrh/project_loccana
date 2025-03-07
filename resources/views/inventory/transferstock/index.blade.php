@@ -43,10 +43,10 @@
                                     <thead>
                                         <tr>
                                             <th>No</th>
-                                            <th>Tanggal Transfer Stock</th>
+                                            <th>Tanggal Transfer</th>
                                             <th>Deskripsi</th>
-                                            <th>Keterangan</th>
-                                            <th>Option</th>
+                                            <th>Status</th>
+                                            <th>Action</th>
                                         </tr>
                                     </thead>
                                 </table>

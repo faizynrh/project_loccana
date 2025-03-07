@@ -78,9 +78,9 @@
                                 <thead>
                                     <tr>
                                         <th>No</th>
-                                        <th>No Invoice</th>
-                                        <th>Nama Principal</th>
+                                        <th>No. Invoice</th>
                                         <th>Tanggal Invoice</th>
+                                        <th>Nama Principal</th>
                                         <th>Total</th>
                                         <th>Sisa</th>
                                         <th>Jatuh Tempo</th>
@@ -139,44 +139,21 @@
                         },
                         {
                             data: 'invoice_date'
-                            // render: function(data) {
-                            //     if (data) {
-                            //         var date = new Date(data);
-                            //         return (
-                            //             date.getDate().toString().padStart(2, '0') +
-                            //             '-' +
-                            //             (date.getMonth() + 1).toString().padStart(2, '0') +
-                            //             '-' +
-                            //             date.getFullYear()
-                            //         );
-                            //     }
-                            //     return data;
-                            // },
                         },
                         {
                             data: 'total_amount',
+                            render: function(data) {
+                                return formatRupiah(data);
+                            }
                         },
                         {
                             data: 'sisa',
-                            // render: function(data, type, row) {
-                            //     return formatRupiah(data);
-                            // }
+                            render: function(data) {
+                                return formatRupiah(data);
+                            }
                         },
                         {
                             data: 'due_date',
-                            render: function(data) {
-                                if (data) {
-                                    var date = new Date(data);
-                                    return (
-                                        date.getDate().toString().padStart(2, '0') +
-                                        '-' +
-                                        (date.getMonth() + 1).toString().padStart(2, '0') +
-                                        '-' +
-                                        date.getFullYear()
-                                    );
-                                }
-                                return data;
-                            },
                         },
                         {
                             data: 'status',
