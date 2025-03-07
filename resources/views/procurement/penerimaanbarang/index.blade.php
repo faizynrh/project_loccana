@@ -31,7 +31,7 @@
                     <div class="card-header">
                         <div class="d-flex justify-content-between align-items-center">
                             <div class="d-flex align-items-center">
-                                <a href="/penerimaan_barang/add" class="btn btn-primary fw-bold me-2">+ Penerimaan
+                                <a href="/penerimaan_barang/add" class="btn btn-primary fw-bold me-2">+ Tambah Penerimaan
                                     Barang</a>
                                 <form id="searchForm" class="d-flex align-items-center gap-2">
                                     @csrf
