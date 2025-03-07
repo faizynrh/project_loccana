@@ -78,7 +78,7 @@
                                 <thead>
                                     <tr>
                                         <th>No</th>
-                                        <th>No Invoice</th>
+                                        <th>No. Invoice</th>
                                         <th>Nama Principal</th>
                                         <th>Tanggal Invoice</th>
                                         <th>Total</th>
