@@ -113,7 +113,7 @@
                     serverSide: true,
                     processing: true,
                     ajax: {
-                        url: '{{ route('hutang.ajaxpembayaran') }}',
+                        url: '{{ route('hutang.pembayaran.ajax') }}',
                         type: 'GET',
                         data: function(d) {
                             d.month = $('#monthSelect').val();
@@ -189,7 +189,7 @@
                                                             <span class="sr-only"><i class="bi bi-list-task"></i></span>
                                                         </button>
                                                         <div class="dropdown-menu">
-                                                            <a href="/hutang/pembayaran/detail_pembayaran/${row.transaksi_id}" class="dropdown-item" title="Detail">
+                                                            <a href="/hutang/pembayaran/detail/${row.transaksi_id}" class="dropdown-item" title="Detail">
                                                                 <i class="bi bi-eye text-primary"></i> Detail
                                                             </a>
                                                             <a href="/hutang/pembayaran/print/${row.transaksi_id}" class="dropdown-item" target="_blank" title="Print PDF">

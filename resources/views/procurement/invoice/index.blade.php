@@ -78,7 +78,7 @@
                                 <thead>
                                     <tr>
                                         <th>No</th>
-                                        <th>No Invoice</th>
+                                        <th>No. Invoice</th>
                                         <th>Nama Principal</th>
                                         <th>Tanggal Invoice</th>
                                         <th>Total</th>
@@ -139,63 +139,27 @@
                         },
                         {
                             data: 'invoice_date',
-                            render: function(data) {
-                                if (data) {
-                                    var date = new Date(data);
-                                    return (
-                                        date.getDate().toString().padStart(2, '0') +
-                                        '-' +
-                                        (date.getMonth() + 1).toString().padStart(2, '0') +
-                                        '-' +
-                                        date.getFullYear()
-                                    );
-                                }
-                                return data;
-                            },
+                            render: function(data, type, row) {
+                                return formatDate(data);
+                            }
                         },
                         {
                             data: 'total_amount',
                             render: function(data) {
-                                if (data) {
-                                    return new Intl.NumberFormat('id-ID', {
-                                        style: 'currency',
-                                        currency: 'IDR',
-                                        minimumFractionDigits: 2,
-                                        maximumFractionDigits: 2
-                                    }).format(data);
-                                }
-                                return data;
+                                return formatRupiah(data);
                             }
                         },
                         {
                             data: 'sisa',
                             render: function(data) {
-                                if (data) {
-                                    return new Intl.NumberFormat('id-ID', {
-                                        style: 'currency',
-                                        currency: 'IDR',
-                                        minimumFractionDigits: 2,
-                                        maximumFractionDigits: 2
-                                    }).format(data);
-                                }
-                                return data;
+                                return formatRupiah(data);
                             }
                         },
                         {
                             data: 'due_date',
-                            render: function(data) {
-                                if (data) {
-                                    var date = new Date(data);
-                                    return (
-                                        date.getDate().toString().padStart(2, '0') +
-                                        '-' +
-                                        (date.getMonth() + 1).toString().padStart(2, '0') +
-                                        '-' +
-                                        date.getFullYear()
-                                    );
-                                }
-                                return data;
-                            },
+                            render: function(data, type, row) {
+                                return formatDate(data);
+                            }
                         },
                         {
                             data: 'status'

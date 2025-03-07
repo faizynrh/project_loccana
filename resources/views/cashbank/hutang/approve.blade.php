@@ -101,20 +101,20 @@
                         <div class="row">
                             <div class="col-md-12 d-flex justify-content-end align-items-center gap-2 mt-3">
                                 <form id="approve{{ $data->data[0]->id_payment }}" method="POST"
-                                    action="{{ route('hutang.approve', $data->data[0]->id_payment) }}">
+                                    action="{{ route('hutang.pembayaran.approve', $data->data[0]->id_payment) }}">
                                     @csrf
                                     @method('PUT')
                                     <button type="button" class="btn btn-primary"
                                         onclick="confirmApprove('{{ $data->data[0]->id_payment }}')">Setujui</button>
                                 </form>
-                                <form id="reject{{ $data->data[0]->id_payment }}" method="POST"
-                                    action="{{ route('hutang.reject', $data->data[0]->id_payment) }}">
+                                {{-- <form id="reject{{ $data->data[0]->id_payment }}" method="POST"
+                                    action="{{ route('hutang.pembayaran.reject', $data->data[0]->id_payment) }}">
                                     @csrf
                                     @method('PUT')
                                     <button type="button" class="btn btn-danger"
                                         onclick="confirmReject('{{ $data->data[0]->id_payment }}')">Tolak</button>
-                                </form>
-                                <a href="{{ route('hutang.pembayaran') }}" class="btn btn-secondary">Batal</a>
+                                </form> --}}
+                                <a href="{{ route('hutang.pembayaran.index') }}" class="btn btn-secondary">Batal</a>
                             </div>
                         </div>
                     </div>

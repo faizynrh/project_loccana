@@ -119,7 +119,6 @@ class HutangController extends Controller
             $apiResponse = fectApi(env('HUTANG_URL') . '/' . $id);
             if ($apiResponse->successful()) {
                 $data = json_decode($apiResponse->body());
-                // dd($data);
                 return view('cashbank.hutang.detailpembayaran', compact('data'));
             } else {
                 return back()->withErrors($apiResponse->json()['message']);
@@ -193,7 +192,7 @@ class HutangController extends Controller
             ];
             $apiResponse = storeApi(env('HUTANG_URL'), $data);
             if ($apiResponse->successful()) {
-                return redirect()->route('hutang.pembayaran')
+                return redirect()->route('hutang.pembayaran.index')
                     ->with('success', $apiResponse->json()['message']);
             } else {
                 return back()->withErrors($apiResponse->json()['message']);
@@ -269,7 +268,7 @@ class HutangController extends Controller
             ];
             $apiResponse = updateApi(env('HUTANG_URL') . '/' . $id, $data);
             if ($apiResponse->successful()) {
-                return redirect()->route('hutang.pembayaran')
+                return redirect()->route('hutang.pembayaran.index')
                     ->with('success', $apiResponse->json()['message']);
             } else {
                 return back()->withErrors($apiResponse->json()['message']);
@@ -302,24 +301,7 @@ class HutangController extends Controller
             ];
             $apiResponse = updateApi(env('HUTANG_URL') . '/approve/' . $id, $data);
             if ($apiResponse->successful()) {
-                return redirect()->route('hutang.pembayaran')->with('success', $apiResponse->json()['message']);
-            } else {
-                return back()->withErrors($apiResponse->json()['message']);
-            }
-        } catch (\Exception $e) {
-            return back()->withErrors($e->getMessage());
-        }
-    }
-
-    public function reject(Request $request, $id)
-    {
-        try {
-            $data = [
-                'status' => 'Rejected'
-            ];
-            $apiResponse = updateApi(env('HUTANG_URL') . '/approve/' . $id, $data);
-            if ($apiResponse->successful()) {
-                return redirect()->route('hutang.pembayaran')->with('success', $apiResponse->json()['message']);
+                return redirect()->route('hutang.pembayaran.index')->with('success', $apiResponse->json()['message']);
             } else {
                 return back()->withErrors($apiResponse->json()['message']);
             }
@@ -333,7 +315,7 @@ class HutangController extends Controller
         try {
             $apiResponse = deleteApi(env('HUTANG_URL') . '/' . $id);
             if ($apiResponse->successful()) {
-                return redirect()->route('hutang.pembayaran')->with('success', $apiResponse->json()['message']);
+                return redirect()->route('hutang.pembayaran.index')->with('success', $apiResponse->json()['message']);
             } else {
                 return back()->withErrors($apiResponse->json()['message']);
             }

@@ -35,7 +35,7 @@
             <section class="section">
                 <div class="card">
                     <div class="card-body">
-                        <form action="{{ route('hutang.store') }}" method="POST" id="createForm">
+                        <form action="{{ route('hutang.pembayaran.store') }}" method="POST" id="createForm">
                             @csrf
                             <div class="row mb-3">
                                 <div class="col-md-6">
@@ -141,7 +141,8 @@
                             <div class="row">
                                 <div class="col-md-12 text-end">
                                     <button type="submit" class="btn btn-primary" id="submitButton">Simpan</button>
-                                    <a href="{{ route('hutang.pembayaran') }}" class="btn btn-secondary ms-2">Batal</a>
+                                    <a href="{{ route('hutang.pembayaran.index') }}"
+                                        class="btn btn-secondary ms-2">Batal</a>
                                 </div>
                             </div>
                         </form>

@@ -42,7 +42,7 @@
                                     <th scope="col">Principal</th>
                                     <th scope="col">Harga Pokok </th>
                                     <th scope="col">Harga Beli</th>
-                                    <th scope="col">Option</th>
+                                    <th scope="col">Action</th>
                                 </tr>
                             </thead>
                         </table>

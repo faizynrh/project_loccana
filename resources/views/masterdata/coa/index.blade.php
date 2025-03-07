@@ -35,11 +35,11 @@
                             <table class="table table-striped table-bordered mt-3" id="tablecoa">
                                 <thead>
                                     <tr>
-                                        <th scope="col" class="col-1">No</th>
-                                        <th scope="col" class="col-5">Parent</th>
-                                        <th scope="col" class="col-2">COA</th>
-                                        <th scope="col" class="col-3">Keterangan</th>
-                                        <th scope="col" class="col-2">Option</th>
+                                        <th>No</th>
+                                        <th>Parent</th>
+                                        <th>COA</th>
+                                        <th>Keterangan</th>
+                                        <th>Action</th>
                                     </tr>
                                 </thead>
                             </table>

@@ -19,7 +19,7 @@
                                     <a href="index.html">Dashboard</a>
                                 </li>
                                 <li class="breadcrumb-item active" aria-current="page">
-                                    Detail Penerimaan Barang Management
+                                    Detail Penerimaan Barang
                                 </li>
                             </ol>
                         </nav>
@@ -52,7 +52,7 @@
                                 <input type="text" class="form-control" value="{{ $data->data[0]->fax }}" readonly> --}}
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label fw-bold mt-2 mb-1 small">No DO</label>
+                                <label class="form-label fw-bold mt-2 mb-1 small">No. DO</label>
                                 <input type="text" class="form-control" value="{{ $data->data[0]->do_number }}" readonly>
                                 <label class="form-label fw-bold mt-2 mb-1 small">Tanggal DO</label>
                                 <input type="date" class="form-control"
@@ -61,11 +61,12 @@
                                 <label class="form-label fw-bold mt-2 mb-1 small">Angkutan</label>
                                 <input type="text" class="form-control" value="{{ $data->data[0]->shipment_info }}"
                                     readonly>
-                                <label class="form-label fw-bold mt-2 mb-1 small">No Polisi</label>
+                                <label class="form-label fw-bold mt-2 mb-1 small">No. Polisi</label>
                                 <input type="text" class="form-control" value="{{ $data->data[0]->plate_number }}"
                                     readonly>
                             </div>
                         </div>
+                        <hr class="my-4 border-2 border-dark">
                         <div class="p-2">
                             <h5 class="fw-bold ">Items</h5>
                         </div>
@@ -73,21 +74,33 @@
                             <thead>
                                 <tr style="border-bottom: 3px solid #000;">
                                     <th style="width: 110px">Kode</th>
-                                    <th style="width: 45px">Order (Kg/Lt)</th>
-                                    <th style="width: 45px">Sisa (Kg/Lt)</th>
-                                    <th style="width: 45px">Diterima</th>
+                                    <th style="width: 45px">Order</th>
+                                    <th style="width: 45px">Sisa</th>
+                                    <th style="width: 45px">Total Diterima</th>
                                     <th style="width: 70px">Gudang</th>
                                     <th style="width: 45px">Bonus</th>
                                     <th style="width: 45px">Titipan</th>
                                     <th style="width: 45px">Diskon</th>
                                     <th style="width: 45px">Keterangan</th>
                                 </tr>
+                                {{-- <tr style="border-bottom: 3px solid #000;">
+                                    <th>Kode</th>
+                                    <th>Order</th>
+                                    <th>Sisa</th>
+                                    <th>Total Diterima</th>
+                                    <th>Diterima (Qty)</th>
+                                    <th>Ditolak (Qty)</th>
+                                    <th>Bonus</th>
+                                    <th>Titipan</th>
+                                    <th>Diskon</th>
+                                    <th>Keterangan</th>
+                                </tr> --}}
                             </thead>
                             <tbody id="tableBody">
                                 @foreach ($data->data as $item)
                                     <tr style="border-bottom: 2px solid #000;">
                                         <td>
-                                            <p class="fw-bold">{{ $item->item_code }} - {{ $item->item_name }}</p>
+                                            <p class="fw-bold">[{{ $item->item_code }}] {{ $item->item_name }}</p>
                                         </td>
                                         <td>
                                             <p class="fw-bold">{{ $item->jumlah_order }}</p>
@@ -119,7 +132,7 @@
                         </table>
                         <div class="row">
                             <div class="col-md-12 text-end">
-                                <a href="{{ route('penerimaan_barang.index') }}" class="btn btn-primary ms-2">Kembali</a>
+                                <a href="{{ route('penerimaan_barang.index') }}" class="btn btn-secondary ms-2">Kembali</a>
                             </div>
                         </div>
                     </div>

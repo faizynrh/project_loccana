@@ -38,12 +38,12 @@
                             <table class="table table-striped table-bordered mt-3" id="tablegudang">
                                 <thead>
                                     <tr>
-                                        <th scope="col">No</th>
-                                        <th scope="col">Nama Gudang</th>
-                                        <th scope="col">Deskripsi</th>
-                                        <th scope="col">Lokasi</th>
-                                        <th scope="col">Kapasitas</th>
-                                        <th scope="col">Action</th>
+                                        <th>No</th>
+                                        <th>Nama Gudang</th>
+                                        <th>Lokasi</th>
+                                        <th>Kapasitas</th>
+                                        <th>Deskripsi</th>
+                                        <th>Action</th>
                                     </tr>
                                 </thead>
                             </table>
@@ -75,13 +75,13 @@
                         data: 'name'
                     },
                     {
-                        data: 'description',
-                    },
-                    {
                         data: 'location'
                     },
                     {
                         data: 'capacity'
+                    },
+                    {
+                        data: 'description',
                     },
                     {
                         data: null,

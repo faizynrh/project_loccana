@@ -183,18 +183,19 @@ class InvoiceController extends Controller
     {
         try {
             $items = [];
-            if ($request->has('item_id')) {
-                foreach ($request->input('item_id') as $index => $itemId) {
+            if ($request->has('items')) {
+                foreach ($request->input('items') as $item) {
                     $items[] = [
-                        'item_id' => $itemId,
-                        'quantity' => $request->input('qty')[$index],
-                        'unit_price' => $request->input('harga')[$index],
-                        'discount' => $request->input('discount')[$index],
-                        'total_price' => $request->input('total_price')[$index],
-                        'warehouse_id' => $request->input('warehouse_id')[$index],
+                        'item_id' => $item['item_id'],
+                        'quantity' => $item['qty'],
+                        'unit_price' => $item['harga'],
+                        'discount' => $item['discount'],
+                        'total_price' => $item['total_price'],
+                        'warehouse_id' => $item['warehouse_id'],
                     ];
                 }
             }
+
             $data = [
                 'invoice_number' => $request->invoice_number,
                 'item_receipt_id' => $request->item_receipt_id,
