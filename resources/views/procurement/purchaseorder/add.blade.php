@@ -12,7 +12,7 @@
             <div class="page-title">
                 <div class="row">
                     <div class="col-12 col-md-6 order-md-1 order-last">
-                        <h3>Add Purchase Order</h3>
+                        <h3>Tambah Purchase Order</h3>
                     </div>
                     <div class="col-12 col-md-6 order-md-2 order-first">
                         <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
@@ -21,7 +21,7 @@
                                     <a href="/purchase_order">Purchase Order</a>
                                 </li>
                                 <li class="breadcrumb-item active" aria-current="page">
-                                    Add Purchase Order
+                                    Tambah Purchase Order
                                 </li>
                             </ol>
                         </nav>
@@ -30,9 +30,6 @@
             </div>
             <section class="section">
                 <div class="card">
-                    <div class="card-header">
-                        <h4 class="card-title"> Form detail isian purchase order</h4>
-                    </div>
                     <div class="card-body">
                         @include('alert.alert')
                         <form id="createForm" method="POST" action="{{ route('purchaseorder.store') }}">
@@ -184,7 +181,7 @@
                                     <input type="hidden" name="tax_amount" id="tax_amount" value="0">
                                     <input type="hidden" name="company_id" id="company_id" value="2">
                                     <input type="hidden" name="total_amount" id="total_amount" value="0">
-                                    <button type="submit" class="btn btn-primary" id="submitButton">Submit</button>
+                                    <button type="submit" class="btn btn-primary" id="submitButton">Simpan</button>
                                     {{-- <button type="button" class="btn btn-danger ms-2" id="rejectButton">Reject</button> --}}
                                     <a href="/purchase_order" class="btn btn-secondary ms-2">Batal</a>
                                 </div>

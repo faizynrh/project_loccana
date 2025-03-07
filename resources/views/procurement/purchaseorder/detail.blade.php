@@ -30,9 +30,6 @@
             </div>
             <section class="section">
                 <div class="card">
-                    <div class="card-header">
-                        <h4 class="card-title"> Form detail purchase order</h4>
-                    </div>
                     <div class="card-body">
                         @if (session('success'))
                             <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -95,8 +92,8 @@
                                 <label for="ship" class="form-label fw-bold mt-2 mb-1 small">Ship From :</label>
                                 <textarea class="form-control bg-body-secondary" rows="5" id="ship" name="ship" readonly></textarea>
                                 <label for="ppn" class="form-label fw-bold mt-2 mb-1 small">VAT/PPN</label>
-                                <input type="text" class="form-control" value="{{ $data->data[0]->ppn }}"
-                                    id="ppn" name="ppn" disabled>
+                                <input type="text" class="form-control" value="{{ $data->data[0]->ppn }}" id="ppn"
+                                    name="ppn" disabled>
 
 
 

@@ -31,9 +31,6 @@
             </div>
             <section class="section">
                 <div class="card">
-                    <div class="card-header">
-                        <h4 class="card-title">Form detail edit purchase order</h4>
-                    </div>
                     <div class="card-body">
                         <form id="createForm" method="POST"
                             action="{{ route('purchaseorder.update', $data->data[0]->id_po) }}">
@@ -236,7 +233,7 @@
                                     <input type="hidden" name="tax_amount" id="tax_amount" value="0">
                                     <input type="hidden" name="company_id" id="company_id" value="2">
                                     <input type="hidden" name="total_amount" id="total_amount" value="0">
-                                    <button type="submit" class="btn btn-primary" id="submitButton">Submit</button>
+                                    <button type="submit" class="btn btn-primary" id="submitButton">Simpan</button>
                                     <a href="/purchase_order" class="btn btn-secondary ms-2">Batal</a>
                                 </div>
                             </div>
