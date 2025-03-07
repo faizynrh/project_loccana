@@ -150,7 +150,6 @@ Route::middleware('auth.login')->group(
         });
 
         // ===================================== PROCUREMENT =========================================
-
         // PENERIMAAN BARANG
         Route::prefix('/penerimaan_barang')->name('penerimaan_barang.')->controller(PenerimaanBarangController::class)->group(function () {
             Route::get('/', 'index')->name('index');
@@ -345,7 +344,6 @@ Route::middleware('auth.login')->group(
         });
 
         // ===================================== CASHBANK =========================================
-
         Route::prefix('/hutang')->name('hutang.')->controller(HutangController::class)->group(
             function () {
                 Route::get('/', 'index')->name('index');
