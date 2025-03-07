@@ -70,21 +70,21 @@
                                     <thead>
                                         <tr>
                                             <th>No</th>
-                                            <th>Tanggal</th>
+                                            <th>Tanggal Pembelian</th>
+                                            <th>No. Transaksi</th>
+                                            <th>No. Invoice</th>
                                             <th>Kode Produk</th>
-                                            <th>Nama Barang</th>
+                                            <th>Nama Produk</th>
                                             <th>Kemasan</th>
                                             <th>Qty</th>
-                                            <th>harga</th>
-                                            <th>Jumlah (Rp.)</th>
+                                            <th>Harga</th>
+                                            <th>Total Harga</th>
                                             <th>PPN</th>
-                                            <th>Rp. +PPN</th>
-                                            <th>No Trans</th>
-                                            <th>No Invoice</th>
+                                            <th>Total Harga + PPN</th>
                                             <th>Jatuh Tempo</th>
                                             <th>Lama Hari</th>
-                                            <th>No Faktur</th>
-                                            <th>Tgl Faktur Pajak</th>
+                                            <th>No. Faktur Pajak</th>
+                                            <th>Tanggal Faktur Pajak</th>
                                         </tr>
                                     </thead>
                                 </table>
@@ -154,6 +154,12 @@
                                 data: 'tanggal'
                             },
                             {
+                                data: 'no_trans'
+                            },
+                            {
+                                data: 'no_invoice'
+                            },
+                            {
                                 data: 'kode_produk'
                             },
                             {
@@ -188,12 +194,6 @@
                                 render: function(data) {
                                     return formatRupiah(data);
                                 }
-                            },
-                            {
-                                data: 'no_trans'
-                            },
-                            {
-                                data: 'no_invoice'
                             },
                             {
                                 data: 'jatuh_tempo'
