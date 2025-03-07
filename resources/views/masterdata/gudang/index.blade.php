@@ -43,7 +43,7 @@
                                         <th scope="col">Deskripsi</th>
                                         <th scope="col">Lokasi</th>
                                         <th scope="col">Kapasitas</th>
-                                        <th scope="col">Option</th>
+                                        <th scope="col">Action</th>
                                     </tr>
                                 </thead>
                             </table>

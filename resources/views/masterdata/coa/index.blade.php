@@ -39,7 +39,7 @@
                                         <th scope="col" class="col-5">Parent</th>
                                         <th scope="col" class="col-2">COA</th>
                                         <th scope="col" class="col-3">Keterangan</th>
-                                        <th scope="col" class="col-2">Option</th>
+                                        <th scope="col" class="col-2">Action</th>
                                     </tr>
                                 </thead>
                             </table>
