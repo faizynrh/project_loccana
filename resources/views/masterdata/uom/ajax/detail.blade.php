@@ -3,7 +3,7 @@
         <div class="modal-body">
             <div class="row mb-3 align-items-center">
                 <div class="col-md-3">
-                    <label for="account_code" class="form-label fw-bold mb-0">Uom <span class="text-danger"></span></label>
+                    <label for="account_code" class="form-label fw-bold mb-0">UOM <span class="text-danger"></span></label>
                 </div>
                 <div class="col-md-9">
                     <input type="text" placeholder="UoM" name="uom_name" class="form-control"
@@ -12,7 +12,7 @@
             </div>
             <div class="row mb-3 align-items-center">
                 <div class="col-md-3">
-                    <label for="account_code" class="form-label fw-bold mb-0">Simbol UoM <span
+                    <label for="account_code" class="form-label fw-bold mb-0">Simbol UOM <span
                             class="text-danger"></span></label>
                 </div>
                 <div class="col-md-9">
@@ -22,7 +22,7 @@
             </div>
             <div class="row mb-3 align-items-center">
                 <div class="col-md-3">
-                    <label for="account_code" class="form-label fw-bold mb-0">Keterangan UoM <span
+                    <label for="account_code" class="form-label fw-bold mb-0">Keterangan UOM <span
                             class="text-danger"></span></label>
                 </div>
                 <div class="col-md-9">

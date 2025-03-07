@@ -33,9 +33,9 @@
                             <thead>
                                 <tr>
                                     <th>No</th>
-                                    <th>Partner Tipe</th>
+                                    <th>Tipe Partner</th>
                                     <th>Nama</th>
-                                    <th>Contact Info</th>
+                                    <th>Contact</th>
                                     {{-- <th>COA ID</th> --}}
                                     <th scope="col">Action</th>
                                 </tr>
@@ -155,7 +155,7 @@
                         //
                     },
                     success: function(response) {
-                        updateModal('#modal-example', 'Detail customer', response,
+                        updateModal('#modal-example', 'Detail Customer', response,
                             'modal-lg');
                     },
                     error: function(xhr) {
@@ -187,7 +187,7 @@
                         //
                     },
                     success: function(response) {
-                        updateModal('#modal-example', 'Edit customer', response,
+                        updateModal('#modal-example', 'Edit Customer', response,
                             'modal-lg');
                     },
                     error: function(xhr) {

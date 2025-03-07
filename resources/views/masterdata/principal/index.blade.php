@@ -33,9 +33,9 @@
                             <thead>
                                 <tr>
                                     <th>No</th>
-                                    <th>Partner Type</th>
+                                    <th>Tipe Partner</th>
                                     <th>Nama</th>
-                                    <th>Contact Info</th>
+                                    <th>Contact</th>
                                     {{-- <th>COA ID</th> --}}
                                     <th scope="col">Action</th>
                                 </tr>
@@ -45,8 +45,6 @@
                         </table>
                     </div>
                 </div>
-
-
             </section>
         </div>
     </div>
@@ -121,7 +119,7 @@
                         //
                     },
                     success: function(response) {
-                        updateModal('#modal-example', 'Tambah principal', response,
+                        updateModal('#modal-example', 'Tambah Principal', response,
                             'modal-lg');
                     },
                     error: function(xhr) {
@@ -153,7 +151,7 @@
                         //
                     },
                     success: function(response) {
-                        updateModal('#modal-example', 'Detail principal', response,
+                        updateModal('#modal-example', 'Detail Principal', response,
                             'modal-lg');
                     },
                     error: function(xhr) {

@@ -73,10 +73,6 @@
                 bottom: 2px;
                 left: 4px;
             }
-
-            input[type="number"] {
-                text-align: right;
-            }
         </style>
     @endpush
     <div id="main-content">
@@ -132,7 +128,6 @@
                                     <label for="contact" class="form-label fw-bold mt-2 mb-1 small">No Telp</label>
                                     <input type="text" class="form-control bg-body-secondary" id="contact"
                                         name="contact_info" readonly>
-
                                     {{-- <label for="status" class="form-label fw-bold mt-2 mb-1 small">Status</label> --}}
                                     <input type="hidden" class="form-control" id="status" name="status">
                                     <input type="hidden" class="form-control" id="currency_id" name="currency_id"
@@ -180,8 +175,8 @@
                                         <th style="width: 80px">Qty Box</th>
                                         <th style="width: 45px">Qty Satuan</th>
                                         <th style="width: 90px">Total Qty</th>
-                                        <th style="width: 100px">Harga</th>
-                                        <th style="width: 30px">Diskon (%)</th>
+                                        <th style="width: 130px">Harga</th>
+                                        <th style="width: 15px">Diskon (%)</th>
                                         <th style="width: 70px">Total</th>
                                         <th style="width: 30px"></th>
                                         <th style="width: 20px"></th>

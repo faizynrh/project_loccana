@@ -232,7 +232,6 @@
                                     <td>Total</td>
                                     <td style="float: right">0</td>
                                 </tr>
-
                             </table>
                             <div class="row">
                                 <div class="col-md-12 text-end">
@@ -273,8 +272,6 @@
                 }
             });
 
-
-
             $('#custom_payment_term').on('input', function() {
                 let value = $(this).val();
                 // Remove any non-numeric characters
@@ -298,10 +295,19 @@
                 $(this).val(value);
             });
 
+            // Track selected items to prevent duplicates
+            const selectedItems = new Set();
+
+            // Initialize the form with existing items
+            $('.item-select').each(function() {
+                const itemId = $(this).val();
+                if (itemId && itemId !== '') {
+                    selectedItems.add(itemId);
+                }
+            });
+
             var poId = '{{ $data->data[0]->partner_id }}';
             var warehouseId = $('#gudang').val();
-
-
             if (poId) {
                 $.ajax({
                     url: '/purchase_order/getDetailPrinciple/' + poId,
@@ -342,30 +348,73 @@
                 });
             }
 
-            // Item selection related functions
-            function updateAllItemSelects(items) {
-                var options = '<option value="" disabled selected>--Pilih Item--</option>';
-                if (items && items.length > 0) {
-                    items.forEach(function(item) {
-                        options +=
-                            `<option value="${item.id}" data-uom="${item.unit_of_measure_id}">${item.sku ?? '-'} - ${item.name ?? '-'}</option>`;
-                    });
-                } else {
-                    options = '<option value="" disabled selected>Tidak ada item tersedia</option>';
+            // Function to disable/enable row inputs based on item selection
+            function toggleRowInputs(row, enable) {
+                row.find('.notes-input, .box-qty-input, .qty-input, .price-input, .discount-input')
+                    .prop('disabled', !enable);
+
+                // Reset values if disabling
+                if (!enable) {
+                    row.find('.notes-input').val('');
+                    row.find('.box-qty-input, .qty-input').val('0');
+                    row.find('.total-qty').val('0');
+                    row.find('.price-input').val('0');
+                    row.find('.discount-input').val('0');
+                    row.find('.total-input').val('0');
+                    row.find('.stock-info').remove();
                 }
-
-                // Store items data for future use
-                $('#transaction-table').data('current-items', items);
-
-                $('.item-select').html(options);
             }
 
+            // Initialize rows - disable inputs if no item selected
+            $('.item-row').each(function() {
+                const itemSelect = $(this).find('.item-select');
+                const hasSelectedItem = itemSelect.val() && itemSelect.val() !== '';
+                toggleRowInputs($(this), hasSelectedItem);
+            });
+
             $(document).on('change', '.item-select', function() {
+                const row = $(this).closest('tr');
+                const itemId = $(this).val();
                 const selectedUOM = $(this).find(':selected').data('uom');
+
+                // Check if item is already selected in another row
+                if (itemId && selectedItems.has(itemId)) {
+                    // Find which row has this item
+                    let duplicateRowIndex = -1;
+                    $('.item-select').not(this).each(function(index) {
+                        if ($(this).val() === itemId) {
+                            duplicateRowIndex = index + 1;
+                            return false; // break the loop
+                        }
+                    });
+
+                    Swal.fire({
+                        title: 'Item Duplikat',
+                        text: `Item ini sudah dipilih di baris ${duplicateRowIndex}. Silahkan pilih item lain.`,
+                        icon: 'warning'
+                    });
+
+                    $(this).val('').trigger('change');
+                    return;
+                }
+
+                // Remove previous item from tracking if there was one
+                const previousItemId = $(this).data('previous-item');
+                if (previousItemId) {
+                    selectedItems.delete(previousItemId);
+                }
+
+                // Update tracking
+                if (itemId) {
+                    selectedItems.add(itemId);
+                    $(this).data('previous-item', itemId);
+                }
+
+                // Update UOM input
                 $(this).siblings('.uom-input').val(selectedUOM);
 
-                const itemId = $(this).val();
-                const row = $(this).closest('tr');
+                // Enable/disable row inputs based on selection
+                toggleRowInputs(row, !!itemId);
 
                 if (itemId) {
                     $.ajax({
@@ -373,13 +422,24 @@
                         type: 'GET',
                         dataType: 'json',
                         success: function(response) {
-                            const stockInfo = response.stock ? response.stock : 0;
+                            const stockInfo = response.stock ? parseInt(response.stock) : 0;
+                            const pcsPerBox = response.pcs_per_box ? parseInt(response
+                                .pcs_per_box) : 0;
 
+                            // Remove existing stock info
                             row.find('.stock-info').remove();
 
+                            // Add stock info in a better position
                             row.find('input[name$="[box_quantity]"]').parent().append(
-                                `<div class="stock-info text-danger small mt-1">Stock: ${stockInfo}</div>`
+                                `<div class="stock-info text-danger small mt-1">Stock: ${stockInfo} | Pcs per Box: ${pcsPerBox}</div>`
                             );
+
+                            // Set max attribute for quantity inputs
+                            row.find('.box-qty-input').attr('max', stockInfo);
+                            row.find('.qty-input').attr('max', stockInfo);
+
+                            // Store stock value for calculations
+                            row.data('stock', stockInfo);
                         },
                         error: function(xhr, status, error) {
                             console.error('Error fetching stock information:', error);
@@ -388,76 +448,79 @@
                             row.find('input[name$="[box_quantity]"]').parent().append(
                                 '<div class="stock-info text-danger small mt-1">Stock: Unable to fetch</div>'
                             );
+
+                            row.data('stock', 0);
                         }
                     });
                 } else {
                     row.find('.stock-info').remove();
+                    toggleRowInputs(row, false);
                 }
             });
 
             function createNewRow(rowCount) {
-                let itemOptions = '';
-                const firstSelect = $('.item-select').first();
+                let itemOptions = '<option value="" selected disabled>Pilih Item</option>';
 
-                if (firstSelect.length > 0) {
-                    firstSelect.find('option').each(function() {
-                        const value = $(this).val();
-                        const text = $(this).text();
-                        const uom = $(this).data('uom') || '';
-                        const selected = $(this).is(':selected') ? 'selected' : '';
-                        const disabled = $(this).is(':disabled') ? 'disabled' : '';
-
-                        itemOptions +=
-                            `<option value="${value}" data-uom="${uom}" ${selected} ${disabled}>${text}</option>`;
-                    });
-                } else {
-                    itemOptions = '<option value="" disabled selected>Pilih Item</option>';
-                }
+                // Get all available items that haven't been selected yet
+                @foreach ($items->data->items ?? [] as $option)
+                    if (!selectedItems.has('{{ $option->id }}')) {
+                        itemOptions += `<option value="{{ $option->id }}" data-uom="{{ $option->unit_of_measure_id }}">
+                    {{ $option->sku }} - {{ $option->name }}
+                </option>`;
+                    }
+                @endforeach
 
                 return `
-            <tr style="border-bottom: 2px solid #000" class="item-row">
-                <td colspan="2">
-                   <select class="form-select" name="items[${rowCount}][item_id]" required>
-                    <option value="" selected disabled>Pilih Item</option>
-                    @foreach ($items->data->items ?? [] as $option)
-                        <option value="{{ $option->id }}" data-uom="{{ $option->unit_of_measure_id }}">
-                            {{ $option->sku }} - {{ $option->name }}
-                        </option>
-                    @endforeach
-                </select>
-                <input type="hidden" name="items[${rowCount}][uom_id]" class="uom-input">
-                <input type="hidden" name="items[${rowCount}][po_detail_id]" class="po-detail-id">
-                </td>
-                <td>
-                    <input type="text" name="items[${rowCount}][notes]" class="form-control notes-input">
-                </td>
-                <td>
-                    <input type="number" name="items[${rowCount}][box_quantity]" class="form-control box-qty-input"  min="0">
-                </td>
-                <td>
-                    <input type="number" name="items[${rowCount}][per_box_quantity]" class="form-control qty-input"  min="0">
-                </td>
-                <td>
-                    <input type="number" name="items[${rowCount}][quantity]" class="form-control total-qty bg-body-secondary"  min="0" readonly>
-                </td>
-                <td>
-                    <input type="number" name="items[${rowCount}][unit_price]" class="form-control price-input" value="0" min="0">
-                </td>
-                <td>
-                    <input type="number" name="items[${rowCount}][discount]" class="form-control discount-input" value="0" min="0" max="100">
-                </td>
-                <td colspan="2">
-                    <input type="number" name="items[${rowCount}][total_price]" class="form-control bg-body-secondary total-input" readonly value="0">
-                </td>
-                <td class="text-center">
-                    <button type="button" class="btn btn-danger btn-sm remove-row">X</button>
-                </td>
-            </tr>
-        `;
+        <tr style="border-bottom: 2px solid #000" class="item-row">
+            <td colspan="2">
+               <select class="form-select item-select" name="items[${rowCount}][item_id]" required>
+                ${itemOptions}
+               </select>
+               <input type="hidden" name="items[${rowCount}][uom_id]" class="uom-input">
+               <input type="hidden" name="items[${rowCount}][po_detail_id]" class="po-detail-id">
+            </td>
+            <td>
+                <input type="text" name="items[${rowCount}][notes]" class="form-control notes-input" disabled>
+            </td>
+            <td>
+                <input type="number" name="items[${rowCount}][box_quantity]" class="form-control box-qty-input" min="0" value="0" disabled>
+            </td>
+            <td>
+                <input type="number" name="items[${rowCount}][quantity]" class="form-control qty-input" min="0" value="0" disabled>
+            </td>
+            <td>
+                <input type="number" name="" class="form-control total-qty bg-body-secondary" min="0" readonly value="0">
+            </td>
+            <td>
+                <input type="number" name="items[${rowCount}][unit_price]" class="form-control price-input" value="0" min="0" disabled>
+            </td>
+            <td>
+                <input type="number" name="items[${rowCount}][discount]" class="form-control discount-input" value="0" min="0" max="100" disabled>
+            </td>
+            <td colspan="2">
+                <input type="number" name="items[${rowCount}][total_price]" class="form-control bg-body-secondary total-input" readonly value="0">
+            </td>
+            <td class="text-center">
+                <button type="button" class="btn btn-danger btn-sm remove-row">X</button>
+            </td>
+        </tr>
+    `;
             }
 
             $('#add-row').on('click', function(e) {
                 e.preventDefault();
+
+                // Check if first item is selected
+                const firstItemSelected = $('.item-row').first().find('.item-select').val();
+                if (!firstItemSelected) {
+                    Swal.fire({
+                        title: 'Perhatian',
+                        text: 'Silahkan pilih item pada baris pertama terlebih dahulu',
+                        icon: 'warning'
+                    });
+                    return;
+                }
+
                 const rowCount = $('.item-row').length;
                 const newRowHtml = createNewRow(rowCount);
                 $(this).closest('tr').before(newRowHtml);
@@ -466,10 +529,23 @@
 
             $(document).on('click', '.remove-row', function() {
                 if ($('.item-row').length > 1) {
-                    $(this).closest('tr').remove();
+                    const row = $(this).closest('tr');
+                    const itemSelect = row.find('.item-select');
+                    const itemId = itemSelect.val();
+
+                    // Remove from tracking
+                    if (itemId) {
+                        selectedItems.delete(itemId);
+                    }
+
+                    row.remove();
                     updateTotals();
                 } else {
-                    alert('Minimal harus ada satu item');
+                    Swal.fire({
+                        title: 'Perhatian',
+                        text: 'Minimal harus ada satu item',
+                        icon: 'info'
+                    });
                 }
             });
 
@@ -527,11 +603,42 @@
             });
 
             // Fix calculation logic for rows and make it work in realtime
-            $(document).on('input', '.box-qty-input, .qty-input, .price-input, .discount-input', function() {
-                var row = $(this).closest('tr');
-                calculateRowTotal(row);
-                updateTotals();
-            });
+            $(document).on('input', '.box-qty-input, .per-box-qty-input, .qty-input, .price-input, .discount-input',
+                function() {
+                    var row = $(this).closest('tr');
+
+                    // Validate against max stock
+                    if ($(this).hasClass('box-qty-input') || $(this).hasClass('qty-input')) {
+                        const stockLimit = parseInt(row.data('stock')) || 0;
+                        const boxQty = parseInt(row.find('.box-qty-input').val()) || 0;
+                        const perBoxQty = parseInt(row.find('.per-box-qty-input').val()) || 1;
+                        const unitQty = parseInt(row.find('.qty-input').val()) || 0;
+
+                        // Calculate total quantity
+                        const totalQty = (boxQty * perBoxQty) + unitQty;
+
+                        // Check if total exceeds stock
+                        if (totalQty > stockLimit) {
+                            Swal.fire({
+                                title: 'Peringatan Stok',
+                                text: `Total kuantitas (${totalQty}) melebihi stok tersedia (${stockLimit})`,
+                                icon: 'warning'
+                            });
+
+                            // Reset to max possible value
+                            if ($(this).hasClass('box-qty-input')) {
+                                const maxBoxes = Math.floor(stockLimit / perBoxQty);
+                                $(this).val(maxBoxes);
+                            } else if ($(this).hasClass('qty-input')) {
+                                const remainingStock = stockLimit - (boxQty * perBoxQty);
+                                $(this).val(Math.max(0, remainingStock));
+                            }
+                        }
+                    }
+
+                    calculateRowTotal(row);
+                    updateTotals();
+                });
 
             // Also trigger calculation when PPN changes
             $('#ppn').on('input', function() {
@@ -541,11 +648,10 @@
                 updateTotals();
             });
 
-
-
             function calculateRowTotal(row) {
-                const boxqty = parseFloat(row.find('.box-qty-input').val()) || 0;
-                const qty = parseFloat(row.find('.qty-input').val()) || 0;
+                const boxQty = parseFloat(row.find('.box-qty-input').val()) || 0;
+                const perBoxQty = parseFloat(row.find('.per-box-qty-input').val()) || 1;
+                const unitQty = parseFloat(row.find('.qty-input').val()) || 0;
                 const price = parseFloat(row.find('.price-input').val()) || 0;
                 let discount = parseFloat(row.find('.discount-input').val()) || 0;
 
@@ -554,11 +660,11 @@
                     row.find('.discount-input').val(100);
                 }
 
+                // Calculate total quantity: (box_qty * pcs_per_box) + unit_qty
+                const totalQty = (boxQty * perBoxQty) + unitQty;
+                row.find('.total-qty').val(totalQty.toFixed(0));
 
-                const totalqty = boxqty + qty;
-                row.find('.total-qty').val(totalqty.toFixed(0));
-
-                const subtotal = totalqty * price;
+                const subtotal = totalQty * price;
                 const ppn = parseFloat($('#ppn').val()) || 0;
                 const ppn_decimal = ppn / 100;
                 const hargapokok = subtotal / (1 + ppn_decimal);
@@ -579,12 +685,16 @@
                 let totalFinal = 0;
 
                 $('.item-row').each(function() {
-                    const qty = parseFloat($(this).find('.qty-input').val()) || 0;
+                    const boxQty = parseFloat($(this).find('.box-qty-input').val()) || 0;
+                    const perBoxQty = parseFloat($(this).find('.per-box-qty-input').val()) || 1;
+                    const unitQty = parseFloat($(this).find('.qty-input').val()) || 0;
+                    const totalQty = (boxQty * perBoxQty) + unitQty;
+
                     const price = parseFloat($(this).find('.price-input').val()) || 0;
                     const discount = parseFloat($(this).find('.discount-input').val()) || 0;
                     const total = parseFloat($(this).find('.total-input').val()) || 0;
 
-                    const rowSubtotal = qty * price;
+                    const rowSubtotal = totalQty * price;
                     const rowDiscount = rowSubtotal * (discount / 100);
 
                     subtotal += rowSubtotal;
@@ -600,8 +710,8 @@
                 updateDisplayValue('VAT/PPN', totalPPN);
                 updateDisplayValue('Total', totalFinal);
 
-                $('#tax_amount').val(totalPPN);
-                $('#total_amount').val(totalFinal);
+                $('#tax_amount').val(totalPPN.toFixed(0));
+                $('#total_amount').val(totalFinal.toFixed(0));
             }
 
             function updateDisplayValue(label, value) {
@@ -620,10 +730,55 @@
                 });
             }
 
+            // Initialize calculations
             $('.item-row').each(function() {
                 calculateRowTotal($(this));
             });
             updateTotals();
+
+            // Form validation before submit
+            $('#createForm').on('submit', function(e) {
+                let hasError = false;
+
+                // Check if at least one item is selected
+                if ($('.item-select').filter(function() {
+                        return $(this).val();
+                    }).length === 0) {
+                    Swal.fire('Error', 'Silahkan pilih minimal satu item', 'error');
+                    hasError = true;
+                }
+
+                // Check for quantity exceeding stock
+                $('.item-row').each(function() {
+                    if ($(this).find('.item-select').val()) {
+                        const stockLimit = parseInt($(this).data('stock')) || 0;
+                        const boxQty = parseInt($(this).find('.box-qty-input').val()) || 0;
+                        const perBoxQty = parseInt($(this).find('.per-box-qty-input').val()) || 1;
+                        const unitQty = parseInt($(this).find('.qty-input').val()) || 0;
+
+                        const totalQty = (boxQty * perBoxQty) + unitQty;
+
+                        if (totalQty > stockLimit) {
+                            Swal.fire('Error',
+                                `Total kuantitas melebihi stok tersedia pada salah satu item`,
+                                'error');
+                            hasError = true;
+                            return false; // break each loop
+                        }
+
+                        if (totalQty <= 0) {
+                            Swal.fire('Error', 'Kuantitas item harus lebih dari 0', 'error');
+                            hasError = true;
+                            return false;
+                        }
+                    }
+                });
+
+                if (hasError) {
+                    e.preventDefault();
+                    return false;
+                }
+            });
         });
     </script>
 @endpush

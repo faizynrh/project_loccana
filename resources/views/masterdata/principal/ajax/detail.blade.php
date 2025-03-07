@@ -3,10 +3,10 @@
         <form action="{{ route('principal.update', $data->data->id) }}" method="POST" id="updateForm">
             <div class="row">
                 <div class="col-md-6 mb-3">
-                    <label for="kode" class="form-label fw-bold">Type Partner</label>
+                    <label for="kode" class="form-label fw-bold">Tipe Partner</label>
                     <select type="number" name="partner_type_id" placeholder="Type Partner" class="form-control"
                         id="partner_type_id" disabled>
-                        <option value="" disabled selected>Pilih Type</option>
+                        <option value="" disabled selected>Pilih Tipe</option>
                         @if (isset($partner->data))
                             @foreach ($partner->data as $partnerType)
                                 <option value="{{ $partnerType->id }}"
@@ -41,7 +41,7 @@
                     </select>
                 </div>
                 <div class="col-md-6 mb-3">
-                    <label for="contact_info" class="form-label fw-bold">Contact Info</label>
+                    <label for="contact_info" class="form-label fw-bold">Contact</label>
                     <input type="text" name="contact_info" placeholder="Contact Info" class="form-control"
                         id="contact_info" disabled value="{{ $data->data->contact_info }}">
                 </div>

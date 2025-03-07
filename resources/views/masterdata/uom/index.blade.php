@@ -35,7 +35,7 @@
                                     <th scope="col">Nama</th>
                                     <th scope="col">Simbol</th>
                                     <th scope="col">Deskripsi</th>
-                                    <th scope="col">Option</th>
+                                    <th scope="col">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -115,7 +115,7 @@
                         //
                     },
                     success: function(response) {
-                        updateModal('#modal-example', 'Tambah Uom', response,
+                        updateModal('#modal-example', 'Tambah UOM', response,
                             'modal-lg');
                     },
                     error: function(xhr) {
@@ -148,7 +148,7 @@
                         //
                     },
                     success: function(response) {
-                        updateModal('#modal-example', 'Detail uom', response,
+                        updateModal('#modal-example', 'Detail UOM', response,
                             'modal-lg');
                     },
                     error: function(xhr) {
@@ -180,7 +180,7 @@
                         //
                     },
                     success: function(response) {
-                        updateModal('#modal-example', 'Edit Uom', response,
+                        updateModal('#modal-example', 'Edit UOM', response,
                             'modal-lg');
                     },
                     error: function(xhr) {
