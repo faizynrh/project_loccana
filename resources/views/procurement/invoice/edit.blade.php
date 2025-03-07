@@ -38,7 +38,7 @@
                                     @method('PUT')
                                     <label class="form-label fw-bold mt-2 mb-1 small">No.
                                         DO</label>
-                                    <input type="text" class="form-control bg-body-secondary" name="item_receipt_id"
+                                    <input type="hidden" class="form-control bg-body-secondary" name="item_receipt_id"
                                         id="po_id" value="{{ $data->data[0]->id_receipt }}" readonly>
                                     <input type="text" class="form-control bg-body-secondary" name="po_id"
                                         id="po_id" value="{{ $data->data[0]->do_number }}" readonly>
@@ -60,8 +60,8 @@
                             <div class="col-md-6">
                                 <label class="form-label fw-bold mt-2 mb-1 small">Ship To</label>
                                 <textarea class="form-control bg-body-secondary" id="shipFrom" rows="4" readonly>
-    JL. Sangkuriang NO.38-A
-    NPWP: 01.555.161.7.428.000</textarea>
+JL. Sangkuriang NO.38-A
+NPWP: 01.555.161.7.428.000</textarea>
                                 <label class="form-label fw-bold mt-2 mb-1 small">Email</label>
                                 <input type="text" class="form-control bg-body-secondary" readonly>
                                 <label class="form-label fw-bold mt-2 mb-1 small">Telp/Fax</label>
@@ -113,31 +113,33 @@
                                 @foreach ($data->data as $index => $item)
                                     <tr style="border-bottom: 1px solid #000;">
                                         <td><input type="hidden" class="form-control bg-body-secondary item_name"
-                                                value="{{ $item->item_id }}" name="item_id[{{ $index }}]"
+                                                value="{{ $item->item_id }}" name="items[{{ $index }}][item_id]"
                                                 readonly>
                                             <input type="hidden" class="form-control bg-body-secondary item_name"
                                                 value="{{ $item->warehouse_id }}"
-                                                name="warehouse_id[{{ $index }}]" readonly>
+                                                name="items[{{ $index }}][warehouse_id]" readonly>
                                             <input type="text" class="form-control bg-body-secondary item_name"
-                                                value="{{ $item->item_name }}" name="item_name[{{ $index }}]"
-                                                readonly>
+                                                value="{{ $item->item_name }}"
+                                                name="items[{{ $index }}][item_name]" readonly>
                                         </td>
                                         <td>
                                             <input type="text" class="form-control bg-body-secondary qty text-end"
-                                                value="{{ $item->qty_on_po }}" name="qty[{{ $index }}]" readonly>
+                                                value="{{ $item->qty_on_po }}" name="items[{{ $index }}][qty]"
+                                                readonly>
                                         </td>
                                         <td>
                                             <input type="number" class="form-control harga text-end" min="1"
-                                                name="harga[{{ $index }}]" value="{{ $item->unit_price }}">
+                                                name="items[{{ $index }}][harga]"
+                                                value="{{ $item->unit_price }}">
                                         </td>
                                         <td>
                                             <input type="number" class="form-control diskon text-end"
                                                 value="{{ $item->discount }}" min="0" max="100"
-                                                name="discount[{{ $index }}]">
+                                                name="items[{{ $index }}][discount]">
                                         </td>
                                         <td>
                                             <input type="text" class="form-control bg-body-secondary total text-end"
-                                                readonly name="total_price[{{ $index }}]"
+                                                readonly name="items[{{ $index }}][total_price]"
                                                 value="{{ $item->total_price }}">
                                         </td>
                                     </tr>
