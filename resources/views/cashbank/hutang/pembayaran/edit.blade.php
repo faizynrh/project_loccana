@@ -149,10 +149,10 @@
                                             </td>
                                             <td>
                                                 <input type="number" class="form-control" name="items[0][amount_paid]"
-                                                    required value="{{ $item->amount }}">
+                                                    id="amountPaid" required value="{{ $item->amount }}" min="0">
                                             </td>
                                             <td>
-                                                <textarea class="form-control" name="items[0][notes]" required></textarea>
+                                                <textarea class="form-control" name="items[0][notes]"></textarea>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -200,11 +200,11 @@
                         <option value="" selected disabled>Pilih Invoice</option>
                         ${invoiceData.map(inv =>
                             `<option value="${inv.id_invoice}"
-                                                data-nilai="${inv.nilai}"
-                                                data-sisa="${inv.sisa}"
-                                                data-jatuhtempo="${inv.jatuh_tempo}">
-                                                ${inv.invoice_number}
-                                            </option>`).join('')}
+                                                            data-nilai="${inv.nilai}"
+                                                            data-sisa="${inv.sisa}"
+                                                            data-jatuhtempo="${inv.jatuh_tempo}">
+                                                            ${inv.invoice_number}
+                                                        </option>`).join('')}
                     </select>
                     <input type="hidden" class="form-control" name="items[${index}][id_payment_detail]" value="0">
                 </td>
@@ -322,6 +322,12 @@
 
                 $('#remaining_amount').val(total);
             }
+
+            $(document).on("input", "#amountPaid", function() {
+                let row = $(this).closest("tr");
+                let amountInput = row.find("#amountPaid");
+                amountInput.val(validateMinOne(amountInput.val()));
+            });
 
             updateTotalRemaining();
             updateTotalAmount();
