@@ -43,7 +43,6 @@ use App\Http\Controllers\inventory\ReportController as InventoryReportController
 */
 
 
-
 Route::view('/', 'home')->name('home');
 
 Route::redirect('/login', '/');
@@ -53,6 +52,10 @@ Route::prefix('/')->name('oauth.')->group(function () {
     Route::get('callback', [AuthController::class, 'handleCallback'])->name('callback');
     Route::get('logout', [AuthController::class, 'logout'])->name('logout');
 });
+
+Route::get('/loading', function () {
+    return view('loading.loadingpage');
+})->name('loading-screen');
 
 //MIDDLEWARE
 Route::middleware('auth.login')->group(
