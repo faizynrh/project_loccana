@@ -36,7 +36,7 @@
                 <div class="card">
                     <div class="card-header">
                         <div class="d-flex justify-content-between align-items-center">
-                            <div class="d-flex align-items-center">
+                            {{-- <div class="d-flex align-items-center">
                                 <a href="/hutang/pembayaran/add" class="btn btn-primary me-2 fw-bold">+ Pembayaran</a>
                                 <form id="searchForm" class="d-flex align-items-center gap-2">
                                     @csrf
@@ -71,12 +71,37 @@
                                     </select>
                                     <button type="submit" class="btn btn-primary">Cari</button>
                                 </form>
+                            </div> --}}
+                            <div class="row g-3 align-items-center">
+                                <div class="col-auto">
+                                    <input type="date" id="start_date" name="start_date" class="form-control"
+                                        value="{{ \Carbon\Carbon::now()->startOfMonth()->toDateString() }}" required>
+                                </div>
+                                <div class="col-auto">
+                                    <label for="end_date" class="form-label fw-bold small">s/d</label>
+                                </div>
+                                <div class="col-auto">
+                                    <input type="date" id="end_date" name="end_date" class="form-control"
+                                        value="{{ \Carbon\Carbon::now()->toDateString() }}" required>
+                                </div>
+                                <div class="col-auto">
+                                    <select id="statusSelect" class="form-select me-2" name="status" style="width: auto;">
+                                        <option value="semua" selected>Semua</option>
+                                        <option value="lunas">Sudah Dibayar</option>
+                                        <option value="konfirmasi">Konfirmasi</option>
+                                    </select>
+                                </div>
+                                <div class="col-auto">
+                                    <button type="submit" class="btn btn-primary">Cari</button>
+                                </div>
                             </div>
                             <div>
-                                <a href="{{ route('piutang.') }}" class="btn btn-primary me-2 fw-bold text-end">
-                                    <i class="bi bi-bank"></i> Daftar Giro
+                                <a href="{{ route('piutang.pembayaran.giro.index') }}"
+                                    class="btn btn-primary me-2 fw-bold text-end">
+                                    <i class="bi bi-journal-text"></i> Daftar Rekap Giro
                                 </a>
-                                <a href="{{ route('piutang.index') }}" class="btn btn-secondary me-2 fw-bold text-end">
+                                <a href="{{ route('piutang.pembayaran.index') }}"
+                                    class="btn btn-secondary me-2 fw-bold text-end">
                                     <i class="bi bi-arrow-left-circle"></i> Kembali
                                 </a>
                             </div>

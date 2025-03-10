@@ -76,7 +76,7 @@
                     <div class="card-body">
                         @include('alert.alert')
                         <div class="table-responsive">
-                            <table class="table table-striped table-bordered mt-3" id="tablehutang">
+                            <table class="table table-striped table-bordered mt-3" id="tablepiutang">
                                 <thead>
                                     <tr>
                                         <th>No</th>
@@ -84,12 +84,24 @@
                                         <th>Customer</th>
                                         <th>Total</th>
                                         <th>Sisa</th>
-                                        <th>Tanggal</th>
-                                        <th>Jatuh Tempo</th>
+                                        <th>Tanggal Invoice</th>
+                                        <th>Tanggal Jatuh Tempo</th>
                                         <th>Status</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
+                                {{-- <thead>
+                                    <tr>
+                                        <th>No. Invoice</th>
+                                        <th>Customer</th>
+                                        <th>Tanggal</th>
+                                        <th>Jatuh Tempo</th>
+                                        <th>Total</th>
+                                        <th>Sisa</th>
+                                        <th>Status</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead> --}}
                             </table>
                         </div>
                     </div>
@@ -99,18 +111,18 @@
     </div>
 @endsection
 @push('scripts')
-    {{-- <script>
+    <script>
         $(document).ready(function() {
             function initializeTable() {
-                if ($.fn.DataTable.isDataTable('#tablehutang')) {
-                    $('#tablehutang').DataTable().destroy();
+                if ($.fn.DataTable.isDataTable('#tablepiutang')) {
+                    $('#tablepiutang').DataTable().destroy();
                 }
 
-                $('#tablehutang').DataTable({
+                $('#tablepiutang').DataTable({
                     serverSide: true,
                     processing: true,
                     ajax: {
-                        url: '{{ route('hutang.ajax') }}',
+                        url: '{{ route('piutang.ajax') }}',
                         type: 'GET',
                         data: function(d) {
                             d.month = $('#monthSelect').val();
@@ -125,19 +137,13 @@
                             }
                         },
                         {
-                            data: 'order_number'
-                        },
-                        {
                             data: 'invoice_number'
                         },
                         {
                             data: 'partner_name'
                         },
                         {
-                            data: 'order_date',
-                        },
-                        {
-                            data: 'total',
+                            data: 'total_invoice',
                             render: function(data) {
                                 return formatRupiah(data);
                             }
@@ -149,20 +155,33 @@
                             }
                         },
                         {
-                            data: 'jatuh_tempo',
-                            render: function(data, type, row) {
-                                return formatDate(data);
-                            }
+                            data: 'invoice_date'
                         },
                         {
-                            data: 'status'
+                            data: 'due_date'
+                        },
+                        {
+                            data: 'status_invoice',
+                            className: 'text-center',
+                            render: function(data, type, row) {
+                                let statusClass = 'badge bg-secondary';
+                                let statusLabel = data;
+
+                                if (data.toLowerCase() === 'unpaid') {
+                                    statusClass = 'badge bg-danger';
+                                } else if (data.toLowerCase() === 'paid') {
+                                    statusClass = 'badge bg-success';
+                                }
+
+                                return `<span class="${statusClass}">${statusLabel}</span>`;
+                            }
                         },
                         {
                             data: null,
                             render: function(data, type, row) {
                                 return `
                                     <div class="text-center">
-                                        <a href="/hutang/detail/${row.invoice_id}" class="btn btn-sm btn-info mb-2" title="Detail">
+                                        <a href="/piutang/detail/${row.id_invoice}" class="btn btn-sm btn-info mb-2" title="Detail">
                                             <i class="bi bi-eye"></i>
                                         </a>
                                     </div>
@@ -179,5 +198,5 @@
                 initializeTable()
             });
         });
-    </script> --}}
+    </script>
 @endpush
