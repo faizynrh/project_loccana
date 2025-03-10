@@ -196,19 +196,16 @@
                 </button>
             </form>`;
 
-                                // Improved dropdown with better styling
                                 let actionButtons = `
             <div class="dropdown action-dropdown">
                 <button type="button" class="btn btn-sm btn-light border rounded-pill shadow-sm dropdown-toggle px-3"
                         data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="bi bi-gear-fill me-1"></i> Aksi
+                    <i class="bi bi-gear-fill me-1"></i> Action
                 </button>
                 <ul class="dropdown-menu dropdown-menu-end shadow border-0" style="min-width: 200px;">
-                    <li class="dropdown-header text-center fw-bold text-uppercase small">Opsi Transaksi</li>
                     <li>${detailButton}</li>
                     <li>${printButton}</li>
                     <li><hr class="dropdown-divider"></li>
-                    <li class="dropdown-header text-center small text-muted">Manajemen Data</li>
                     <li>${editButton}</li>
                     <li>${deleteButton}</li>
                 </ul>
