@@ -164,7 +164,8 @@
             const state = {
                 itemIndex: 1,
                 principalId: $('#principal').val(),
-                selectedInvoices: new Set()
+                selectedInvoices: new Set(),
+                // totalInvoices: 0
             };
 
             const templates = {
@@ -273,9 +274,16 @@
 
             function updateAddRowButtonState() {
                 const addRowButton = $('#add-row');
+                // const currentRowCount = $('.invoice-row').length;
+                // if (!state.principalId || currentRowCount >= state.totalInvoices) {
+                //     addRowButton.prop('disabled', true);
+                // } else {
+                //     addRowButton.prop('disabled', false);
+                // }
+                console.log(state.totalInvoices);
 
                 if (!state.principalId) {
-                    addRowButton.prop('disabled', true);
+                    addRowButton.prop('disabled', true).attr('title', 'tes');
                 } else {
                     addRowButton.prop('disabled', false);
                 }
@@ -358,7 +366,6 @@
 
                 resetTable();
 
-                // Update status tombol add-row
                 updateAddRowButtonState();
             });
 
