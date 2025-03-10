@@ -178,9 +178,8 @@
                             render: function(data, type, row) {
                                 let isApproved = row.status.toLowerCase() === 'approved';
 
-                                // Icons with text for better visual hierarchy
                                 let detailButton = `
-            <a href="/hutang/pembayaran/detail/${row.transaksi_id}" class="dropdown-item d-flex align-items-center py-2" title="Detail">
+            <a href="/piutang/pembayaran/detail/${row.transaksi_id}" class="dropdown-item d-flex align-items-center py-2" title="Detail">
                 <i class="bi bi-eye-fill text-primary me-2"></i>
                 <span>Lihat Detail</span>
             </a>`;

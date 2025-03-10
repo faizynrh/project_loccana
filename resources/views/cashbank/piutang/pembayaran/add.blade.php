@@ -40,8 +40,7 @@
                             <div class="row mb-3">
                                 <div class="col-md-6">
                                     <label class="form-label fw-bold mt-2 mb-1 small">Kode</label>
-                                    <input type="text" class="form-control" name="payment_number" value="K2025000"
-                                        required>
+                                    <input type="text" class="form-control" name="payment_number" required>
                                     <label class="form-label fw-bold mt-2 mb-1 small">Tanggal Pembayaran</label>
                                     <input type="date" class="form-control" name="payment_date"required>
                                     <label class="form-label fw-bold mt-2 mb-1 small">Customer</label>
@@ -95,42 +94,6 @@
                                     </tr>
                                 </thead>
                                 <tbody id="tableBody">
-                                    <tr style="border-bottom: 2px solid #000;">
-                                        <td>
-                                            <select id="invoiceSelect" class="form-select w-auto item-select"
-                                                name="items[0][invoice]" required>
-                                                <option value="" selected disabled>Pilih Principal Terlebih Dahulu
-                                                </option>
-                                            </select>
-                                        </td>
-                                        <td>
-                                            <input type="number" class="form-control" name="items[0][nilai]" disabled>
-                                        </td>
-                                        <td>
-                                            <input type="number" class="form-control bg-body-secondary"
-                                                name="items[0][sisa]" disabled>
-                                        </td>
-                                        <td>
-                                            <input type="number" class="form-control" name="items[0][amount_paid]"
-                                                required>
-                                        </td>
-                                        <td>
-                                            <textarea class="form-control" name="items[0][notes]" required></textarea>
-                                        </td>
-                                        <td class="text-end">
-                                            <button type="button" class="btn btn-danger fw-bold remove-row">-</button>
-                                        </td>
-                                    </tr>
-                                    <tr id="add-button-row" style="border-bottom: 2px solid #000;">
-                                        <td colspan="6" class="text-end">
-                                            <button type="button" class="btn btn-primary fw-bold"
-                                                id="add-row">+</button>
-                                        </td>
-                                    </tr>
-                                    <tr id="total-row" class="fw-bold">
-                                        <td colspan="4" class="text-end">Total</td>
-                                        <td class="text-end" id="amount">Rp. 0,00</td>
-                                    </tr>
                                 </tbody>
                             </table>
                             <div class="row">
@@ -150,15 +113,22 @@
 @push('scripts')
     <script>
         $(document).ready(function() {
+            $(document).on("input", ".amount-paid", function() {
+                let row = $(this).closest("tr");
+                let amountInput = row.find(".amount-paid");
+                amountInput.val(validateMinOne(amountInput.val()));
+            });
+
             const state = {
                 itemIndex: 1,
-                initialPrincipal: $('#principal').val(),
-                selectedInvoices: new Set()
+                principalId: $('#principal').val(),
+                selectedInvoices: new Set(),
+                // totalInvoices: 0
             };
 
             const templates = {
-                tableRow: (index, options) => `
-                                <tr style="border-bottom: 2px solid #000;">
+                firstRow: () => `
+                                    <tr class="invoice-row first-row" style="border-bottom: 2px solid #000;">
                                         <td>
                                             <select id="invoiceSelect" class="form-select w-auto item-select"
                                                 name="items[0][invoice]" required>
@@ -174,7 +144,33 @@
                                                 name="items[0][sisa]" disabled>
                                         </td>
                                         <td>
-                                            <input type="number" class="form-control" name="items[0][amount_paid]"
+                                            <input type="number" class="form-control amount-paid" name="items[0][amount_paid]"
+                                                required>
+                                        </td>
+                                        <td>
+                                            <textarea class="form-control" name="items[0][notes]" required></textarea>
+                                        </td>
+                                    </tr>
+                                `,
+
+                additionalRow: (index) => `
+                                    <tr class="invoice-row" style="border-bottom: 2px solid #000;">
+                                        <td>
+                                            <select id="invoiceSelect" class="form-select w-auto item-select"
+                                                name="items[0][invoice]" required>
+                                                <option value="" selected disabled>Pilih Principal Terlebih Dahulu
+                                                </option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <input type="number" class="form-control" name="items[0][nilai]" disabled>
+                                        </td>
+                                        <td>
+                                            <input type="number" class="form-control bg-body-secondary"
+                                                name="items[0][sisa]" disabled>
+                                        </td>
+                                        <td>
+                                            <input type="number" class="form-control amount-paid" name="items[0][amount_paid]"
                                                 required>
                                         </td>
                                         <td>
@@ -183,9 +179,10 @@
                                         <td class="text-end">
                                             <button type="button" class="btn btn-danger fw-bold remove-row">-</button>
                                         </td>
-                                </tr>`,
+                                    </tr>
+                                `,
 
-                footerRows: `
+                footer: `
                                     <tr id="add-button-row" style="border-bottom: 2px solid #000;">
                                         <td colspan="6" class="text-end">
                                             <button type="button" class="btn btn-primary fw-bold"
@@ -195,21 +192,21 @@
                                     <tr id="total-row" class="fw-bold">
                                         <td colspan="4" class="text-end">Total</td>
                                         <td class="text-end" id="amount">Rp. 0,00</td>
-                                    </tr>`
+                                    </tr>
+                        `
             };
 
-            function fetchInvoices(principalId, callback, excludeSelected = true) {
-                if (!principalId) return;
+            function fetchInvoices(callback, excludeSelected = true) {
+                if (!state.principalId) return;
 
                 $('#loading-overlay').fadeIn();
 
                 $.ajax({
-                    url: `/piutang/pembayaran/getinvoice/${principalId}`,
+                    url: `/piutang/pembayaran/getinvoice/${state.principalId}`,
                     type: "GET",
                     dataType: "json",
                     success: function(response) {
                         $('#loading-overlay').fadeOut();
-                        console.log(response);
 
                         let availableInvoices = [];
                         let options = '<option value="" disabled selected>Pilih Invoice</option>';
@@ -223,18 +220,13 @@
                             if (availableInvoices.length > 0) {
                                 availableInvoices.forEach(invoice => {
                                     options += `<option value="${invoice.id_invoice}"
-                            data-nilai="${invoice.nilai}"
-                            data-sisa="${invoice.sisa}"
-                            data-jatuhtempo="${invoice.jatuh_tempo}">
-                            Invoice #${invoice.id_invoice}
-                        </option>`;
+                                data-nilai="${invoice.nilai}"
+                                data-sisa="${invoice.sisa}"
+                                data-jatuhtempo="${invoice.due_date}">
+                                ${invoice.invoice_number}
+                            </option>`;
                                 });
-                            } else {
-                                options +=
-                                    '<option value="" disabled>Semua Invoice sudah dipilih</option>';
                             }
-                        } else {
-                            options += '<option value="" disabled>Tidak ada Invoice</option>';
                         }
 
                         if (callback) callback(options, availableInvoices.length);
@@ -246,23 +238,37 @@
                 });
             }
 
-            function resetTable(principalId) {
+            function resetTable() {
                 state.selectedInvoices.clear();
                 state.itemIndex = 1;
 
-                const initialOptions = '<option value="" disabled selected>Pilih Invoice</option>';
-                $('#tableBody').html(templates.tableRow(0, initialOptions) + templates.footerRows);
+                $('#tableBody').html(templates.firstRow() + templates.footer);
 
-                fetchInvoices(principalId, function(options) {
+                fetchInvoices(function(options) {
                     $('.item-select').html(options);
                 }, false);
+
+                updateAddRowButtonState();
+            }
+
+            function updateAddRowButtonState() {
+                const addRowButton = $('#add-row');
+                // const currentRowCount = $('.invoice-row').length;
+                // if (!state.principalId || currentRowCount >= state.totalInvoices) {
+                //     addRowButton.prop('disabled', true);
+                // } else {
+                //     addRowButton.prop('disabled', false);
+                // }
+
+                if (!state.principalId) {
+                    addRowButton.prop('disabled', true).attr('title', 'tes');
+                } else {
+                    addRowButton.prop('disabled', false);
+                }
             }
 
             function updateAllDropdowns() {
-                const principalId = $('#principal').val();
-                if (!principalId) return;
-
-                fetchInvoices(principalId, function(options) {
+                fetchInvoices(function(options) {
                     $('.item-select').each(function() {
                         if (!$(this).val()) {
                             $(this).html(options);
@@ -271,9 +277,10 @@
                 });
             }
 
-            function handleRowAddition(principalId) {
-                fetchInvoices(principalId, function(options, availableCount) {
-                    const currentRowCount = $('#tableBody tr').not('#add-button-row, #total-row').length;
+            function addNewRow() {
+                fetchInvoices(function(options, availableCount) {
+                    const currentRowCount = $('.invoice-row').length;
+
                     if (currentRowCount >= availableCount) {
                         Swal.fire({
                             title: 'Peringatan',
@@ -297,98 +304,26 @@
                     $('#add-button-row, #total-row').remove();
 
                     $('#tableBody').append(
-                        templates.tableRow(state.itemIndex, options) +
-                        templates.footerRows
+                        templates.additionalRow(state.itemIndex) + templates.footer
                     );
+
+                    $(`select[name="items[${state.itemIndex}][invoice]"]`).html(options);
+
+                    updateAddRowButtonState();
 
                     state.itemIndex++;
                 });
             }
 
-            $('#principal').change(function() {
-                const principalId = $(this).val();
-                if (principalId !== state.initialPrincipal) {
-                    state.initialPrincipal = principalId;
-                    resetTable(principalId);
-                }
-            });
-
-            $(document).on('change', '.item-select', function() {
-                const selectedOption = $(this).find(':selected');
-                const row = $(this).closest('tr');
-                const invoiceId = selectedOption.val();
-
-                if (invoiceId) {
-                    state.selectedInvoices.add(invoiceId.toString());
-                }
-
-                row.find('input[name*="[nilai]"]').val(selectedOption.data('nilai') || 0);
-                row.find('input[name*="[sisa]"]').val(selectedOption.data('sisa') || 0);
-                row.find('input[name*="[jatuhtempo]"]').val(selectedOption.data('jatuhtempo') || '');
-                row.find('input[name*="[amount_paid]"]').val(selectedOption.data('sisa') || 0);
-
-                updateAllDropdowns();
-            });
-
-            $(document).on('click', '#add-row', function(e) {
-                e.preventDefault();
-
-                const principalId = $('#principal').val();
-
-                if (!principalId) {
-                    Swal.fire({
-                        title: 'Peringatan',
-                        text: 'Silahkan pilih principal terlebih dahulu!',
-                        icon: 'warning',
-                        confirmButtonText: 'Oke'
-                    });
-                    return;
-                }
-
-                handleRowAddition(principalId);
-                disableFirstRowButton();
-            });
-
-            disableFirstRowButton();
-
-            $(document).on('click', '.remove-row', function(e) {
-                e.preventDefault();
-
-                const row = $(this).closest('tr');
-                const selectedValue = row.find('.item-select').val();
-
-                if (row.is(':first-child')) {
-                    return;
-                }
-
-                if (selectedValue) {
-                    state.selectedInvoices.delete(selectedValue.toString());
-                }
-
-                row.remove();
-                updateAllDropdowns();
-            });
-
-            function disableFirstRowButton() {
-                $('#tableBody tr:first-child .remove-row').prop('disabled', true);
-            }
-
-            $(document).on('input', 'input[name*="[amount_paid]"]', function() {
-                updateTotalAmount();
-            });
-
-            updateTotalAmount();
-
             function updateTotalAmount() {
                 let total = 0;
 
-                $('input[name*="[amount_paid]"]').each(function() {
+                $('.amount-paid').each(function() {
                     let value = parseFloat($(this).val()) || 0;
                     total += value;
                 });
 
                 $('#total_amount').val(total);
-
                 $('#amount').text(formatRupiah(total));
             }
 
@@ -403,14 +338,67 @@
                 $('#remaining_amount').val(total);
             }
 
-            updateTotalRemaining();
+            $('#principal').change(function() {
+                const newPrincipalId = $(this).val();
+                state.principalId = newPrincipalId;
 
-            const initialPrincipalId = $('#principal').val();
-            if (initialPrincipalId) {
-                fetchInvoices(initialPrincipalId, function(options) {
-                    $('.item-select').html(options);
-                }, false);
+                resetTable();
+
+                updateAddRowButtonState();
+            });
+
+            $(document).on('change', '.item-select', function() {
+                const selectedOption = $(this).find(':selected');
+                const row = $(this).closest('tr');
+                const invoiceId = selectedOption.val();
+
+                if (invoiceId) {
+                    state.selectedInvoices.add(invoiceId.toString());
+
+                    row.find('input[name*="[nilai]"]').val(selectedOption.data('nilai') || 0);
+                    row.find('input[name*="[sisa]"]').val(selectedOption.data('sisa') || 0);
+                    row.find('input[name*="[amount_paid]"]').val(selectedOption.data('sisa') || 0);
+
+                    updateAllDropdowns();
+                    updateTotalAmount();
+                    updateTotalRemaining();
+                }
+            });
+
+            $(document).on('click', '#add-row', function(e) {
+                e.preventDefault();
+                addNewRow();
+            });
+
+            $(document).on('click', '.remove-row', function(e) {
+                e.preventDefault();
+
+                const row = $(this).closest('tr');
+                const selectedValue = row.find('.item-select').val();
+
+                if (selectedValue) {
+                    state.selectedInvoices.delete(selectedValue.toString());
+                }
+
+                row.remove();
+                updateAllDropdowns();
+                updateTotalAmount();
+                updateTotalRemaining();
+            });
+
+            $(document).on('input', '.amount-paid', function() {
+                updateTotalAmount();
+            });
+
+            if (state.principalId) {
+                resetTable();
+            } else {
+                $('#tableBody').html(templates.firstRow() + templates.footer);
+                updateAddRowButtonState();
             }
+
+            updateTotalRemaining();
+            updateTotalAmount();
         });
     </script>
 @endpush

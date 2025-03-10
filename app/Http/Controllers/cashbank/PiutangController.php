@@ -96,10 +96,10 @@ class PiutangController extends Controller
         return view('cashbank.piutang.pembayaran.index');
     }
 
-    public function showpiutang(string $id)
+    public function showpembayaran(string $id)
     {
         try {
-            $apiResponse = fectApi(env('PIUTANG_URL') . '/' . $id);
+            $apiResponse = fectApi(env('PIUTANG_URL') . '/pembayaran/detail/' . $id);
             if ($apiResponse->successful()) {
                 $data = json_decode($apiResponse->body());
                 return view('cashbank.piutang.detail', compact('data'));
@@ -111,14 +111,6 @@ class PiutangController extends Controller
         }
     }
 
-    public function giro()
-    {
-        return view('cashbank.piutang.giro.index');
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create(Request $request)
     {
         $companyid = 2;
@@ -232,5 +224,9 @@ class PiutangController extends Controller
         } catch (\Exception $e) {
             return back()->withErrors($e->getMessage());
         }
+    }
+    public function giro()
+    {
+        return view('cashbank.piutang.giro.index');
     }
 }
