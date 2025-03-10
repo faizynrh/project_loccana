@@ -99,7 +99,7 @@ class HutangController extends Controller
             $apiResponse = fectApi(env('HUTANG_URL') . '/invoice/detail/' . $id);
             if ($apiResponse->successful()) {
                 $data = json_decode($apiResponse->body());
-                return view('cashbank.hutang.detailhutang', compact('data'));
+                return view('cashbank.hutang.detail', compact('data'));
             } else {
                 return back()->withErrors($apiResponse->json()['message']);
             }
@@ -110,7 +110,7 @@ class HutangController extends Controller
 
     public function pembayaran()
     {
-        return view('cashbank.hutang.pembayaran');
+        return view('cashbank.hutang.pembayaran.index');
     }
 
     public function showpembayaran(string $id)
@@ -119,7 +119,7 @@ class HutangController extends Controller
             $apiResponse = fectApi(env('HUTANG_URL') . '/' . $id);
             if ($apiResponse->successful()) {
                 $data = json_decode($apiResponse->body());
-                return view('cashbank.hutang.detailpembayaran', compact('data'));
+                return view('cashbank.hutang.pembayaran.detail', compact('data'));
             } else {
                 return back()->withErrors($apiResponse->json()['message']);
             }
@@ -140,7 +140,7 @@ class HutangController extends Controller
                 = json_decode($partnerResponse->body(), false);
             $coa =
                 json_decode($coaResponse->body(), false);
-            return view('cashbank.hutang.add', compact('partner', 'coa'));
+            return view('cashbank.hutang.pembayaran.add', compact('partner', 'coa'));
         } else {
             $errors = [];
             if (!$coaResponse->successful()) {
@@ -218,7 +218,7 @@ class HutangController extends Controller
                 $partner = json_decode($partnerResponse->body());
                 $coa = json_decode($coaResponse->body());
                 $invoice = json_decode($invoiceResponse->body());
-                return view('cashbank.hutang.edit', compact('data', 'partner', 'coa', 'invoice'));
+                return view('cashbank.hutang.pembayaran.edit', compact('data', 'partner', 'coa', 'invoice'));
             } else {
                 $errors = [];
                 if (!$coaResponse->successful()) {
@@ -284,7 +284,7 @@ class HutangController extends Controller
             $apiResponse = fectApi(env('HUTANG_URL') . '/' . $id);
             if ($apiResponse->successful()) {
                 $data = json_decode($apiResponse->body());
-                return view('cashbank.hutang.approve', compact('data'));
+                return view('cashbank.hutang.pembayaran.approve', compact('data'));
             } else {
                 return back()->withErrors($apiResponse->json()['message']);
             }
@@ -335,7 +335,7 @@ class HutangController extends Controller
                 foreach ($datas as $item) {
                     $totalAmount += $item->amount;
                 }
-                $pdf = Pdf::loadView('cashbank.hutang.print', compact('datas', 'totalAmount'));
+                $pdf = Pdf::loadView('cashbank.hutang.pembayaran.print', compact('datas', 'totalAmount'));
                 return $pdf->stream('Transfer Stok.pdf');
             } else {
                 return back()->withErrors($apiResponse->status());

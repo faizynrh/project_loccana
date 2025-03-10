@@ -7831,3 +7831,31 @@ function formatDate(data) {
         date.getDate().toString().padStart(2, "0")
     );
 }
+
+function validateMinZero(value) {
+    let num = parseFloat(value);
+    if (isNaN(num) || num < 0) {
+        Swal.fire({
+            title: "Invalid Input!",
+            text: "Nilai tidak boleh kurang dari 0.",
+            icon: "warning",
+            confirmButtonText: "OK",
+        });
+        return "";
+    }
+    return num;
+}
+
+function validateMinOne(value) {
+    let num = parseFloat(value);
+    if (isNaN(num) || num < 1) {
+        Swal.fire({
+            title: "Invalid Input!",
+            text: "Nilai tidak boleh kurang dari 1.",
+            icon: "warning",
+            confirmButtonText: "OK",
+        });
+        return "";
+    }
+    return num;
+}

@@ -156,7 +156,20 @@
                             }
                         },
                         {
-                            data: 'status'
+                            data: 'status',
+                            className: 'text-center',
+                            render: function(data, type, row) {
+                                let statusClass = '';
+                                let statusLabel = data;
+
+                                if (data.toLowerCase() === 'pending') {
+                                    statusClass = 'btn btn-warning btn-sm ';
+                                } else if (data.toLowerCase() === 'bayar') {
+                                    statusClass = 'badge bg-success fw-bold';
+                                }
+                                return statusLabel !== data ? statusLabel :
+                                    `<span class="${statusClass}">${data}</span>`;
+                            }
                         },
                         {
                             data: null,
