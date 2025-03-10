@@ -135,7 +135,6 @@
                                 <tbody id="tableBody">
                                     @foreach ($data->data as $index => $item)
                                         @php
-                                            // Ambil data option yang sesuai dengan item_id pada $item
                                             $selectedOption = collect($items->data->items ?? [])->firstWhere(
                                                 'id',
                                                 $item->item_id,
@@ -254,8 +253,6 @@
 @push('scripts')
     <script>
         $(document).ready(function() {
-            // Handle custom payment term
-
             $('#pembayaran').on('change', function() {
                 const selectedValue = $(this).val();
                 const customInput = $('#custom_payment_term');
@@ -275,7 +272,6 @@
 
             $('#custom_payment_term').on('input', function() {
                 let value = $(this).val();
-                // Remove any non-numeric characters
                 value = value.replace(/[^\d]/g, '');
                 if (value) {
                     $(this).val(value);
@@ -291,145 +287,204 @@
 
             $('#custom_payment_term').on('focus', function() {
                 let value = $(this).val();
-                // Remove "Hari" when focusing on the input
                 value = value.replace(' Hari', '');
                 $(this).val(value);
             });
-            // Handle item select change to update UOM
-            // $(document).on('change', '.form-select', function() {
-            //     const uomId = $(this).find(':selected').data('uom');
-            //     $(this).siblings('.uom-input').val(uomId);
-            //     calculateRowTotal($(this).closest('tr'));
-            //     updateTotals();
-            // });
 
-            // Add new row
+            let selectedItems = [];
+
+            function updateSelectedItems() {
+                selectedItems = [];
+                $('.item-row').each(function() {
+                    const selectedItemId = $(this).find('select[name^="items"][name$="[item_id]"]').val();
+                    if (selectedItemId && selectedItemId !== '') {
+                        selectedItems.push(selectedItemId);
+                    }
+                });
+            }
+
+            updateSelectedItems();
+
+            function updateItemSelectOptions() {
+                $('.item-row').each(function() {
+                    const currentSelect = $(this).find('select[name^="items"][name$="[item_id]"]');
+                    const currentValue = currentSelect.val();
+
+                    currentSelect.find('option:not(:first)').show();
+
+                    selectedItems.forEach(function(itemId) {
+                        if (itemId !== currentValue) {
+                            currentSelect.find(`option[value="${itemId}"]`).hide();
+                        }
+                    });
+                });
+            }
+
+            function areAllItemsSelected() {
+                const totalAvailableItems = @json(count($items->data->items ?? []));
+                return selectedItems.length >= totalAvailableItems;
+            }
+
+            function updateAddButton() {
+                if (areAllItemsSelected()) {
+                    $('#add-row').prop('disabled', true).addClass('btn-secondary').removeClass('btn-primary');
+                } else {
+                    $('#add-row').prop('disabled', false).addClass('btn-primary').removeClass('btn-secondary');
+                }
+            }
+
+            $(document).on('change', 'select[name^="items"][name$="[item_id]"]', function() {
+                const uomId = $(this).find(':selected').data('uom');
+                $(this).siblings('.uom-input').val(uomId);
+                calculateRowTotal($(this).closest('tr'));
+
+                updateSelectedItems();
+                updateItemSelectOptions();
+                updateAddButton();
+
+                updateTotals();
+            });
+
+            function isLastRowEmpty() {
+                const lastRow = $('.item-row:last');
+                const selectedItem = lastRow.find('select[name^="items"][name$="[item_id]"]').val();
+                return !selectedItem || selectedItem === '';
+            }
+
             $('#add-row').on('click', function(e) {
                 e.preventDefault();
+
+                if (isLastRowEmpty()) {
+                    Swal.fire({
+                        title: 'Perhatian',
+                        text: 'Harap pilih item pada baris sebelumnya terlebih dahulu',
+                        icon: 'warning',
+                        confirmButtonText: 'OK'
+                    });
+                    return;
+                }
+
                 const rowCount = $('.item-row').length;
+
+
+                let itemOptions = '<option value="" selected disabled>Pilih Item</option>';
+                @foreach ($items->data->items ?? [] as $option)
+                    if (!selectedItems.includes('{{ $option->id }}')) {
+                        itemOptions +=
+                            `<option value="{{ $option->id }}" data-uom="{{ $option->unit_of_measure_id }}">{{ $option->sku }} - {{ $option->name }}</option>`;
+                    }
+                @endforeach
+
                 const newRow = `
-        <tr style="border-bottom: 2px solid #000" class="item-row">
-            <td colspan="2">
-                <select class="form-select" name="items[${rowCount}][item_id]" required>
-                    <option value="" selected disabled>Pilih Item</option>
-                    @foreach ($items->data->items ?? [] as $option)
-                        <option value="{{ $option->id }}" data-uom="{{ $option->unit_of_measure_id }}">
-                            {{ $option->sku }} - {{ $option->name }}
-                        </option>
-                    @endforeach
-                </select>
-                <input type="hidden" name="items[${rowCount}][uom_id]" class="uom-input">
-                <input type="hidden" name="items[${rowCount}][po_detail_id]" class="po-detail-id">
-            </td>
-            <td>
-                <input type="number" name="items[${rowCount}][quantity]" class="form-control qty-input" value="1" min="1">
-            </td>
-            <td>
-                <input type="number" name="items[${rowCount}][unit_price]" class="form-control price-input" value="0" min="0">
-            </td>
-            <td>
-                <input type="number" name="items[${rowCount}][discount]" class="form-control discount-input" value="0" min="0" max="100">
-            </td>
-            <td colspan="2">
-                <input type="number" class="form-control bg-body-secondary total-input" value="0" readonly>
-            </td>
-            <td class="text-center">
-                <button type="button" class="btn btn-danger btn-sm remove-row">X</button>
-            </td>
-        </tr>
-    `;
+            <tr style="border-bottom: 2px solid #000" class="item-row">
+                <td colspan="2">
+                    <select class="form-select" name="items[${rowCount}][item_id]" required>
+                        ${itemOptions}
+                    </select>
+                    <input type="hidden" name="items[${rowCount}][uom_id]" class="uom-input">
+                    <input type="hidden" name="items[${rowCount}][po_detail_id]" class="po-detail-id">
+                </td>
+                <td>
+                    <input type="number" name="items[${rowCount}][quantity]" class="form-control qty-input" value="1" min="1">
+                </td>
+                <td>
+                    <input type="number" name="items[${rowCount}][unit_price]" class="form-control price-input" value="0" min="0">
+                </td>
+                <td>
+                    <input type="number" name="items[${rowCount}][discount]" class="form-control discount-input" value="0" min="0" max="100">
+                </td>
+                <td colspan="2">
+                    <input type="number" class="form-control bg-body-secondary total-input" value="0" readonly>
+                </td>
+                <td class="text-center">
+                    <button type="button" class="btn btn-danger btn-sm remove-row">-</button>
+                </td>
+            </tr>
+        `;
+
                 $(newRow).insertBefore('#tableBody tr:last');
-            });
-            $(document).ready(function() {
-                var poId = '{{ $data->data[0]->partner_id }}';
-                var warehouseId = $('#gudang').val();
 
-                // Fungsi ambil data principle
-                function getDetailPrinciple(poId) {
-                    if (poId) {
-                        $('#loading-overlay').fadeIn();
-                        $.ajax({
-                            url: '/purchase_order/getDetailPrinciple/' + poId,
-                            type: 'GET',
-                            dataType: 'json',
-                            success: function(response) {
-                                if (response.contact_info) {
-                                    $('#contact').val(response
-                                        .contact_info); // Isi input contact otomatis
-                                } else {
-                                    $('#contact').val('Data tidak tersedia');
-                                }
-                                $('#loading-overlay').fadeOut();
-
-                            },
-                            error: function(xhr, status, error) {
-                                Swal.fire('Error', 'Gagal mengambil data customer', 'error');
-                                $('#contact').val('Gagal mengambil data');
-                                $('#loading-overlay').fadeOut();
-
-                            }
-
-                        });
-                    }
-                }
-
-                // Fungsi ambil data warehouse
-                function getDetailWarehouse(warehouseId) {
-                    if (warehouseId) {
-                        $('#loading-overlay').fadeIn();
-                        $.ajax({
-                            url: '/purchase_order/getDetailWarehouse/' + warehouseId,
-                            type: 'GET',
-                            dataType: 'json',
-                            success: function(response) {
-                                if (response.location) {
-                                    $('#ship').val(response
-                                        .location); // Isi input ship otomatis
-                                } else {
-                                    $('#ship').val('Data tidak tersedia');
-                                }
-                                $('#loading-overlay').fadeOut();
-                            },
-                            error: function(xhr, status, error) {
-                                Swal.fire('Error', 'Gagal mengambil data gudang', 'error');
-                                $('#ship').val('Gagal mengambil data');
-                                $('#loading-overlay').fadeOut();
-                            }
-                        });
-                    }
-                }
-
-                // Panggil fungsi otomatis saat halaman dimuat
-                getDetailPrinciple(poId);
-                getDetailWarehouse(warehouseId);
-
-                // Kalau partner_id berubah, update contact
-                $('#partner_id').on('change', function() {
-                    var newPoId = $(this).val();
-                    getDetailPrinciple(newPoId);
-                });
-
-                // Kalau gudang berubah, update ship
-                $('#gudang').on('change', function() {
-                    var newWarehouseId = $(this).val();
-                    getDetailWarehouse(newWarehouseId);
-                });
+                updateAddButton();
             });
 
-            // Remove row
+            var poId = '{{ $data->data[0]->partner_id }}';
+            var warehouseId = $('#gudang').val();
+
+            function getDetailPrinciple(poId) {
+                if (poId) {
+                    $('#loading-overlay').fadeIn();
+                    $.ajax({
+                        url: '/purchase_order/getDetailPrinciple/' + poId,
+                        type: 'GET',
+                        dataType: 'json',
+                        success: function(response) {
+                            if (response.contact_info) {
+                                $('#contact').val(response.contact_info);
+                            } else {
+                                $('#contact').val('Data tidak tersedia');
+                            }
+                            $('#loading-overlay').fadeOut();
+                        },
+                        error: function(xhr, status, error) {
+                            Swal.fire('Error', 'Gagal mengambil data customer', 'error');
+                            $('#contact').val('Gagal mengambil data');
+                            $('#loading-overlay').fadeOut();
+                        }
+                    });
+                }
+            }
+
+            function getDetailWarehouse(warehouseId) {
+                if (warehouseId) {
+                    $('#loading-overlay').fadeIn();
+                    $.ajax({
+                        url: '/purchase_order/getDetailWarehouse/' + warehouseId,
+                        type: 'GET',
+                        dataType: 'json',
+                        success: function(response) {
+                            if (response.location) {
+                                $('#ship').val(response.location);
+                            } else {
+                                $('#ship').val('Data tidak tersedia');
+                            }
+                            $('#loading-overlay').fadeOut();
+                        },
+                        error: function(xhr, status, error) {
+                            Swal.fire('Error', 'Gagal mengambil data gudang', 'error');
+                            $('#ship').val('Gagal mengambil data');
+                            $('#loading-overlay').fadeOut();
+                        }
+                    });
+                }
+            }
+
+            getDetailPrinciple(poId);
+            getDetailWarehouse(warehouseId);
+
+            $('#partner_id').on('change', function() {
+                var newPoId = $(this).val();
+                getDetailPrinciple(newPoId);
+            });
+
+            $('#gudang').on('change', function() {
+                var newWarehouseId = $(this).val();
+                getDetailWarehouse(newWarehouseId);
+            });
+
             $(document).on('click', '.remove-row', function() {
                 if ($('.item-row').length > 1) {
                     $(this).closest('tr').remove();
+                    updateSelectedItems();
+                    updateItemSelectOptions();
+                    updateAddButton();
                     updateTotals();
                 }
             });
 
-            // Calculate totals on input change
             $(document).on('input', '.qty-input, .price-input, .discount-input', function() {
                 const discountInput = $(this).closest('tr').find('.discount-input');
                 let discountValue = parseFloat(discountInput.val()) || 0;
 
-                // Validate discount input to not exceed 100
                 if (discountValue > 100) {
                     discountInput.val(100);
                     discountValue = 100;
@@ -438,7 +493,6 @@
                 calculateRowTotal($(this).closest('tr'));
                 updateTotals();
             });
-
 
             function calculateRowTotal(row) {
                 const qty = parseFloat(row.find('.qty-input').val()) || 0;
@@ -451,7 +505,6 @@
 
                 row.find('.total-input').val(total.toFixed());
             }
-
 
             function updateTotals() {
                 let subtotal = 0;
@@ -496,15 +549,16 @@
                 });
             }
 
-            // Calculate totals on page load
             function initialCalculations() {
                 $('.item-row').each(function() {
                     calculateRowTotal($(this));
                 });
                 updateTotals();
+                updateSelectedItems();
+                updateItemSelectOptions();
+                updateAddButton();
             }
 
-            // Initial calculations when the page loads
             initialCalculations();
         });
     </script>

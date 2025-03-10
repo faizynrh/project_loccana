@@ -255,7 +255,6 @@
 @push('scripts')
     <script>
         $(document).ready(function() {
-            // Payment term related code (unchanged)
             $('#pembayaran').on('change', function() {
                 const selectedValue = $(this).val();
                 const customInput = $('#custom_payment_term');
@@ -312,7 +311,7 @@
                     dataType: 'json',
                     success: function(response) {
                         if (response.contact_info) {
-                            $('#contact').val(response.contact_info); // Isi input contact otomatis
+                            $('#contact').val(response.contact_info);
                         } else {
                             $('#contact').val('Data tidak tersedia');
                         }
@@ -331,7 +330,7 @@
                     dataType: 'json',
                     success: function(response) {
                         if (response.location) {
-                            $('#ship').val(response.location); // Isi input ship otomatis
+                            $('#ship').val(response.location);
                         } else {
                             $('#ship').val('Data tidak tersedia');
                         }
@@ -345,12 +344,10 @@
                 });
             }
 
-            // Function to disable/enable row inputs based on item selection
             function toggleRowInputs(row, enable) {
                 row.find('.notes-input, .box-qty-input, .qty-input, .price-input, .discount-input')
                     .prop('disabled', !enable);
 
-                // Reset values if disabling
                 if (!enable) {
                     row.find('.notes-input').val('');
                     row.find('.box-qty-input, .qty-input').val('0');
@@ -362,7 +359,6 @@
                 }
             }
 
-            // Initialize rows - disable inputs if no item selected
             $('.item-row').each(function() {
                 const itemSelect = $(this).find('.item-select');
                 const hasSelectedItem = itemSelect.val() && itemSelect.val() !== '';
@@ -374,13 +370,11 @@
                 const itemId = $(this).val();
                 const selectedUOM = $(this).find(':selected').data('uom');
 
-                // Remove previous item from tracking if there was one
                 const previousItemId = $(this).data('previous-item');
                 if (previousItemId) {
                     selectedItems.delete(previousItemId);
                 }
 
-                // Update tracking
                 if (itemId) {
                     selectedItems.add(itemId);
                     $(this).data('previous-item', itemId);
@@ -409,7 +403,6 @@
                             row.find('.box-qty-input').attr('max', stockInfo);
                             row.find('.qty-input').attr('max', stockInfo);
 
-                            // Store stock value for calculations
                             row.data('stock', stockInfo);
                         },
                         error: function(xhr, status, error) {
@@ -479,7 +472,6 @@
             $('#add-row').on('click', function(e) {
                 e.preventDefault();
 
-                // Check if first item is selected
                 let allItemsSelected = true;
                 $('.item-row').each(function() {
                     if (!$(this).find('.item-select').val()) {
@@ -507,7 +499,6 @@
                     const itemSelect = row.find('.item-select');
                     const itemId = itemSelect.val();
 
-                    // Remove from tracking
                     if (itemId) {
                         selectedItems.delete(itemId);
                     }
@@ -529,7 +520,7 @@
                         dataType: 'json',
                         success: function(response) {
                             if (response.contact_info) {
-                                $('#contact').val(response.contact_info); // Isi input contact
+                                $('#contact').val(response.contact_info);
                             } else {
                                 $('#contact').val('Data tidak tersedia');
                             }
@@ -548,14 +539,13 @@
                 var warehouseId = $(this).val();
                 $('#loading-overlay').fadeIn();
                 if (warehouseId) {
-                    // Ambil detail customer (contact_info)
                     $.ajax({
                         url: '/penjualan/getDetailWarehouse/' + warehouseId,
                         type: 'GET',
                         dataType: 'json',
                         success: function(response) {
                             if (response.location) {
-                                $('#ship').val(response.location); // Isi input contact
+                                $('#ship').val(response.location);
                             } else {
                                 $('#ship').val('Data tidak tersedia');
                             }
@@ -570,22 +560,18 @@
                 }
             });
 
-            // Fix calculation logic for rows and make it work in realtime
             $(document).on('input', '.box-qty-input, .per-box-qty-input, .qty-input, .price-input, .discount-input',
                 function() {
                     var row = $(this).closest('tr');
 
-                    // Validate against max stock
                     if ($(this).hasClass('box-qty-input') || $(this).hasClass('qty-input')) {
                         const stockLimit = parseInt(row.data('stock')) || 0;
                         const boxQty = parseInt(row.find('.box-qty-input').val()) || 0;
                         const perBoxQty = parseInt(row.find('.per-box-qty-input').val()) || 1;
                         const unitQty = parseInt(row.find('.qty-input').val()) || 0;
 
-                        // Calculate total quantity
                         const totalQty = (boxQty * perBoxQty) + unitQty;
 
-                        // Check if total exceeds stock
                         if (totalQty > stockLimit) {
                             Swal.fire({
                                 title: 'Peringatan Stok',
@@ -593,7 +579,6 @@
                                 icon: 'warning'
                             });
 
-                            // Reset to max possible value
                             if ($(this).hasClass('box-qty-input')) {
                                 const maxBoxes = Math.floor(stockLimit / perBoxQty);
                                 $(this).val(maxBoxes);
@@ -608,7 +593,6 @@
                     updateTotals();
                 });
 
-            // Also trigger calculation when PPN changes
             $('#ppn').on('input', function() {
                 $('.item-row').each(function() {
                     calculateRowTotal($(this));
@@ -628,7 +612,6 @@
                     row.find('.discount-input').val(100);
                 }
 
-                // Calculate total quantity: (box_qty * pcs_per_box) + unit_qty
                 const totalQty = (boxQty * perBoxQty) + unitQty;
                 row.find('.total-qty').val(totalQty.toFixed(0));
 
@@ -643,7 +626,7 @@
                 row.find('.total-input').val(total.toFixed(0));
 
                 row.data('discountAmount', discountAmount);
-                row.data('nilaippn', nilaippn); // Simpan nilaippn di data-row
+                row.data('nilaippn', nilaippn);
             }
 
             function updateTotals() {
@@ -668,7 +651,7 @@
                     subtotal += rowSubtotal;
                     totalDiscount += $(this).data('discountAmount') || 0;
                     totalFinal += total;
-                    totalPPN += $(this).data('nilaippn') || 0; // Ambil nilaippn
+                    totalPPN += $(this).data('nilaippn') || 0;
                 });
 
                 const dpp = totalFinal - totalPPN;
@@ -698,17 +681,14 @@
                 });
             }
 
-            // Initialize calculations
             $('.item-row').each(function() {
                 calculateRowTotal($(this));
             });
             updateTotals();
 
-            // Form validation before submit
             $('#createForm').on('submit', function(e) {
                 let hasError = false;
 
-                // Check if at least one item is selected
                 if ($('.item-select').filter(function() {
                         return $(this).val();
                     }).length === 0) {
@@ -716,7 +696,6 @@
                     hasError = true;
                 }
 
-                // Check for quantity exceeding stock
                 $('.item-row').each(function() {
                     if ($(this).find('.item-select').val()) {
                         const stockLimit = parseInt($(this).data('stock')) || 0;
@@ -731,7 +710,7 @@
                                 `Total kuantitas melebihi stok tersedia pada salah satu item`,
                                 'error');
                             hasError = true;
-                            return false; // break each loop
+                            return false;
                         }
 
                         if (totalQty <= 0) {

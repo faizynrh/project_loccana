@@ -223,7 +223,7 @@
                             success: function(response) {
                                 if (response.contact_info) {
                                     $('#contact').val(response
-                                        .contact_info); // Isi input contact otomatis
+                                        .contact_info);
                                 } else {
                                     $('#contact').val('Data tidak tersedia');
                                 }
@@ -244,7 +244,7 @@
                             success: function(response) {
                                 if (response.location) {
                                     $('#ship').val(response
-                                        .location); // Isi input ship otomatis
+                                        .location);
                                 } else {
                                     $('#ship').val('Data tidak tersedia');
                                 }

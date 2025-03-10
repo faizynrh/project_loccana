@@ -107,7 +107,6 @@
 @push('scripts')
     <script>
         $(document).ready(function() {
-            // Inisialisasi DataTable dan simpan dalam variabel
             var dataTable = $('#tablepenjualan').DataTable({
                 serverSide: true,
                 processing: true,
@@ -254,7 +253,6 @@
                 ]
             });
 
-            // Hapus event on change pada select, gunakan tombol "Cari" untuk memicu reload tabel
             $('#filterButton').on('click', function() {
                 dataTable.ajax.reload();
             });
