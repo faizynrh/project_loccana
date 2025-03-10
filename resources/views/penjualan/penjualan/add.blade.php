@@ -317,7 +317,6 @@
                 $(this).val(value);
             });
 
-
             $('#partner_id').on('change', function() {
                 var poId = $(this).val();
                 $('#loading-overlay').fadeIn();
@@ -330,6 +329,7 @@
                         dataType: 'json',
                         success: function(response) {
                             updateAllItemSelects(response.items);
+                            checkAvailableItems();
                             $('#loading-overlay').fadeOut();
                         },
                         error: function(xhr, status, error) {
@@ -337,6 +337,7 @@
                             $('.item-select').html(
                                 '<option value="" disabled selected>Tidak ada item tersedia</option>'
                             );
+                            $('#add-row').prop('disabled', true);
                             $('#loading-overlay').fadeOut();
                         }
                     });
@@ -389,7 +390,6 @@
 
             let selectedItems = [];
 
-
             function updateAllItemSelects(items) {
                 var options = '<option value="" disabled selected>--Pilih Item--</option>';
                 if (items && items.length > 0) {
@@ -399,6 +399,7 @@
                     });
                 } else {
                     options = '<option value="" disabled selected>Tidak ada item tersedia</option>';
+                    $('#add-row').prop('disabled', true);
                 }
 
                 $('#tableBody').data('current-items', items);
@@ -419,6 +420,26 @@
                     false);
             }
 
+            function checkAvailableItems() {
+                const currentItems = $('#tableBody').data('current-items') || [];
+                const selectedItemIds = [];
+
+                $('.item-select').each(function() {
+                    const selectedId = $(this).val();
+                    if (selectedId) {
+                        selectedItemIds.push(selectedId);
+                    }
+                });
+
+                const availableItems = currentItems.filter(item => !selectedItemIds.includes(item.id.toString()));
+
+                if (availableItems.length === 0) {
+                    $('#add-row').prop('disabled', true);
+                } else {
+                    $('#add-row').prop('disabled', false);
+                }
+            }
+
             $(document).on('change', '.item-select', function() {
                 const selectedOption = $(this).find(':selected');
                 const selectedUOM = selectedOption.data('uom');
@@ -426,7 +447,6 @@
                 const itemSku = selectedOption.data('sku');
                 const itemName = selectedOption.data('item');
                 const row = $(this).closest('tr');
-
 
                 if (itemId) {
                     let isDuplicate = false;
@@ -440,34 +460,20 @@
                         }
                     });
 
-                    function updateItemSelects() {
-                        $('.item-select').each(function() {
-                            const rowItemId = $(this).closest('tr').data('item-id');
-                            const select = $(this);
+                    selectedItems.push({
+                        id: itemId,
+                        name: itemName,
+                        sku: itemSku
+                    });
 
-                            if (rowItemId) return;
-
-                            select.find('option').each(function() {
-                                const optionValue = $(this).val();
-                                if (optionValue && selectedItems.some(item => item.id ===
-                                        optionValue)) {
-                                    $(this).hide();
-                                } else {
-                                    $(this).show();
-                                }
-                            });
-                        });
-                    }
+                    updateItemSelects();
 
                     row.data('prev-item-id', itemId);
-
                     $(this).siblings('.uom-input').val(selectedUOM);
-
                     row.data('item-id', itemId);
-
                     enableRowInputs(row);
-
                     fetchStockInformation(itemId, row);
+                    checkAvailableItems();
                 } else {
                     row.data('item-id', null);
                     row.data('prev-item-id', null);
@@ -475,6 +481,28 @@
                     row.find('.stock-info').remove();
                 }
             });
+
+            function updateItemSelects() {
+                $('.item-select').each(function() {
+                    const thisSelect = $(this);
+                    const thisSelectValue = thisSelect.val();
+
+                    thisSelect.find('option').each(function() {
+                        const optionValue = $(this).val();
+                        if (!optionValue || optionValue === thisSelectValue) return;
+
+                        const isSelected = $('.item-select').not(thisSelect).filter(function() {
+                            return $(this).val() === optionValue;
+                        }).length > 0;
+
+                        if (isSelected) {
+                            $(this).hide();
+                        } else {
+                            $(this).show();
+                        }
+                    });
+                });
+            }
 
             $(document).on('focus', '.item-select', function() {
                 const currentValue = $(this).val();
@@ -497,7 +525,7 @@
 
                         row.find('input[name$="[box_quantity]"]').parent().append(
                             `<div class="stock-info text-danger small mt-1">Stock: ${stockInfo}<br>
-                             PCS per Box: ${pcsPerBox}</div>`
+                     PCS per Box: ${pcsPerBox}</div>`
                         );
 
                         if (pcsPerBox > 0) {
@@ -517,8 +545,6 @@
                         updateTotals();
                     },
                     error: function(xhr, status, error) {
-                        console.error('Error fetching stock information:', error);
-
                         row.find('.stock-info').remove();
                         row.find('input[name$="[box_quantity]"]').parent().append(
                             '<div class="stock-info text-danger small mt-1">Stock: Unable to fetch</div>'
@@ -527,18 +553,19 @@
                 });
             }
 
-
-
             function createNewRow(rowCount) {
                 const currentItems = $('#tableBody').data('current-items');
                 let itemOptions = '<option value="" disabled selected>--Pilih Item--</option>';
 
                 if (currentItems && currentItems.length > 0) {
                     currentItems.forEach(function(item) {
-                        const isSelected = selectedItems.some(selectedItem => selectedItem.id === item.id);
-                        if (!isSelected) {
+                        const isAlreadySelected = $('.item-select').filter(function() {
+                            return $(this).val() == item.id;
+                        }).length > 0;
+
+                        if (!isAlreadySelected) {
                             itemOptions +=
-                                `<option value="${item.id}" data-uom="${item.unit_of_measure_id}" data-item="${item.name}" data-sku="${item.sku}">${item.sku} - ${item.name}</option>`;
+                                `<option value="${item.id}" data-uom="${item.unit_of_measure_id}" data-item="${item.name}" data-sku="${item.sku}">${item.sku ?? '-'} - ${item.name ?? '-'}</option>`;
                         }
                     });
                 } else {
@@ -546,39 +573,39 @@
                 }
 
                 return `
-            <tr style="border-bottom: 2px solid #000" class="item-row">
-                <td colspan="2">
-                    <select class="form-select item-select" name="items[${rowCount}][item_id]">
-                        ${itemOptions}
-                    </select>
-                    <input type="hidden" name="items[${rowCount}][uom_id]" class="uom-input">
-                </td>
-                <td>
-                    <input type="text" name="items[${rowCount}][notes]" class="form-control notes-input" disabled>
-                </td>
-                <td>
-                    <input type="number" name="items[${rowCount}][box_quantity]" class="form-control box-qty-input" value="0" min="0" disabled>
-                </td>
-                <td>
-                    <input type="number" name="items[${rowCount}][per_box_quantity]" class="form-control qty-input" value="0" min="0" disabled>
-                </td>
-                <td>
-                    <input type="number" name="items[${rowCount}][quantity]" class="form-control total-qty bg-body-secondary" value="0" min="0" readonly>
-                </td>
-                <td>
-                    <input type="number" name="items[${rowCount}][unit_price]" class="form-control price-input" value="0" min="0" disabled>
-                </td>
-                <td>
-                    <input type="number" name="items[${rowCount}][discount]" class="form-control discount-input" value="0" min="0" max="100" disabled>
-                </td>
-                <td colspan="2">
-                    <input type="number" name="items[${rowCount}][total_price]" class="form-control bg-body-secondary total-input" readonly>
-                </td>
-                <td>
-                    <button type="button" class="btn btn-danger btn-sm remove-row">-</button>
-                </td>
-            </tr>
-        `;
+        <tr style="border-bottom: 2px solid #000" class="item-row">
+            <td colspan="2">
+                <select class="form-select item-select" name="items[${rowCount}][item_id]">
+                    ${itemOptions}
+                </select>
+                <input type="hidden" name="items[${rowCount}][uom_id]" class="uom-input">
+            </td>
+            <td>
+                <input type="text" name="items[${rowCount}][notes]" class="form-control notes-input" disabled>
+            </td>
+            <td>
+                <input type="number" name="items[${rowCount}][box_quantity]" class="form-control box-qty-input" value="0" min="0" disabled>
+            </td>
+            <td>
+                <input type="number" name="items[${rowCount}][per_box_quantity]" class="form-control qty-input" value="0" min="0" disabled>
+            </td>
+            <td>
+                <input type="number" name="items[${rowCount}][quantity]" class="form-control total-qty bg-body-secondary" value="0" min="0" readonly>
+            </td>
+            <td>
+                <input type="number" name="items[${rowCount}][unit_price]" class="form-control price-input" value="0" min="0" disabled>
+            </td>
+            <td>
+                <input type="number" name="items[${rowCount}][discount]" class="form-control discount-input" value="0" min="0" max="100" disabled>
+            </td>
+            <td colspan="2">
+                <input type="number" name="items[${rowCount}][total_price]" class="form-control bg-body-secondary total-input" readonly>
+            </td>
+            <td>
+                <button type="button" class="btn btn-danger btn-sm remove-row">-</button>
+            </td>
+        </tr>
+    `;
             }
 
             $('#add-row').on('click', function(e) {
@@ -603,6 +630,7 @@
                 const newRowHtml = createNewRow(rowCount);
                 $(newRowHtml).insertBefore('#tableBody tr:last');
                 updateTotals();
+                checkAvailableItems();
             });
 
             $(document).on('click', '.remove-row', function() {
@@ -617,6 +645,7 @@
                     row.remove();
                     updateTotals();
                     updateItemSelects();
+                    checkAvailableItems();
                 }
             });
 
