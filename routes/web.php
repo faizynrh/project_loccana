@@ -378,7 +378,6 @@ Route::middleware('auth.login')->group(
             function () {
                 Route::get('/', 'index')->name('index');
                 Route::get('/ajax', 'ajax')->name('ajax');
-                Route::get('/detail/{id}', 'showpiutang')->name('detail');
 
                 Route::prefix('/pembayaran')->name('pembayaran.')->group(
                     function () {
@@ -386,6 +385,7 @@ Route::middleware('auth.login')->group(
                         Route::get('/ajax', 'ajaxpembayaran')->name('ajax');
                         Route::get('/add', 'create')->name('create');
                         Route::post('/store', 'store')->name('store');
+                        Route::get('/detail/{id}', 'showpembayaran')->name('detail');
                         Route::get('/getinvoice/{id}', 'getinvoice')->name('getinvoice');
                         Route::delete('/delete/{id}', 'destroy')->name('destroy');
 

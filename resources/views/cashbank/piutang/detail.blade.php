@@ -83,18 +83,18 @@
                                             {{-- <p class="fw-bold">{{ $item->discount }}%</p> --}}
                                         </td>
                                     </tr>
-                                    {{-- @endforeach --}}
-                                    <tr class="fw-bold" style="border-top: 2px solid #000">
-                                        <td colspan="3" class="text-end">Total</td>
-                                        <td class="text-end" id="totalamount">Rp.
-                                            {{-- {{ number_format($data->data[0]->total_amount, 2, ',', '.') }} --}}
-                                        </td>
-                                    </tr>
+                                @endforeach
+                                <tr class="fw-bold" style="border-top: 2px solid #000">
+                                    <td colspan="3" class="text-end">Total</td>
+                                    <td class="text-end" id="totalamount">Rp.
+                                        {{-- {{ number_format($data->data[0]->total_amount, 2, ',', '.') }} --}}
+                                    </td>
+                                </tr>
                             </tbody>
                         </table>
                         <div class="row">
                             <div class="col-md-12 text-end">
-                                <a href="{{ route('hutang.index') }}" class="btn btn-secondary ms-2">Kembali</a>
+                                <a href="{{ route('piutang.pembayaran.index') }}" class="btn btn-secondary ms-2">Kembali</a>
                             </div>
                         </div>
                     </div>
