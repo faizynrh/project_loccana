@@ -382,6 +382,8 @@ Route::middleware('auth.login')->group(
                         Route::get('/', 'pembayaran')->name('index');
                         Route::get('/ajax', 'ajaxpembayaran')->name('ajax');
                         Route::get('/add', 'create')->name('create');
+                        Route::post('/store', 'store')->name('store');
+                        Route::get('/getinvoice/{id}', 'getinvoice')->name('getinvoice');
                         Route::delete('/delete/{id}', 'destroy')->name('destroy');
 
                         Route::prefix('/giro')->name('giro.')->group(
