@@ -374,16 +374,20 @@ Route::middleware('auth.login')->group(
         Route::prefix('/piutang')->name('piutang.')->controller(PiutangController::class)->group(
             function () {
                 Route::get('/', 'index')->name('index');
+                Route::get('/ajax', 'ajax')->name('ajax');
+                Route::get('/detail/{id}', 'showpiutang')->name('detail');
 
                 Route::prefix('/pembayaran')->name('pembayaran.')->group(
                     function () {
                         Route::get('/', 'pembayaran')->name('index');
-                    }
-                );
+                        Route::get('/ajax', 'ajaxpembayaran')->name('ajax');
+                        Route::delete('/delete/{id}', 'destroy')->name('destroy');
 
-                Route::prefix('/giro')->name('giro.')->group(
-                    function () {
-                        Route::get('/', 'giro')->name('index');
+                        Route::prefix('/giro')->name('giro.')->group(
+                            function () {
+                                Route::get('/', 'giro')->name('index');
+                            }
+                        );
                     }
                 );
             }
