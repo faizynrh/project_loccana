@@ -109,7 +109,7 @@
                                 <div class="col-md-6">
                                     <label for="code" class="form-label fw-bold mt-2 mb-1 small">Nomor Penjualan</label>
                                     <input type="text" class="form-control bg-body-secondary" id="code"
-                                        name="order_number" placeholder="Nomor Penjualan" value="">
+                                        name="order_number" placeholder="Nomor Penjualan" value="{{ $poCode }}">
                                     <label for="tanggal" class="form-label fw-bold mt-2 mb-1 small">Tanggal Order</label>
                                     <input type="date" class="form-control" id="order_date" name="order_date" required>
 

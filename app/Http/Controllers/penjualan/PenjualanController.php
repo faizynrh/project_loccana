@@ -9,32 +9,35 @@ use Illuminate\Http\Request;
 use Log;
 use Symfony\Component\HttpFoundation\Session\Session;
 
+
 class PenjualanController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
 
-    // public function generatePOCode()
-    // {
-    //     try {
-    //         $currentYear = Carbon::now()->format('Y');
-    //         $lastCode = Session::get('last_po_code');
-    //         if ($lastCode && strpos($lastCode, 'PO' . $currentYear) === 0) {
-    //             $lastNumber = intval(substr($lastCode, -4));
-    //             $newNumber = str_pad($lastNumber + 1, 4, '0', STR_PAD_LEFT);
-    //         } else {
-    //             $newNumber = '0001';
-    //         }
-    //         $poCode = 'PO' . $currentYear . $newNumber;
-    //         return $poCode;
-    //     } catch (\Exception $e) {
-    //         return response()->json([
-    //             'success' => false,
-    //             'message' => 'Error generating PO code: ' . $e->getMessage()
-    //         ], 500);
-    //     }
-    // }
+    public function generatePOCode()
+    {
+        try {
+            $currentYear = Carbon::now()->format('Y');
+            // Use the Laravel session helper instead of Symfony Session
+            $lastCode = session('last_po_code');
+
+            if ($lastCode && strpos($lastCode, 'PO' . $currentYear) === 0) {
+                $lastNumber = intval(substr($lastCode, -4));
+                $newNumber = str_pad($lastNumber + 1, 4, '0', STR_PAD_LEFT);
+            } else {
+                $newNumber = '0001';
+            }
+
+            $poCode = $currentYear . $newNumber;
+            return $poCode;
+        } catch (\Exception $e) {
+            // Log the error
+            Log::error('Error generating PO code: ' . $e->getMessage());
+            return 'PO' . $currentYear . '0001'; // Fallback
+        }
+    }
 
     public function ajaxselling(Request $request)
     {
@@ -109,12 +112,14 @@ class PenjualanController extends Controller
         $partnerResponse = fectApi(env('LIST_PARTNER') . '/' . $company_id . '/' . $suplier . '/' . $customer);
         $gudangResponse = fectApi(env('LIST_GUDANG') . '/' . $company_id);
 
+
         if ($partnerResponse->successful() && $gudangResponse->successful()) {
             $partner = json_decode($partnerResponse->getbody()->getContents(), false);
             $gudang = json_decode($gudangResponse->getbody()->getContents(), false);
+            $poCode = $this->generatePOCode();
 
             // $poCode = $this->generatePOCode();
-            return view('penjualan.penjualan.add', compact('partner', 'gudang', ));
+            return view('penjualan.penjualan.add', compact('partner', 'gudang', 'poCode'));
         } else {
             $errors = [];
             if (!$gudangResponse->successful()) {
@@ -235,7 +240,8 @@ class PenjualanController extends Controller
             $apiResponse = storeApi(env('PENJUALAN_URL'), $data);
             // dd($apiResponse->json(), $data);
             if ($apiResponse->successful()) {
-                // Session::put('last_po_code', $request->input('code'));
+                $request->session()->put('last_po_code', $request->input('code'));
+
                 return redirect()->route('penjualan.index')
                     ->with('success', $apiResponse->json()['message']);
             } else {
@@ -361,7 +367,7 @@ class PenjualanController extends Controller
             $apiResponse = updateApi(env('PENJUALAN_URL') . '/' . $id, $data);
             // dd($data, $apiResponse->json());
             if ($apiResponse->successful()) {
-                // Session::put('last_po_code', $request->input('code'));
+                $request->session()->put('last_po_code', $request->input('code'));
                 return redirect()->route('penjualan.index')
                     ->with('success', $apiResponse->json()['message']);
             } else {
