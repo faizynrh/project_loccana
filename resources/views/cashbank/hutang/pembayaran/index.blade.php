@@ -155,7 +155,7 @@
                                 if (data.toLowerCase() === 'pending') {
                                     statusClass = 'btn btn-warning btn-sm ';
                                     statusLabel =
-                                        `<a href="/hutang/pembayaran/approve/${row.transaksi_id}" class="${statusClass}" title="Klik untuk Approve">Konfirmasi</a>`;
+                                        `<a href="/hutang/pembayaran/approve/${row.transaksi_id}" class="${statusClass}" title="Klik untuk Approve">${data}</a>`;
                                 } else if (data.toLowerCase() === 'approved') {
                                     statusClass = 'badge bg-success fw-bold';
                                 }
@@ -168,12 +168,11 @@
                             render: function(data, type, row) {
                                 let isApproved = row.status.toLowerCase() === 'approved';
 
-                                // Icons with text for better visual hierarchy
                                 let detailButton = `
-            <a href="/hutang/pembayaran/detail/${row.transaksi_id}" class="dropdown-item d-flex align-items-center py-2" title="Detail">
-                <i class="bi bi-eye-fill text-primary me-2"></i>
-                <span>Lihat Detail</span>
-            </a>`;
+                                                    <a href="/hutang/pembayaran/detail/${row.transaksi_id}" class="dropdown-item d-flex align-items-center py-2" title="Detail">
+                                                        <i class="bi bi-eye-fill text-primary me-2"></i>
+                                                        <span>Lihat Detail</span>
+                                                    </a>`;
 
                                 let printButton = `
             <a href="/hutang/pembayaran/print/${row.transaksi_id}" class="dropdown-item d-flex align-items-center py-2" target="_blank" title="Print PDF">
@@ -249,16 +248,6 @@
                 });
             }
 
-            // Pastikan tooltip diinisialisasi
-            document.addEventListener('DOMContentLoaded', function() {
-                var tooltipTriggerList = [].slice.call(document.querySelectorAll(
-                    '[data-bs-toggle="tooltip"]'))
-                var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
-                    return new bootstrap.Tooltip(tooltipTriggerEl, {
-                        boundary: document.body
-                    });
-                });
-            });
             $('#searchForm').submit(function(e) {
                 e.preventDefault();
                 initializeTable()

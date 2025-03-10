@@ -25,7 +25,7 @@
                                     <a href="/hutang/pembayaran">Pembayaran Hutang</a>
                                 </li>
                                 <li class="breadcrumb-item active" aria-current="page">
-                                    Tambah
+                                    Tambah Pembayaran
                                 </li>
                             </ol>
                         </nav>
@@ -40,8 +40,7 @@
                             <div class="row mb-3">
                                 <div class="col-md-6">
                                     <label class="form-label fw-bold mt-2 mb-1 small">Kode</label>
-                                    <input type="text" class="form-control" name="payment_number" value="K2025000"
-                                        required>
+                                    <input type="text" class="form-control" name="payment_number" required>
                                     <label class="form-label fw-bold mt-2 mb-1 small">Tanggal Pembayaran</label>
                                     <input type="date" class="form-control" name="payment_date"required>
                                     <label class="form-label fw-bold mt-2 mb-1 small">Principal</label>
@@ -117,10 +116,10 @@
                                         </td>
                                         <td>
                                             <input type="number" class="form-control" name="items[0][amount_paid]"
-                                                required>
+                                                id="amountPaid" min="0" required>
                                         </td>
                                         <td>
-                                            <textarea class="form-control" name="items[0][notes]" required></textarea>
+                                            <textarea class="form-control" name="items[0][notes]"></textarea>
                                         </td>
                                         <td class="text-end">
                                             <button type="button" class="btn btn-danger fw-bold remove-row">-</button>
@@ -155,6 +154,10 @@
 @push('scripts')
     <script>
         $(document).ready(function() {
+            $("#amountPaid").on("input", function() {
+                $(this).val(validateMinOne($(this).val()));
+            });
+
             const state = {
                 itemIndex: 1,
                 initialPrincipal: $('#principal').val(),
@@ -167,7 +170,8 @@
                                         <td>
                                             <select id="invoiceSelect" class="form-select w-auto item-select"
                                                 name="items[0][invoice]" required>
-                                                <option value="" selected disabled>Pilih Invoice</option>
+                                                <option value="" selected disabled>Pilih Principal Terlebih Dahulu
+                                                </option>
                                             </select>
                                         </td>
                                         <td>
@@ -182,27 +186,30 @@
                                                 name="items[0][jatuhtempo]" disabled>
                                         </td>
                                         <td>
-                                            <input type="number" class="form-control" name="items[0][amount_paid]" id="amount_paid"
-                                                required>
+                                            <input type="number" class="form-control" name="items[0][amount_paid]"
+                                                min="0" required>
                                         </td>
                                         <td>
-                                            <textarea class="form-control" name="items[0][notes]" required></textarea>
+                                            <textarea class="form-control" name="items[0][notes]"></textarea>
                                         </td>
                                         <td class="text-end">
                                             <button type="button" class="btn btn-danger fw-bold remove-row">-</button>
                                         </td>
-                                    </tr>`,
+                                    </tr>
+                                    `,
 
                 footerRows: `
-            <tr id="add-button-row" style="border-bottom: 2px solid #000;">
-                <td colspan="7" class="text-end">
-                    <button type="button" class="btn btn-primary fw-bold" id="add-row">+</button>
-                </td>
-            </tr>
-            <tr id="total-row" class="fw-bold">
-                <td colspan="5" class="text-end">Total</td>
-                <td class="text-end" id="amount">0</td>
-            </tr>`
+                            <tr id="add-button-row" style="border-bottom: 2px solid #000;">
+                                <td colspan="7" class="text-end">
+                                    <button type="button" class="btn btn-primary fw-bold"
+                                        id="add-row">+</button>
+                                </td>
+                            </tr>
+                            <tr id="total-row" class="fw-bold">
+                                <td colspan="5" class="text-end">Total</td>
+                                <td class="text-end" id="amount">Rp. 0,00</td>
+                            </tr>
+            `
             };
 
             function fetchInvoices(principalId, callback, excludeSelected = true) {

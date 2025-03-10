@@ -149,7 +149,7 @@ NPWP: 01.555.161.7.428.000
                         </table>
                         <div class="row">
                             <div class="col-md-12 text-end">
-                                <a href="{{ route('hutang.index') }}" class="btn btn-primary ms-2">Kembali</a>
+                                <a href="{{ route('hutang.index') }}" class="btn btn-secondary ms-2">Kembali</a>
                             </div>
                         </div>
                     </div>

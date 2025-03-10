@@ -10,16 +10,22 @@
             <div class="page-title">
                 <div class="row">
                     <div class="col-12 col-md-6 order-md-1 order-last">
-                        <h3>Detail Invoice</h3>
+                        <h3>Detail Pembayaran Hutang</h3>
                     </div>
                     <div class="col-12 col-md-6 order-md-2 order-first">
                         <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item">
-                                    <a href="/invoice_penjualan">Dashboard</a>
+                                    <a href="/dashboard">Dashboard</a>
+                                </li>
+                                <li class="breadcrumb-item">
+                                    <a href="/hutang">Hutang</a>
+                                </li>
+                                <li class="breadcrumb-item">
+                                    <a href="/pembayaran">Pembayaran</a>
                                 </li>
                                 <li class="breadcrumb-item active" aria-current="page">
-                                    Detail Invoice
+                                    Detail Pembayaran
                                 </li>
                             </ol>
                         </nav>
@@ -100,7 +106,7 @@
                         </table>
                         <div class="row">
                             <div class="col-md-12 text-end">
-                                <a href="{{ route('hutang.pembayaran.index') }}" class="btn btn-primary ms-2">Kembali</a>
+                                <a href="{{ route('hutang.pembayaran.index') }}" class="btn btn-secondary ms-2">Kembali</a>
                             </div>
                         </div>
                     </div>

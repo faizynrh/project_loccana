@@ -37,7 +37,7 @@
                     <div class="card-header">
                         <div class="d-flex justify-content-between align-items-center">
                             <div class="d-flex align-items-center">
-                                <a href="/hutang/pembayaran/add" class="btn btn-primary me-2 fw-bold">+ Tambah
+                                <a href="/piutang/pembayaran/add" class="btn btn-primary me-2 fw-bold">+ Tambah
                                     Pembayaran</a>
                                 <form id="searchForm" class="d-flex align-items-center gap-2">
                                     @csrf
