@@ -124,16 +124,18 @@
                                         </td>
                                         <td>
                                             <input type="number" name="items[0][quantity]"
-                                                class="form-control qty-input" value="1" min="1">
+                                                class="form-control qty-input" value="1"
+                                                oninput="this.value = validateMinOne(this.value)" min="1">
                                         </td>
                                         <td>
                                             <input type="number" name="items[0][unit_price]"
-                                                class="form-control price-input" value="0" min="0">
+                                                class="form-control price-input" value="0" min="0"
+                                                oninput="this.value = validateMinZero(this.value)">
                                         </td>
                                         <td>
                                             <input type="number" name="items[0][discount]"
                                                 class="form-control discount-input" value="0" min="0"
-                                                max="100">
+                                                max="100" oninput="this.value = validateMinZero(this.value)">
                                         </td>
                                         <td colspan="2">
                                             <input type="number" name="items[0][total_price]"
@@ -371,13 +373,13 @@
             <input type="hidden" name="items[${rowCount}][uom_id]" class="uom-input">
           </td>
           <td>
-            <input type="number" class="form-control qty-input" name="items[${rowCount}][quantity]" value="0" min="0">
+            <input type="number" class="form-control qty-input" name="items[${rowCount}][quantity]" value="1" min="0" oninput="this.value = validateMinOne(this.value)">
           </td>
           <td>
-            <input type="number" class="form-control price-input" name="items[${rowCount}][unit_price]" value="0" min="0">
+            <input type="number" class="form-control price-input" name="items[${rowCount}][unit_price]" value="0" min="0" oninput="this.value = validateMinZero(this.value)">
           </td>
           <td>
-            <input type="number" class="form-control discount-input" name="items[${rowCount}][discount]" value="0" min="0" max="100">
+            <input type="number" class="form-control discount-input" name="items[${rowCount}][discount]" value="0" min="0" max="100" oninput="this.value = validateMinZero(this.value)">
           </td>
           <td colspan="2">
             <input type="number" class="form-control bg-body-secondary total-input" name="items[${rowCount}][total_price]" readonly>
