@@ -53,9 +53,9 @@ Route::prefix('/')->name('oauth.')->group(function () {
     Route::get('logout', [AuthController::class, 'logout'])->name('logout');
 });
 
-Route::get('/loading', function () {
-    return view('loading.loadingpage');
-})->name('loading-screen');
+// Route::get('/loading', function () {
+//     return view('loading.loadingpage');
+// })->name('loading-screen');
 
 //MIDDLEWARE
 Route::middleware('auth.login')->group(

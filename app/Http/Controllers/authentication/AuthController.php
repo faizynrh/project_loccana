@@ -96,8 +96,7 @@ class AuthController extends Controller
                         'scope' => $scope,
                     ]);
 
-                    // return redirect()->route('dashboard-dev');
-                    return redirect()->route('loading-screen');
+                    return redirect()->route('dashboard-dev');
                 } else {
                     return response('Error: Invalid ID token format.', 400);
                 }
