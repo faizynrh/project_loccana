@@ -119,9 +119,29 @@ class PiutangController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Request $request)
     {
-        //
+        $companyid = 2;
+        $supplier = "false";
+        $customer = "true";
+        $partnerResponse = fectApi(env('LIST_PARTNER') . '/' . $companyid . '/' . $supplier . '/' . $customer);
+        $coaResponse = fectApi(env('LIST_COA') . '/' . $companyid);
+        if ($partnerResponse->successful() && $coaResponse->successful()) {
+            $partner
+                = json_decode($partnerResponse->body(), false);
+            $coa =
+                json_decode($coaResponse->body(), false);
+            return view('cashbank.piutang.pembayaran.add', compact('partner', 'coa'));
+        } else {
+            $errors = [];
+            if (!$coaResponse->successful()) {
+                $errors[] = $coaResponse->json()['message'];
+            }
+            if (!$partnerResponse->successful()) {
+                $errors[] = $partnerResponse->json()['message'];
+            }
+            return back()->withErrors($errors);
+        }
     }
 
     /**
