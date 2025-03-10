@@ -86,7 +86,7 @@
                                             <option value="{{ $items['id'] }}">{{ $items['name'] }}</option>
                                         @endforeach
                                     </select>
-                                    <label for="ship" class="form-label fw-bold mt-2 mb-1 small">Ship From :</label>
+                                    <label for="ship" class="form-label fw-bold mt-2 mb-1 small">Ship From</label>
                                     <textarea class="form-control bg-body-secondary" rows="5" id="ship" name="ship" readonly></textarea>
                                     <label for="ppn" class="form-label fw-bold mt-2 mb-1 small">VAT/PPN</label>
                                     <input type="number" class="form-control" id="ppn" name="ppn" required>
@@ -139,7 +139,10 @@
                                             <input type="number" name="items[0][total_price]"
                                                 class="form-control bg-body-secondary total-input" readonly>
                                         </td>
-                                        <td></td>
+                                        <td>
+                                            <button type="button" class="btn btn-danger btn-sm remove-row"
+                                                disabled>-</button>
+                                        </td>
                                     </tr>
                                     <tr style="border-bottom: 2px solid #000;">
                                         <td colspan="6"></td>
@@ -185,7 +188,6 @@
                                     <input type="hidden" name="company_id" id="company_id" value="2">
                                     <input type="hidden" name="total_amount" id="total_amount" value="0">
                                     <button type="submit" class="btn btn-primary" id="submitButton">Simpan</button>
-                                    {{-- <button type="button" class="btn btn-danger ms-2" id="rejectButton">Reject</button> --}}
                                     <a href="/purchase_order" class="btn btn-secondary ms-2">Batal</a>
                                 </div>
                             </div>
@@ -199,7 +201,6 @@
 @push('scripts')
     <script>
         $(document).ready(function() {
-
             $('#pembayaran').on('change', function() {
                 const selectedValue = $(this).val();
                 const customInput = $('#custom_payment_term');
@@ -219,7 +220,6 @@
 
             $('#custom_payment_term').on('input', function() {
                 let value = $(this).val();
-                // Remove any non-numeric characters
                 value = value.replace(/[^\d]/g, '');
                 if (value) {
                     $(this).val(value);
@@ -235,10 +235,10 @@
 
             $('#custom_payment_term').on('focus', function() {
                 let value = $(this).val();
-                // Remove "Hari" when focusing on the input
                 value = value.replace(' Hari', '');
                 $(this).val(value);
             });
+
             $('#partner_id').on('change', function() {
                 var poId = $(this).val();
                 $('#loading-overlay').fadeIn();
@@ -249,9 +249,10 @@
                         type: 'GET',
                         dataType: 'json',
                         success: function(response) {
+                            $('#tableBody').data('current-items', response.items);
                             updateAllItemSelects(response.items);
+                            checkItemsAvailability();
                             $('#loading-overlay').fadeOut();
-
                         },
                         error: function(xhr, status, error) {
                             Swal.fire('Error', 'Gagal mengambil data item', 'error');
@@ -259,7 +260,6 @@
                                 '<option value="" disabled selected>Tidak ada item tersedia</option>'
                             );
                             $('#loading-overlay').fadeOut();
-
                         }
                     });
                     $.ajax({
@@ -268,7 +268,7 @@
                         dataType: 'json',
                         success: function(response) {
                             if (response.contact_info) {
-                                $('#contact').val(response.contact_info); // Isi input contact
+                                $('#contact').val(response.contact_info);
                             } else {
                                 $('#contact').val('Data tidak tersedia');
                             }
@@ -282,18 +282,18 @@
                     });
                 }
             });
+
             $('#gudang').on('change', function() {
                 var warehouseId = $(this).val();
                 $('#loading-overlay').fadeIn();
                 if (warehouseId) {
-                    // Ambil detail customer (contact_info)
                     $.ajax({
                         url: '/purchase_order/getDetailWarehouse/' + warehouseId,
                         type: 'GET',
                         dataType: 'json',
                         success: function(response) {
                             if (response.location) {
-                                $('#ship').val(response.location); // Isi input contact
+                                $('#ship').val(response.location);
                             } else {
                                 $('#ship').val('Data tidak tersedia');
                             }
@@ -309,79 +309,196 @@
             });
 
             function updateAllItemSelects(items) {
-                var options = '<option value="" disabled selected>--Pilih Item--</option>';
-                if (items && items.length > 0) {
-                    items.forEach(function(item) {
-                        options +=
-                            `<option value="${item.id}" data-uom="${item.unit_of_measure_id}">${item.sku} - ${item.name}</option>`;
-                    });
-                } else {
-                    options = '<option value="" disabled selected>Tidak ada item tersedia</option>';
-                }
+                const selectedItems = getSelectedItems();
 
                 $('#tableBody').data('current-items', items);
 
-                $('.item-select').html(options);
+                $('.item-select').each(function() {
+                    const currentValue = $(this).val();
+                    let options = '<option value="" disabled selected>--Pilih Item--</option>';
+
+                    if (items && items.length > 0) {
+                        items.forEach(function(item) {
+                            if (!selectedItems.includes(item.id.toString()) || item.id
+                                .toString() === currentValue) {
+                                options +=
+                                    `<option value="${item.id}" data-uom="${item.unit_of_measure_id}">${item.sku} - ${item.name}</option>`;
+                            }
+                        });
+                    } else {
+                        options = '<option value="" disabled selected>Tidak ada item tersedia</option>';
+                    }
+
+                    const currentSelection = $(this).val();
+                    $(this).html(options);
+
+                    if (currentSelection) {
+                        $(this).val(currentSelection);
+                    }
+                });
+
+                checkItemsAvailability();
             }
 
             function createNewRow(rowCount) {
                 const currentItems = $('#tableBody').data('current-items');
+                const selectedItems = getSelectedItems();
+
                 let itemOptions = '<option value="" disabled selected>--Pilih Item--</option>';
 
                 if (currentItems && currentItems.length > 0) {
                     currentItems.forEach(function(item) {
-                        itemOptions +=
-                            `<option value="${item.id}" data-uom="${item.unit_of_measure_id}">${item.sku} - ${item.name}</option>`;
+                        if (!selectedItems.includes(item.id.toString())) {
+                            itemOptions +=
+                                `<option value="${item.id}" data-uom="${item.unit_of_measure_id}">${item.sku} - ${item.name}</option>`;
+                        }
                     });
+
+                    if (selectedItems.length >= currentItems.length) {
+                        itemOptions = '<option value="" disabled selected>Semua item sudah dipilih</option>';
+                    }
                 } else {
                     itemOptions =
                         '<option value="" disabled selected>Silahkan pilih partner terlebih dahulu</option>';
                 }
 
                 return `
-            <tr style="border-bottom: 2px solid #000" class="item-row">
-                <td colspan="2">
-                    <select class="form-select item-select" name="items[${rowCount}][item_id]">
-                        ${itemOptions}
-                    </select>
-                    <input type="hidden" name="items[${rowCount}][uom_id]" class="uom-input">
-                </td>
-                <td>
-                    <input type="number" class="form-control qty-input" name="items[${rowCount}][quantity]" value="0" min="0">
-                </td>
-                <td>
-                    <input type="number" class="form-control price-input" name="items[${rowCount}][unit_price]" value="0" min="0">
-                </td>
-                <td>
-                    <input type="number" class="form-control discount-input" name="items[${rowCount}][discount]" value="0" min="0" max="100">
-                </td>
-                <td colspan="2">
-                    <input type="number" class="form-control bg-body-secondary total-input" name="items[${rowCount}][total_price]" readonly>
-                </td>
-                <td class="text-center">
-                    <button type="button" class="btn btn-danger btn-sm remove-row">X</button>
-                </td>
-            </tr>
-        `;
+        <tr style="border-bottom: 2px solid #000" class="item-row">
+          <td colspan="2">
+            <select class="form-select item-select" name="items[${rowCount}][item_id]">
+              ${itemOptions}
+            </select>
+            <input type="hidden" name="items[${rowCount}][uom_id]" class="uom-input">
+          </td>
+          <td>
+            <input type="number" class="form-control qty-input" name="items[${rowCount}][quantity]" value="0" min="0">
+          </td>
+          <td>
+            <input type="number" class="form-control price-input" name="items[${rowCount}][unit_price]" value="0" min="0">
+          </td>
+          <td>
+            <input type="number" class="form-control discount-input" name="items[${rowCount}][discount]" value="0" min="0" max="100">
+          </td>
+          <td colspan="2">
+            <input type="number" class="form-control bg-body-secondary total-input" name="items[${rowCount}][total_price]" readonly>
+          </td>
+          <td>
+            <button type="button" class="btn btn-danger btn-sm remove-row">-</button>
+          </td>
+        </tr>
+      `;
+            }
+
+            function getSelectedItems() {
+                const selectedItems = [];
+                $('.item-select').each(function() {
+                    const itemId = $(this).val();
+                    if (itemId) {
+                        selectedItems.push(itemId);
+                    }
+                });
+                return selectedItems;
+            }
+
+            function isPreviousRowEmpty() {
+                let isEmpty = false;
+                const lastRow = $('.item-row:last');
+
+                if (lastRow.length) {
+                    const itemId = lastRow.find('.item-select').val();
+                    if (!itemId) {
+                        isEmpty = true;
+                    }
+                }
+
+                return isEmpty;
+            }
+
+            function checkItemsAvailability() {
+                const currentItems = $('#tableBody').data('current-items') || [];
+                const selectedItems = getSelectedItems();
+                const $addButton = $('#add-row');
+
+                if (!currentItems.length) {
+                    $addButton.prop('disabled', true);
+                    $addButton.removeClass('btn-primary').addClass('btn-secondary');
+                    return;
+                }
+
+                if (selectedItems.length >= currentItems.length) {
+                    $addButton.prop('disabled', true);
+                    $addButton.removeClass('btn-primary').addClass('btn-secondary');
+                    return;
+                }
+
+                $addButton.prop('disabled', false);
+                $addButton.removeClass('btn-secondary').addClass('btn-primary');
             }
 
             $(document).on('change', '.item-select', function() {
-                const selectedUOM = $(this).find(':selected').data('uom');
-                $(this).siblings('.uom-input').val(selectedUOM);
+                const selectedOption = $(this).find(':selected');
+                const selectedUOM = selectedOption.data('uom');
+                const itemId = $(this).val();
+                const row = $(this).closest('tr');
+
+                if (itemId) {
+                    $(this).siblings('.uom-input').val(selectedUOM);
+                    row.data('item-id', itemId);
+
+                    const items = $('#tableBody').data('current-items');
+                    if (items) {
+                        updateAllItemSelects(items);
+                    }
+                }
+
+                checkItemsAvailability();
             });
 
             $('#add-row').on('click', function(e) {
                 e.preventDefault();
+
+                if (isPreviousRowEmpty()) {
+                    Swal.fire({
+                        title: 'Peringatan',
+                        text: 'Harap pilih item pada baris sebelumnya terlebih dahulu!',
+                        icon: 'warning',
+                        confirmButtonText: 'OK'
+                    });
+                    return;
+                }
+
+                const currentItems = $('#tableBody').data('current-items') || [];
+                const selectedItems = getSelectedItems();
+
+                if (selectedItems.length >= currentItems.length) {
+                    Swal.fire({
+                        title: 'Peringatan',
+                        text: 'Semua item sudah dipilih!',
+                        icon: 'warning',
+                        confirmButtonText: 'OK'
+                    });
+                    return;
+                }
+
                 const rowCount = $('.item-row').length;
                 const newRowHtml = createNewRow(rowCount);
                 $(newRowHtml).insertBefore('#tableBody tr:last');
                 updateTotals();
+
+                checkItemsAvailability();
             });
 
             $(document).on('click', '.remove-row', function() {
                 if ($('.item-row').length > 1) {
                     $(this).closest('tr').remove();
                     updateTotals();
+
+                    const items = $('#tableBody').data('current-items');
+                    if (items) {
+                        updateAllItemSelects(items);
+                    }
+
+                    checkItemsAvailability();
                 }
             });
 
@@ -455,6 +572,7 @@
             }
 
             updateTotals();
+            checkItemsAvailability();
         });
     </script>
 @endpush
