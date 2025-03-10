@@ -365,10 +365,30 @@
                 toggleRowInputs($(this), hasSelectedItem);
             });
 
+            function checkAvailableItems() {
+                var totalAvailableItems =
+                    @if (isset($items->data->items))
+                        {{ count($items->data->items) }}
+                    @else
+                        0
+                    @endif ;
+
+                if (selectedItems.size >= totalAvailableItems) {
+                    $('#add-row').prop('disabled', true);
+                    $('#add-row').addClass('btn-secondary').removeClass('btn-primary');
+                } else {
+                    $('#add-row').prop('disabled', false);
+                    $('#add-row').addClass('btn-primary').removeClass('btn-secondary');
+                }
+            }
+
+            checkAvailableItems();
+
             $(document).on('change', '.item-select', function() {
                 const row = $(this).closest('tr');
                 const itemId = $(this).val();
                 const selectedUOM = $(this).find(':selected').data('uom');
+
 
                 const previousItemId = $(this).data('previous-item');
                 if (previousItemId) {
@@ -384,7 +404,10 @@
 
                 toggleRowInputs(row, !!itemId);
 
+                checkAvailableItems();
+
                 if (itemId) {
+                    $('#loading-overlay').fadeIn();
                     $.ajax({
                         url: '/penjualan/getStock/' + itemId,
                         type: 'GET',
@@ -404,14 +427,15 @@
                             row.find('.qty-input').attr('max', stockInfo);
 
                             row.data('stock', stockInfo);
+                            $('#loading-overlay').fadeOut();
+
                         },
                         error: function(xhr, status, error) {
-                            console.error('Error fetching stock information:', error);
-
                             row.find('.stock-info').remove();
                             row.find('input[name$="[box_quantity]"]').parent().append(
                                 '<div class="stock-info text-danger small mt-1">Stock: Unable to fetch</div>'
                             );
+                            $('#loading-overlay').fadeOut();
 
                             row.data('stock', 0);
                         }
@@ -424,12 +448,14 @@
 
             function createNewRow(rowCount) {
                 let itemOptions = '<option value="" selected disabled>Pilih Item</option>';
+                let availableItems = 0;
 
                 @foreach ($items->data->items ?? [] as $option)
                     if (!selectedItems.has('{{ $option->id }}')) {
                         itemOptions += `<option value="{{ $option->id }}" data-uom="{{ $option->unit_of_measure_id }}">
-                {{ $option->sku }} - {{ $option->name }}
-            </option>`;
+        {{ $option->sku }} - {{ $option->name }}
+    </option>`;
+                        availableItems++;
                     }
                 @endforeach
 
@@ -469,6 +495,7 @@
         </tr>
     `;
             }
+
             $('#add-row').on('click', function(e) {
                 e.preventDefault();
 
@@ -491,6 +518,8 @@
                 const newRowHtml = createNewRow(rowCount);
                 $(this).closest('tr').before(newRowHtml);
                 updateTotals();
+
+                checkAvailableItems();
             });
 
             $(document).on('click', '.remove-row', function() {
@@ -505,6 +534,8 @@
 
                     row.remove();
                     updateTotals();
+
+                    checkAvailableItems();
                 }
             });
 
