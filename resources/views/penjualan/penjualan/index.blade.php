@@ -170,7 +170,7 @@
                         render: function(data, type, row) {
                             let statusClass = '';
                             let statusLabel = data;
-                            if (data.toLowerCase() === 'approve') {
+                            if (data.toLowerCase() === 'konfirmasi') {
                                 statusClass = 'badge bg-warning';
                                 statusLabel = `<a href="/penjualan/approve/${row.id}" class="text-dark text-decoration-none" title="Klik untuk Approve">
                                                 <span class="${statusClass}">${data}</span>
@@ -188,7 +188,7 @@
                         data: null,
                         render: function(data, type, row) {
                             let actionButtons = ``;
-                            actionButtons += row.status.toLowerCase() === 'approve' ? `
+                            actionButtons += row.status.toLowerCase() === 'konfirmasi' ? `
                                 <div class="btn-group dropdown me-1 mb-1">
                                     <button type="button" class="btn btn-outline-danger rounded-3 dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-reference="parent">
                                         <span class="sr-only"><i class="bi bi-list-task"></i></span>
@@ -232,15 +232,15 @@
                                             Print PDF
                                         </a>
                                         <div class="dropdown-divider"></div>
-                                        <a href="/penjualan/edit/${row.id_penjualan}" class="dropdown-item" title="Edit">
-                                            <i class="bi bi-pencil text-info"></i>
+                                        <a href="/penjualan/edit/${row.id_penjualan}" class="dropdown-item disabled" title="Edit">
+                                            <i class="bi bi-pencil"></i>
                                             Edit
                                         </a>
-                                        <form action="/penjualan/delete/${row.id_penjualan}" method="POST" id="delete${row.id_penjualan}" style="display:inline;">
+                                        <form action="/penjualan/delete/${row.id_penjualan}" method="POST" id="delete${row.id_penjualan}" style="display:inline;" disabled>
                                             @csrf
                                             @method('DELETE')
-                                            <button type="button" class="dropdown-item" title="Hapus" onclick="confirmDelete(${row.id_penjualan})">
-                                                <i class="bi bi-trash text-danger"></i>
+                                            <button type="button" class="dropdown-item disabled" title="Hapus"  onclick="confirmDelete(${row.id_penjualan})">
+                                                <i class="bi bi-trash"></i>
                                                 Delete
                                             </button>
                                         </form>
