@@ -165,17 +165,18 @@
                                             <td>
                                                 <input type="number" name="items[{{ $index }}][quantity]"
                                                     class="form-control qty-input" value="{{ $item->qty ?? 1 }}"
-                                                    min="1">
+                                                    min="1" oninput="this.value = validateMinOne(this.value)">
                                             </td>
                                             <td>
                                                 <input type="number" name="items[{{ $index }}][unit_price]"
                                                     class="form-control price-input" value="{{ $item->unit_price ?? 0 }}"
-                                                    min="0">
+                                                    min="0" oninput="this.value = validateMinZero(this.value)">
                                             </td>
                                             <td>
                                                 <input type="number" name="items[{{ $index }}][discount]"
                                                     class="form-control discount-input"
-                                                    value="{{ $item->discount ?? 0 }}" min="0" max="100">
+                                                    value="{{ $item->discount ?? 0 }}" min="0" max="100"
+                                                    oninput="this.value = validateMinZero(this.value)">
                                             </td>
                                             <td colspan="2">
                                                 <input type="number" class="form-control bg-body-secondary total-input"
@@ -385,13 +386,13 @@
                     <input type="hidden" name="items[${rowCount}][po_detail_id]" class="po-detail-id">
                 </td>
                 <td>
-                    <input type="number" name="items[${rowCount}][quantity]" class="form-control qty-input" value="1" min="1">
+                    <input type="number" name="items[${rowCount}][quantity]" class="form-control qty-input" value="1" min="1" oninput="this.value = validateMinOne(this.value)">
                 </td>
                 <td>
-                    <input type="number" name="items[${rowCount}][unit_price]" class="form-control price-input" value="0" min="0">
+                    <input type="number" name="items[${rowCount}][unit_price]" class="form-control price-input" value="0" min="0" oninput="this.value = validateMinZero(this.value)">
                 </td>
                 <td>
-                    <input type="number" name="items[${rowCount}][discount]" class="form-control discount-input" value="0" min="0" max="100">
+                    <input type="number" name="items[${rowCount}][discount]" class="form-control discount-input" value="0" min="0" max="100" oninput="this.value = validateMinZero(this.value)">
                 </td>
                 <td colspan="2">
                     <input type="number" class="form-control bg-body-secondary total-input" value="0" readonly>

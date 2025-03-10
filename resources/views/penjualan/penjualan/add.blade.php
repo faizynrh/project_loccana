@@ -199,24 +199,28 @@
                                         </td>
                                         <td>
                                             <input type="number" name="items[0][box_quantity]"
-                                                class="form-control box-qty-input" min="0" disabled>
+                                                class="form-control box-qty-input" value="1" disabled
+                                                oninput="this.value = validateMinOne(this.value)">
                                             <div class="stock"></div>
                                         </td>
                                         <td>
                                             <input type="number" name="items[0][per_box_quantity]"
-                                                class="form-control qty-input" min="0" disabled>
+                                                class="form-control qty-input" min="0" disabled
+                                                oninput="this.value = validateMinZero(this.value)">
                                         <td>
                                             <input type="number" name="items[0][quantity]"
                                                 class="form-control total-qty bg-body-secondary" min="0" readonly>
                                         </td>
                                         <td>
                                             <input type="number" name="items[0][unit_price]"
-                                                class="form-control price-input" value="0" min="0" disabled>
+                                                class="form-control price-input" value="0" disabled
+                                                oninput="this.value = validateMinZero(this.value)">
                                         </td>
                                         <td>
                                             <input type="number" name="items[0][discount]"
                                                 class="form-control discount-input" value="0" min="0"
-                                                max="100" disabled>
+                                                max="100" disabled
+                                                oninput="this.value = validateMinZero(this.value)">
                                         </td>
                                         <td colspan="2">
                                             <input type="number" name="items[0][total_price]"
@@ -584,19 +588,19 @@
                 <input type="text" name="items[${rowCount}][notes]" class="form-control notes-input" disabled>
             </td>
             <td>
-                <input type="number" name="items[${rowCount}][box_quantity]" class="form-control box-qty-input" value="0" min="0" disabled>
+                <input type="number" name="items[${rowCount}][box_quantity]" class="form-control box-qty-input" value="1" min="0" disabled oninput="this.value = validateMinOne(this.value)">
             </td>
             <td>
-                <input type="number" name="items[${rowCount}][per_box_quantity]" class="form-control qty-input" value="0" min="0" disabled>
+                <input type="number" name="items[${rowCount}][per_box_quantity]" class="form-control qty-input" value="0" min="0" disabled oninput="this.value = validateMinZero(this.value)">
             </td>
             <td>
                 <input type="number" name="items[${rowCount}][quantity]" class="form-control total-qty bg-body-secondary" value="0" min="0" readonly>
             </td>
             <td>
-                <input type="number" name="items[${rowCount}][unit_price]" class="form-control price-input" value="0" min="0" disabled>
+                <input type="number" name="items[${rowCount}][unit_price]" class="form-control price-input" value="0" min="0" disabled oninput="this.value = validateMinZero(this.value)">
             </td>
             <td>
-                <input type="number" name="items[${rowCount}][discount]" class="form-control discount-input" value="0" min="0" max="100" disabled>
+                <input type="number" name="items[${rowCount}][discount]" class="form-control discount-input" value="0" min="0" max="100" disabled oninput="this.value = validateMinZero(this.value)">
             </td>
             <td colspan="2">
                 <input type="number" name="items[${rowCount}][total_price]" class="form-control bg-body-secondary total-input" readonly>
