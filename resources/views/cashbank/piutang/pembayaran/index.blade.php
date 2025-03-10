@@ -165,7 +165,7 @@
                                 if (data.toLowerCase() === 'pending') {
                                     statusClass = 'btn btn-warning btn-sm ';
                                     statusLabel =
-                                        `<a href="/hutang/pembayaran/approve/${row.transaksi_id}" class="${statusClass}" title="Klik untuk Approve">${data}</a>`;
+                                        `<a href="/piutang/pembayaran/approve/${row.transaksi_id}" class="${statusClass}" title="Klik untuk Approve">${data}</a>`;
                                 } else if (data.toLowerCase() === 'approved') {
                                     statusClass = 'badge bg-success fw-bold';
                                 }

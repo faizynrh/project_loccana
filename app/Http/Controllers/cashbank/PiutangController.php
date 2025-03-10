@@ -209,9 +209,37 @@ class PiutangController extends Controller
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
+    public function detail_approve(string $id)
+    {
+        try {
+            $apiResponse = fectApi(env('PIUTANG_URL') . '/pembayaran/detail/' . $id);
+            if ($apiResponse->successful()) {
+                $data = json_decode($apiResponse->body());
+                return view('cashbank.piutang.pembayaran.approve', compact('data'));
+            } else {
+                return back()->withErrors($apiResponse->json()['message']);
+            }
+        } catch (\Exception $e) {
+            return back()->withErrors($e->getMessage());
+        }
+    }
+
+    public function approve(Request $request, $id)
+    {
+        try {
+            $data = [
+                'status' => 'Approved'
+            ];
+            $apiResponse = updateApi(env('PIUTANG_URL') . '/approve/' . $id, $data);
+            if ($apiResponse->successful()) {
+                return redirect()->route('piutang.pembayaran.index')->with('success', $apiResponse->json()['message']);
+            } else {
+                return back()->withErrors($apiResponse->json()['message']);
+            }
+        } catch (\Exception $e) {
+            return back()->withErrors($e->getMessage());
+        }
+    }
     public function destroy(string $id)
     {
         try {

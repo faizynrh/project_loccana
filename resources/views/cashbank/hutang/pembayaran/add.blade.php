@@ -95,47 +95,6 @@
                                     </tr>
                                 </thead>
                                 <tbody id="tableBody">
-                                    <tr style="border-bottom: 2px solid #000;">
-                                        <td>
-                                            <select id="invoiceSelect" class="form-select w-auto item-select"
-                                                name="items[0][invoice]" required>
-                                                <option value="" selected disabled>Pilih Principal Terlebih Dahulu
-                                                </option>
-                                            </select>
-                                        </td>
-                                        <td>
-                                            <input type="number" class="form-control bg-body-secondary"
-                                                name="items[0][nilai]" disabled>
-                                        </td>
-                                        <td>
-                                            <input type="number" class="form-control bg-body-secondary"
-                                                name="items[0][sisa]" disabled>
-                                        </td>
-                                        <td>
-                                            <input type="date" class="form-control bg-body-secondary"
-                                                name="items[0][jatuhtempo]" disabled>
-                                        </td>
-                                        <td>
-                                            <input type="number" class="form-control" name="items[0][amount_paid]"
-                                                id="amountPaid" required>
-                                        </td>
-                                        <td>
-                                            <textarea class="form-control" name="items[0][notes]"></textarea>
-                                        </td>
-                                        <td class="text-end">
-                                            <button type="button" class="btn btn-danger fw-bold remove-row">-</button>
-                                        </td>
-                                    </tr>
-                                    <tr id="add-button-row" style="border-bottom: 2px solid #000;">
-                                        <td colspan="7" class="text-end">
-                                            <button type="button" class="btn btn-primary fw-bold"
-                                                id="add-row">+</button>
-                                        </td>
-                                    </tr>
-                                    {{-- <tr id="total-row" class="fw-bold">
-                                        <td colspan="5" class="text-end">Total</td>
-                                        <td class="text-end" id="amount">Rp. 0,00</td>
-                                    </tr> --}}
                                 </tbody>
                             </table>
                             <div class="row">
@@ -244,7 +203,7 @@
                                 data-nilai="${invoice.nilai}"
                                 data-sisa="${invoice.sisa}"
                                 data-jatuhtempo="${invoice.due_date}">
-                                Invoice #${invoice.id_invoice}
+                                ${invoice.invoice_number}
                             </option>`;
                                 });
                             }
