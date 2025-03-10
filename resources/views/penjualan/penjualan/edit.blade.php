@@ -18,6 +18,9 @@
                         <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item">
+                                    <a href="/dashboard">Dashboard</a>
+                                </li>
+                                <li class="breadcrumb-item">
                                     <a href="/penjualan">Penjualan</a>
                                 </li>
                                 <li class="breadcrumb-item active" aria-current="page">
@@ -194,7 +197,10 @@
                                                 class="form-control bg-body-secondary total-input" readonly
                                                 value="{{ $item->total_price }}">
                                         </td>
-                                        <td></td>
+                                        <td>
+                                            <button type="button" class="btn btn-danger btn-sm remove-row"
+                                                disabled>-</button>
+                                        </td>
                                     </tr>
                                     <tr style="border-bottom: 2px solid #000;">
                                         <td colspan="9"></td>
@@ -269,7 +275,6 @@
 
             $('#custom_payment_term').on('input', function() {
                 let value = $(this).val();
-                // Remove any non-numeric characters
                 value = value.replace(/[^\d]/g, '');
                 if (value) {
                     $(this).val(value);
@@ -285,15 +290,12 @@
 
             $('#custom_payment_term').on('focus', function() {
                 let value = $(this).val();
-                // Remove "Hari" when focusing on the input
                 value = value.replace(' Hari', '');
                 $(this).val(value);
             });
 
-            // Track selected items to prevent duplicates
             const selectedItems = new Set();
 
-            // Initialize the form with existing items
             $('.item-select').each(function() {
                 const itemId = $(this).val();
                 if (itemId && itemId !== '') {
@@ -430,12 +432,11 @@
             function createNewRow(rowCount) {
                 let itemOptions = '<option value="" selected disabled>Pilih Item</option>';
 
-                // Get all available items that haven't been selected yet
                 @foreach ($items->data->items ?? [] as $option)
                     if (!selectedItems.has('{{ $option->id }}')) {
                         itemOptions += `<option value="{{ $option->id }}" data-uom="{{ $option->unit_of_measure_id }}">
-                    {{ $option->sku }} - {{ $option->name }}
-                </option>`;
+                {{ $option->sku }} - {{ $option->name }}
+            </option>`;
                     }
                 @endforeach
 
@@ -469,24 +470,28 @@
             <td colspan="2">
                 <input type="number" name="items[${rowCount}][total_price]" class="form-control bg-body-secondary total-input" readonly value="0">
             </td>
-            <td class="text-center">
-                <button type="button" class="btn btn-danger btn-sm remove-row">X</button>
+            <td>
+                <button type="button" class="btn btn-danger btn-sm remove-row">-</button>
             </td>
         </tr>
     `;
             }
-
             $('#add-row').on('click', function(e) {
                 e.preventDefault();
 
                 // Check if first item is selected
-                const firstItemSelected = $('.item-row').first().find('.item-select').val();
-                if (!firstItemSelected) {
-                    Swal.fire({
-                        title: 'Perhatian',
-                        text: 'Silahkan pilih item pada baris pertama terlebih dahulu',
-                        icon: 'warning'
-                    });
+                let allItemsSelected = true;
+                $('.item-row').each(function() {
+                    if (!$(this).find('.item-select').val()) {
+                        allItemsSelected = false;
+                        return false;
+                    }
+                });
+
+                if (!allItemsSelected) {
+                    Swal.fire('Perhatian',
+                        'Pilih item pada baris yang sudah ada sebelum menambahkan baris baru', 'warning'
+                    );
                     return;
                 }
 
@@ -509,12 +514,6 @@
 
                     row.remove();
                     updateTotals();
-                } else {
-                    Swal.fire({
-                        title: 'Perhatian',
-                        text: 'Minimal harus ada satu item',
-                        icon: 'info'
-                    });
                 }
             });
 

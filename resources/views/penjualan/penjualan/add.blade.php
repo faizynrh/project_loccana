@@ -86,6 +86,9 @@
                         <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item">
+                                    <a href="/dashboard">Dashboard</a>
+                                </li>
+                                <li class="breadcrumb-item">
                                     <a href="/penjualan">Penjualan</a>
                                 </li>
                                 <li class="breadcrumb-item active" aria-current="page">
@@ -437,25 +440,23 @@
                         }
                     });
 
-                    if (isDuplicate) {
-                        const duplicateIndex = duplicateRow.index() + 1;
-                        const currentIndex = row.index() + 1;
+                    function updateItemSelects() {
+                        $('.item-select').each(function() {
+                            const rowItemId = $(this).closest('tr').data('item-id');
+                            const select = $(this);
 
-                        Swal.fire({
-                            title: 'Item Duplikat',
-                            text: `Item "${itemName}" sudah dipilih pada baris ke-${duplicateIndex}. Pilih item yang berbeda.`,
-                            icon: 'warning',
-                            confirmButtonText: 'OK'
+                            if (rowItemId) return;
+
+                            select.find('option').each(function() {
+                                const optionValue = $(this).val();
+                                if (optionValue && selectedItems.some(item => item.id ===
+                                        optionValue)) {
+                                    $(this).hide();
+                                } else {
+                                    $(this).show();
+                                }
+                            });
                         });
-
-                        const previousItemId = row.data('prev-item-id');
-                        if (previousItemId) {
-                            $(this).val(previousItemId);
-                        } else {
-                            $(this).val('');
-                        }
-
-                        return;
                     }
 
                     row.data('prev-item-id', itemId);
@@ -526,23 +527,7 @@
                 });
             }
 
-            function updateItemSelects() {
-                $('.item-select').each(function() {
-                    const rowItemId = $(this).closest('tr').data('item-id');
-                    const select = $(this);
 
-                    if (rowItemId) return;
-
-                    select.find('option').each(function() {
-                        const optionValue = $(this).val();
-                        if (optionValue && selectedItems.some(item => item.id === optionValue)) {
-                            $(this).hide();
-                        } else {
-                            $(this).show();
-                        }
-                    });
-                });
-            }
 
             function createNewRow(rowCount) {
                 const currentItems = $('#tableBody').data('current-items');

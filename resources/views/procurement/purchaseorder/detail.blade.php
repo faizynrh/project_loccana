@@ -18,6 +18,9 @@
                         <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item">
+                                    <a href="/dashboard">Dashboard</a>
+                                </li>
+                                <li class="breadcrumb-item">
                                     <a href="/purchase_order">Purchase Order</a>
                                 </li>
                                 <li class="breadcrumb-item active" aria-current="page">
@@ -92,8 +95,8 @@
                                 <label for="ship" class="form-label fw-bold mt-2 mb-1 small">Ship From :</label>
                                 <textarea class="form-control bg-body-secondary" rows="5" id="ship" name="ship" readonly></textarea>
                                 <label for="ppn" class="form-label fw-bold mt-2 mb-1 small">VAT/PPN</label>
-                                <input type="text" class="form-control" value="{{ $data->data[0]->ppn }}" id="ppn"
-                                    name="ppn" disabled>
+                                <input type="text" class="form-control" value="{{ $data->data[0]->ppn }}"
+                                    id="ppn" name="ppn" disabled>
 
 
 
