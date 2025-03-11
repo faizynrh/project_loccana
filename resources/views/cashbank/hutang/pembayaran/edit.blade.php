@@ -96,8 +96,8 @@
                                     <input type="date" class="form-control" value="{{ $data->data[0]->due_date }}"> --}}
                                     <label class="form-label fw-bold mt-2 mb-1 small">Keterangan</label>
                                     <textarea class="form-control" rows="4">{{ $data->data[0]->keterangan }}</textarea>
-                                    <input type="hidden" class="form-control" id="total_amount" name="total_amount">
-                                    <input type="hidden" class="form-control" id="remaining_amount"
+                                    <input type="text" class="form-control" id="total_amount" name="total_amount">
+                                    <input type="text" class="form-control" id="remaining_amount"
                                         name="remaining_amount">
                                 </div>
                             </div>
@@ -140,16 +140,17 @@
                                                     value="{{ $item->nilai }}" disabled>
                                             </td>
                                             <td>
-                                                <input type="number" class="form-control bg-body-secondary"
+                                                <input type="number" class="form-control bg-body-secondary invoice-sisa"
                                                     name="items[0][sisa]" value="{{ $item->sisa }}" disabled>
                                             </td>
                                             <td>
-                                                <input type="text" class="form-control bg-body-secondary"
+                                                <input type="date" class="form-control bg-body-secondary"
                                                     name="items[0][jatuhtempo]" value="{{ $item->due_date_inv }}" disabled>
                                             </td>
                                             <td>
-                                                <input type="number" class="form-control" name="items[0][amount_paid]"
-                                                    id="amountPaid" required value="{{ $item->amount }}" min="0">
+                                                <input type="number" class="form-control invoice-amount-paid"
+                                                    name="items[0][amount_paid]" id="amountPaid" required
+                                                    value="{{ $item->amount }}" min="0">
                                             </td>
                                             <td>
                                                 <textarea class="form-control" name="items[0][notes]"></textarea>
@@ -200,18 +201,18 @@
                         <option value="" selected disabled>Pilih Invoice</option>
                         ${invoiceData.map(inv =>
                             `<option value="${inv.id_invoice}"
-                                                            data-nilai="${inv.nilai}"
-                                                            data-sisa="${inv.sisa}"
-                                                            data-jatuhtempo="${inv.jatuh_tempo}">
-                                                            ${inv.invoice_number}
-                                                        </option>`).join('')}
+                                                                                                            data-nilai="${inv.nilai}"
+                                                                                                            data-sisa="${inv.sisa}"
+                                                                                                            data-jatuhtempo="${inv.due_date}">
+                                                                                                            ${inv.invoice_number}
+                                                                                                        </option>`).join('')}
                     </select>
                     <input type="hidden" class="form-control" name="items[${index}][id_payment_detail]" value="0">
                 </td>
-                <td><input type="number" class="form-control" name="items[${index}][nilai]" disabled></td>
-                <td><input type="number" class="form-control bg-body-secondary" name="items[${index}][sisa]" disabled></td>
-                <td><input type="text" class="form-control bg-body-secondary" name="items[${index}][jatuhtempo]" disabled></td>
-                <td><input type="number" class="form-control" name="items[${index}][amount_paid]" required></td>
+                <td><input type="number" class="form-control bg-body-secondary" name="items[${index}][nilai]" readonly></td>
+                <td><input type="number" class="form-control bg-body-secondary invoice-sisa" name="items[${index}][sisa]" readonly></td>
+                <td><input type="date" class="form-control bg-body-secondary" name="items[${index}][jatuhtempo]" disabled></td>
+                <td><input type="number" class="form-control invoice-amount-paid" name="items[${index}][amount_paid]" required></td>
                 <td><textarea class="form-control" name="items[${index}][notes]" required></textarea></td>
                 <td class="text-end"><button type="button" class="btn btn-danger fw-bold remove-row">-</button></td>
             </tr>`,
@@ -254,15 +255,15 @@
             $(document).on('click', '#add-row', function(e) {
                 e.preventDefault();
 
-                if (!canAddRow()) {
-                    Swal.fire({
-                        title: 'Peringatan',
-                        text: 'Jumlah baris sudah mencapai maksimum jumlah invoice yang tersedia!',
-                        icon: 'warning',
-                        confirmButtonText: 'Oke'
-                    });
-                    return;
-                }
+                // if (!canAddRow()) {
+                //     Swal.fire({
+                //         title: 'Peringatan',
+                //         text: 'Jumlah baris sudah mencapai maksimum jumlah invoice yang tersedia!',
+                //         icon: 'warning',
+                //         confirmButtonText: 'Oke'
+                //     });
+                //     return;
+                // }
 
                 $('#loading-overlay').fadeIn();
 
@@ -271,7 +272,7 @@
                 state.itemIndex++;
 
                 updateTotalRemaining();
-                updateInvoiceDropdowns();
+                // updateInvoiceDropdowns();
                 $('#loading-overlay').fadeOut();
             });
 
@@ -284,6 +285,9 @@
                 row.find('input[name*="[sisa]"]').val(selectedOption.data('sisa') || 0);
                 row.find('input[name*="[jatuhtempo]"]').val(selectedOption.data('jatuhtempo') || '');
                 row.find('input[name*="[amount_paid]"]').val(selectedOption.data('sisa') || 0);
+
+                updateTotalRemaining();
+                updateTotalAmount();
                 $('#loading-overlay').fadeOut();
             });
 
@@ -292,30 +296,41 @@
                 $(this).closest('tr').remove();
                 updateTotalRemaining();
                 updateTotalAmount();
-                updateInvoiceDropdowns();
+                // updateInvoiceDropdowns();
             });
 
-            $(document).on('input', 'input[name*="[amount_paid]"]', function() {
+            $(document).on('input', '.invoice-amount-paid', function() {
+                const row = $(this).closest('tr');
+                const sisaInput = row.find('input[name*="[sisa]"]');
+                const amountInput = $(this);
+
+                const sisa = parseFloat(sisaInput.val()) || 0;
+                let amount = parseFloat(amountInput.val()) || 0;
+
+                if (amount > sisa) {
+                    amount = sisa;
+                    amountInput.val(sisa);
+                }
+
                 updateTotalAmount();
             });
 
             function updateTotalAmount() {
                 let total = 0;
 
-                $('input[name*="[amount_paid]"]').each(function() {
+                $('.invoice-amount-paid').each(function() {
                     let value = parseFloat($(this).val()) || 0;
                     total += value;
                 });
 
                 $('#total_amount').val(total);
-
                 $('#amount').text(formatRupiah(total));
             }
 
             function updateTotalRemaining() {
                 let total = 0;
 
-                $('input[name*="[sisa]"]').each(function() {
+                $('.invoice-sisa').each(function() {
                     let value = parseFloat($(this).val()) || 0;
                     total += value;
                 });
@@ -323,15 +338,19 @@
                 $('#remaining_amount').val(total);
             }
 
-            $(document).on("input", "#amountPaid", function() {
-                let row = $(this).closest("tr");
-                let amountInput = row.find("#amountPaid");
-                amountInput.val(validateMinOne(amountInput.val()));
+            $('.invoice-select').each(function() {
+                const selectedOption = $(this).find(':selected');
+                const row = $(this).closest('tr');
+
+                if (selectedOption.val()) {
+                    const sisa = selectedOption.data('sisa') || 0;
+                    row.find('input[name*="[sisa]"]').val(sisa);
+                }
             });
 
             updateTotalRemaining();
             updateTotalAmount();
-            updateInvoiceDropdowns();
+            // updateInvoiceDropdowns();
         });
     </script>
 @endpush
