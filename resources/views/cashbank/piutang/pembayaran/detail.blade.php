@@ -86,35 +86,22 @@
                                                 {{ number_format($item->sisa, 2, ',', '.') }}</p>
                                         </td>
                                         <td>
-                                            {{-- <p class="fw-bold">{{ $item->discount }}%</p> --}}
+                                            <p class="fw-bold">Rp.
+                                                {{ number_format($item->amount, 2, ',', '.') }}</p>
                                         </td>
                                     </tr>
                                 @endforeach
                                 <tr class="fw-bold" style="border-top: 2px solid #000">
                                     <td colspan="3" class="text-end">Total</td>
-                                    <td class="text-end" id="totalamount">Rp.
-                                        {{ number_format($data->data[0]->amount, 2, ',', '.') }}
+                                    <td class="text-end" id="totalamount">Rp. 0,00
                                     </td>
                                 </tr>
                             </tbody>
                         </table>
                         <div class="row">
-                            <div class="col-md-12 d-flex justify-content-end align-items-center gap-2 mt-3">
-                                <form id="approve{{ $data->data[0]->invoice_id }}" method="POST"
-                                    action="{{ route('piutang.pembayaran.approve', $data->data[0]->invoice_id) }}">
-                                    @csrf
-                                    @method('PUT')
-                                    <button type="button" class="btn btn-primary"
-                                        onclick="confirmApprove('{{ $data->data[0]->invoice_id }}')">Setujui</button>
-                                </form>
-                                {{-- <form id="reject{{ $data->data[0]->invoice_id }}" method="POST"
-                                    action="{{ route('piutang.pembayaran.reject', $data->data[0]->invoice_id) }}">
-                                    @csrf
-                                    @method('PUT')
-                                    <button type="button" class="btn btn-danger"
-                                        onclick="confirmReject('{{ $data->data[0]->invoice_id }}')">Tolak</button>
-                                </form> --}}
-                                <a href="{{ route('piutang.pembayaran.index') }}" class="btn btn-secondary">Batal</a>
+                            <div class="col-md-12 text-end">
+                                <a href="{{ route('piutang.pembayaran.index') }}"
+                                    class="btn btn-secondary ms-2">Kembali</a>
                             </div>
                         </div>
                     </div>
@@ -124,5 +111,23 @@
     </div>
 @endsection
 @push('scripts')
-    <script></script>
+    <script>
+        $(document).ready(function() {
+            function calculateTotalAmount() {
+                let total = 0;
+
+                $("#tableBody tr:not(:last-child)").each(function() {
+                    let amountText = $(this).find("td:eq(3) p").text().replace('Rp.', '').replace(/\./g, '')
+                        .replace(',', '.');
+                    let amount = parseFloat(amountText) || 0;
+
+                    total += amount;
+                });
+
+                $("#totalamount").text(formatRupiah(total));
+            }
+
+            calculateTotalAmount();
+        });
+    </script>
 @endpush

@@ -97,11 +97,6 @@
             <div></div>
         </div>
     </div>
-    <script>
-        setTimeout(() => {
-            window.location.href = "{{ route('dashboard-dev') }}";
-        }, 1700);
-    </script>
 </body>
 
 </html>

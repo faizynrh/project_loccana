@@ -10,7 +10,7 @@
             <div class="page-title">
                 <div class="row">
                     <div class="col-12 col-md-6 order-md-1 order-last">
-                        <h3>Edit Pembayaran Hutang</h3>
+                        <h3>Edit Pembayaran Piutang</h3>
                     </div>
                     <div class="col-12 col-md-6 order-md-2 order-first">
                         <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
@@ -19,13 +19,10 @@
                                     <a href="/dashboard">Dashboard</a>
                                 </li>
                                 <li class="breadcrumb-item">
-                                    <a href="/hutang">Hutang</a>
-                                </li>
-                                <li class="breadcrumb-item">
-                                    <a href="/hutang/pembayaran">Pembayaran Hutang</a>
+                                    <a href="/piutang/pembayaran">Piutang</a>
                                 </li>
                                 <li class="breadcrumb-item active" aria-current="page">
-                                    Edit
+                                    Edit Pembayaran Piutang
                                 </li>
                             </ol>
                         </nav>
@@ -35,69 +32,71 @@
             <section class="section">
                 <div class="card">
                     <div class="card-body">
-                        <form action="{{ route('hutang.pembayaran.update', $data->data[0]->id_payment) }}" method="POST"
+                        <form action="{{ route('piutang.pembayaran.update', $data->data[0]->id_payment) }}" method="POST"
                             id="createForm">
                             @csrf
                             @method('PUT')
                             <div class="row mb-3">
                                 <div class="col-md-6">
-                                    <label class="form-label fw-bold mt-2 mb-1 small">Kode</label>
-                                    <input type="text" class="form-control bg-body-secondary" name="payment_number"
+                                    <label for="nomorInvoice" class="form-label fw-bold mt-2 mb-1 small">Kode</label>
+                                    <input type="text" class="form-control bg-body-secondary"
                                         value="{{ $data->data[0]->payment_number }}" readonly>
-                                    <label class="form-label fw-bold mt-2 mb-1 small">Tanggal Pembayaran</label>
+                                    <label class="form-label fw-bold mt-2 mb-1 small">Tanggal</label>
                                     <input type="date" class="form-control" name="payment_date"
                                         value="{{ $data->data[0]->payment_date }}">
-                                    <label class="form-label fw-bold mt-2 mb-1 small">Principal</label>
+                                    <label class="form-label fw-bold mt-2 mb-1 small">Customer</label>
                                     <select id="principal" class="form-select" name="principal" disabled>
                                         <option value="" selected disabled>Pilih Principal</option>
-                                        <option value="10" {{ $data->data[0]->partner_id == 10 ? 'selected' : '' }}>10
                                         </option>
-                                        @foreach ($partner->data as $item)
-                                            <option value="{{ $item->id }}"
-                                                {{ $data->data[0]->partner_id == $item->id ? 'selected' : '' }}>
-                                                {{ $item->name }}</option>
+                                        <option value="5" {{ $data->data[0]->partner_id == 5 ? 'selected' : '' }}>5
+                                            @foreach ($partner->data as $item)
+                                        <option value="{{ $item->id }}"
+                                            {{ $data->data[0]->partner_id == $item->id ? 'selected' : '' }}>
+                                            {{ $item->name }}</option>
                                         @endforeach
                                     </select>
                                     <label class="form-label fw-bold mt-2 mb-1 small">Tipe Pembayaran</label>
                                     <select id="payment_type" class="form-select" name="payment_type" required>
                                         <option value="" selected disabled>Pilih Pembayaran</option>
                                         <option value="cash"
-                                            {{ $data->data[0]->payment_type == 'cash' ? 'selected' : '' }}>Cash/Transfer
+                                            {{ $data->data[0]->payment_type == 'cash' ? 'selected' : '' }}>
+                                            Cash/Transfer
                                         </option>
                                         <option value="giro"
-                                            {{ $data->data[0]->payment_type == 'giro' ? 'selected' : '' }}>Giro</option>
+                                            {{ $data->data[0]->payment_type == 'giro' ? 'selected' : '' }}>
+                                            Giro</option>
                                         <option value="bonus"
-                                            {{ $data->data[0]->payment_type == 'bonus' ? 'selected' : '' }}>Bonus
+                                            {{ $data->data[0]->payment_type == 'bonus' ? 'selected' : '' }}>
+                                            Bonus
                                         </option>
                                         <option value="komisi"
-                                            {{ $data->data[0]->payment_type == 'komisi' ? 'selected' : '' }}>Komisi
+                                            {{ $data->data[0]->payment_type == 'komisi' ? 'selected' : '' }}>
+                                            Komisi
                                         </option>
                                         <option value="piutang"
                                             {{ $data->data[0]->payment_type == 'piutang' ? 'selected' : '' }}>Piutang
                                         </option>
                                     </select>
-
                                 </div>
-
                                 <div class="col-md-6">
                                     <label class="form-label fw-bold mt-2 mb-1 small">Cash Account</label>
                                     <select id="cash_account" class="form-select" name="cash_account" required>
                                         <option value="" selected disabled>Pilih Cash Account</option>
-                                        @foreach ($coa->data as $coa)
-                                            <option value="{{ $coa->id }}"
-                                                {{ $data->data[0]->coa_id == $coa->id ? 'selected' : '' }}>
-                                                {{ $coa->account_name }}</option>
+                                        <option value="1" {{ $data->data[0]->coa_id == 1 ? 'selected' : '' }}>1
+                                            @foreach ($coa->data as $coa)
+                                        <option value="{{ $coa->id }}"
+                                            {{ $data->data[0]->coa_id == $coa->id ? 'selected' : '' }}>
+                                            {{ $coa->account_name }}</option>
                                         @endforeach
                                     </select>
-                                    {{-- <label class="form-label fw-bold mt-2 mb-1 small">Tanggal Terbit</label>
-                                    <input type="date" class="form-control"
-                                        value="{{ $data->data[0]->published_date }}">
+                                    <label class="form-label fw-bold mt-2 mb-1 small">Tanggal Terbit</label>
+                                    <input type="date" class="form-control" value="{{ $data->data[0]->publish_date }}">
                                     <label class="form-label fw-bold mt-2 mb-1 small">Jatuh Tempo</label>
-                                    <input type="date" class="form-control" value="{{ $data->data[0]->due_date }}"> --}}
+                                    <input type="date" class="form-control" value="{{ $data->data[0]->due_date }}">
                                     <label class="form-label fw-bold mt-2 mb-1 small">Keterangan</label>
                                     <textarea class="form-control" rows="4">{{ $data->data[0]->keterangan }}</textarea>
-                                    <input type="text" class="form-control" id="total_amount" name="total_amount">
-                                    <input type="text" class="form-control" id="remaining_amount"
+                                    <input type="hidden" class="form-control" id="total_amount" name="total_amount">
+                                    <input type="hidden" class="form-control" id="remaining_amount"
                                         name="remaining_amount">
                                 </div>
                             </div>
@@ -110,17 +109,15 @@
                                         <th>Invoice</th>
                                         <th>Nilai</th>
                                         <th>Sisa</th>
-                                        <th>Jatuh Tempo</th>
                                         <th>Terbayar</th>
-                                        <th>Notes</th>
+                                        <th>Keterangan</th>
                                     </tr>
                                 </thead>
                                 <tbody id="tableBody">
                                     @foreach ($data->data as $item)
                                         <tr style="border-bottom: 2px solid #000;">
                                             <td>
-                                                <select id="invoiceSelect" class="form-select w-auto invoice-select"
-                                                    disabled required>
+                                                <select class="form-select w-auto invoice-select" disabled required>
                                                     <option value="" selected disabled>Pilih Invoice
                                                     </option>
                                                     @foreach ($invoice->data as $datainvoice)
@@ -136,16 +133,12 @@
                                                     value="{{ $item->id_payment_detail }}">
                                             </td>
                                             <td>
-                                                <input type="number" class="form-control" name="items[0][nilai]"
-                                                    value="{{ $item->nilai }}" disabled>
+                                                <input type="number" class="form-control bg-body-secondary"
+                                                    value="{{ $item->nilai }}" readonly>
                                             </td>
                                             <td>
                                                 <input type="number" class="form-control bg-body-secondary invoice-sisa"
-                                                    name="items[0][sisa]" value="{{ $item->sisa }}" disabled>
-                                            </td>
-                                            <td>
-                                                <input type="date" class="form-control bg-body-secondary"
-                                                    name="items[0][jatuhtempo]" value="{{ $item->due_date_inv }}" disabled>
+                                                    name="items[0][sisa]" value="100" readonly>
                                             </td>
                                             <td>
                                                 <input type="number" class="form-control invoice-amount-paid"
@@ -158,13 +151,13 @@
                                         </tr>
                                     @endforeach
                                     <tr id="add-button-row" style="border-bottom: 2px solid #000;">
-                                        <td colspan="7" class="text-end">
+                                        <td colspan="6" class="text-end">
                                             <button type="button" class="btn btn-primary fw-bold"
                                                 id="add-row">+</button>
                                         </td>
                                     </tr>
                                     <tr id="total-row" class="fw-bold">
-                                        <td colspan="5" class="text-end">Total</td>
+                                        <td colspan="4" class="text-end">Total</td>
                                         <td class="text-end" id="amount">Rp. 0,00</td>
                                     </tr>
                                 </tbody>
@@ -172,7 +165,7 @@
                             <div class="row">
                                 <div class="col-md-12 text-end">
                                     <button type="submit" class="btn btn-primary" id="submitButton">Simpan</button>
-                                    <a href="{{ route('hutang.pembayaran.index') }}"
+                                    <a href="{{ route('piutang.pembayaran.index') }}"
                                         class="btn btn-secondary ms-2">Batal</a>
                                 </div>
                             </div>
@@ -194,39 +187,38 @@
 
             const templates = {
                 tableRow: (index) => `
-            <tr style="border-bottom: 2px solid #000;">
-                <td>
-                    <select class="form-select w-auto invoice-select"
-                        name="items[${index}][invoice]" required>
-                        <option value="" selected disabled>Pilih Invoice</option>
-                        ${invoiceData.map(inv =>
-                            `<option value="${inv.id_invoice}"
-                                                                                                            data-nilai="${inv.nilai}"
-                                                                                                            data-sisa="${inv.sisa}"
-                                                                                                            data-jatuhtempo="${inv.due_date}">
-                                                                                                            ${inv.invoice_number}
-                                                                                                        </option>`).join('')}
-                    </select>
-                    <input type="hidden" class="form-control" name="items[${index}][id_payment_detail]" value="0">
-                </td>
-                <td><input type="number" class="form-control bg-body-secondary" name="items[${index}][nilai]" readonly></td>
-                <td><input type="number" class="form-control bg-body-secondary invoice-sisa" name="items[${index}][sisa]" readonly></td>
-                <td><input type="date" class="form-control bg-body-secondary" name="items[${index}][jatuhtempo]" disabled></td>
-                <td><input type="number" class="form-control invoice-amount-paid" name="items[${index}][amount_paid]" required></td>
-                <td><textarea class="form-control" name="items[${index}][notes]" required></textarea></td>
-                <td class="text-end"><button type="button" class="btn btn-danger fw-bold remove-row">-</button></td>
-            </tr>`,
+    <tr style="border-bottom: 2px solid #000;">
+        <td>
+            <select class="form-select w-auto invoice-select"
+                name="items[${index}][invoice]" required>
+                <option value="" selected disabled>Pilih Invoice</option>
+                ${invoiceData.map(inv =>
+                    `<option value="${inv.id_invoice}"
+                        data-nilai="${inv.nilai}"
+                        data-sisa="${inv.sisa}"
+                        data-jatuhtempo="${inv.jatuh_tempo}">
+                        ${inv.invoice_number}
+                    </option>`).join('')}
+            </select>
+            <input type="hidden" class="form-control" name="items[${index}][id_payment_detail]" value="0">
+        </td>
+        <td><input type="number" class="form-control bg-body-secondary invoice-nilai" name="items[${index}][nilai]" readonly></td>
+        <td><input type="number" class="form-control bg-body-secondary invoice-sisa" name="items[${index}][sisa]" readonly></td>
+        <td><input type="number" class="form-control invoice-amount-paid" name="items[${index}][amount_paid]" required min="0"></td>
+        <td><textarea class="form-control" name="items[${index}][notes]"></textarea></td>
+        <td class="text-end"><button type="button" class="btn btn-danger fw-bold remove-row">-</button></td>
+    </tr>`,
 
                 footerRows: `
-            <tr id="add-button-row" style="border-bottom: 2px solid #000;">
-                <td colspan="7" class="text-end">
-                    <button type="button" class="btn btn-primary fw-bold" id="add-row">+</button>
-                </td>
-            </tr>
-            <tr id="total-row" class="fw-bold">
-                <td colspan="5" class="text-end">Total</td>
-                <td class="text-end" id="amount">0</td>
-            </tr>`
+    <tr id="add-button-row" style="border-bottom: 2px solid #000;">
+        <td colspan="6" class="text-end">
+            <button type="button" class="btn btn-primary fw-bold" id="add-row">+</button>
+        </td>
+    </tr>
+    <tr id="total-row" class="fw-bold">
+        <td colspan="4" class="text-end">Total</td>
+        <td class="text-end" id="amount">Rp. 0,00</td>
+    </tr>`
             };
 
             function canAddRow() {
@@ -255,15 +247,15 @@
             $(document).on('click', '#add-row', function(e) {
                 e.preventDefault();
 
-                // if (!canAddRow()) {
-                //     Swal.fire({
-                //         title: 'Peringatan',
-                //         text: 'Jumlah baris sudah mencapai maksimum jumlah invoice yang tersedia!',
-                //         icon: 'warning',
-                //         confirmButtonText: 'Oke'
-                //     });
-                //     return;
-                // }
+                if (!canAddRow()) {
+                    Swal.fire({
+                        title: 'Peringatan',
+                        text: 'Jumlah baris sudah mencapai maksimum jumlah invoice yang tersedia!',
+                        icon: 'warning',
+                        confirmButtonText: 'Oke'
+                    });
+                    return;
+                }
 
                 $('#loading-overlay').fadeIn();
 
@@ -272,7 +264,7 @@
                 state.itemIndex++;
 
                 updateTotalRemaining();
-                // updateInvoiceDropdowns();
+                updateInvoiceDropdowns();
                 $('#loading-overlay').fadeOut();
             });
 
@@ -281,10 +273,12 @@
                 const selectedOption = $(this).find(':selected');
                 const row = $(this).closest('tr');
 
-                row.find('input[name*="[nilai]"]').val(selectedOption.data('nilai') || 0);
-                row.find('input[name*="[sisa]"]').val(selectedOption.data('sisa') || 0);
-                row.find('input[name*="[jatuhtempo]"]').val(selectedOption.data('jatuhtempo') || '');
-                row.find('input[name*="[amount_paid]"]').val(selectedOption.data('sisa') || 0);
+                const nilai = selectedOption.data('nilai') || 0;
+                const sisa = selectedOption.data('sisa') || 0;
+
+                row.find('input[name*="[nilai]"]').val(nilai);
+                row.find('input[name*="[sisa]"]').val(sisa);
+                row.find('input[name*="[amount_paid]"]').val(sisa);
 
                 updateTotalRemaining();
                 updateTotalAmount();
@@ -296,7 +290,7 @@
                 $(this).closest('tr').remove();
                 updateTotalRemaining();
                 updateTotalAmount();
-                // updateInvoiceDropdowns();
+                updateInvoiceDropdowns();
             });
 
             $(document).on('input', '.invoice-amount-paid', function() {
@@ -350,7 +344,7 @@
 
             updateTotalRemaining();
             updateTotalAmount();
-            // updateInvoiceDropdowns();
+            updateInvoiceDropdowns();
         });
     </script>
 @endpush
