@@ -216,7 +216,7 @@
         <div class="left-info">
             <strong>Pembeli</strong>
             <div>{{ $data['data'][0]['partner_name'] }}</div>
-            <div>JL. Stasiun Rt. 06 Rw. 01 Cigedog Kec. Kersana Brebes</div>
+            {{-- <div>JL. Stasiun Rt. 06 Rw. 01 Cigedog Kec. Kersana Brebes</div> --}}
         </div>
         <div class="right-info-table mt-do">
             <table>

@@ -137,7 +137,7 @@
                     </ul>
                 </li>
                 <li
-                    class="sidebar-item has-sub {{ Request::is('hutang*') || Request::is('piutang*') ? 'active' : '' }}">
+                    class="sidebar-item has-sub {{ (Request::is('hutang*') || Request::is('piutang*') ? 'active' : '' || Request::is('pemasukan*')) ? 'active' : '' }}">
                     <a href="#" class="sidebar-link">
                         <i class="bi bi-cash-stack"></i>
                         <span>Cash Bank</span>
@@ -149,8 +149,8 @@
                         <li class="submenu-item {{ Request::is('piutang*') ? 'active' : '' }}">
                             <a href="/piutang" class="submenu-link">Piutang</a>
                         </li>
-                        <li class="submenu-item">
-                            <a href="#" class="submenu-link">Pemasukan</a>
+                        <li class="submenu-item {{ Request::is('pemasukan*') ? 'active' : '' }}">
+                            <a href="/pemasukan" class="submenu-link">Pemasukan</a>
                         </li>
                         <li class="submenu-item">
                             <a href="#" class="submenu-link">Pengeluaran</a>

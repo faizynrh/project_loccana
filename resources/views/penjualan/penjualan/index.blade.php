@@ -170,7 +170,7 @@
                         render: function(data, type, row) {
                             let statusClass = '';
                             let statusLabel = data;
-                            if (data.toLowerCase() === 'approve') {
+                            if (data.toLowerCase() === 'konfirmasi') {
                                 statusClass = 'badge bg-warning';
                                 statusLabel = `<a href="/penjualan/approve/${row.id_penjualan}" class="text-dark text-decoration-none" title="Klik untuk Approve">
                                                 <span class="${statusClass}">${data}</span>
@@ -188,7 +188,7 @@
                         data: null,
                         render: function(data, type, row) {
                             let actionButtons = ``;
-                            actionButtons += row.status.toLowerCase() === 'approve' ? `
+                            actionButtons += row.status.toLowerCase() === 'konfirmasi' ? `
                                 <div class="btn-group dropdown me-1 mb-1">
                                     <button type="button" class="btn btn-outline-danger rounded-3 dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-reference="parent">
                                         <span class="sr-only"><i class="bi bi-list-task"></i></span>
