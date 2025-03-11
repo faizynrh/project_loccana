@@ -461,8 +461,9 @@ class PenjualanController extends Controller
                         if (isset($item['quantity']) && isset($item['unit_price'])) {
                             $box_qty = $item['box_quantity'] ?? 0;
                             $qty = $item['quantity'] ?? 0;
+                            $per_box_quantity = $item['per_box_quantity'] ?? 0;
 
-                            $total_qty = $box_qty + $qty;
+                            $total_qty = $box_qty * $per_box_quantity + $qty;
 
                             $subtotal_item = $total_qty * $item['unit_price'];
                             $discount_percentage = $item['discount'] ?? 0;
@@ -482,12 +483,14 @@ class PenjualanController extends Controller
                         }
 
                         // Calculate column totals
+                        $totals['total_qty'] = ($totals['total_qty'] ?? 0) + $total_qty;
                         $totals['box_quantity'] += $item['box_quantity'] ?? 0;
                         $totals['qty_in_pcs'] += $item['qty_in_pcs'] ?? 0;
                         $totals['per_box_quantity'] += $item['per_box_quantity'] ?? 0;
                         $totals['quantity'] += $item['quantity'] ?? 0;
                         $totals['liter_kg'] += isset($item['liter_kg']) ? (float) str_replace(',', '.', $item['liter_kg']) : 0;
                         $totals['pack_quantity'] += $item['pack_quantity'] ?? 0;
+
                     }
                 }
 
@@ -498,6 +501,7 @@ class PenjualanController extends Controller
 
                 $viewData = [
                     'data' => $responseData,
+                    'total_qty' => $total_qty,
                     'sub_total' => $subtotal,
                     'discount' => $total_discount,
                     'dpp' => $dpp,
@@ -505,6 +509,7 @@ class PenjualanController extends Controller
                     'total' => $total_final,
                     'totals' => $totals
                 ];
+
 
                 $pdf = Pdf::loadView('penjualan.penjualan.print', $viewData);
                 return $pdf->stream('invoice.pdf');

@@ -172,7 +172,7 @@
                             let statusLabel = data;
                             if (data.toLowerCase() === 'approve') {
                                 statusClass = 'badge bg-warning';
-                                statusLabel = `<a href="/penjualan/approve/${row.id}" class="text-dark text-decoration-none" title="Klik untuk Approve">
+                                statusLabel = `<a href="/penjualan/approve/${row.id_penjualan}" class="text-dark text-decoration-none" title="Klik untuk Approve">
                                                 <span class="${statusClass}">${data}</span>
                                            </a>`;
                             } else if (data.toLowerCase() === 'reject') {
@@ -232,15 +232,15 @@
                                             Print PDF
                                         </a>
                                         <div class="dropdown-divider"></div>
-                                        <a href="/penjualan/edit/${row.id_penjualan}" class="dropdown-item" title="Edit">
-                                            <i class="bi bi-pencil text-info"></i>
+                                        <a href="/penjualan/edit/${row.id_penjualan}" class="dropdown-item disabled" title="Edit">
+                                            <i class="bi bi-pencil"></i>
                                             Edit
                                         </a>
-                                        <form action="/penjualan/delete/${row.id_penjualan}" method="POST" id="delete${row.id_penjualan}" style="display:inline;">
+                                        <form action="/penjualan/delete/${row.id_penjualan}" method="POST" id="delete${row.id_penjualan}" style="display:inline;" disabled>
                                             @csrf
                                             @method('DELETE')
-                                            <button type="button" class="dropdown-item" title="Hapus" onclick="confirmDelete(${row.id_penjualan})">
-                                                <i class="bi bi-trash text-danger"></i>
+                                            <button type="button" class="dropdown-item disabled" title="Hapus"  onclick="confirmDelete(${row.id_penjualan})">
+                                                <i class="bi bi-trash"></i>
                                                 Delete
                                             </button>
                                         </form>
