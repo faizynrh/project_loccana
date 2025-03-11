@@ -5,7 +5,7 @@ namespace App\Http\Controllers\cashbank;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-class PemasukanController extends Controller
+class JurnalPemasukanController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -31,7 +31,7 @@ class PemasukanController extends Controller
             $requestbody['search'] = $search;
         }
 
-        $apiResponse = storeApi(env('PEMASUKAN_URL') . '/list', $requestbody);
+        $apiResponse = storeApi(env('JURNAL_MASUK_URL') . '/list', $requestbody);
 
         if ($request->ajax()) {
             try {
@@ -54,7 +54,7 @@ class PemasukanController extends Controller
 
     public function index()
     {
-        return view('cashbank.pemasukan.index');
+        return view('cashbank.jurnalpemasukan.index');
     }
 
     /**
@@ -102,6 +102,18 @@ class PemasukanController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        try {
+            $apiResponse = deleteApi(env('JURNAL_MASUK_URL') . '/' . $id);
+            if ($apiResponse->successful()) {
+                return redirect()->route('pemasukan.index')
+                    ->with('success', $apiResponse->json()['message']);
+            } else {
+                return back()->withErrors(
+                    $apiResponse->json()['message']
+                );
+            }
+        } catch (\Exception $e) {
+            return back()->withErrors($e->getMessage());
+        }
     }
 }

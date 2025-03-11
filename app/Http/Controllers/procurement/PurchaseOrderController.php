@@ -375,11 +375,7 @@ class PurchaseOrderController extends Controller
     }
     public function destroy(string $id)
     {
-        //
         try {
-
-            // $apiurl = getApiUrl() . '/loccana/po/1.0.0/purchase-order/' . $id;
-            // dd($id);
             $apiResponse = deleteApi(env('PO_URL') . '/' . $id);
             if ($apiResponse->successful()) {
                 return redirect()->route('purchaseorder.index')
