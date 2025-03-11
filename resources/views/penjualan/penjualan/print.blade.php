@@ -113,15 +113,14 @@
     <!-- FAKTUR PAGE -->
     <div class="header">
         <div class="company-name">PT. ENDIRA ALDA</div>
-        <div>JL. Sangkuriang No.38-A</div>
-        <div>01.555.161.7.428.000</div>
+        {{-- <div>JL. Sangkuriang No.38-A</div>
+        <div>01.555.161.7.428.000</div> --}}
     </div>
 
     <div class="info-container clearfix">
         <div class="left-info">
             <strong>Pembeli</strong>
             <div>{{ $data['data'][0]['partner_name'] }}</div>
-            <div>JL. Stasiun Rt. 06 Rw. 01 Cigedog Kec. Kersana Brebes</div>
         </div>
         <div class="right-info-table mt-faktur">
             <table>
@@ -137,11 +136,6 @@
                     <td>Tanggal</td>
                     <td>:</td>
                     <td>{{ $data['data'][0]['order_date'] ?? '' }}</td>
-                </tr>
-                <tr>
-                    <td>Alamat pengiriman</td>
-                    <td>:</td>
-                    <td>JL. Stasiun Rt. 06 Rw. 01 Cigedog Kec. Kersana Brebes</td>
                 </tr>
                 <tr>
                     <td>Phone</td>
@@ -175,7 +169,7 @@
                     <td>{{ $item['box_quantity'] }}</td>
                     <td>{{ $item['quantity'] }}</td>
                     <td>{{ $item['per_box_quantity'] }}</td>
-                    <td></td>
+                    <td>{{ $total_qty }}</td>
                     <td>{{ $item['unit_price'] }}</td>
                     <td>{{ $item['total_price'] }}</td>
                 </tr>
@@ -214,8 +208,8 @@
     <!-- DO PAGE -->
     <div class="header">
         <div class="company-name">PT. ENDIRA ALDA</div>
-        <div>JL. Sangkuriang No.38-A</div>
-        <div>01.555.161.7.428.000</div>
+        {{-- <div>JL. Sangkuriang No.38-A</div>
+        <div>01.555.161.7.428.000</div> --}}
     </div>
 
     <div class="info-container clearfix">
@@ -240,11 +234,6 @@
                     <td>{{ $data['data'][0]['order_date'] }}</td>
                 </tr>
                 <tr>
-                    <td>Alamat pengiriman</td>
-                    <td>:</td>
-                    <td>JL. Stasiun Rt. 06 Rw. 01 Cigedog Kec. Kersana Brebes</td>
-                </tr>
-                <tr>
                     <td>Phone</td>
                     <td>:</td>
                     <td>{{ $data['data'][0]['contact_info'] ?? '' }}</td>
@@ -263,7 +252,6 @@
                 <th>Qty Pcs</th>
                 <th>Isi per Box</th>
                 <th>Total Pcs</th>
-                <th>Liter/Kg</th>
             </tr>
         </thead>
         <tbody>
@@ -275,8 +263,7 @@
                     <td>{{ $item['box_quantity'] }}</td>
                     <td>{{ $item['quantity'] }}</td>
                     <td>{{ $item['per_box_quantity'] }}</td>
-                    <td></td>
-                    <td>{{ $item['liter_kg'] ?? '0,00' }}</td>
+                    <td>{{ $total_qty }}</td>
                 </tr>
             @endforeach
             <tr style="border-top: 1px solid #000">
@@ -284,8 +271,7 @@
                 <td>{{ $totals['box_quantity'] }}</td>
                 <td>{{ $totals['quantity'] }}</td>
                 <td>{{ $totals['per_box_quantity'] }}</td>
-                <td></td>
-                <td>{{ $totals['liter_kg'] }}</td>
+                <td>{{ $totals['total_qty'] }}</td>
             </tr>
         </tbody>
     </table>
@@ -329,13 +315,11 @@
             <tr>
                 <th>No.</th>
                 <th>Customer</th>
-                <th>Kota</th>
                 <th>Produk</th>
                 <th>Pack</th>
                 <th>Box</th>
                 <th>Pcs</th>
                 <th>Total Pcs</th>
-                <th>Liter/Kg</th>
             </tr>
         </thead>
         <tbody>
@@ -343,22 +327,19 @@
                 <tr>
                     <td>{{ $loop->iteration }}</td>
                     <td>{{ $item['partner_name'] }}</td>
-                    <td>Brebes</td>
                     <td>{{ $item['item_name'] }}</td>
                     <td>{{ $item['pack_quantity'] ?? '0,00' }}</td>
                     <td>{{ $item['box_quantity'] }}</td>
                     <td>{{ $item['quantity'] }}</td>
-                    <td></td>
-                    <td>{{ $item['liter_kg'] ?? '0,00' }}</td>
+                    <td>{{ $total_qty }}</td>
                 </tr>
             @endforeach
             <tr style="border-top: 1px solid #000">
-                <td colspan="4">Jumlah</td>
+                <td colspan="3">Jumlah</td>
                 <td>{{ $totals['pack_quantity'] }}</td>
                 <td>{{ $totals['box_quantity'] }}</td>
-                <td></td>
                 <td>{{ $totals['quantity'] }}</td>
-                <td>{{ $totals['liter_kg'] }}</td>
+                <td>{{ $totals['total_qty'] }}</td>
             </tr>
         </tbody>
     </table>

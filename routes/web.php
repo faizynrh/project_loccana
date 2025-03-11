@@ -64,7 +64,7 @@ Route::middleware('auth.login')->group(
         Route::view('/profile', 'profile')->name('profile');
 
         // ==========================================MASTERDATA========================================
-
+    
 
         // ITEM
         Route::prefix('/item')->name('item.')->controller(ItemController::class)->group(function () {
@@ -97,15 +97,15 @@ Route::middleware('auth.login')->group(
         // UOM
         Route::prefix('/uom')->name('uom.')->controller(UomController::class)->group(
             function () {
-                Route::get('/', 'index')->name('index');
-                Route::get('/ajax', 'ajaxuom')->name('ajax');
-                Route::get('/add', 'create')->name('create');
-                Route::post('/add', 'store')->name('store');
-                Route::delete('/delete/{id}', 'destroy')->name('destroy');
-                Route::get('/edit/{id}', 'edit')->name('edit');
-                Route::put('/update/{id}', 'update')->name('update');
-                Route::get('/detail/{id}', 'show')->name('show');
-            }
+            Route::get('/', 'index')->name('index');
+            Route::get('/ajax', 'ajaxuom')->name('ajax');
+            Route::get('/add', 'create')->name('create');
+            Route::post('/add', 'store')->name('store');
+            Route::delete('/delete/{id}', 'destroy')->name('destroy');
+            Route::get('/edit/{id}', 'edit')->name('edit');
+            Route::put('/update/{id}', 'update')->name('update');
+            Route::get('/detail/{id}', 'show')->name('show');
+        }
         );
 
         // COA
@@ -238,7 +238,7 @@ Route::middleware('auth.login')->group(
 
 
         // ===================================== INVENTORY =========================================
-
+    
         Route::prefix('/stock')->name('stock.')->controller(StockController::class)->group(function () {
             Route::get('/', 'index')->name('index');
             Route::get('/ajax', 'ajax')->name('ajax');
@@ -284,7 +284,7 @@ Route::middleware('auth.login')->group(
 
 
         // ===================================== PENJUALAN =========================================
-
+    
         Route::prefix('/penjualan')->name('penjualan.')->controller(PenjualanController::class)->group(function () {
             Route::get('/', 'index')->name('index');
             Route::get('/generate-po-code', 'generateCode');
@@ -353,26 +353,26 @@ Route::middleware('auth.login')->group(
         // ===================================== CASHBANK =========================================
         Route::prefix('/hutang')->name('hutang.')->controller(HutangController::class)->group(
             function () {
-                Route::get('/', 'index')->name('index');
-                Route::get('/ajax', 'ajax')->name('ajax');
-                Route::get('/detail/{id}', 'showhutang')->name('detail');
-                Route::get('/getinvoice/{id}', 'getinvoice')->name('getinvoice');
+            Route::get('/', 'index')->name('index');
+            Route::get('/ajax', 'ajax')->name('ajax');
+            Route::get('/detail/{id}', 'showhutang')->name('detail');
+            Route::get('/getinvoice/{id}', 'getinvoice')->name('getinvoice');
 
-                Route::prefix('/pembayaran')->name('pembayaran.')->group(function () {
-                    Route::get('/', 'pembayaran')->name('index');
-                    Route::get('/ajax', 'ajaxpembayaran')->name('ajax');
-                    Route::get('/add', 'create')->name('create');
-                    Route::post('/store', 'store')->name('store');
-                    Route::get('/edit/{id}', 'edit')->name('edit');
-                    Route::put('/update/{id}', 'update')->name('update');
-                    Route::get('/approve/{id}', 'detail_approve')->name('detail_approve');
-                    Route::put('/approve/{id}', 'approve')->name('approve');
-                    Route::put('/reject/{id}', 'reject')->name('reject');
-                    Route::get('/detail/{id}', 'showpembayaran')->name('detail');
-                    Route::delete('/delete/{id}', 'destroy')->name('destroy');
-                    Route::get('/print/{id}', 'print')->name('print');
-                });
-            }
+            Route::prefix('/pembayaran')->name('pembayaran.')->group(function () {
+                Route::get('/', 'pembayaran')->name('index');
+                Route::get('/ajax', 'ajaxpembayaran')->name('ajax');
+                Route::get('/add', 'create')->name('create');
+                Route::post('/store', 'store')->name('store');
+                Route::get('/edit/{id}', 'edit')->name('edit');
+                Route::put('/update/{id}', 'update')->name('update');
+                Route::get('/approve/{id}', 'detail_approve')->name('detail_approve');
+                Route::put('/approve/{id}', 'approve')->name('approve');
+                Route::put('/reject/{id}', 'reject')->name('reject');
+                Route::get('/detail/{id}', 'showpembayaran')->name('detail');
+                Route::delete('/delete/{id}', 'destroy')->name('destroy');
+                Route::get('/print/{id}', 'print')->name('print');
+            });
+        }
         );
 
         Route::prefix('/piutang')->name('piutang.')->controller(PiutangController::class)->group(

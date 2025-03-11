@@ -190,7 +190,7 @@
                                         </form>
                                     </td>
                                     <td>
-                                        <a href="/purchase_order" class="btn btn-secondary ms-2">Kembali</a>
+                                        <a href="/penjualan" class="btn btn-secondary ms-2">Kembali</a>
                                     </td>
                                 </tr>
                             </table>
@@ -208,6 +208,30 @@
                 let totalDiscount = 0;
                 let totalPPN = 0;
                 let totalFinal = 0;
+
+                var poId = '{{ $data->data[0]->partner_id }}';
+                var warehouseId = $('#gudang').val();
+
+                if (poId) {
+                    $.ajax({
+                        url: '/purchase_order/getDetailPrinciple/' + poId,
+                        type: 'GET',
+                        dataType: 'json',
+                        success: function(response) {
+                            if (response.contact_info) {
+                                $('#contact').val(response
+                                    .contact_info);
+                            } else {
+                                $('#contact').val('Data tidak tersedia');
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            Swal.fire('Error', 'Gagal mengambil data customer',
+                                'error');
+                            $('#contact').val('Gagal mengambil data');
+                        }
+                    });
+                }
 
                 $('.item-row').each(function() {
                     calculateRowTotal($(this));
