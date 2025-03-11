@@ -379,6 +379,7 @@ Route::middleware('auth.login')->group(
             function () {
                 Route::get('/', 'index')->name('index');
                 Route::get('/ajax', 'ajax')->name('ajax');
+                Route::get('/detail/{id}', 'showpiutang')->name('detail');
 
                 Route::prefix('/pembayaran')->name('pembayaran.')->group(
                     function () {
@@ -389,8 +390,11 @@ Route::middleware('auth.login')->group(
                         Route::get('/detail/{id}', 'showpembayaran')->name('detail');
                         Route::get('/getinvoice/{id}', 'getinvoice')->name('getinvoice');
                         Route::get('/approve/{id}', 'detail_approve')->name('detail_approve');
+                        Route::get('/edit/{id}', 'edit')->name('edit');
+                        Route::put('/update/{id}', 'update')->name('update');
                         Route::put('/approve/{id}', 'approve')->name('approve');
                         Route::delete('/delete/{id}', 'destroy')->name('destroy');
+                        Route::get('/print/{id}', 'print')->name('print');
 
                         Route::prefix('/giro')->name('giro.')->group(
                             function () {

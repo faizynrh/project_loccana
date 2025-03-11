@@ -73,13 +73,12 @@
                                     <button type="submit" class="btn btn-primary">Cari</button>
                                 </form>
                             </div>
-                            <div>
-                                <a href="{{ route('piutang.pembayaran.giro.index') }}"
-                                    class="btn btn-primary me-2 fw-bold text-end">
-                                    <i class="bi bi-bank"></i> Daftar Giro
-                                </a>
-                                <a href="{{ route('piutang.index') }}" class="btn btn-secondary me-2 fw-bold text-end">
+                            <div class="d-flex flex-column align-items-end">
+                                <a href="{{ route('piutang.index') }}" class="btn btn-secondary fw-bold mb-2">
                                     <i class="bi bi-arrow-left-circle"></i> Kembali
+                                </a>
+                                <a href="{{ route('piutang.pembayaran.giro.index') }}" class="btn btn-primary fw-bold">
+                                    <i class="bi bi-bank"></i> Daftar Giro
                                 </a>
                             </div>
                         </div>
@@ -185,13 +184,13 @@
             </a>`;
 
                                 let printButton = `
-            <a href="/hutang/pembayaran/print/${row.transaksi_id}" class="dropdown-item d-flex align-items-center py-2" target="_blank" title="Print PDF">
+            <a href="/piutang/pembayaran/print/${row.transaksi_id}" class="dropdown-item d-flex align-items-center py-2" target="_blank" title="Print PDF">
                 <i class="bi bi-printer-fill text-warning me-2"></i>
                 <span>Cetak PDF</span>
             </a>`;
 
                                 let editButton = `
-            <a href="/hutang/pembayaran/edit/${row.transaksi_id}" class="dropdown-item d-flex align-items-center py-2 ${isApproved ? 'disabled text-muted' : ''}" title="Edit">
+            <a href="/piutang/pembayaran/edit/${row.transaksi_id}" class="dropdown-item d-flex align-items-center py-2 ${isApproved ? 'disabled text-muted' : ''}" title="Edit">
                 <i class="bi bi-pencil-fill ${isApproved ? 'text-muted' : 'text-info'} me-2"></i>
                 <span>Edit Data</span>
             </a>`;
