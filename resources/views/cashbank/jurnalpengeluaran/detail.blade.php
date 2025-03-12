@@ -84,7 +84,8 @@
                                 @endforeach
                                 <tr id="total-row" class="fw-bold">
                                     <td colspan="2" class="text-end">Total</td>
-                                    <td class="text-end" id="amount">Rp. 0,00</td>
+                                    <td class="text-end" id="amount">
+                                        {{ number_format($data->data[0]->credit, 2, ',', '.') }}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -102,20 +103,5 @@
 @endsection
 
 @push('scripts')
-    <script>
-        $(document).ready(function() {
-            function updateTotalAmount() {
-                let total = 0;
-
-                $('.jumlah').each(function() {
-                    let value = parseFloat($(this).val()) || 0;
-                    total += value;
-                });
-
-                $('#amount').text(formatRupiah(total));
-            }
-
-            updateTotalAmount();
-        });
-    </script>
+    <script></script>
 @endpush
