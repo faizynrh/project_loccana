@@ -36,30 +36,24 @@
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label class="form-label fw-bold">Cash Account Kredit</label>
-                                    <div class="col-md-9">
-                                        <input type="text" class="form-control" name="transaction_date"
-                                            value="{{ $data->data[0]->coa_credit }}" readonly>
-                                    </div>
-                                </div>
-
-                                <div class="mb-3">
-                                    <label class="form-label fw-bold">Tanggal</label>
                                     <input type="text" class="form-control" name="transaction_date"
                                         value="{{ $data->data[0]->coa_credit }}" readonly>
                                 </div>
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Tanggal</label>
+                                    <input type="date" class="form-control" name="transaction_date"
+                                        value="{{ $data->data[0]->transaction_date }}" readonly>
+                                </div>
                             </div>
-
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label class="form-label fw-bold">Jumlah</label>
                                     <input type="text" class="form-control" placeholder="Jumlah" name="credit"
                                         id="total_amount" value="{{ $data->data[0]->credit }}" readonly>
                                 </div>
-
                                 <div class="mb-3">
                                     <label class="form-label fw-bold">Keterangan</label>
                                     <textarea class="form-control" name="description" placeholder="Keterangan" rows="5" readonly>{{ $data->data[0]->description_credit }}</textarea>
-
                                 </div>
                             </div>
                         </div>
@@ -90,7 +84,8 @@
                                 @endforeach
                                 <tr id="total-row" class="fw-bold">
                                     <td colspan="2" class="text-end">Total</td>
-                                    <td class="text-end" id="amount">Rp. 0,00</td>
+                                    <td class="text-end" id="amount">
+                                        {{ number_format($data->data[0]->credit, 2, ',', '.') }}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -108,20 +103,5 @@
 @endsection
 
 @push('scripts')
-    <script>
-        $(document).ready(function() {
-            function updateTotalAmount() {
-                let total = 0;
-
-                $('.jumlah').each(function() {
-                    let value = parseFloat($(this).val()) || 0;
-                    total += value;
-                });
-
-                $('#amount').text(formatRupiah(total));
-            }
-
-            updateTotalAmount();
-        });
-    </script>
+    <script></script>
 @endpush

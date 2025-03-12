@@ -67,7 +67,7 @@ Route::middleware('auth.login')->group(
         Route::view('/profile', 'profile')->name('profile');
 
         // ==========================================MASTERDATA========================================
-    
+
 
         // ITEM
         Route::prefix('/item')->name('item.')->controller(ItemController::class)->group(function () {
@@ -241,7 +241,7 @@ Route::middleware('auth.login')->group(
 
 
         // ===================================== INVENTORY =========================================
-    
+
         Route::prefix('/stock')->name('stock.')->controller(StockController::class)->group(function () {
             Route::get('/', 'index')->name('index');
             Route::get('/ajax', 'ajax')->name('ajax');
@@ -287,7 +287,7 @@ Route::middleware('auth.login')->group(
 
 
         // ===================================== PENJUALAN =========================================
-    
+
         Route::prefix('/penjualan')->name('penjualan.')->controller(PenjualanController::class)->group(function () {
             Route::get('/', 'index')->name('index');
             Route::get('/generate-po-code', 'generateCode');
@@ -436,6 +436,7 @@ Route::middleware('auth.login')->group(
             Route::get('/edit/{id}', 'edit')->name('edit');
             Route::put('/update/{id}', 'update')->name('update');
             Route::delete('/delete/{id}', 'destroy')->name('destroy');
+            Route::get('/print/{id}', 'print')->name('print');
         });
     }
 
