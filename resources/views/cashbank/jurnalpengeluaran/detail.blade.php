@@ -36,30 +36,24 @@
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label class="form-label fw-bold">Cash Account Kredit</label>
-                                    <div class="col-md-9">
-                                        <input type="text" class="form-control" name="transaction_date"
-                                            value="{{ $data->data[0]->coa_credit }}" readonly>
-                                    </div>
-                                </div>
-
-                                <div class="mb-3">
-                                    <label class="form-label fw-bold">Tanggal</label>
                                     <input type="text" class="form-control" name="transaction_date"
                                         value="{{ $data->data[0]->coa_credit }}" readonly>
                                 </div>
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Tanggal</label>
+                                    <input type="date" class="form-control" name="transaction_date"
+                                        value="{{ $data->data[0]->transaction_date }}" readonly>
+                                </div>
                             </div>
-
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label class="form-label fw-bold">Jumlah</label>
                                     <input type="text" class="form-control" placeholder="Jumlah" name="credit"
                                         id="total_amount" value="{{ $data->data[0]->credit }}" readonly>
                                 </div>
-
                                 <div class="mb-3">
                                     <label class="form-label fw-bold">Keterangan</label>
                                     <textarea class="form-control" name="description" placeholder="Keterangan" rows="5" readonly>{{ $data->data[0]->description_credit }}</textarea>
-
                                 </div>
                             </div>
                         </div>
