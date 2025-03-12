@@ -21,7 +21,7 @@
                                     <a href="/dashboard">Dashboard</a>
                                 </li>
                                 <li class="breadcrumb-item">
-                                    <a href="/purchase_order">Jurnal Masuk</a>
+                                    <a href="/jurnalpemasukan">Jurnal Masuk</a>
                                 </li>
                                 <li class="breadcrumb-item active" aria-current="page">
                                     Tambah Jurnal Masuk
@@ -135,7 +135,7 @@
                                 <tr style="border-top: 2px solid #000">
                                     <td colspan="2"></td>
                                     <td>Total</td>
-                                    <td style=" ">0</td>
+                                    <td style="">0</td>
                                 </tr>
                             </table>
                             <div class="row">

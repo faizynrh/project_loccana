@@ -31,7 +31,7 @@ class JurnalPemasukanController extends Controller
             $requestbody['search'] = $search;
         }
 
-        $apiResponse = storeApi(env('JURNAL_MASUK_URL') . '/list', $requestbody);
+        $apiResponse = storeApi(env('JURNAL_PEMASUKAN_URL') . '/list', $requestbody);
 
         if ($request->ajax()) {
             try {
@@ -111,7 +111,7 @@ class JurnalPemasukanController extends Controller
     public function destroy(string $id)
     {
         try {
-            $apiResponse = deleteApi(env('JURNAL_MASUK_URL') . '/' . $id);
+            $apiResponse = deleteApi(env('JURNAL_PEMASUKAN_URL') . '/' . $id);
             if ($apiResponse->successful()) {
                 return redirect()->route('pemasukan.index')
                     ->with('success', $apiResponse->json()['message']);
