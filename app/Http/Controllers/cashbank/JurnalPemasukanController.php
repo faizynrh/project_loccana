@@ -62,7 +62,15 @@ class JurnalPemasukanController extends Controller
      */
     public function create()
     {
-        //
+        $companyid = 2;
+        $requestbody = [
+            'company_id' => $companyid
+        ];
+        $coaResponse = fectApi(env('LIST_COA') . '/' . $companyid);
+        if ($coaResponse->successful()) {
+            $coa = $coaResponse->json()['data'];
+            return view('cashbank.jurnalpemasukan.add', compact('coa'));
+        }
     }
 
     /**

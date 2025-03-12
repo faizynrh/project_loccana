@@ -34,7 +34,7 @@
                         @include('alert.alert')
                         <div class="row">
                             <div class="d-flex align-items-center mb-2">
-                                <a href="/purchase_order/add" class="btn btn-primary me-2 fw-bold">+ Tambah Pemasukan</a>
+                                <a href="/jurnalpemasukan/add" class="btn btn-primary me-2 fw-bold">+ Tambah Pemasukan</a>
                                 <form action="{{ route('purchaseorder.printexcel') }}" method="GET" id="filterForm">
                                     <div class="d-flex align-items-center">
                                         <select id="yearSelect" class="form-select me-2" name="year"

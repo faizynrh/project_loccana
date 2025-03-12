@@ -66,7 +66,7 @@ Route::middleware('auth.login')->group(
         Route::view('/profile', 'profile')->name('profile');
 
         // ==========================================MASTERDATA========================================
-
+    
 
         // ITEM
         Route::prefix('/item')->name('item.')->controller(ItemController::class)->group(function () {
@@ -240,7 +240,7 @@ Route::middleware('auth.login')->group(
 
 
         // ===================================== INVENTORY =========================================
-
+    
         Route::prefix('/stock')->name('stock.')->controller(StockController::class)->group(function () {
             Route::get('/', 'index')->name('index');
             Route::get('/ajax', 'ajax')->name('ajax');
@@ -286,7 +286,7 @@ Route::middleware('auth.login')->group(
 
 
         // ===================================== PENJUALAN =========================================
-
+    
         Route::prefix('/penjualan')->name('penjualan.')->controller(PenjualanController::class)->group(function () {
             Route::get('/', 'index')->name('index');
             Route::get('/generate-po-code', 'generateCode');
@@ -411,9 +411,8 @@ Route::middleware('auth.login')->group(
         Route::prefix('/jurnalpemasukan')->name('jurnalpemasukan.')->controller(JurnalPemasukanController::class)->group(function () {
             Route::get('/', 'index')->name('index');
             Route::get('/ajax', 'ajaxpemasukan')->name('ajax');
-            // Route::get('/generate-po-code', 'generateCode');
-            // Route::get('/add', 'create')->name('create');
-            // Route::post('/add', 'store')->name('store');
+            Route::get('/add', 'create')->name('create');
+            Route::post('/add', 'store')->name('store');
             // Route::get('/getItemsList/{id}', 'getItemsList')->name('getitem');
             // Route::get('/getDetailCustomer/{id}', 'getDetailCustomer')->name('getDetailCustomer');
             // Route::get('/getDetailWarehouse/{id}', 'getDetailWarehouse')->name('getDetailWarehouse');
