@@ -35,7 +35,7 @@
                 <div class="card">
                     <div class="card-body">
                         @include('alert.alert')
-                        <form id="createForm" method="POST" action="{{ route('purchaseorder.store') }}">
+                        <form id="createForm" method="POST" action="{{ route('jurnalpemasukan.store') }}">
                             @csrf
                             <div class="row mb-3">
                                 {{-- <div class="col-md-6"> --}}
