@@ -39,62 +39,39 @@
                     <form action="{{ route('jurnal_pengeluaran.store') }}" method="POST">
                         @csrf
                         <div class="card-body">
-                            {{-- <div class="mb-3 p-1 d-flex justify-content-between align-items-center">
-                                <h5 class="fw-bold d-inline-block border-bottom pb-2 border-3">
-                                    1. Form Detail Transfer Stock
-                                </h5>
-                            </div> --}}
-                            <div class="row mb-1">
-                                <div class="col-12">
-                                    <div class="row mb-3 align-items-center">
-                                        <div class="col-md-3">
-                                            <label class="form-label fw-bold mb-0">Cash Account Kredit<span
-                                                    class="text-danger bg-light px-1">*</span></label>
-                                        </div>
-                                        <div class="col-md-9">
-                                            <select class="form-select" name="coa_kredit" required>
-                                                @if (!empty($coa->data) && count($coa->data) > 0)
-                                                    <option value="" disabled selected>Pilih Cash Kredit</option>
-                                                    @foreach ($coa->data as $data)
-                                                        <option value="{{ $data->id }}">{{ $data->account_name }}
-                                                        </option>
-                                                    @endforeach
-                                                @else
-                                                    <option value="" selected disabled>Data Cash Tidak Tersedia
-                                                    </option>
-                                                @endif
-                                            </select>
-                                        </div>
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label fw-bold">Cash Account Kredit<span
+                                                class="text-danger bg-light px-1">*</span></label>
+                                        <select class="form-select" name="coa_kredit" required>
+                                            @if (!empty($coa->data) && count($coa->data) > 0)
+                                                <option value="" disabled selected>Pilih Cash Kredit</option>
+                                                @foreach ($coa->data as $data)
+                                                    <option value="{{ $data->id }}">{{ $data->account_name }}</option>
+                                                @endforeach
+                                            @else
+                                                <option value="" selected disabled>Data Cash Tidak Tersedia</option>
+                                            @endif
+                                        </select>
                                     </div>
-                                    <div class="row mb-3 align-items-center">
-                                        <div class="col-md-3">
-                                            <label class="form-label fw-bold mb-0">Tanggal<span
-                                                    class="text-danger bg-light px-1">*</span></label>
-                                        </div>
-                                        <div class="col-md-9">
-                                            <input type="date" class="form-control" name="transaction_date"
-                                                value="" required>
-                                        </div>
+                                    <div class="mb-3">
+                                        <label class="form-label fw-bold">Tanggal<span
+                                                class="text-danger bg-light px-1">*</span></label>
+                                        <input type="date" class="form-control" name="transaction_date" required>
                                     </div>
-                                    <div class="row mb-3 align-items-center">
-                                        <div class="col-md-3">
-                                            <label class="form-label fw-bold mb-0">Jumlah<span
-                                                    class="text-danger bg-light px-1">*</span></label>
-                                        </div>
-                                        <div class="col-md-9">
-                                            <input type="text" class="form-control bg-body-secondary"
-                                                placeholder="Jumlah" name="credit" id="total_amount" value=""
-                                                readonly>
-                                        </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label fw-bold">Jumlah<span
+                                                class="text-danger bg-light px-1">*</span></label>
+                                        <input type="text" class="form-control bg-body-secondary" placeholder="Jumlah"
+                                            name="credit" id="total_amount" value="" readonly>
                                     </div>
-                                    <div class="row mb-3 align-items-center">
-                                        <div class="col-md-3">
-                                            <label class="form-label fw-bold mb-0">Keterangan<span
-                                                    class="text-danger bg-light px-1">*</span></label>
-                                        </div>
-                                        <div class="col-md-9">
-                                            <textarea class="form-control" name="description" placeholder="Keterangan" rows="5" required></textarea>
-                                        </div>
+                                    <div class="mb-3">
+                                        <label class="form-label fw-bold">Keterangan<span
+                                                class="text-danger bg-light px-1">*</span></label>
+                                        <textarea class="form-control" name="description" placeholder="Keterangan" rows="4" required></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -131,11 +108,6 @@
                                         <td>
                                             <textarea class="form-control" name="items[0][description]" placeholder="Keterangan"></textarea>
                                         </td>
-                                        {{-- <td>
-                                            <select class="form-select item-select" name="t" disabled>
-                                                <option value="" disabled selected></option>
-                                            </select>
-                                        </td> --}}
                                     </tr>
                                     <tr id="add-button-row" style="border-bottom: 2px solid #000;">
                                         <td colspan="3" class="text-end">

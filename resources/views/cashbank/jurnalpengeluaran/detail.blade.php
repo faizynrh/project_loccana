@@ -32,42 +32,34 @@
             <section class="section">
                 <div class="card">
                     <div class="card-body">
-                        <div class="row mb-1">
-                            <div class="col-12">
-                                <div class="row mb-3 align-items-center">
-                                    <div class="col-md-3">
-                                        <label class="form-label fw-bold mb-0">Cash Account Kredit</label>
-                                    </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Cash Account Kredit</label>
                                     <div class="col-md-9">
                                         <input type="text" class="form-control" name="transaction_date"
                                             value="{{ $data->data[0]->coa_credit }}" readonly>
                                     </div>
                                 </div>
-                                <div class="row mb-3 align-items-center">
-                                    <div class="col-md-3">
-                                        <label class="form-label fw-bold mb-0">Tanggal</label>
-                                    </div>
-                                    <div class="col-md-9">
-                                        <input type="date" class="form-control" name="transaction_date"
-                                            value="{{ $data->data[0]->transaction_date }}" readonly>
-                                    </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Tanggal</label>
+                                    <input type="text" class="form-control" name="transaction_date"
+                                        value="{{ $data->data[0]->coa_credit }}" readonly>
                                 </div>
-                                <div class="row mb-3 align-items-center">
-                                    <div class="col-md-3">
-                                        <label class="form-label fw-bold mb-0">Jumlah</label>
-                                    </div>
-                                    <div class="col-md-9">
-                                        <input type="text" class="form-control" placeholder="Jumlah" name="credit"
-                                            id="total_amount" value="{{ $data->data[0]->credit }}" readonly>
-                                    </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Jumlah</label>
+                                    <input type="text" class="form-control" placeholder="Jumlah" name="credit"
+                                        id="total_amount" value="{{ $data->data[0]->credit }}" readonly>
                                 </div>
-                                <div class="row mb-3 align-items-center">
-                                    <div class="col-md-3">
-                                        <label class="form-label fw-bold mb-0">Keterangan</label>
-                                    </div>
-                                    <div class="col-md-9">
-                                        <textarea class="form-control" name="description" placeholder="Keterangan" rows="5" readonly>{{ $data->data[0]->description_credit }}</textarea>
-                                    </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Keterangan</label>
+                                    <textarea class="form-control" name="description" placeholder="Keterangan" rows="5" readonly>{{ $data->data[0]->description_credit }}</textarea>
+
                                 </div>
                             </div>
                         </div>
