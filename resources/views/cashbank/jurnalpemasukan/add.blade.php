@@ -184,11 +184,7 @@
                             <input type="text" name="items[${rowIndex}][keterangan]"
                                 class="form-control discount-input" placeholder="keterangan">
                         </td>
-                        <td style="width: 30px">
-                            <input type="number" name="items[${rowIndex}][total_price]"
-                                class="form-select bg-body-secondary total-input" disabled>
-                        </td>
-                        <td>
+
                             <button type="button" class="btn btn-danger btn-sm remove-row">-</button>
                         </td>
                     </tr>
@@ -280,7 +276,7 @@
                     $row.find('select[name^="items"]').attr('name', `items[${index}][coa]`);
                     $row.find('input.subtotal-input').attr('name', `items[${index}][jumlah]`);
                     $row.find('input.discount-input').attr('name', `items[${index}][keterangan]`);
-                    $row.find('input.total-input').attr('name', `items[${index}][total_price]`);
+                    $row.find('input.jumlah').attr('name', `items[${index}][jumlah]`);
                 });
             }
 

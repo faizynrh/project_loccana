@@ -90,7 +90,7 @@
                             </div>
                             <div class="row">
                                 <div class="mt-1 d-flex justify-content-end">
-                                    <button type="submit" class="btn btn-primary fw-bold">
+                                    <button type="submit" form="filterForm" class="btn btn-primary fw-bold">
                                         <i class="bi bi-file-earmark-excel"></i> Export Excel
                                     </button>
                                 </div>
