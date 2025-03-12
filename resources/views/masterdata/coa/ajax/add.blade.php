@@ -14,6 +14,10 @@
                 <div class="col-md-9">
                     <select class="form-select" id="parent_account_id" name="parent_account_id">
                         <option value="" selected disabled>Pilih Parent</option>
+                        @foreach ($coa->data as $data)
+                            <option value="{{ $data->id }}">{{ $data->account_name }}
+                            </option>
+                        @endforeach
                     </select>
                 </div>
             </div>
