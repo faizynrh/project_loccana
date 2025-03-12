@@ -2,9 +2,7 @@
 @section('content')
     @push('styles')
         <style>
-            .cursor-not-allowed {
-                cursor: not-allowed;
-            }
+            /* CSS code here */
         </style>
     @endpush
     <div id="main-content">
@@ -12,7 +10,10 @@
             <div class="page-title">
                 <div class="row">
                     <div class="col-12 col-md-6 order-md-1 order-last">
-                        <h3>Jurnal Masuk</h3>
+                        <h3>Jurnal Pemasukan</h3>
+                        {{-- <p class="text-subtitle text-muted">
+                            Easily manage and adjust product prices.
+                        </p> --}}
                     </div>
                     <div class="col-12 col-md-6 order-md-2 order-first">
                         <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
@@ -21,7 +22,7 @@
                                     <a href="/dashboard">Dashboard</a>
                                 </li>
                                 <li class="breadcrumb-item active" aria-current="page">
-                                    Jurnal Masuk
+                                    Jurnal Pemasukan
                                 </li>
                             </ol>
                         </nav>
@@ -30,73 +31,47 @@
             </div>
             <section class="section">
                 <div class="card">
-                    <div class="card-body">
-                        @include('alert.alert')
-                        <div class="row">
-                            <div class="d-flex align-items-center mb-2">
-                                <a href="/jurnalpemasukan/add" class="btn btn-primary me-2 fw-bold">+ Tambah Pemasukan</a>
-                                <form action="{{ route('purchaseorder.printexcel') }}" method="GET" id="filterForm">
-                                    <div class="d-flex align-items-center">
-                                        <select id="yearSelect" class="form-select me-2" name="year"
-                                            style="width: auto;">
-                                            @php
-                                                $currentYear = now()->year;
-                                            @endphp
-                                            @for ($year = $currentYear; $year >= 2019; $year--)
-                                                <option value="{{ $year }}"
-                                                    {{ $year == request('year') ? 'selected' : '' }}>
-                                                    {{ $year }}
-                                                </option>
-                                            @endfor
-                                        </select>
-                                        <select id="monthSelect" class="form-select me-2" name="month"
-                                            style="width: auto;">
-                                            <option value="0" {{ request('month') == 'all' ? 'selected' : '' }}>ALL
-                                            </option>
-                                            @php
-                                                $months = [
-                                                    1 => 'Januari',
-                                                    2 => 'Februari',
-                                                    3 => 'Maret',
-                                                    4 => 'April',
-                                                    5 => 'Mei',
-                                                    6 => 'Juni',
-                                                    7 => 'Juli',
-                                                    8 => 'Agustus',
-                                                    9 => 'September',
-                                                    10 => 'Oktober',
-                                                    11 => 'November',
-                                                    12 => 'Desember',
-                                                ];
-                                                $currentMonth = Carbon\Carbon::now()->month;
-                                            @endphp
-                                            @foreach ($months as $num => $name)
-                                                <option value="{{ $num }}"
-                                                    {{ request('month') == strval($num) || $currentMonth == $num ? 'selected' : '' }}>
-                                                    {{ $name }}
-                                                </option>
-                                            @endforeach
-                                        </select>
 
-                                        <button type="button" id="filterButton"
-                                            class="btn btn-primary fw-bold">Cari</button>
-                                    </div>
+                    <div class="card-header">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="d-flex align-items-center">
+                                <a href="/jurnalpemasukan/add" class="btn btn-primary me-2 fw-bold">+ Tambah
+                                    Pemasukan</a>
+                                <form id="searchForm" class="d-flex align-items-center gap-2">
+                                    @csrf
+                                    <select id="yearSelect" class="form-select me-2" name="year" style="width: auto;">
+                                        @php
+                                            $currentYear = Carbon\Carbon::now()->year;
+                                        @endphp
+                                        @for ($year = $currentYear; $year >= 2019; $year--)
+                                            <option value="{{ $year }}"
+                                                {{ $year == request('year') ? 'selected' : '' }}>
+                                                {{ $year }}
+                                            </option>
+                                        @endfor
+                                    </select>
+                                    <select id="monthSelect" class="form-select me-2" name="month" style="width: auto;">
+                                        <option value="0" {{ request('month') == 'all' ? 'selected' : '' }}>ALL
+                                        </option>
+                                        @php
+                                            $currentMonth = Carbon\Carbon::now()->month;
+                                        @endphp
+                                        @foreach (['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'] as $index => $monthName)
+                                            <option value="{{ $index + 1 }}"
+                                                {{ request('month') == strval($index + 1) || $currentMonth == $index + 1 ? 'selected' : '' }}>
+                                                {{ $monthName }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    <button type="submit" class="btn btn-primary">Cari</button>
                                 </form>
-                                {{-- <div class="text-end ms-auto">
-                                    <h6 class="fw-bold">Total Per Bulan</h6>
-                                    <h4 class="fw-bold" id="totalPerBulan">Rp 0,00</h4>
-                                </div> --}}
-                            </div>
-                            <div class="row">
-                                <div class="mt-1 d-flex justify-content-end">
-                                    <button type="submit" class="btn btn-primary fw-bold">
-                                        <i class="bi bi-file-earmark-excel"></i> Export Excel
-                                    </button>
-                                </div>
                             </div>
                         </div>
+                    </div>
+                    <div class="card-body">
+                        @include('alert.alert')
                         <div class="table-responsive">
-                            <table class="table table-striped table-bordered mt-3" id="tablejurnalpemasukan">
+                            <table class="table table-striped table-bordered mt-3" id="tablepemasukan">
                                 <thead>
                                     <tr>
                                         <th scope="col">No</th>
@@ -116,127 +91,105 @@
         </div>
     </div>
 @endsection
-
 @push('scripts')
     <script>
         $(document).ready(function() {
-            // Inisialisasi DataTable
-            var dataTable = $('#tablejurnalpemasukan').DataTable({
-                serverSide: true,
-                processing: true,
-                ajax: {
-                    url: '{{ route('jurnalpemasukan.ajax') }}',
-                    type: 'GET',
-                    data: function(d) {
-                        d.month = $('#monthSelect').val();
-                        d.year = $('#yearSelect').val();
+            function initializeTable() {
+                if ($.fn.DataTable.isDataTable('#tablepemasukan')) {
+                    $('#tablepemasukan').DataTable().destroy();
+                }
+
+                $('#tablepemasukan').DataTable({
+                    serverSide: true,
+                    processing: true,
+                    ajax: {
+                        url: '{{ route('jurnalpemasukan.ajax') }}',
+                        type: 'GET',
+                        data: function(d) {
+                            d.month = $('#monthSelect').val();
+                            d.year = $('#yearSelect').val();
+                            d.status = $('#statusSelect').val();
+                        },
                     },
-                    // dataSrc: function(response) {
-                    //     if (response.mtd) {
-                    //         const formattedNumber = new Intl.NumberFormat('id-ID', {
-                    //             minimumFractionDigits: 2,
-                    //             maximumFractionDigits: 2
-                    //         }).format(response.mtd);
-                    //         $('#totalPerBulan').html('Rp ' + formattedNumber);
-                    //     }
-                    //     return response.data;
-                    // }
-                },
-                columns: [{
-                        data: null,
-                        render: function(data, type, row, meta) {
-                            return meta.row + meta.settings._iDisplayStart + 1;
-                        }
-                    },
-                    {
-                        data: 'coa_credit'
-                    },
-                    {
-                        data: 'coa_debit'
-                    },
-                    {
-                        data: 'transaction_date',
-                        render: function(data) {
-                            if (data) {
-                                var date = new Date(data);
-                                return date.getFullYear() + '-' +
-                                    (date.getMonth() + 1).toString().padStart(2, '0') + '-' +
-                                    date.getDate().toString().padStart(2, '0');
+                    columns: [{
+                            data: null,
+                            render: function(data, type, row, meta) {
+                                return meta.row + meta.settings._iDisplayStart + 1;
                             }
-                            return data;
-                        }
-                    },
-                    {
-                        data: 'total',
-                        render: function(data, type, row) {
-                            return formatRupiah(data);
-                        }
-                    },
-                    {
-                        data: null,
-                        // data: 'keterangan'
-                    },
-                    {
-                        data: null,
-                        render: function(data, type, row) {
-                            return `
-                                <div class="dropdown action-dropdown">
-                                    <button type="button" class="btn btn-sm btn-light border rounded-pill shadow-sm dropdown-toggle px-3"
-                                            data-bs-toggle="dropdown" aria-expanded="false">
-                                        <i class="bi bi-gear-fill me-1"></i> Action
-                                    </button>
-                                    <div class="dropdown-menu">
-                                        <a href="/penjualan/detail/${row.id_penjualan}" class="dropdown-item" title="Detail">
-                                            <i class="bi bi-eye-fill text-primary me-2"></i>
-                                            Detail
-                                        </a>
-                                        <a href="/penjualan/print/${row.id_penjualan}" class="dropdown-item" target="_blank" title="Print">
-                                            <i class="bi bi-printer-fill text-warning me-2"></i>
-                                            Print PDF
-                                        </a>
-                                        <div class="dropdown-divider"></div>
-                                        <a href="/penjualan/edit/${row.id_penjualan}" class="dropdown-item" title="Edit">
-                                            <i class="bi bi-pencil-fill text-info me-2"></i>
-                                            Edit
-                                        </a>
-                                        <form action="/pemasukan/delete/${row.id}" method="POST" id="delete${row.id}" style="display:inline;">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="button" class="dropdown-item" title="Hapus" onclick="confirmDelete(${row.id})">
-                                                <i class="bi bi-trash-fill text-danger me-2"></i>
-                                                Delete
-                                            </button>
-                                        </form>
-                                    </div>
-                                </div>
-                            `;
-                            return `<div class="d-flex">${actionButtons}</div>`;
-                        }
-                    }
-                ]
-            });
+                        },
+                        {
+                            data: 'coa_credit'
+                        },
+                        {
+                            data: 'coa_debit'
+                        },
+                        {
+                            data: 'transaction_date',
+                            render: function(data) {
+                                if (data) {
+                                    var date = new Date(data);
+                                    return date.getFullYear() + '-' +
+                                        (date.getMonth() + 1).toString().padStart(2, '0') + '-' +
+                                        date.getDate().toString().padStart(2, '0');
+                                }
+                                return data;
+                            }
+                        },
+                        {
+                            data: 'total',
+                            render: function(data, type, row) {
+                                return formatRupiah(data);
+                            }
+                        },
+                        {
+                            // data: 'description',
+                            data: null,
+                        },
+                        {
+                            data: null,
+                            render: function(data, type, row) {
+                                let actionButtons = `
+            <div class="dropdown action-dropdown">
+                <button type="button" class="btn btn-sm btn-light border rounded-pill shadow-sm dropdown-toggle px-3"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="bi bi-gear-fill me-1"></i> Action
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end shadow border-0" style="min-width: 200px;">
+                    <li> <a href="/jurnal_pengeluaran/detail/${row.jurnal_id}" class="dropdown-item d-flex align-items-center py-2" title="Detail">
+                                                        <i class="bi bi-eye-fill text-primary me-2"></i>
+                                                        <span>Lihat Detail</span>
+                                                    </a></li>
+                    <li><a href="/jurnal_pengeluaran/print/${row.jurnal_id}" class="dropdown-item d-flex align-items-center py-2" target="_blank" title="Print PDF">
+                <i class="bi bi-printer-fill text-warning me-2"></i>
+                <span>Cetak PDF</span>
+            </a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li> <a href="/jurnal_pengeluaran/edit/${row.jurnal_id}" class="dropdown-item d-flex align-items-center py-2" title="Edit">
+                <i class="bi bi-pencil-fill text-info me-2"></i>
+                <span>Edit Data</span>
+            </a></li>
+                    <li><form action="/jurnal_pengeluaran/delete/${row.jurnal_id}" method="POST" id="delete${row.jurnal_id}" style="display:inline; width: 100%;">
+                @csrf
+                @method('DELETE')
+                <button type="button" class="dropdown-item d-flex align-items-center py-2" title="Hapus" onclick="confirmDelete(${row.jurnal_id})">
+                    <i class="bi bi-trash-fill text-danger me-2"></i>
+                    <span>Hapus Data</span>
+                </button>
+            </form></li>
+                </ul>
+            </div>`;
 
-            $('#filterButton').on('click', function() {
-                dataTable.ajax.reload();
-            });
+                                return actionButtons;
+                            }
+                        }
+                    ]
+                });
+            };
+            initializeTable()
 
-            $('#filterForm').on('submit', function(e) {
+            $('#searchForm').submit(function(e) {
                 e.preventDefault();
-
-                const totalFilteredEntries = dataTable.page.info().recordsDisplay;
-                const totalEntries = dataTable.page.info().recordsTotal;
-
-                if (!$('#total_entries').length) {
-                    $(this).append('<input type="hidden" id="total_entries" name="total_entries">');
-                }
-                $('#total_entries').val(totalFilteredEntries);
-
-                if (!$('#total_all_entries').length) {
-                    $(this).append('<input type="hidden" id="total_all_entries" name="total_all_entries">');
-                }
-                $('#total_all_entries').val(totalEntries);
-
-                this.submit();
+                initializeTable()
             });
         });
     </script>
