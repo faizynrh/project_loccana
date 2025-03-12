@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers\cashbank;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
+use App\Http\Controllers\Controller;
 
 class JurnalPengeluaranController extends Controller
 {
@@ -168,9 +169,6 @@ class JurnalPengeluaranController extends Controller
         }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(string $id)
     {
         try {
@@ -179,6 +177,26 @@ class JurnalPengeluaranController extends Controller
                 return redirect()->route('jurnal_pengeluaran.index')->with('success', $apiResponse->json()['message']);
             } else {
                 return back()->withErrors($apiResponse->json()['message']);
+            }
+        } catch (\Exception $e) {
+            return back()->withErrors($e->getMessage());
+        }
+    }
+
+    public function print($id)
+    {
+        try {
+            $apiResponse = fectApi(env('JURNAL_PENGELUARAN_URL') . '/' . $id);
+            if ($apiResponse->successful()) {
+                $data = json_decode($apiResponse->body());
+                $totalAmount = 0;
+                // foreach ($datas as $item) {
+                //     $totalAmount += $item->amount;
+                // }
+                $pdf = Pdf::loadView('cashbank.jurnalpengeluaran.print', compact('data', 'totalAmount'));
+                return $pdf->stream('Transfer Stok.pdf');
+            } else {
+                return back()->withErrors($apiResponse->status());
             }
         } catch (\Exception $e) {
             return back()->withErrors($e->getMessage());
