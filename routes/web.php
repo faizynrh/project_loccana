@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\cashbank\JurnalPemasukanController;
 use App\Http\Controllers\cashbank\PemasukanController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\masterdata\COAController;
@@ -408,17 +409,17 @@ Route::middleware('auth.login')->group(
             }
         );
 
-        Route::prefix('/pemasukan')->name('pemasukan.')->controller(PemasukanController::class)->group(function () {
+        Route::prefix('/jurnalpemasukan')->name('jurnalpemasukan.')->controller(JurnalPemasukanController::class)->group(function () {
             Route::get('/', 'index')->name('index');
-            // Route::get('/generate-po-code', 'generateCode');
             Route::get('/ajax', 'ajaxpemasukan')->name('ajax');
+            // Route::get('/generate-po-code', 'generateCode');
             // Route::get('/add', 'create')->name('create');
             // Route::post('/add', 'store')->name('store');
             // Route::get('/getItemsList/{id}', 'getItemsList')->name('getitem');
             // Route::get('/getDetailCustomer/{id}', 'getDetailCustomer')->name('getDetailCustomer');
             // Route::get('/getDetailWarehouse/{id}', 'getDetailWarehouse')->name('getDetailWarehouse');
             // Route::get('/getStock/{id}', 'getstock')->name('getstock');
-            // Route::delete('/delete/{id}', 'destroy')->name('destroy');
+            Route::delete('/delete/{id}', 'destroy')->name('destroy');
             // Route::get('/detail/{id}', 'show')->name('detail');
             // Route::get('/edit/{id}', 'edit')->name('edit');
             // Route::put('/update/{id}', 'update')->name('update');

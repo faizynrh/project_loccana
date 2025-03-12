@@ -34,8 +34,7 @@
                         @include('alert.alert')
                         <div class="row">
                             <div class="d-flex align-items-center mb-2">
-                                <a href="/purchase_order/add" class="btn btn-primary me-2 fw-bold">+ Tambah Purchase
-                                    Order</a>
+                                <a href="/purchase_order/add" class="btn btn-primary me-2 fw-bold">+ Tambah Pemasukan</a>
                                 <form action="{{ route('purchaseorder.printexcel') }}" method="GET" id="filterForm">
                                     <div class="d-flex align-items-center">
                                         <select id="yearSelect" class="form-select me-2" name="year"
@@ -97,17 +96,16 @@
                             </div>
                         </div>
                         <div class="table-responsive">
-                            <table class="table table-striped table-bordered mt-3" id="tablepemasukan">
+                            <table class="table table-striped table-bordered mt-3" id="tablejurnalpemasukan">
                                 <thead>
                                     <tr>
                                         <th scope="col">No</th>
-                                        <th scope="col">Nomor PO</th>
-                                        <th scope="col">Nama Principal</th>
-                                        <th scope="col">Tanggal PO</th>
+                                        <th scope="col">COA Kredit</th>
+                                        <th scope="col">COA Debit</th>
+                                        <th scope="col">Tanggal</th>
                                         <th scope="col">Total</th>
-                                        <th scope="col">Jatuh Tempo</th>
-                                        <th scope="col">Status</th>
-                                        <th scope="col">Action</th>
+                                        <th scope="col">Keterangan</th>
+                                        <th scope="col">Option</th>
                                     </tr>
                                 </thead>
                             </table>
@@ -123,11 +121,11 @@
     <script>
         $(document).ready(function() {
             // Inisialisasi DataTable
-            var dataTable = $('#tablepemasukan').DataTable({
+            var dataTable = $('#tablejurnalpemasukan').DataTable({
                 serverSide: true,
                 processing: true,
                 ajax: {
-                    url: '{{ route('pemasukan.ajax') }}',
+                    url: '{{ route('jurnalpemasukan.ajax') }}',
                     type: 'GET',
                     data: function(d) {
                         d.month = $('#monthSelect').val();
@@ -151,13 +149,13 @@
                         }
                     },
                     {
-                        data: 'po_code'
+                        data: 'coa_credit'
                     },
                     {
-                        data: 'name'
+                        data: 'coa_debit'
                     },
                     {
-                        data: 'order_date',
+                        data: 'transaction_date',
                         render: function(data) {
                             if (data) {
                                 var date = new Date(data);
@@ -169,99 +167,43 @@
                         }
                     },
                     {
-                        data: 'total_amount',
+                        data: 'total',
                         render: function(data, type, row) {
                             return formatRupiah(data);
                         }
                     },
                     {
-                        data: 'term_of_payment'
-                    },
-                    {
-                        data: 'status',
-                        className: 'text-center',
-                        render: function(data, type, row) {
-                            let statusClass = '';
-                            let statusLabel = data;
-                            if (data.toLowerCase() === 'konfirmasi') {
-                                statusClass = 'btn btn-warning btn-sm';
-                                statusLabel = `<a href="/purchase_order/approve/${row.id}" class="text-dark text-decoration-none" title="Klik untuk Approve">
-                                    <span class="${statusClass}">${data}</span>
-                                </a>`;
-                            } else if (data.toLowerCase() === 'reject') {
-                                statusClass = 'badge bg-danger cursor-not-allowed';
-                            } else if (data.toLowerCase() === 'approve') {
-                                statusClass = 'badge bg-success cursor-not-allowed';
-                            }
-                            return statusLabel !== data ? statusLabel :
-                                `<span class="${statusClass}">${data}</span>`;
-                        }
+                        data: null,
+                        // data: 'keterangan'
                     },
                     {
                         data: null,
                         render: function(data, type, row) {
-                            let actionButtons = ``;
-                            actionButtons += row.status.toLowerCase() === 'konfirmasi' ? `
-                                <div class="btn-group dropdown me-1 mb-1">
-                                    <button type="button" class="btn btn-outline-danger rounded-3 dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-reference="parent">
-                                        <span class="sr-only"><i class="bi bi-list-task"></i></span>
+                            return `
+                                <div class="dropdown action-dropdown">
+                                    <button type="button" class="btn btn-sm btn-light border rounded-pill shadow-sm dropdown-toggle px-3"
+                                            data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="bi bi-gear-fill me-1"></i> Action
                                     </button>
                                     <div class="dropdown-menu">
-                                        <a href="/purchase_order/detail/${row.id}" class="dropdown-item" title="Detail">
-                                            <i class="bi bi-eye text-primary"></i>
+                                        <a href="/penjualan/detail/${row.id_penjualan}" class="dropdown-item" title="Detail">
+                                            <i class="bi bi-eye-fill text-primary me-2"></i>
                                             Detail
                                         </a>
-                                        <a href="/purchase_order/print/${row.id}" class="dropdown-item" target="_blank" title="Print">
-                                            <i class="bi bi-printer text-warning"></i>
+                                        <a href="/penjualan/print/${row.id_penjualan}" class="dropdown-item" target="_blank" title="Print">
+                                            <i class="bi bi-printer-fill text-warning me-2"></i>
                                             Print PDF
                                         </a>
-                                        <a href="/purchase_order/excel/detail/${row.id}" class="dropdown-item" title="Print">
-                                            <i class="bi bi-file-earmark-excel text-success"></i>
-                                            Print Excel
-                                        </a>
                                         <div class="dropdown-divider"></div>
-                                        <a href="/purchase_order/edit/${row.id}" class="dropdown-item" title="Edit">
-                                            <i class="bi bi-pencil text-info"></i>
+                                        <a href="/penjualan/edit/${row.id_penjualan}" class="dropdown-item" title="Edit">
+                                            <i class="bi bi-pencil-fill text-info me-2"></i>
                                             Edit
                                         </a>
-                                        <form action="/purchase_order/delete/${row.id}" method="POST" id="delete${row.id}" style="display:inline;">
+                                        <form action="/pemasukan/delete/${row.id}" method="POST" id="delete${row.id}" style="display:inline;">
                                             @csrf
                                             @method('DELETE')
                                             <button type="button" class="dropdown-item" title="Hapus" onclick="confirmDelete(${row.id})">
-                                                <i class="bi bi-trash text-danger"></i>
-                                                Delete
-                                            </button>
-                                        </form>
-                                    </div>
-                                </div>
-                            ` : `
-                                <div class="btn-group dropdown me-1 mb-1">
-                                    <button type="button" class="btn btn-outline-danger rounded-3 dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-reference="parent">
-                                        <span class="sr-only"><i class="bi bi-list-task"></i></span>
-                                    </button>
-                                    <div class="dropdown-menu">
-                                        <a href="/purchase_order/detail/${row.id}" class="dropdown-item" title="Detail">
-                                            <i class="bi bi-eye text-primary"></i>
-                                            Detail
-                                        </a>
-                                        <a href="/purchase_order/print/${row.id}" class="dropdown-item" target="_blank" title="Print">
-                                            <i class="bi bi-printer text-warning"></i>
-                                            Print PDF
-                                        </a>
-                                        <a href="/purchase_order/excel/detail/${row.id}" class="dropdown-item" title="Print">
-                                            <i class="bi bi-file-earmark-excel text-success"></i>
-                                            Print Excel
-                                        </a>
-                                        <div class="dropdown-divider"></div>
-                                        <a href="/purchase_order/edit/${row.id}" class="dropdown-item disabled" title="Edit">
-                                            <i class="bi bi-pencil"></i>
-                                            Edit
-                                        </a>
-                                        <form action="/purchase_order/delete/${row.id}" method="POST" id="delete${row.id}" style="display:inline;">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="button" class="dropdown-item disabled" title="Hapus" onclick="confirmDelete(${row.id})">
-                                                <i class="bi bi-trash"></i>
+                                                <i class="bi bi-trash-fill text-danger me-2"></i>
                                                 Delete
                                             </button>
                                         </form>
@@ -274,13 +216,10 @@
                 ]
             });
 
-            // Hapus event on change pada select tahun dan bulan agar tidak reload otomatis
-            // Tambahkan event handler untuk tombol "Cari" untuk menerapkan filter berdasarkan tahun dan bulan
             $('#filterButton').on('click', function() {
                 dataTable.ajax.reload();
             });
 
-            // Saat form Export disubmit, tambahkan informasi total record ke dalam form
             $('#filterForm').on('submit', function(e) {
                 e.preventDefault();
 

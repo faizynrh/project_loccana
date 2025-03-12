@@ -150,7 +150,7 @@
                             <a href="/piutang" class="submenu-link">Piutang</a>
                         </li>
                         <li class="submenu-item {{ Request::is('pemasukan*') ? 'active' : '' }}">
-                            <a href="/pemasukan" class="submenu-link">Pemasukan</a>
+                            <a href="/jurnalpemasukan" class="submenu-link">Pemasukan</a>
                         </li>
                         <li class="submenu-item {{ Request::is('jurnal_pengeluaran*') ? 'active' : '' }}">
                             <a href="/jurnal_pengeluaran" class="submenu-link">Pengeluaran</a>
