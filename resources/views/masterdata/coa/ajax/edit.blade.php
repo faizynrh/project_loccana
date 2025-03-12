@@ -14,8 +14,14 @@
                             class="text-danger">*</span></label>
                 </div>
                 <div class="col-md-9">
-                    <select class="form-select" id="edit_parent_account_id" name="parent_account_id">
+                    <select class="form-select" id="parent_account_id" name="parent_account_id">
                         <option value="" selected disabled>Pilih Parent</option>
+                        @foreach ($coa->data as $item)
+                            <option value="{{ $item->id }}"
+                                {{ $data->data->parent_account_id == $item->id ? 'selected' : '' }}>
+                                {{ $item->account_name }}
+                            </option>
+                        @endforeach
                     </select>
                 </div>
             </div>

@@ -50,7 +50,15 @@ class COAController extends Controller
 
     public function create()
     {
-        return view('masterdata.coa.ajax.add');
+        $company_id = 2;
+        $coaResponse = fectApi(env('LIST_COA') . '/' . $company_id);
+
+        if ($coaResponse->successful()) {
+            $coa = json_decode($coaResponse->body());
+            return view('masterdata.coa.ajax.add', compact('coa'));
+        } else {
+            return back()->withErrors($coaResponse->json()['message']);
+        }
     }
 
     public function store(Request $request)
@@ -59,13 +67,12 @@ class COAController extends Controller
             $data = [
                 'account_name' => $request->input('account_name'),
                 'account_code' => $request->input('account_code'),
-                'parent_account_id' => $request->input('parent_account_id', 2),
-                'account_type_id' => $request->input('account_type_id', 2),
+                'parent_account_id' => $request->input('parent_account_id', 999),
+                'account_type_id' => 2,
                 'description' => $request->input('description'),
-                'company_id' => $request->input('company_id', 2),
+                'company_id' => 2,
             ];
             $apiResponse = storeApi(env('COA_URL'), $data);
-
             if ($apiResponse->successful()) {
                 return redirect()->route('coa.index')
                     ->with(
@@ -96,9 +103,23 @@ class COAController extends Controller
     public function edit($id)
     {
         try {
+            $company_id = 2;
+            $coaResponse = fectApi(env('LIST_COA') . '/' . $company_id);
             $apiResponse = fectApi(env('COA_URL') . '/' . $id);
-            $data = json_decode($apiResponse->getBody()->getContents());
-            return view('masterdata.coa.ajax.edit', data: compact('data'));
+            if ($apiResponse->successful() && $coaResponse->successful()) {
+                $data = json_decode($apiResponse->getBody()->getContents());
+                $coa = json_decode($coaResponse->getBody()->getContents());
+                return view('masterdata.coa.ajax.edit', compact('data', 'coa'));
+            } else {
+                $errors = [];
+                if (!$coaResponse->successful()) {
+                    $errors[] = $coaResponse->json()['message'];
+                }
+                if (!$apiResponse->successful()) {
+                    $errors[] = $apiResponse->json()['message'];
+                }
+                return back()->withErrors($errors);
+            }
         } catch (\Exception $e) {
             return back()->withErrors($e->getMessage());
         }
@@ -111,8 +132,8 @@ class COAController extends Controller
             $data = [
                 'account_name' => $request->account_name,
                 'account_code' => $request->account_code,
-                'parent_account_id' => $request->input('parent_account_id', 2),
-                'account_type_id' => $request->input('account_type_id', 2),
+                'parent_account_id' => $request->parent_account_id,
+                'account_type_id' => 2,
                 'description' => $request->description,
             ];
 
