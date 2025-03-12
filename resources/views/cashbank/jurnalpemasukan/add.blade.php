@@ -94,7 +94,6 @@
                                         <th></th>
                                         <th></th>
                                         <th></th>
-                                        <th></th>
                                     </tr>
                                 </thead>
                                 <tbody id="tableBody">
@@ -117,26 +116,26 @@
                                             <input type="text" name="items[0][keterangan]"
                                                 class="form-control discount-input" placeholder="keterangan">
                                         </td>
-                                        <td style="width: 30px">
-                                            <input type="number" name="items[0][total_price]"
-                                                class="form-select bg-body-secondary total-input" disabled>
-                                        </td>
                                         <td>
                                             <button type="button" class="btn btn-danger btn-sm remove-row"
                                                 disabled>-</button>
                                         </td>
+                                        <td style="width: 30px">
+                                            <input type="hidden" name="items[0][total_price]"
+                                                class="form-select bg-body-secondary total-input" disabled>
+                                        </td>
                                     </tr>
                                     <tr style="border-bottom: 2px solid #000;border-top: 3px solid #000">
-                                        <td colspan="3"></td>
+                                        <td colspan="2"></td>
                                         <td class="text-end">
                                             <button class="btn btn-primary fw-bold" id="add-row">+</button>
                                         </td>
                                     </tr>
                                 </tbody>
                                 <tr style="border-top: 2px solid #000">
-                                    <td colspan="4"></td>
+                                    <td colspan="2"></td>
                                     <td>Total</td>
-                                    <td style="float: right">0</td>
+                                    <td style=" ">0</td>
                                 </tr>
                             </table>
                             <div class="row">
@@ -166,7 +165,7 @@
 
             function createNewRow(rowIndex) {
                 return `
-                    <tr style="border-: 2px solid #000" class="item-row">
+                    <tr class="item-row">
                         <td>
                             <select class="form-select coa-select" name="items[${rowIndex}][coa]" required>
                                 <option value="" selected disabled>Pilih COA</option>
@@ -184,9 +183,11 @@
                             <input type="text" name="items[${rowIndex}][keterangan]"
                                 class="form-control discount-input" placeholder="keterangan">
                         </td>
-
+                        <td>
                             <button type="button" class="btn btn-danger btn-sm remove-row">-</button>
                         </td>
+                            <input type="hidden" name="items[${rowIndex}][total_price]"
+                                class="form-select bg-body-secondary total-input" disabled>
                     </tr>
                 `;
             }
@@ -276,7 +277,7 @@
                     $row.find('select[name^="items"]').attr('name', `items[${index}][coa]`);
                     $row.find('input.subtotal-input').attr('name', `items[${index}][jumlah]`);
                     $row.find('input.discount-input').attr('name', `items[${index}][keterangan]`);
-                    $row.find('input.jumlah').attr('name', `items[${index}][jumlah]`);
+                    $row.find('input.total-input').attr('name', `items[${index}][total_price]`);
                 });
             }
 
