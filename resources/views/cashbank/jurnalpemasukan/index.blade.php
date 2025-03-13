@@ -37,7 +37,7 @@
                             <div class="d-flex align-items-center">
                                 <a href="/jurnal_pemasukan/add" class="btn btn-primary me-2 fw-bold">+ Tambah
                                     Pemasukan</a>
-                                <form id="searchForm" class="d-flex align-items-center gap-2">
+                                {{-- <form id="searchForm" class="d-flex align-items-center gap-2">
                                     @csrf
                                     <select id="yearSelect" class="form-select me-2" name="year" style="width: auto;">
                                         @php
@@ -64,7 +64,61 @@
                                         @endforeach
                                     </select>
                                     <button type="submit" class="btn btn-primary">Cari</button>
+                                </form> --}}
+                                <form action="{{ route('jurnal_pemasukan.printexcel') }}" method="GET" id="filterForm">
+                                    <div class="d-flex align-items-center">
+                                        <select id="yearSelect" class="form-select me-2" name="year"
+                                            style="width: auto;">
+                                            @php
+                                                $currentYear = now()->year;
+                                            @endphp
+                                            @for ($year = $currentYear; $year >= 2019; $year--)
+                                                <option value="{{ $year }}"
+                                                    {{ $year == request('year') ? 'selected' : '' }}>
+                                                    {{ $year }}
+                                                </option>
+                                            @endfor
+                                        </select>
+                                        <select id="monthSelect" class="form-select me-2" name="month"
+                                            style="width: auto;">
+                                            <option value="0" {{ request('month') == 'all' ? 'selected' : '' }}>ALL
+                                            </option>
+                                            @php
+                                                $months = [
+                                                    1 => 'Januari',
+                                                    2 => 'Februari',
+                                                    3 => 'Maret',
+                                                    4 => 'April',
+                                                    5 => 'Mei',
+                                                    6 => 'Juni',
+                                                    7 => 'Juli',
+                                                    8 => 'Agustus',
+                                                    9 => 'September',
+                                                    10 => 'Oktober',
+                                                    11 => 'November',
+                                                    12 => 'Desember',
+                                                ];
+                                                $currentMonth = Carbon\Carbon::now()->month;
+                                            @endphp
+                                            @foreach ($months as $num => $name)
+                                                <option value="{{ $num }}"
+                                                    {{ request('month') == strval($num) || $currentMonth == $num ? 'selected' : '' }}>
+                                                    {{ $name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+
+                                        <button type="button" id="filterButton"
+                                            class="btn btn-primary fw-bold">Cari</button>
+                                    </div>
                                 </form>
+                            </div>
+                            <div class="row">
+                                <div class="mt-1 d-flex justify-content-end">
+                                    <button type="submit" form="filterForm" class="btn btn-primary fw-bold">
+                                        <i class="bi bi-file-earmark-excel"></i> Export Excel
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -142,8 +196,8 @@
                             }
                         },
                         {
-                            // data: 'description',
-                            data: null,
+                            data: 'description',
+                            // data: null,
                         },
                         {
                             data: null,
