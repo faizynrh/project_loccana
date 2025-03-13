@@ -57,7 +57,7 @@
                     </select>
                 </div>
             </div>
-            <div class="row mb-3 align-items-center">
+            {{-- <div class="row mb-3 align-items-center">
                 <div class="col-md-3">
                     <an" class="form-label fw-bold mb-0">Kategori Barang<span class="text-danger">*</span>
                         </barang>
@@ -67,7 +67,7 @@
                         <option value="" selected disabled>Pilih Kategori Barang</option>
                     </select>
                 </div>
-            </div>
+            </div> --}}
             <div class="modal-footer">
                 <button type="submit" class="btn btn-primary" id="submitButton">Simpan</button>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"

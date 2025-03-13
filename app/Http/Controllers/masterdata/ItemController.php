@@ -72,13 +72,13 @@ class ItemController extends Controller
     {
         try {
             $data = [
-                'name' => $request->input('name'),
-                'description' => $request->input('description'),
-                'unit_of_measure_id' => $request->input('unit_of_measure_id'),
-                'item_type_id' => $request->input('item_type_id'),
-                'item_category_id' => $request->input('item_category_id', 1),
-                'sku' => $request->input('sku'),
-                'company_id' => $request->input('company_id', 2),
+                'name' => $request->name,
+                'description' => $request->description,
+                'unit_of_measure_id' => $request->unit_of_measure_id,
+                'item_type_id' => $request->item_type_id,
+                'item_category_id' => 1,
+                'sku' => $request->sku,
+                'company_id' => 2,
             ];
             $apiResponse = storeApi(env('ITEM_URL'), $data);
 
@@ -142,10 +142,9 @@ class ItemController extends Controller
                 'description' => $request->description,
                 'unit_of_measure_id' => $request->unit_of_measure_id,
                 'item_type_id' => $request->item_type_id,
-                'item_category_id' => $request->input('item_category_id', 1),
+                'item_category_id' => 1,
                 'sku' => $request->sku,
             ];
-
             $apiResponse = updateApi(env('ITEM_URL') . '/' . $id, $data);
             if ($apiResponse->successful()) {
                 return redirect()->route('item.index')->with('success', $apiResponse->json()['message']);
