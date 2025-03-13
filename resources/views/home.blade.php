@@ -32,7 +32,7 @@
                     <div class="col-lg-6">
                         <div class="img-container">
                             <div class="img-overlay"></div>
-                            <img src="assets/img/home/img-home.png" alt="Modern Business Illustration"
+                            <img src="{{ asset('assets/img/home/5278822.jpg') }}" alt="Modern Business Illustration"
                                 class="img-fluid rounded-circle floating">
                         </div>
                     </div>
