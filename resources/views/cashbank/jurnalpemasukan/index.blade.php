@@ -35,7 +35,7 @@
                     <div class="card-header">
                         <div class="d-flex justify-content-between align-items-center">
                             <div class="d-flex align-items-center">
-                                <a href="/jurnalpemasukan/add" class="btn btn-primary me-2 fw-bold">+ Tambah
+                                <a href="/jurnal_pemasukan/add" class="btn btn-primary me-2 fw-bold">+ Tambah
                                     Pemasukan</a>
                                 <form id="searchForm" class="d-flex align-items-center gap-2">
                                     @csrf
@@ -103,7 +103,7 @@
                     serverSide: true,
                     processing: true,
                     ajax: {
-                        url: '{{ route('jurnalpemasukan.ajax') }}',
+                        url: '{{ route('jurnal_pemasukan.ajax') }}',
                         type: 'GET',
                         data: function(d) {
                             d.month = $('#monthSelect').val();
@@ -155,20 +155,20 @@
                     <i class="bi bi-gear-fill me-1"></i> Action
                 </button>
                 <ul class="dropdown-menu dropdown-menu-end shadow border-0" style="min-width: 200px;">
-                    <li> <a href="/jurnal_pengeluaran/detail/${row.jurnal_id}" class="dropdown-item d-flex align-items-center py-2" title="Detail">
+                    <li> <a href="/jurnal_pemasukan/detail/${row.jurnal_id}" class="dropdown-item d-flex align-items-center py-2" title="Detail">
                                                         <i class="bi bi-eye-fill text-primary me-2"></i>
                                                         <span>Lihat Detail</span>
                                                     </a></li>
-                    <li><a href="/jurnal_pengeluaran/print/${row.jurnal_id}" class="dropdown-item d-flex align-items-center py-2" target="_blank" title="Print PDF">
+                    <li><a href="/jurnal_pemasukan/print/${row.jurnal_id}" class="dropdown-item d-flex align-items-center py-2" target="_blank" title="Print PDF">
                 <i class="bi bi-printer-fill text-warning me-2"></i>
                 <span>Cetak PDF</span>
             </a></li>
                     <li><hr class="dropdown-divider"></li>
-                    <li> <a href="/jurnal_pengeluaran/edit/${row.jurnal_id}" class="dropdown-item d-flex align-items-center py-2" title="Edit">
+                    <li> <a href="/jurnal_pemasukan/edit/${row.jurnal_id}" class="dropdown-item d-flex align-items-center py-2" title="Edit">
                 <i class="bi bi-pencil-fill text-info me-2"></i>
                 <span>Edit Data</span>
             </a></li>
-                    <li><form action="/jurnal_pengeluaran/delete/${row.jurnal_id}" method="POST" id="delete${row.jurnal_id}" style="display:inline; width: 100%;">
+                    <li><form action="/jurnal_pemasukan/delete/${row.jurnal_id}" method="POST" id="delete${row.jurnal_id}" style="display:inline; width: 100%;">
                 @csrf
                 @method('DELETE')
                 <button type="button" class="dropdown-item d-flex align-items-center py-2" title="Hapus" onclick="confirmDelete(${row.jurnal_id})">

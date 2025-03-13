@@ -19,7 +19,7 @@
                                     <a href="/dashboard">Dashboard</a>
                                 </li>
                                 <li class="breadcrumb-item">
-                                    <a href="/jurnalpemasukan">Jurnal Pemasukan</a>
+                                    <a href="/jurnal_pemasukan">Jurnal Pemasukan</a>
                                 </li>
                                 <li class="breadcrumb-item active" aria-current="page">
                                     Tambah Jurnal Pemasukan
@@ -36,7 +36,7 @@
                                 class="text-danger bg-light px-1">*</span>, dan
                             masukkan data dengan benar.</h6>
                     </div>
-                    <form action="{{ route('jurnalpemasukan.store') }}" method="POST">
+                    <form action="{{ route('jurnal_pemasukan.store') }}" method="POST">
                         @csrf
                         <div class="card-body">
                             @include('alert.alert')
@@ -124,7 +124,7 @@
                             <div class="row mt-3">
                                 <div class="col-md-12 text-end">
                                     <button type="submit" class="btn btn-primary" id="submitButton">Simpan</button>
-                                    <a href="/jurnalpemasukan" class="btn btn-secondary ms-2">Batal</a>
+                                    <a href="/jurnal_pemasukan" class="btn btn-secondary ms-2">Batal</a>
                                 </div>
                             </div>
                         </div>
