@@ -157,14 +157,14 @@
                         </li>
                     </ul>
                 </li>
-                <li class="sidebar-item has-sub">
+                <li class="sidebar-item has-sub {{ Request::is('jurnal_penyesuaian*') ? 'active' : '' }}">
                     <a href="#" class="sidebar-link">
                         <i class="bi bi-calculator"></i>
                         <span>Accounting</span>
                     </a>
                     <ul class="submenu active">
-                        <li class="submenu-item">
-                            <a href="#" class="submenu-link">Jurnal Penyesuaian</a>
+                        <li class="submenu-item {{ Request::is('jurnal_penyesuaian*') ? 'active' : '' }}">
+                            <a href="/jurnal_penyesuaian" class="submenu-link">Jurnal Penyesuaian</a>
                         </li>
                         <li class="submenu-item">
                             <a href="#" class="submenu-link">Asset</a>

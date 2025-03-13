@@ -84,7 +84,7 @@
                                 @endforeach
                                 <tr id="total-row" class="fw-bold">
                                     <td colspan="2" class="text-end">Total</td>
-                                    <td class="text-end" id="amount">
+                                    <td class="text-end" id="amount">Rp.
                                         {{ number_format($data->data[0]->credit, 2, ',', '.') }}</td>
                                 </tr>
                             </tbody>
