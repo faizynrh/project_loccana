@@ -418,7 +418,7 @@ Route::middleware('auth.login')->group(
             Route::get('/detail/{id}', 'show')->name('detail');
             Route::get('/edit/{id}', 'edit')->name('edit');
             Route::put('/update/{id}', 'update')->name('update');
-            // Route::get('/approve/{id}', 'vapprove')->name('vapprove');
+            Route::get('/print/{id}', 'print')->name('print');
             // Route::get('/print/{id}', 'print')->name('print');
         });
 
