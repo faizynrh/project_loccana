@@ -162,8 +162,8 @@
                         <i class="bi bi-calculator"></i>
                         <span>Accounting</span>
                     </a>
-                    <ul class="submenu active {{ Request::is('jurnal_penyesuaian*') ? 'active' : '' }}">
-                        <li class="submenu-item">
+                    <ul class="submenu active">
+                        <li class="submenu-item {{ Request::is('jurnal_penyesuaian*') ? 'active' : '' }}">
                             <a href="/jurnal_penyesuaian" class="submenu-link">Jurnal Penyesuaian</a>
                         </li>
                         <li class="submenu-item">

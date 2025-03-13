@@ -138,35 +138,35 @@
                             data: null,
                             render: function(data, type, row) {
                                 let actionButtons = `
-                                                <div class="dropdown action-dropdown">
-                                                    <button type="button" class="btn btn-sm btn-light border rounded-pill shadow-sm dropdown-toggle px-3"
-                                                            data-bs-toggle="dropdown" aria-expanded="false">
-                                                        <i class="bi bi-gear-fill me-1"></i> Action
-                                                    </button>
-                                                    <ul class="dropdown-menu dropdown-menu-end shadow border-0" style="min-width: 200px;">
-                                                        <li> <a href="{{ route('jurnal_penyesuaian.detail', ':id') }}".replace(':id', row.jurnal_id)" class="dropdown-item d-flex align-items-center py-2" title="Detail">
-                                                                                            <i class="bi bi-eye-fill text-primary me-2"></i>
-                                                                                            <span>Lihat Detail</span>
-                                                                                        </a></li>
-                                                        <li><a href="/jurnal_penyesuaian/print/${row.jurnal_id}" class="dropdown-item d-flex align-items-center py-2" target="_blank" title="Print PDF">
-                                                    <i class="bi bi-printer-fill text-warning me-2"></i>
-                                                    <span>Cetak PDF</span>
-                                                </a></li>
-                                                        <li><hr class="dropdown-divider"></li>
-                                                        <li> <a href="/jurnal_penyesuaian/edit/${row.jurnal_id}" class="dropdown-item d-flex align-items-center py-2" title="Edit">
-                                                    <i class="bi bi-pencil-fill text-info me-2"></i>
-                                                    <span>Edit Data</span>
-                                                </a></li>
-                                                        <li><form action="/jurnal_penyesuaian/delete/${row.jurnal_id}" method="POST" id="delete${row.jurnal_id}" style="display:inline; width: 100%;">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="button" class="dropdown-item d-flex align-items-center py-2" title="Hapus" onclick="confirmDelete(${row.jurnal_id})">
-                                                        <i class="bi bi-trash-fill text-danger me-2"></i>
-                                                        <span>Hapus Data</span>
-                                                    </button>
-                                                </form></li>
-                                                    </ul>
-                                                </div>`;
+                                            <div class="dropdown action-dropdown">
+                                                <button type="button" class="btn btn-sm btn-light border rounded-pill shadow-sm dropdown-toggle px-3"
+                                                        data-bs-toggle="dropdown" aria-expanded="false">
+                                                    <i class="bi bi-gear-fill me-1"></i> Action
+                                                </button>
+                                                <ul class="dropdown-menu dropdown-menu-end shadow border-0" style="min-width: 200px;">
+                                                    <li> <a href="/jurnal_penyesuaian/detail/${row.jurnal_id}" class="dropdown-item d-flex align-items-center py-2" title="Detail">
+                                                                                        <i class="bi bi-eye-fill text-primary me-2"></i>
+                                                                                        <span>Lihat Detail</span>
+                                                                                    </a></li>
+                                                    <li><a href="/jurnal_penyesuaian/print/${row.jurnal_id}" class="dropdown-item d-flex align-items-center py-2" target="_blank" title="Print PDF">
+                                                <i class="bi bi-printer-fill text-warning me-2"></i>
+                                                <span>Cetak PDF</span>
+                                            </a></li>
+                                                    <li><hr class="dropdown-divider"></li>
+                                                    <li> <a href="/jurnal_penyesuaian/edit/${row.jurnal_id}" class="dropdown-item d-flex align-items-center py-2" title="Edit">
+                                                <i class="bi bi-pencil-fill text-info me-2"></i>
+                                                <span>Edit Data</span>
+                                            </a></li>
+                                                    <li><form action="/jurnal_penyesuaian/delete/${row.jurnal_id}" method="POST" id="delete${row.jurnal_id}" style="display:inline; width: 100%;">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="button" class="dropdown-item d-flex align-items-center py-2" title="Hapus" onclick="confirmDelete(${row.jurnal_id})">
+                                                    <i class="bi bi-trash-fill text-danger me-2"></i>
+                                                    <span>Hapus Data</span>
+                                                </button>
+                                            </form></li>
+                                                </ul>
+                                            </div>`;
 
                                 return actionButtons;
                             }
