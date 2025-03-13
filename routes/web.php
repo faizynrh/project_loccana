@@ -67,7 +67,7 @@ Route::middleware('auth.login')->group(
         Route::view('/profile', 'profile')->name('profile');
 
         // ==========================================MASTERDATA========================================
-
+    
 
         // ITEM
         Route::prefix('/item')->name('item.')->controller(ItemController::class)->group(function () {
@@ -241,7 +241,7 @@ Route::middleware('auth.login')->group(
 
 
         // ===================================== INVENTORY =========================================
-
+    
         Route::prefix('/stock')->name('stock.')->controller(StockController::class)->group(function () {
             Route::get('/', 'index')->name('index');
             Route::get('/ajax', 'ajax')->name('ajax');
@@ -287,7 +287,7 @@ Route::middleware('auth.login')->group(
 
 
         // ===================================== PENJUALAN =========================================
-
+    
         Route::prefix('/penjualan')->name('penjualan.')->controller(PenjualanController::class)->group(function () {
             Route::get('/', 'index')->name('index');
             Route::get('/generate-po-code', 'generateCode');
@@ -409,21 +409,16 @@ Route::middleware('auth.login')->group(
             }
         );
 
-        Route::prefix('/jurnalpemasukan')->name('jurnalpemasukan.')->controller(JurnalPemasukanController::class)->group(function () {
+        Route::prefix('/jurnal_pemasukan')->name('jurnal_pemasukan.')->controller(JurnalPemasukanController::class)->group(function () {
             Route::get('/', 'index')->name('index');
             Route::get('/ajax', 'ajax')->name('ajax');
             Route::get('/add', 'create')->name('create');
             Route::post('/add', 'store')->name('store');
-            // Route::get('/getItemsList/{id}', 'getItemsList')->name('getitem');
-            // Route::get('/getDetailCustomer/{id}', 'getDetailCustomer')->name('getDetailCustomer');
-            // Route::get('/getDetailWarehouse/{id}', 'getDetailWarehouse')->name('getDetailWarehouse');
-            // Route::get('/getStock/{id}', 'getstock')->name('getstock');
             Route::delete('/delete/{id}', 'destroy')->name('destroy');
-            // Route::get('/detail/{id}', 'show')->name('detail');
-            // Route::get('/edit/{id}', 'edit')->name('edit');
-            // Route::put('/update/{id}', 'update')->name('update');
+            Route::get('/detail/{id}', 'show')->name('detail');
+            Route::get('/edit/{id}', 'edit')->name('edit');
+            Route::put('/update/{id}', 'update')->name('update');
             // Route::get('/approve/{id}', 'vapprove')->name('vapprove');
-            // Route::put('/approve/{id}', 'approve')->name('approve');
             // Route::get('/print/{id}', 'print')->name('print');
         });
 

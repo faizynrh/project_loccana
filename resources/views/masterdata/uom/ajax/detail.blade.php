@@ -16,8 +16,8 @@
                             class="text-danger"></span></label>
                 </div>
                 <div class="col-md-9">
-                    <input type="text" placeholder="Simbol" class="form-control" name="uom_code"
-                        {{-- {{ $uom['symbol'] }} --}} value="" readonly>
+                    <input type="text" placeholder="Simbol" class="form-control" name="uom_symbol"
+                        value="{{ $data->data->symbol }}" readonly>
                 </div>
             </div>
             <div class="row mb-3 align-items-center">
