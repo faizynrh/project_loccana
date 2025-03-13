@@ -2,9 +2,7 @@
 @section('content')
     @push('styles')
         <style>
-            .hidden {
-                display: none !important;
-            }
+            /* CSS code here */
         </style>
     @endpush
     <div id="main-content">
@@ -12,7 +10,7 @@
             <div class="page-title">
                 <div class="row">
                     <div class="col-12 col-md-6 order-md-1 order-last">
-                        <h3>Tambah Jurnal Masuk</h3>
+                        <h3>Tambah Jurnal Pemasukan</h3>
                     </div>
                     <div class="col-12 col-md-6 order-md-2 order-first">
                         <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
@@ -21,10 +19,10 @@
                                     <a href="/dashboard">Dashboard</a>
                                 </li>
                                 <li class="breadcrumb-item">
-                                    <a href="/jurnalpemasukan">Jurnal Masuk</a>
+                                    <a href="/jurnalpemasukan">Jurnal Pemasukan</a>
                                 </li>
                                 <li class="breadcrumb-item active" aria-current="page">
-                                    Tambah Jurnal Masuk
+                                    Tambah Jurnal Pemasukan
                                 </li>
                             </ol>
                         </nav>
@@ -33,292 +31,227 @@
             </div>
             <section class="section">
                 <div class="card">
-                    <div class="card-body">
-                        @include('alert.alert')
-                        <form id="createForm" method="POST" action="{{ route('jurnalpemasukan.store') }}">
-                            @csrf
+                    <div class="card-header">
+                        <h6 class="mb-1">Harap isi data yang telah ditandai dengan <span
+                                class="text-danger bg-light px-1">*</span>, dan
+                            masukkan data dengan benar.</h6>
+                    </div>
+                    <form action="{{ route('jurnalpemasukan.store') }}" method="POST">
+                        @csrf
+                        <div class="card-body">
+                            @include('alert.alert')
                             <div class="row mb-3">
-                                {{-- <div class="col-md-6"> --}}
-                                <div class="card-header">
-                                    <h6 class="card-title">Harap isi data yang telah ditandai dengan <span
-                                            class="text-danger bg-light px-1">*</span>, dan
-                                        masukkan data dengan benar.</h6>
-                                </div>
-                                <div class="row mb-2 align-items-center">
-                                    <div class="col-md-6">
-                                        <label for="principal" class="form-label fw-bold mt-2 mb-1 small">Cash Account
-                                            Debit</label>
-                                        <select class="form-select" id="coa" name="coa" required>
-                                            <option value="" selected disabled>Pilih COA</option>
-                                            @foreach ($coa as $item)
-                                                <option value="{{ $item['id'] }}">{{ $item['account_name'] }}</option>
-                                            @endforeach
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label fw-bold">Cash Account Kredit<span
+                                                class="text-danger bg-light px-1">*</span></label>
+                                        <select class="form-select" name="coa_debit" required>
+                                            @if (!empty($coa->data) && count($coa->data) > 0)
+                                                <option value="" disabled selected>Pilih Cash Debit</option>
+                                                @foreach ($coa->data as $data)
+                                                    <option value="{{ $data->id }}">{{ $data->account_name }}</option>
+                                                @endforeach
+                                            @else
+                                                <option value="" selected disabled>Data Cash Tidak Tersedia</option>
+                                            @endif
                                         </select>
                                     </div>
-                                    <div class="col-md-6">
-                                        <label for="tanggal" class="form-label fw-bold mt-2 mb-1 small">Tanggal</label>
-                                        <input type="date" class="form-control" id="tanggal" name="tanggal" required>
+                                    <div class="mb-3">
+                                        <label class="form-label fw-bold">Tanggal<span
+                                                class="text-danger bg-light px-1">*</span></label>
+                                        <input type="date" class="form-control" name="transaction_date" required>
                                     </div>
                                 </div>
-
-                                <div class="row mb-3 align-items-center">
-                                    <div class="col-md-12">
-                                        <label for="jumlah" class="form-label fw-bold mt-2 mb-1 small">Jumlah</label>
-                                        <input type="jumlah" class="form-control bg-body-secondary jumlah" id="jumlah"
-                                            name="jumlah" readonly>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label fw-bold">Jumlah<span
+                                                class="text-danger bg-light px-1">*</span></label>
+                                        <input type="text" class="form-control bg-body-secondary" placeholder="Jumlah"
+                                            name="credit" id="total_amount" value="" readonly>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label fw-bold">Keterangan<span
+                                                class="text-danger bg-light px-1">*</span></label>
+                                        <textarea class="form-control" name="description" placeholder="Keterangan" rows="4" required></textarea>
                                     </div>
                                 </div>
-                                <div class="row mb-3 align-items-center">
-                                    <div class="col-md-12">
-                                        <label for="description"
-                                            class="form-label fw-bold mt-2 mb-1 small">Keterangan</label>
-                                        <textarea class="form-control" rows="5" id="description" name="description"></textarea>
-                                    </div>
-                                </div>
-                                {{-- <label for="status" class="form-label fw-bold mt-2 mb-1 small">Status</label> --}}
-                                <input type="hidden" class="form-control" id="status" name="status" value="konfirmasi">
-                                <input type="hidden" class="form-control" id="requested_by" name="requested_by"
-                                    value="1">
-                                <input type="hidden" class="form-control" id="currency_id" name="currency_id"
-                                    value="1">
-
                             </div>
-                            <div class="p-2" style="border-top: 1px solid #000">
-                                {{-- <h5 class="fw-bold ">Cash Credit</h5> --}}
-                            </div>
-                            <table class="table mt-3" id="transaction-table">
+                            <hr class="my-4 border-2 border-dark">
+                            <table class="table mt-3">
                                 <thead>
-                                    <tr>
-                                        <th>Cash Kredit</th>
-                                        <th></th>
-                                        <th></th>
-                                        <th></th>
-                                        <th></th>
+                                    <tr style="border-bottom: 3px solid #000;">
+                                        <th>Cash Kredit<span class="text-danger bg-light px-1">*</span></th>
+                                        <th>Jumlah</th>
+                                        <th>Keterangan</th>
+                                        {{-- <th></th> --}}
                                     </tr>
                                 </thead>
                                 <tbody id="tableBody">
-                                    <tr class="item-row">
+                                    <tr style="border-bottom: 2px solid #000;">
                                         <td>
-                                            <select class="form-select" id="coa" name="items[0][coa]" required>
-                                                <option value="" selected disabled>Pilih COA</option>
-                                                @foreach ($coa as $item)
-                                                    <option value="{{ $item['id'] }}">{{ $item['account_name'] }}</option>
-                                                @endforeach
+                                            <select class="form-select coa-select" name="items[0][coa_credit]" required>
+                                                @if (!empty($coa->data) && count($coa->data) > 0)
+                                                    <option value="" disabled selected>Pilih Cash Kredit</option>
+                                                    @foreach ($coa->data as $data)
+                                                        <option value="{{ $data->id }}">{{ $data->account_name }}
+                                                        </option>
+                                                    @endforeach
+                                                @else
+                                                    <option value="" selected disabled>Data Cash Tidak Tersedia
+                                                    </option>
+                                                @endif
                                             </select>
-                                            {{-- <input type="hidden" name="items[0][uom_id]" class="uom-input"> --}}
                                         </td>
                                         <td>
-                                            <input type="number" name="items[0][jumlah]" id="subtotal-input"
-                                                class="form-control subtotal-input" placeholder="jumlah"
-                                                oninput="this.value = validateMinOne(this.value)">
+                                            <input type="number" class="form-control jumlah" name="items[0][credit]"
+                                                placeholder="Jumlah" value="" required min="1">
                                         </td>
                                         <td>
-                                            <input type="text" name="items[0][keterangan]"
-                                                class="form-control discount-input" placeholder="keterangan">
-                                        </td>
-                                        <td>
-                                            <button type="button" class="btn btn-danger btn-sm remove-row"
-                                                disabled>-</button>
-                                        </td>
-                                        <td style="width: 30px">
-                                            <input type="hidden" name="items[0][total_price]"
-                                                class="form-select bg-body-secondary total-input" disabled>
+                                            <textarea class="form-control" name="items[0][description]" placeholder="Keterangan"></textarea>
                                         </td>
                                     </tr>
-                                    <tr style="border-bottom: 2px solid #000;border-top: 3px solid #000">
-                                        <td colspan="2"></td>
-                                        <td class="text-end">
-                                            <button class="btn btn-primary fw-bold" id="add-row">+</button>
+                                    <tr id="add-button-row" style="border-bottom: 2px solid #000;">
+                                        <td colspan="3" class="text-end">
+                                            <button type="button" class="btn btn-primary fw-bold" id="add-row">+</button>
                                         </td>
+                                    </tr>
+                                    <tr id="total-row" class="fw-bold">
+                                        <td colspan="2" class="text-end">Total</td>
+                                        <td class="text-end" id="amount">Rp. 0,00</td>
                                     </tr>
                                 </tbody>
-                                <tr style="border-top: 2px solid #000">
-                                    <td colspan="2"></td>
-                                    <td>Total</td>
-                                    <td style="">0</td>
-                                </tr>
                             </table>
-                            <div class="row">
+                            <div class="row mt-3">
                                 <div class="col-md-12 text-end">
-                                    {{-- <input type="hidden" name="tax_amount" id="tax_amount" value="0">
-                                    <input type="hidden" name="company_id" id="company_id" value="2">
-                                    <input type="hidden" name="total_amount" id="total_amount" value="0"> --}}
-
                                     <button type="submit" class="btn btn-primary" id="submitButton">Simpan</button>
                                     <a href="/jurnalpemasukan" class="btn btn-secondary ms-2">Batal</a>
                                 </div>
                             </div>
-                        </form>
-                    </div>
+                        </div>
+                    </form>
                 </div>
             </section>
         </div>
     </div>
 @endsection
+
 @push('scripts')
     <script>
         $(document).ready(function() {
-            const $addButton = $('#add-row');
-            $addButton.prop('disabled', true);
+            const state = {
+                itemIndex: 1,
+                selectedCoas: new Set(),
+                maxCoaCount: {{ count($coa->data) }}
+            };
+            const templates = {
+                tableRow: (index) => `
+                                <tr style="border-bottom: 2px solid #000;">
+                                    <td>
+                                        <select class="form-select coa-select" name="items[${index}][coa_credit]" required>
+                                            <option value="" disabled selected>Pilih Cash Debit</option>
+                                            @foreach ($coa->data as $data)
+                                                <option value="{{ $data->id }}">{{ $data->account_name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <input type="number" class="form-control jumlah" placeholder="Jumlah" name="items[${index}][credit]" required min="1">
+                                    </td>
+                                    <td>
+                                        <textarea class="form-control" placeholder="Keterangan" name="items[${index}][description]"></textarea>
+                                    </td>
+                                    <td class="text-end">
+                                        <button type="button" class="btn btn-danger fw-bold remove-row">-</button>
+                                    </td>
+                                </tr>`,
 
-            $('.item-row:first .remove-row').prop('disabled', true);
+                footerRows: `
+                            <tr id="add-button-row" style="border-bottom: 2px solid #000;">
+                                <td colspan="4" class="text-end">
+                                    <button type="button" class="btn btn-primary fw-bold" id="add-row">+</button>
+                                </td>
+                            </tr>
+                            <tr id="total-row" class="fw-bold">
+                                <td colspan="3" class="text-end">Total</td>
+                                <td class="text-end" id="amount">Rp. 0,00</td>
+                            </tr>`
+            };
 
-            function createNewRow(rowIndex) {
-                return `
-                    <tr class="item-row">
-                        <td>
-                            <select class="form-select coa-select" name="items[${rowIndex}][coa]" required>
-                                <option value="" selected disabled>Pilih COA</option>
-                                @foreach ($coa as $item)
-                                    <option value="{{ $item['id'] }}">{{ $item['account_name'] }}</option>
-                                @endforeach
-                            </select>
-                        </td>
-                        <td>
-                            <input type="number" name="items[${rowIndex}][jumlah]"
-                                class="form-control subtotal-input" placeholder="jumlah"
-                                oninput="this.value = validateMinOne(this.value)">
-                        </td>
-                        <td>
-                            <input type="text" name="items[${rowIndex}][keterangan]"
-                                class="form-control discount-input" placeholder="keterangan">
-                        </td>
-                        <td>
-                            <button type="button" class="btn btn-danger btn-sm remove-row">-</button>
-                        </td>
-                            <input type="hidden" name="items[${rowIndex}][total_price]"
-                                class="form-select bg-body-secondary total-input" disabled>
-                    </tr>
-                `;
+            function canAddRow() {
+                return $('.coa-select').length < state.maxCoaCount;
             }
 
-            $(document).on('change', 'select[name^="items"][name$="[coa]"]', function() {
-                checkAddButtonStatus();
-                updateAllItemSelects();
-
-                var row = $(this).closest('tr');
-                calculateRowTotal(row);
-                updateTotals();
-            });
-
-            function getSelectedItems() {
-                const selectedItems = [];
-                $('.item-row').each(function() {
-                    const itemId = $(this).find('select[name^="items"][name$="[coa]"]').val();
-                    if (itemId) {
-                        selectedItems.push(itemId);
-                    }
-                });
-                return selectedItems;
-            }
-
-            $('#add-row').on('click', function(e) {
+            $(document).on('click', '#add-row', function(e) {
                 e.preventDefault();
 
-                const rowCount = $('.item-row').length;
-
-                $(createNewRow(rowCount)).insertBefore('#tableBody tr:last');
-                updateAllItemSelects();
-                updateTotals();
-                checkAddButtonStatus();
-            });
-
-            $(document).on('click', '.remove-row', function() {
-                if ($('.item-row').length > 1) {
-                    $(this).closest('tr').remove();
-
-                    reindexRows();
-                    updateAllItemSelects();
-                    updateTotals();
-                    checkAddButtonStatus();
+                if (!canAddRow()) {
+                    Swal.fire({
+                        title: 'Peringatan',
+                        text: 'Jumlah baris sudah mencapai maksimum jumlah COA yang tersedia!',
+                        icon: 'warning',
+                        confirmButtonText: 'Oke'
+                    });
+                    return;
                 }
+
+                $('#loading-overlay').fadeIn();
+                $('#add-button-row, #total-row').remove();
+                $('#tableBody').append(templates.tableRow(state.itemIndex) + templates.footerRows);
+                state.itemIndex++;
+                updateCoaDropdowns();
+                updateTotalAmount();
+                $('#loading-overlay').fadeOut();
             });
 
-            $(document).on('input', '.subtotal-input', function() {
-                var row = $(this).closest('tr');
-                calculateRowTotal(row);
-                updateTotals();
+            $(document).on('change', '.coa-select', function() {
+                let selectedValue = $(this).val();
+                updateCoaDropdowns();
             });
 
-            function checkAddButtonStatus() {
-                const $lastRow = $('.item-row:last');
-                const lastCoaValue = $lastRow.find('select[name^="items"][name$="[coa]"]').val();
+            $(document).on('click', '.remove-row', function(e) {
+                $('#loading-overlay').fadeIn();
+                e.preventDefault();
+                $(this).closest('tr').remove();
+                updateTotalAmount();
+                updateCoaDropdowns();
+                $('#loading-overlay').fadeOut();
+            });
 
-                if (lastCoaValue) {
-                    $addButton.prop('disabled', false);
-                } else {
-                    $addButton.prop('disabled', true);
-                }
-            }
+            $(document).on('input', '.jumlah', function() {
+                updateTotalAmount();
+            });
 
-            function updateAllItemSelects() {
-                var selectedItems = getSelectedItems();
+            function updateCoaDropdowns() {
+                let selectedValues = new Set();
 
                 $('.coa-select').each(function() {
-                    var currentSelect = $(this);
-                    var currentValue = currentSelect.val();
+                    let val = $(this).val();
+                    if (val) selectedValues.add(val);
+                });
 
-                    currentSelect.find('option').each(function() {
-                        var optionValue = $(this).val();
-                        if (optionValue && optionValue !== currentValue && selectedItems.includes(
-                                optionValue)) {
-                            $(this).hide();
-                        } else {
-                            $(this).show();
+                $('.coa-select').each(function() {
+                    let currentValue = $(this).val();
+                    $(this).find('option').each(function() {
+                        let optionValue = $(this).val();
+                        if (optionValue && optionValue !== currentValue) {
+                            $(this).toggle(!selectedValues.has(optionValue));
                         }
                     });
                 });
             }
 
-            function reindexRows() {
-                $('.item-row').each(function(index) {
-                    const $row = $(this);
-
-                    $row.find('select[name^="items"]').attr('name', `items[${index}][coa]`);
-                    $row.find('input.subtotal-input').attr('name', `items[${index}][jumlah]`);
-                    $row.find('input.discount-input').attr('name', `items[${index}][keterangan]`);
-                    $row.find('input.total-input').attr('name', `items[${index}][total_price]`);
+            function updateTotalAmount() {
+                let total = 0;
+                $('.jumlah').each(function() {
+                    let value = parseFloat($(this).val()) || 0;
+                    total += value;
                 });
+                $('#total_amount').val(total);
+                $('#amount').text(formatRupiah(total));
             }
 
-            function calculateRowTotal(row) {
-                const subtotal = parseFloat(row.find('.subtotal-input').val()) || 0;
-                const total = subtotal;
-
-                row.find('.total-input').val(total.toFixed(0));
-            }
-
-            function updateTotals() {
-                let finalTotal = 0;
-
-                $('.item-row').each(function() {
-                    const jumlah = parseFloat($(this).find('.total-input').val()) || 0;
-                    finalTotal += jumlah;
-                });
-
-                updateDisplayValue('Total', finalTotal);
-                $('#jumlah').val(finalTotal);
-                $('tr[style*="border-top: 2px solid #000"] td:last').text(formatNumber(finalTotal));
-            }
-
-            function updateDisplayValue(label, value) {
-                $('tr.fw-bold').each(function() {
-                    if ($(this).find('td:eq(1)').text().trim() === label) {
-                        $(this).find('td:eq(1)').next().text(formatNumber(value));
-                    }
-                });
-            }
-
-            function formatNumber(num) {
-                return parseFloat(num).toLocaleString('id-ID', {
-                    minimumFractionDigits: 0,
-                    maximumFractionDigits: 0
-                });
-            }
-
-            updateTotals();
-            checkAddButtonStatus();
-            updateAllItemSelects();
+            updateTotalAmount();
+            updateCoaDropdowns();
         });
     </script>
 @endpush

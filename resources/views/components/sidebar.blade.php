@@ -137,7 +137,7 @@
                     </ul>
                 </li>
                 <li
-                    class="sidebar-item has-sub {{ (Request::is('hutang*') || Request::is('piutang*') ? 'active' : '' || Request::is('pemasukan*') || Request::is('jurnal_pengeluaran*')) ? 'active' : '' }}">
+                    class="sidebar-item has-sub {{ (Request::is('hutang*') || Request::is('piutang*') ? 'active' : '' || Request::is('jurnalpemasukan*') || Request::is('jurnal_pengeluaran*')) ? 'active' : '' }}">
                     <a href="#" class="sidebar-link">
                         <i class="bi bi-cash-stack"></i>
                         <span>Cash Bank</span>
@@ -149,7 +149,7 @@
                         <li class="submenu-item {{ Request::is('piutang*') ? 'active' : '' }}">
                             <a href="/piutang" class="submenu-link">Piutang</a>
                         </li>
-                        <li class="submenu-item {{ Request::is('pemasukan*') ? 'active' : '' }}">
+                        <li class="submenu-item {{ Request::is('jurnalpemasukan*') ? 'active' : '' }}">
                             <a href="/jurnalpemasukan" class="submenu-link">Pemasukan</a>
                         </li>
                         <li class="submenu-item {{ Request::is('jurnal_pengeluaran*') ? 'active' : '' }}">

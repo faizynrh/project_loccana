@@ -7,94 +7,123 @@ use Illuminate\Http\Request;
 
 class JurnalPemasukanController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-
-    public function ajaxpemasukan(Request $request)
+    public function ajax(Request $request)
     {
-        $search = $request->input('search.value') ?? '';
-        $month = $request->input('month', 11);
-        $year = $request->input('year', 0);
-        $length = $request->input('length', 10);
-        $start = $request->input('start', 0);
+        try {
+            $length = $request->input('length', 10);
+            $start = $request->input('start', 0);
+            $search = $request->input('search.value') ?? '';
 
-        $requestbody = [
-            'search' => '',
-            'month' => $month,
-            'year' => $year,
-            'limit' => $length,
-            'offset' => $start,
-        ];
-
-        if (!empty($search)) {
-            $requestbody['search'] = $search;
-        }
-
-        $apiResponse = storeApi(env('JURNAL_PEMASUKAN_URL') . '/list', $requestbody);
-
-        if ($request->ajax()) {
-            try {
-                if ($apiResponse->successful()) {
-                    $data = $apiResponse->json();
-                    return response()->json([
-                        'draw' => $request->input('draw'),
-                        'recordsTotal' => $data['data']['jumlah_filter'] ?? 0,
-                        'recordsFiltered' => $data['data']['jumlah'] ?? 0,
-                        'data' => $data['data']['table'] ?? [],
-                        // 'mtd' => $mtd['data'] ?? [],
-                    ]);
-                }
-                return response()->json(['error' => 'Failed to fetch data'], 500);
-            } catch (\Exception $e) {
-                return response()->json(['error' => $e->getMessage()], 500);
+            $requestbody = [
+                'search' => $search,
+                'limit' => $length,
+                'offset' => $start,
+                'company_id' => 2
+            ];
+            $apiResponse = storeApi(env('JURNAL_PEMASUKAN_URL') . '/list', $requestbody);
+            if ($apiResponse->successful()) {
+                $data = $apiResponse->json();
+                return response()->json([
+                    'draw' => $request->input('draw'),
+                    'recordsTotal' => $data['data']['jumlah_filter'] ?? 0,
+                    'recordsFiltered' => $data['data']['jumlah'] ?? 0,
+                    'data' => $data['data']['table'] ?? [],
+                ]);
+            }
+            return response()->json([
+                'error' => $apiResponse->json()['message'],
+            ]);
+        } catch (\Exception $e) {
+            if ($request->ajax()) {
+                return response()->json([
+                    'error' => $e->getMessage(),
+                ]);
             }
         }
     }
-
     public function index()
     {
         return view('cashbank.jurnalpemasukan.index');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         $companyid = 2;
-        $requestbody = [
-            'company_id' => $companyid
-        ];
         $coaResponse = fectApi(env('LIST_COA') . '/' . $companyid);
         if ($coaResponse->successful()) {
-            $coa = $coaResponse->json()['data'];
+            $coa = json_decode($coaResponse->body());
             return view('cashbank.jurnalpemasukan.add', compact('coa'));
+        } else {
+            return back()->withErrors($coaResponse->json()['message']);
         }
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        // dd($request->all());
+        try {
+            $items = [];
+            if ($request->has('items')) {
+                foreach ($request->input('items') as $item) {
+                    $items[] = [
+                        'coa_id' => $item['coa_credit'],
+                        'credit' => $item['credit'],
+                        'description' => $item['description'],
+                    ];
+                }
+            }
+
+            $data = [
+                'transaction_date' => $request->transaction_date,
+                'coa_id' => $request->coa_debit,
+                'debit' => $request->debit,
+                'credit' => 0,
+                'description' => $request->description,
+                'reference_id' => 0,
+                'reference_type' => 'jurnal masuk',
+                'company_id' => 2,
+                'items' => $items
+            ];
+            $apiResponse = storeApi(env('JURNAL_PEMASUKAN_URL'), $data);
+            if ($apiResponse->successful()) {
+                return redirect()->route('jurnalpemasukan.index')
+                    ->with('success', $apiResponse->json()['message']);
+            } else {
+                return back()->withErrors($apiResponse->json()['message']);
+            }
+        } catch (\Exception $e) {
+            return back()->withErrors($e->getMessage());
+        }
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(string $id)
     {
-        //
+        try {
+            $apiResponse = fectApi(env('JURNAL_PEMASUKAN_URL') . '/' . $id);
+            if ($apiResponse->successful()) {
+                $data = json_decode($apiResponse->body());
+                return view('cashbank.jurnalpemasukan.detail', compact('data'));
+            } else {
+                return back()->withErrors($apiResponse->json()['message']);
+            }
+        } catch (\Exception $e) {
+            return back()->withErrors($e->getMessage());
+        }
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(string $id)
     {
-        //
+        try {
+            $apiResponse = fectApi(env('JURNAL_PEMASUKAN_URL') . '/' . $id);
+            if ($apiResponse->successful()) {
+                $data = json_decode($apiResponse->body());
+                return view('cashbank.jurnalpemasukan.detail', compact('data'));
+            } else {
+                return back()->withErrors($apiResponse->json()['message']);
+            }
+        } catch (\Exception $e) {
+            return back()->withErrors($e->getMessage());
+        }
     }
 
     /**
@@ -113,12 +142,9 @@ class JurnalPemasukanController extends Controller
         try {
             $apiResponse = deleteApi(env('JURNAL_PEMASUKAN_URL') . '/' . $id);
             if ($apiResponse->successful()) {
-                return redirect()->route('pemasukan.index')
-                    ->with('success', $apiResponse->json()['message']);
+                return redirect()->route('jurnalpemasukan.index')->with('success', $apiResponse->json()['message']);
             } else {
-                return back()->withErrors(
-                    $apiResponse->json()['message']
-                );
+                return back()->withErrors($apiResponse->json()['message']);
             }
         } catch (\Exception $e) {
             return back()->withErrors($e->getMessage());
