@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\cashbank;
 
 use App\Http\Controllers\Controller;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 
 class JurnalPemasukanController extends Controller
@@ -182,6 +183,26 @@ class JurnalPemasukanController extends Controller
                 return redirect()->route('jurnal_pemasukan.index')->with('success', $apiResponse->json()['message']);
             } else {
                 return back()->withErrors($apiResponse->json()['message']);
+            }
+        } catch (\Exception $e) {
+            return back()->withErrors($e->getMessage());
+        }
+    }
+
+    public function print($id)
+    {
+        try {
+            $apiResponse = fectApi(env('JURNAL_PEMASUKAN_URL') . '/' . $id);
+            if ($apiResponse->successful()) {
+                $data = json_decode($apiResponse->body());
+                $totalAmount = 0;
+                // foreach ($datas as $item) {
+                //     $totalAmount += $item->amount;
+                // }
+                $pdf = Pdf::loadView('cashbank.jurnalpemasukan.print', compact('data', 'totalAmount'));
+                return $pdf->stream('Kas_Masuk.pdf');
+            } else {
+                return back()->withErrors($apiResponse->status());
             }
         } catch (\Exception $e) {
             return back()->withErrors($e->getMessage());
