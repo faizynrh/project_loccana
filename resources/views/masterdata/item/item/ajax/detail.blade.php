@@ -18,14 +18,6 @@
         </div>
         <div class="row mb-3 align-items-center">
             <div class="col-md-3">
-                <label class="form-label fw-bold mb-0">Deskripsi </label>
-            </div>
-            <div class="col-md-9">
-                <textarea class="form-control" name="description" rows="5" readonly>{{ $data->data->item_description }}</textarea>
-            </div>
-        </div>
-        <div class="row mb-3 align-items-center">
-            <div class="col-md-3">
                 <label class="form-label fw-bold mb-0">Satuan</label>
             </div>
             <div class="col-md-9">
@@ -39,6 +31,14 @@
             <div class="col-md-9">
                 <input type="text" class="form-control" name="name" value="{{ $data->data->item_type_name }}"
                     readonly>
+            </div>
+        </div>
+        <div class="row mb-3 align-items-center">
+            <div class="col-md-3">
+                <label class="form-label fw-bold mb-0">Deskripsi </label>
+            </div>
+            <div class="col-md-9">
+                <textarea class="form-control" name="description" rows="5" readonly>{{ $data->data->item_description }}</textarea>
             </div>
         </div>
         <div class="modal-footer">

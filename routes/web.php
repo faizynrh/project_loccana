@@ -14,6 +14,7 @@ use App\Http\Controllers\masterdata\COATypeController;
 use App\Http\Controllers\procurement\ReportController;
 use App\Http\Controllers\authentication\AuthController;
 use App\Http\Controllers\masterdata\CustomerController;
+use App\Http\Controllers\masterdata\ItemTypeController;
 use App\Http\Controllers\penjualan\PenjualanController;
 use App\Http\Controllers\procurement\InvoiceController;
 use App\Http\Controllers\procurement\RekapPOController;
@@ -71,7 +72,18 @@ Route::middleware('auth.login')->group(
 
 
         // ITEM
-        Route::prefix('/item')->name('item.')->controller(ItemController::class)->group(function () {
+        Route::prefix('/item_type')->name('item_type.')->controller(ItemTypeController::class)->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/ajax', 'ajax')->name('ajax');
+            Route::get('/add', 'create')->name('create');
+            Route::post('/add', 'store')->name('store');
+            Route::get('/edit/{id}', 'edit')->name('edit');
+            Route::put('/update/{id}', 'update')->name('update');
+            Route::get('/detail/{id}', 'show')->name('detail');
+            Route::delete('/delete/{id}', 'destroy')->name('destroy');
+        });
+
+        Route::prefix('/item_management')->name('item.')->controller(ItemController::class)->group(function () {
             Route::get('/', 'index')->name('index');
             Route::get('/ajax', 'ajax')->name('ajax');
             Route::get('/add', 'create')->name('create');

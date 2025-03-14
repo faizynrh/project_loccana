@@ -26,8 +26,16 @@
                         <span>Master Data</span>
                     </a>
                     <ul class="submenu active">
-                        <li class="submenu-item {{ Request::is('item*') ? 'active' : '' }}">
-                            <a href="/item" class="submenu-link">Item</a>
+                        <li class="submenu-item has-sub submenu-item {{ Request::is('item*') ? 'active' : '' }}">
+                            <a href="#" class="submenu-link">Item</a>
+                            <ul class="submenu submenu-level-2 ">
+                                <li class="submenu-item {{ Request::is('item_type*') ? 'active' : '' }}">
+                                    <a href="/item_type" class="submenu-link">Item Type</a>
+                                </li>
+                                <li class="submenu-item {{ Request::is('item_management*') ? 'active' : '' }}">
+                                    <a href="/item_management" class="submenu-link">Item</a>
+                                </li>
+                            </ul>
                         </li>
                         <li class="submenu-item {{ Request::is('user*') ? 'active' : '' }}">
                             <a href="/user" class="submenu-link">User</a>
@@ -47,9 +55,6 @@
                         <li class="submenu-item {{ Request::is('informasi*') ? 'active' : '' }}">
                             <a href="#" class="submenu-link">Informasi</a>
                         </li>
-                        {{-- <li class="submenu-item {{ Request::is('coa*') ? 'active' : '' }}">
-                            <a href="/coa" class="submenu-link">COA</a>
-                        </li> --}}
                         <li class="submenu-item has-sub submenu-item {{ Request::is('coa*') ? 'active' : '' }}">
                             <a href="#" class="submenu-link">COA</a>
                             <ul class="submenu submenu-level-2 ">
