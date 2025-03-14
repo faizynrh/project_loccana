@@ -5,16 +5,22 @@
                 <i class="bi bi-justify fs-3"></i>
             </a>
 
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <div class="d-flex align-items-center rounded p-2 ms-3" id="clock">
+                <span class="text-gray-600 fw-bold fs-6"></span>
+            </div>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <div class="navbar-nav ms-auto mb-lg-0 dropdown">
                     <a href="#" data-bs-toggle="dropdown" aria-expanded="false">
                         <div class="user-menu d-flex">
-                            <div class="user-name text-end me-3">
-                                <h6 class="mb-0 text-gray-600">{{ Session::get('user_info')['username'] ?? 'Guest' }}
+                            <div class="user-name text-end me-3 mt-2">
+                                <h6 class="mb-0 text-gray-600">
+                                    {{ Session::get('user_info')['username'] ?? 'Guest' }}
                                 </h6>
                                 <p class="mb-0 text-sm text-gray-600">Administrator</p>
                             </div>
@@ -61,3 +67,15 @@
         </div>
     </nav>
 </header>
+<script>
+    function updateClock() {
+        const now = new Date();
+        now.setHours(now.getHours());
+        let hours = now.getHours().toString().padStart(2, '0');
+        let minutes = now.getMinutes().toString().padStart(2, '0');
+        let seconds = now.getSeconds().toString().padStart(2, '0');
+        document.getElementById('clock').innerText = `${hours}:${minutes}:${seconds} WIB`;
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+</script>
