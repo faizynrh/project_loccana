@@ -1,54 +1,48 @@
 <div class="row g-3">
-    <div class="col-12">
-        <h6 class="mb-3">Harap isi data yang telah ditandai dengan <span class="text-danger bg-light px-1">*</span>,
-            dan
-            masukkan data dengan benar.</h6>
-    </div>
-    <div class="col-12">
-        <div class="modal-body">
-            <form action="{{ route('uom.update', $data->data->id) }}" id="editUomForm" method="POST"
-                onsubmit="disableButton(event)">
-                @csrf
-                @method('PUT')
-                <div class="row mb-3 align-items-center">
-                    <div class="col-md-3">
-                        <label for="account_code" class="form-label fw-bold mb-0">UOM <span
-                                class="text-danger"></span></label>
+    <div class="row g-3">
+        <div class="col-12">
+            <div class="modal-body">
+                <form action="{{ route('convert_uom.update', $data->data->id) }}" method="POST" id="editConvertUomForm"
+                    onsubmit="disableButton(event)">
+                    @csrf
+                    @method('PUT')
+                    <div class="row mb-3">
+                        <div class="col-md-5">
+                            <label for="dari_edit" class="form-label">Satuan Asal</label>
+                            <select class="form-select" name="dari" id="dari_edit" required>
+                                <option value="" selected disabled>Pilih Satuan Asal</option>
+                                @foreach ($uom->data as $uoms)
+                                    <option value="{{ $uoms->id }}"
+                                        {{ $data->data->from_uom_id == $uoms->id ? 'selected' : '' }}>
+                                        {{ $uoms->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="conversion_factor_edit" class="form-label">Faktor Konversi</label>
+                            <input type="number" class="form-control" id="conversion_factor_edit"
+                                name="conversion_factor" placeholder="Masukkan Faktor Konversi" required
+                                value="{{ $data->data->conversion_factor }}">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="ke_edit" class="form-label">Satuan Tujuan</label>
+                            <select class="form-select" name="ke" id="ke_edit" required>
+                                <option value="" selected disabled>Pilih Satuan Tujuan</option>
+                                @foreach ($uom->data as $uoms)
+                                    <option value="{{ $uoms->id }}"
+                                        {{ $data->data->to_uom_id == $uoms->id ? 'selected' : '' }}>{{ $uoms->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
                     </div>
-                    <div class="col-md-9">
-                        <input type="text" class="form-control" value="{{ $data->data->name }}" id="uom_name"
-                            name="uom_name" required>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary" id="submitButton">Simpan</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                            aria-label="Close">Batal</button>
                     </div>
-                </div>
-
-                <div class="row mb-3 align-items-center">
-                    <div class="col-md-3">
-                        <label for="account_code" class="form-label fw-bold mb-0">Simbol UOM <span
-                                class="text-danger"></span></label>
-                    </div>
-                    <div class="col-md-9">
-                        <input type="text" placeholder="Simbol" class="form-control" name="uom_symbol"
-                            value="{{ $data->data->symbol }}" required>
-                    </div>
-                </div>
-                <div class="row mb-3 align-items-center">
-                    <div class="col-md-3">
-                        <label for="account_code" class="form-label fw-bold mb-0">Keterangan UOM <span
-                                class="text-danger"></span></label>
-                    </div>
-                    <div class="col-md-9">
-                        <textarea cols="30" rows="4" name="description" class="form-control">{{ $data->data->description }}</textarea>
-
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary" id="submitButton">Simpan</button>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
-                        aria-label="Close">Batal</button>
-                </div>
+                </form>
+            </div>
         </div>
-        </form>
     </div>
-</div>
-</div>
 </div>

@@ -1,42 +1,42 @@
 <div class="row g-3">
-    <div class="col-12">
-        <h6 class="mb-3">Harap isi data yang telah ditandai dengan <span class="text-danger bg-light px-1">*</span>, dan
-            masukkan data dengan benar.</h6>
-    </div>
-    <div class="col-12">
-        <div class="modal-body">
-            <form action="{{ route('uom.store') }}" method="POST" id="createForm" onsubmit="disableButton(event)">
-                @csrf
-                <div class="row mb-3 align-items-center">
-                    <div class="col-md-3">
-                        <label for="uom_name" class="form-label">UOM <span class="text-danger">*</span></label>
+    <div class="row g-3">
+        <div class="col-12">
+            <div class="modal-body">
+                <form action="{{ route('convert_uom.store') }}" method="POST" id="createForm"
+                    onsubmit="disableButton(event)">
+                    @csrf
+                    <div class="row mb-3">
+                        <div class="col-md-5">
+                            <label for="dari" class="form-label">Satuan Asal</label>
+                            <select class="form-select" name="dari" id="dari" required>
+                                <option value="" selected disabled>Pilih Satuan Asal</option>
+                                @foreach ($uom->data as $uoms)
+                                    <option value="{{ $uoms->id }}">{{ $uoms->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="conversion_factor" class="form-label">Faktor Konversi</label>
+                            <input type="number" class="form-control" id="conversion_factor" name="conversion_factor"
+                                placeholder="Masukkan Faktor Konversi" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="ke" class="form-label">Satuan Tujuan</label>
+                            <select class="form-select" name="ke" id="ke" required>
+                                <option value="" selected disabled>Pilih Satuan Tujuan</option>
+                                @foreach ($uom->data as $uoms)
+                                    <option value="{{ $uoms->id }}">{{ $uoms->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
                     </div>
-                    <div class="col-md-9">
-                        <input type="text" class="form-control" id="uom_name" name="uom_name" required>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary" id="submitButton">Simpan</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                            aria-label="Close">Batal</button>
                     </div>
-                </div>
-                <div class="row mb-3 align-items-center">
-                    <div class="col-md-3">
-                        <label for="uom_symbol" class="form-label">Simbol UOM <span class="text-danger">*</span></label>
-                    </div>
-                    <div class="col-md-9">
-                        <input type="text" class="form-control" id="uom_symbol" name="uom_symbol" required>
-                    </div>
-                </div>
-                <div class="row mb-3 align-items-center">
-                    <div class="col-md-3">
-                        <label for="description" class="form-label">Keterangan</label>
-                    </div>
-                    <div class="col-md-9">
-                        <textarea class="form-control" id="description" name="description" rows="3"></textarea>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary" id="submitButton">Simpan</button>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
-                        aria-label="Close">Batal</button>
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
     </div>
 </div>

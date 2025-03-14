@@ -16,7 +16,6 @@ class ConvertUomController extends Controller
             $requestbody = [
                 'limit' => $length,
                 'offset' => $start,
-                'company_id' => 2
             ];
             if (!empty($search)) {
                 $requestbody['search'] = $search;
@@ -47,51 +46,88 @@ class ConvertUomController extends Controller
         return view('masterdata.convertuom.index');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
+        $uomResponse = fectApi(env('LIST_UOM'));
+
+        if ($uomResponse->successful()) {
+            $uom = json_decode($uomResponse->body(), false);
+            return view('masterdata.convertuom.ajax.add', compact('uom'));
+        } else {
+            $errors = [];
+            if (!$uomResponse->successful()) {
+                $errors[] = $uomResponse->json()['message'];
+            }
+            return back()->withErrors($errors);
+        }
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        try {
+            $data = [
+                'from_uom_id' => $request->dari,
+                'to_uom_id' => $request->ke,
+                'conversion_factor' => $request->conversion_factor
+            ];
+            $apiResponse = storeApi(env('CONVERT_UOM_URL'), $data);
+
+            if ($apiResponse->successful()) {
+                return redirect()->route('convert_uom.index')
+                    ->with('success', $apiResponse->json()['message']);
+            } else {
+                return back()->withErrors($apiResponse->json()['message']);
+            }
+        } catch (\Exception $e) {
+            return back()->withErrors($e->getMessage());
+        }
     }
 
-    /**
-     * Display the specified resource.
-     */
+
     public function show(string $id)
     {
-        //
+        try {
+            $uomResponse = fectApi(env('LIST_UOM'));
+            $apiResponse = fectApi(env('CONVERT_UOM_URL') . '/' . $id);
+            $data = json_decode($apiResponse->getBody()->getContents());
+            $uom = json_decode($uomResponse->getBody()->getContents());
+            return view('masterdata.convertuom.ajax.detail', compact('data', 'uom'));
+        } catch (\Exception $e) {
+            return back()->withErrors($e->getMessage());
+        }
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(string $id)
     {
-        //
+        try {
+            $uomResponse = fectApi(env('LIST_UOM'));
+            $apiResponse = fectApi(env('CONVERT_UOM_URL') . '/' . $id);
+            $data = json_decode($apiResponse->getBody()->getContents());
+            $uom = json_decode($uomResponse->getBody()->getContents());
+            return view('masterdata.convertuom.ajax.edit', compact('data', 'uom'));
+        } catch (\Exception $e) {
+            return back()->withErrors($e->getMessage());
+        }
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, string $id)
     {
-        //
-    }
+        try {
+            $data = [
+                'from_uom_id' => $request->dari,
+                'to_uom_id' => $request->ke,
+                'conversion_factor' => $request->conversion_factor
+            ];
+            $apiResponse = updateApi(env('CONVERT_UOM_URL') . '/' . $id, $data);
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+            if ($apiResponse->successful()) {
+                return redirect()->route('convert_uom.index')
+                    ->with('success', $apiResponse->json()['message']);
+            } else {
+                return back()->withErrors($apiResponse->json()['message']);
+            }
+        } catch (\Exception $e) {
+            return back()->withErrors($e->getMessage());
+        }
     }
 }

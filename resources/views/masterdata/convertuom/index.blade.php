@@ -26,7 +26,7 @@
                     <div class="card-body">
                         @include('alert.alert')
                         <div class="d-flex justify-content-lg-start align-items-center">
-                            <button type="button" class="btn btn-primary fw-bold btn-add-uom me-3"><i
+                            <button type="button" class="btn btn-primary fw-bold btn-add-convert-uom me-3"><i
                                     class="bi bi-arrow-left-right me-1"></i> Tambah
                                 Convert</button>
                         </div>
@@ -35,8 +35,8 @@
                                 <tr>
                                     <th scope="col">No</th>
                                     <th scope="col">Satuan Asal</th>
-                                    <th scope="col">Satuan Tujuan</th>
                                     <th scope="col">Faktor Konversi</th>
+                                    <th scope="col">Satuan Tujuan</th>
                                     <th scope="col">Action</th>
                                 </tr>
                             </thead>
@@ -71,19 +71,21 @@
                             data: 'dari'
                         },
                         {
+                            data: 'conversion_factor',
+                            className: 'text-start'
+                        },
+                        {
                             data: 'ke'
                         },
                         {
-                            data: 'conversion_factor'
-                        },
-                        {
                             data: null,
+
                             render: function(data, type, row) {
                                 return `
-                    <button type="button" class="btn btn-sm btn-info mb-2 btn-detail-uom" title="Detail" data-id="${row.id}" >
+                    <button type="button" class="btn btn-sm btn-info mb-2 btn-detail-convert-uom" title="Detail" data-id="${row.id}" >
                         <i class="bi bi-eye"></i>
                     </button>
-                    <button type="button" class="btn btn-sm btn-warning mb-2 btn-edit-uom" data-id="${row.id}" title="Edit"  >
+                    <button type="button" class="btn btn-sm btn-warning mb-2 btn-edit-convert-uom" data-id="${row.id}" title="Edit"  >
                         <i class="bi bi-pencil"></i>
                     </button>
                 `;
@@ -94,9 +96,9 @@
             });
 
 
-            $(document).on('click', '.btn-add-uom', function(e) {
+            $(document).on('click', '.btn-add-convert-uom', function(e) {
                 e.preventDefault();
-                const url = '{{ route('uom.store') }}'
+                const url = '{{ route('convert_uom.store') }}'
                 const $button = $(this);
 
                 $('#loading-overlay').fadeIn();
@@ -110,7 +112,7 @@
                         //
                     },
                     success: function(response) {
-                        updateModal('#modal-example', 'Tambah UOM', response,
+                        updateModal('#modal-example', 'Tambah Convert UOM', response,
                             'modal-lg');
                     },
                     error: function(xhr) {
@@ -121,15 +123,16 @@
                     },
                     complete: function() {
                         $('#loading-overlay').fadeOut();
-                        $button.prop("disabled", false).html('+ Tambah UOM');
+                        $button.prop("disabled", false).html(
+                            '<i class="bi bi-arrow-left-right"></i> Tambah Convert');
                     }
                 });
             });
 
-            $(document).on('click', '.btn-detail-uom', function(e) {
+            $(document).on('click', '.btn-detail-convert-uom', function(e) {
                 e.preventDefault();
                 const uomId = $(this).data('id');
-                const url = '{{ route('uom.show', ':uomId') }}'.replace(':uomId', uomId);
+                const url = '{{ route('convert_uom.show', ':uomId') }}'.replace(':uomId', uomId);
                 const $button = $(this);
 
                 $('#loading-overlay').fadeIn();
@@ -143,7 +146,7 @@
                         //
                     },
                     success: function(response) {
-                        updateModal('#modal-example', 'Detail UOM', response,
+                        updateModal('#modal-example', 'Detail Convert UOM', response,
                             'modal-lg');
                     },
                     error: function(xhr) {
@@ -158,10 +161,10 @@
                 });
             });
 
-            $(document).on('click', '.btn-edit-uom', function(e) {
+            $(document).on('click', '.btn-edit-convert-uom', function(e) {
                 e.preventDefault();
                 const uomId = $(this).data('id');
-                const url = '{{ route('uom.edit', ':uomId') }}'.replace(':uomId', uomId);
+                const url = '{{ route('convert_uom.edit', ':uomId') }}'.replace(':uomId', uomId);
                 const $button = $(this);
 
                 $('#loading-overlay').fadeIn();
@@ -175,7 +178,7 @@
                         //
                     },
                     success: function(response) {
-                        updateModal('#modal-example', 'Edit UOM', response,
+                        updateModal('#modal-example', 'Edit Convert UOM', response,
                             'modal-lg');
                     },
                     error: function(xhr) {
@@ -189,8 +192,6 @@
                     }
                 });
             });
-
-
 
             function disableButton(event) {
                 let form = event.target;
