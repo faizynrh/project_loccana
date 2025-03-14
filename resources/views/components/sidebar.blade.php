@@ -20,7 +20,7 @@
                 </li>
                 {{-- <li class="sidebar-item active has-sub"> --}}
                 <li
-                    class="sidebar-item has-sub {{ Request::is('item*') || Request::is('user*') || Request::is('uom*') || Request::is('price*') || Request::is('principal*') || Request::is('customer*') || Request::is('coa*') || Request::is('gudang*') ? 'active' : '' }}">
+                    class="sidebar-item has-sub {{ Request::is('item*') || Request::is('user*') || Request::is('uom*') || Request::is('price*') || Request::is('principal*') || Request::is('convert_uom*') || Request::is('customer*') || Request::is('coa*') || Request::is('gudang*') ? 'active' : '' }}">
                     <a href="#" class="sidebar-link">
                         <i class="bi bi bi-database"></i>
                         <span>Master Data</span>
@@ -40,7 +40,8 @@
                         <li class="submenu-item {{ Request::is('user*') ? 'active' : '' }}">
                             <a href="/user" class="submenu-link">User</a>
                         </li>
-                        <li class="submenu-item has-sub submenu-item {{ Request::is('uom*') ? 'active' : '' }}">
+                        <li
+                            class="submenu-item has-sub submenu-item {{ Request::is('uom*') || Request::is('convert_uom*') ? 'active' : '' }}">
                             <a href="#" class="submenu-link">UOM</a>
                             <ul class="submenu submenu-level-2 ">
                                 <li class="submenu-item {{ Request::is('uom*') ? 'active' : '' }}">
