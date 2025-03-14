@@ -6,7 +6,7 @@
             </div>
             <div class="col-md-9">
                 <input type="text" class="form-control" id="type_name" name="type_name"
-                    value="{{ $data->data->type_name }}" readonly>
+                    value="{{ $data->data->type_name }}" disabled>
             </div>
         </div>
         <div class="row mb-3 align-items-center">
@@ -14,7 +14,7 @@
                 <label for="description" class="form-label fw-bold mb-0">Deskripsi</label>
             </div>
             <div class="col-md-9">
-                <textarea class="form-control" id="description" name="description" rows="5" readonly>{{ $data->data->description }}</textarea>
+                <textarea class="form-control" id="description" name="description" rows="5" disabled>{{ $data->data->description }}</textarea>
             </div>
         </div>
         <div class="modal-footer">

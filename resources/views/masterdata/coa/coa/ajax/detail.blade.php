@@ -23,7 +23,7 @@
             </div>
             <div class="col-md-9">
                 <input type="text" class="form-control" name="account_code" value="{{ $data->data->account_code }}"
-                    readonly>
+                    disabled>
             </div>
         </div>
         <div class="row mb-3 align-items-center">
@@ -32,7 +32,7 @@
             </div>
             <div class="col-md-9">
                 <input type="text" class="form-control" id="edit_account_name" name="account_name"
-                    value="{{ $data->data->account_name }}" readonly>
+                    value="{{ $data->data->account_name }}" disabled>
             </div>
         </div>
         <div class="row mb-3 align-items-center">
@@ -55,7 +55,7 @@
                 <label for="description" class="form-label fw-bold mb-0">Keterangan COA </label>
             </div>
             <div class="col-md-9">
-                <textarea class="form-control" id="edit_description" name="description" rows="5" readonly>{{ $data->data->description }}</textarea>
+                <textarea class="form-control" id="edit_description" name="description" rows="5" disabled>{{ $data->data->description }}</textarea>
             </div>
         </div>
         <div class="modal-footer">

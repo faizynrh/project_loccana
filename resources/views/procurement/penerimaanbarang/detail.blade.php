@@ -36,37 +36,37 @@
                             <div class="col-md-6">
                                 <label for="nomorInvoice" class="form-label fw-bold mt-2 mb-1 small">No.
                                     PO</label>
-                                <input type="text" class="form-control" value="{{ $data->data[0]->code }}" readonly>
+                                <input type="text" class="form-control" value="{{ $data->data[0]->code }}" disabled>
                                 <label class="form-label fw-bold mt-2 mb-1 small">Tanggal</label>
                                 <input type="date" class="form-control"
                                     value="{{ \Carbon\Carbon::parse($data->data[0]->order_date)->format('Y-m-d') }}"
-                                    readonly>
+                                    disabled>
                                 <label class="form-label fw-bold mt-2 mb-1 small">Principal</label>
                                 <input type="text" class="form-control" value="{{ $data->data[0]->partner_name }}"
-                                    readonly>
+                                    disabled>
                                 {{-- <label for="shipFrom" class="form-label fw-bold mt-2 mb-1 small">Alamat</label>
-                                <textarea class="form-control" id="shipFrom" rows="4" readonly>{{ $data->data[0]->address }}</textarea>
+                                <textarea class="form-control" id="shipFrom" rows="4" disabled>{{ $data->data[0]->address }}</textarea>
                                 <label class="form-label fw-bold mt-2 mb-1 small">Att</label>
                                 <input type="text" class="form-control" value="{{ $data->data[0]->description }}"
-                                    readonly>
+                                    disabled>
                                 <label class="form-label fw-bold mt-2 mb-1 small">No. Telp</label>
-                                <input type="text" class="form-control" value="{{ $data->data[0]->phone }}" readonly>
+                                <input type="text" class="form-control" value="{{ $data->data[0]->phone }}" disabled>
                                 <label class="form-label fw-bold mt-2 mb-1 small">Fax</label>
-                                <input type="text" class="form-control" value="{{ $data->data[0]->fax }}" readonly> --}}
+                                <input type="text" class="form-control" value="{{ $data->data[0]->fax }}" disabled> --}}
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label fw-bold mt-2 mb-1 small">No. DO</label>
-                                <input type="text" class="form-control" value="{{ $data->data[0]->do_number }}" readonly>
+                                <input type="text" class="form-control" value="{{ $data->data[0]->do_number }}" disabled>
                                 <label class="form-label fw-bold mt-2 mb-1 small">Tanggal DO</label>
                                 <input type="date" class="form-control"
                                     value="{{ \Carbon\Carbon::parse($data->data[0]->receipt_date)->format('Y-m-d') }}"
-                                    readonly>
+                                    disabled>
                                 <label class="form-label fw-bold mt-2 mb-1 small">Angkutan</label>
                                 <input type="text" class="form-control" value="{{ $data->data[0]->shipment_info }}"
-                                    readonly>
+                                    disabled>
                                 <label class="form-label fw-bold mt-2 mb-1 small">No. Polisi</label>
                                 <input type="text" class="form-control" value="{{ $data->data[0]->plate_number }}"
-                                    readonly>
+                                    disabled>
                             </div>
                         </div>
                         <hr class="my-4 border-2 border-dark">
