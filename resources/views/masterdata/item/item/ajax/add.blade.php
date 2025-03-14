@@ -11,7 +11,7 @@
                     <label class="form-label fw-bold mb-0">Kode Item<span class="text-danger">*</span></label>
                 </div>
                 <div class="col-md-9">
-                    <input type="text" class="form-control" name="sku" placeholder="Kode Item">
+                    <input type="text" class="form-control" name="sku" placeholder="Kode Item" required>
                 </div>
             </div>
             <div class="row mb-3 align-items-center">
@@ -19,15 +19,7 @@
                     <label class="form-label fw-bold mb-0">Nama Item <span class="text-danger">*</span></label>
                 </div>
                 <div class="col-md-9">
-                    <input type="text" class="form-control" name="name" placeholder="Nama Item">
-                </div>
-            </div>
-            <div class="row mb-3 align-items-center">
-                <div class="col-md-3">
-                    <ription" class="form-label fw-bold mb-0">Deskripsi<span class="text-danger">*</span></>
-                </div>
-                <div class="col-md-9">
-                    <textarea class="form-control" name="description" rows="5"></textarea>
+                    <input type="text" class="form-control" name="name" placeholder="Nama Item" required>
                 </div>
             </div>
             <div class="row mb-3 align-items-center">
@@ -35,7 +27,7 @@
                     <an" class="form-label fw-bold mb-0">Satuan<span class="text-danger">*</span></ription>
                 </div>
                 <div class="col-md-9">
-                    <select class="form-select" name="unit_of_measure_id">
+                    <select class="form-select" name="unit_of_measure_id" required>
                         <option value="" selected disabled>Pilih Satuan</option>
                         @foreach ($uom->data as $uoms)
                             <option value="{{ $uoms->id }}">{{ $uoms->name }}</option>
@@ -49,7 +41,7 @@
                         </an>
                 </div>
                 <div class="col-md-9">
-                    <select class="form-select" name="item_type_id">
+                    <select class="form-select" name="item_type_id" required>
                         <option value="" selected disabled>Pilih Tipe Barang</option>
                         @foreach ($item->data as $items)
                             <option value="{{ $items->id }}">{{ $items->name }}</option>
@@ -57,17 +49,14 @@
                     </select>
                 </div>
             </div>
-            {{-- <div class="row mb-3 align-items-center">
+            <div class="row mb-3 align-items-center">
                 <div class="col-md-3">
-                    <an" class="form-label fw-bold mb-0">Kategori Barang<span class="text-danger">*</span>
-                        </barang>
+                    <ription" class="form-label fw-bold mb-0">Deskripsi<span class="text-danger">*</span></>
                 </div>
                 <div class="col-md-9">
-                    <select class="form-select" name="item_category_id">
-                        <option value="" selected disabled>Pilih Kategori Barang</option>
-                    </select>
+                    <textarea class="form-control" name="description" rows="5" placeholder="Deskripsi"></textarea>
                 </div>
-            </div> --}}
+            </div>
             <div class="modal-footer">
                 <button type="submit" class="btn btn-primary" id="submitButton">Simpan</button>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"

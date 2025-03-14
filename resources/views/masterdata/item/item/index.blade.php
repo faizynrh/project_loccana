@@ -105,7 +105,7 @@
                                 title="Edit">
                                 <i class="bi bi-pencil"></i>
                             </button>
-                            <form action="/item/delete/${row.id}" method="POST" id="delete${row.id}" style="display:inline;">
+                            <form action="/item_management/delete/${row.id}" method="POST" id="delete${row.id}" style="display:inline;">
                                 @csrf
                                 @method('DELETE')
                                 <button type="button" class="btn btn-sm btn-danger" title="Hapus" onclick="confirmDelete(${row.id})">

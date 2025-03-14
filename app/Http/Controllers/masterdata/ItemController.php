@@ -44,7 +44,7 @@ class ItemController extends Controller
 
     public function index(Request $request)
     {
-        return view('masterdata.item.index');
+        return view('masterdata.item.item.index');
     }
 
     public function create()
@@ -55,7 +55,7 @@ class ItemController extends Controller
         if ($uomResponse->successful() && $itemResponse->successful()) {
             $uom = json_decode($uomResponse->body(), false);
             $item = json_decode($itemResponse->body(), false);
-            return view('masterdata.item.ajax.add', compact('uom', 'item'));
+            return view('masterdata.item.item.ajax.add', compact('uom', 'item'));
         } else {
             $errors = [];
             if (!$uomResponse->successful()) {
@@ -98,7 +98,7 @@ class ItemController extends Controller
         try {
             $apiResponse = fectApi(env('ITEM_URL') . '/' . $id);
             $data = json_decode($apiResponse->getBody()->getContents());
-            return view('masterdata.item.ajax.detail', compact('data'));
+            return view('masterdata.item.item.ajax.detail', compact('data'));
         } catch (\Exception $e) {
             return back()->withErrors($e->getMessage());
         }
@@ -115,7 +115,7 @@ class ItemController extends Controller
                 $uom = json_decode($uomResponse->getBody()->getContents());
                 $item = json_decode($itemResponse->getBody()->getContents());
                 $data = json_decode($apiResponse->getBody()->getContents());
-                return view('masterdata.item.ajax.edit', compact('data', 'uom', 'item'));
+                return view('masterdata.item.item.ajax.edit', compact('data', 'uom', 'item'));
             } else {
                 $errors = [];
                 if (!$uomResponse->successful()) {

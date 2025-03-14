@@ -10,7 +10,7 @@
             <div class="page-title">
                 <div class="row">
                     <div class="col-12 col-md-6 order-md-1 order-last">
-                        <h3>COA Management</h3>
+                        <h3>COA Type Management</h3>
                     </div>
                     <div class="col-12 col-md-6 order-md-2 order-first">
                         <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
@@ -19,7 +19,7 @@
                                     <a href="/dashboard">Dashboard</a>
                                 </li>
                                 <li class="breadcrumb-item active" aria-current="page">
-                                    COA Management
+                                    COA Type Management
                                 </li>
                             </ol>
                         </nav>
@@ -30,15 +30,14 @@
                 <div class="card">
                     <div class="card-body">
                         @include('alert.alert')
-                        <button type="button" class="btn btn-primary fw-bold btn-add-coa">+ Tambah COA</button>
+                        <button type="button" class="btn btn-primary fw-bold btn-add-coa-type">+ Tambah COA Type</button>
                         <div class="table-responsive">
-                            <table class="table table-striped table-bordered mt-3" id="tablecoa">
+                            <table class="table table-striped table-bordered mt-3" id="tablecoatype">
                                 <thead>
                                     <tr>
                                         <th>No</th>
-                                        <th>Parent</th>
-                                        <th>COA</th>
-                                        <th>Keterangan</th>
+                                        <th>Nama</th>
+                                        <th>Deskripsi</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -53,11 +52,11 @@
 @push('scripts')
     <script>
         $(document).ready(function() {
-            $('#tablecoa').DataTable({
+            $('#tablecoatype').DataTable({
                 serverSide: true,
                 processing: true,
                 ajax: {
-                    url: '{{ route('coa.ajax') }}',
+                    url: '{{ route('coa_type.ajax') }}',
                     type: 'GET',
                 },
                 columns: [{
@@ -67,10 +66,7 @@
                         }
                     },
                     {
-                        data: 'parent'
-                    },
-                    {
-                        data: 'coa'
+                        data: 'type_name'
                     },
                     {
                         data: 'description'
@@ -79,36 +75,36 @@
                         data: null,
                         render: function(data, type, row) {
                             return `
-                                            <div class="d-flex mb-2">
-                                                        <button type="button" class="btn btn-sm btn-info me-2 btn-detail-coa"
-                                                            data-id="${row.id}"
-                                                            title="Detail">
-                                                            <i class="bi bi-eye"></i>
+                                        <div class="d-flex mb-2">
+                                                    <button type="button" class="btn btn-sm btn-info me-2 btn-detail-coa-type"
+                                                        data-id="${row.id}"
+                                                        title="Detail">
+                                                        <i class="bi bi-eye"></i>
+                                                    </button>
+                                                    <button type="button" class="btn btn-sm btn-warning me-2 btn-edit-coa-type"
+                                                        data-id="${row.id}"
+                                                        title="Edit">
+                                                        <i class="bi bi-pencil"></i>
+                                                    </button>
+                                                    <form action="/coa_type/delete/${row.id}" method="POST"
+                                                        id="delete${row.id}" style="display:inline;">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="button" class="btn btn-sm btn-danger" title="Hapus"
+                                                            onclick="confirmDelete(${row.id})">
+                                                            <i class="bi bi-trash"></i>
                                                         </button>
-                                                        <button type="button" class="btn btn-sm btn-warning me-2 btn-edit-coa"
-                                                            data-id="${row.id}"
-                                                            title="Edit">
-                                                            <i class="bi bi-pencil"></i>
-                                                        </button>
-                                                        <form action="/coa/delete/${row.id}" method="POST"
-                                                            id="delete${row.id}" style="display:inline;">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                            <button type="button" class="btn btn-sm btn-danger" title="Hapus"
-                                                                onclick="confirmDelete(${row.id})">
-                                                                <i class="bi bi-trash"></i>
-                                                            </button>
-                                                        </form>
-                                            </div>
-                                        `;
+                                                    </form>
+                                        </div>
+                                    `;
                         }
                     }
                 ]
             });
 
-            $(document).on('click', '.btn-add-coa', function(e) {
+            $(document).on('click', '.btn-add-coa-type', function(e) {
                 e.preventDefault();
-                const url = '{{ route('coa.store') }}'
+                const url = '{{ route('coa_type.store') }}'
                 const $button = $(this);
 
                 $('#loading-overlay').fadeIn();
@@ -122,7 +118,7 @@
                         //
                     },
                     success: function(response) {
-                        updateModal('#modal-example', 'Tambah COA', response,
+                        updateModal('#modal-example', 'Tambah Tipe COA', response,
                             'modal-lg');
                     },
                     error: function(xhr) {
@@ -132,15 +128,15 @@
                     },
                     complete: function() {
                         $('#loading-overlay').fadeOut();
-                        $button.prop("disabled", false).html('+ Tambah COA');
+                        $button.prop("disabled", false).html('+ Tambah COA Type');
                     }
                 });
             });
 
-            $(document).on('click', '.btn-detail-coa', function(e) {
+            $(document).on('click', '.btn-detail-coa-type', function(e) {
                 e.preventDefault();
                 const coaId = $(this).data('id');
-                const url = '{{ route('coa.detail', ':coaId') }}'.replace(':coaId', coaId);
+                const url = '{{ route('coa_type.detail', ':coaId') }}'.replace(':coaId', coaId);
                 const $button = $(this);
 
                 $('#loading-overlay').fadeIn();
@@ -153,7 +149,7 @@
                         //
                     },
                     success: function(response) {
-                        updateModal('#modal-example', 'Detail COA', response,
+                        updateModal('#modal-example', 'Detail COA Type', response,
                             'modal-lg');
                     },
                     error: function(xhr) {
@@ -168,10 +164,10 @@
                 });
             });
 
-            $(document).on('click', '.btn-edit-coa', function(e) {
+            $(document).on('click', '.btn-edit-coa-type', function(e) {
                 e.preventDefault();
                 const coaId = $(this).data('id');
-                const url = '{{ route('coa.edit', ':coaId') }}'.replace(':coaId', coaId);
+                const url = '{{ route('coa_type.edit', ':coaId') }}'.replace(':coaId', coaId);
                 const $button = $(this);
 
                 $('#loading-overlay').fadeIn();
@@ -185,7 +181,7 @@
                         //
                     },
                     success: function(response) {
-                        updateModal('#modal-example', 'Edit COA', response,
+                        updateModal('#modal-example', 'Edit COA Type', response,
                             'modal-lg');
                     },
                     error: function(xhr) {

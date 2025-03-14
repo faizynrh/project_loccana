@@ -28,14 +28,6 @@
             </div>
             <div class="row mb-3 align-items-center">
                 <div class="col-md-3">
-                    <label class="form-label fw-bold mb-0">Deskripsi <span class="text-danger">*</span></label>
-                </div>
-                <div class="col-md-9">
-                    <textarea class="form-control" name="description" rows="5" required>{{ $data->data->item_description }}</textarea>
-                </div>
-            </div>
-            <div class="row mb-3 align-items-center">
-                <div class="col-md-3">
                     <label class="form-label fw-bold mb-0">Satuan<span class="text-danger">*</span></label>
                 </div>
                 <div class="col-md-9">
@@ -66,16 +58,14 @@
                     </select>
                 </div>
             </div>
-            {{-- <div class="row mb-3 align-items-center">
+            <div class="row mb-3 align-items-center">
                 <div class="col-md-3">
-                    <label class="form-label fw-bold mb-0">Kategori Barang<span class="text-danger">*</span></label>
+                    <label class="form-label fw-bold mb-0">Deskripsi <span class="text-danger">*</span></label>
                 </div>
                 <div class="col-md-9">
-                    <select class="form-select" name="item_category_id">
-                        <option value="" selected disabled>Pilih Kategori Barang</option>
-                    </select>
+                    <textarea class="form-control" name="description" rows="5">{{ $data->data->item_description }}</textarea>
                 </div>
-            </div> --}}
+            </div>
             <div class="modal-footer">
                 <button type="submit" class="btn btn-primary btn-save" id="submitButton">Simpan</button>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"

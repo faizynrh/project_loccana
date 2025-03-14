@@ -12,6 +12,29 @@
     <link rel="icon" href="{{ asset('assets/img/icon/icon.png') }}" type="image/png">
     <link rel="stylesheet" href="{{ asset('assets/css/app.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/datatables/dataTables.dataTables.min.css') }}">
+    <style>
+        #loading-overlay {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: row;
+            background: rgba(0, 0, 0, .5);
+            padding: 20px;
+            border-radius: 10px;
+            color: #fff;
+            z-index: 9999;
+            display: none;
+        }
+
+        #loading-overlay p {
+            margin: 0;
+            font-size: 16px;
+        }
+    </style>
     @stack('styles')
 </head>
 

@@ -24130,7 +24130,7 @@ a {
     z-index: 1
 }
 
-#loading-overlay {
+/* #loading-overlay {
     position: fixed;
     top: 50%;
     left: 50%;
@@ -24150,4 +24150,4 @@ a {
 #loading-overlay p {
     margin: 0;
     font-size: 16px;
-}
+} */
