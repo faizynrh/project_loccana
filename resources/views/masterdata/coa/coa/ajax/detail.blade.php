@@ -6,6 +6,8 @@
             </div>
             <div class="col-md-9">
                 <select class="form-select" id="parent_account_id" name="parent_account_id" disabled>
+                    <option value="999" {{ $data->data->parent_account_id == 999 ? 'selected' : '' }}>--Tanpa
+                        Parent--</option>
                     @foreach ($coa->data as $item)
                         <option value="{{ $item->id }}"
                             {{ $data->data->parent_account_id == $item->id ? 'selected' : '' }}>
@@ -35,8 +37,7 @@
         </div>
         <div class="row mb-3 align-items-center">
             <div class="col-md-3">
-                <label for="parent_account_id" class="form-label fw-bold mb-0">Tipe Akun <span
-                        class="text-danger">*</span></label>
+                <label for="parent_account_id" class="form-label fw-bold mb-0">Tipe Akun</label>
             </div>
             <div class="col-md-9">
                 <select class="form-select" id="account_type_id" name="account_type_id" disabled>

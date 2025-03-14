@@ -47,8 +47,19 @@
                         <li class="submenu-item {{ Request::is('informasi*') ? 'active' : '' }}">
                             <a href="#" class="submenu-link">Informasi</a>
                         </li>
-                        <li class="submenu-item {{ Request::is('coa*') ? 'active' : '' }}">
+                        {{-- <li class="submenu-item {{ Request::is('coa*') ? 'active' : '' }}">
                             <a href="/coa" class="submenu-link">COA</a>
+                        </li> --}}
+                        <li class="submenu-item has-sub submenu-item {{ Request::is('coa*') ? 'active' : '' }}">
+                            <a href="#" class="submenu-link">COA</a>
+                            <ul class="submenu submenu-level-2 ">
+                                <li class="submenu-item {{ Request::is('coa_type*') ? 'active' : '' }}">
+                                    <a href="/coa_type" class="submenu-link">COA Type</a>
+                                </li>
+                                <li class="submenu-item {{ Request::is('coa_management*') ? 'active' : '' }}">
+                                    <a href="/coa_management" class="submenu-link">COA</a>
+                                </li>
+                            </ul>
                         </li>
                         <li class="submenu-item {{ Request::is('gudang*') ? 'active' : '' }}">
                             <a href="/gudang" class="submenu-link">Gudang</a>
