@@ -16,6 +16,7 @@
                 <div class="col-md-9">
                     <select class="form-select" id="parent_account_id" name="parent_account_id">
                         <option value="" selected disabled>Pilih Parent</option>
+                        --Tanpa Parent--</option>
                         @foreach ($coa->data as $item)
                             <option value="{{ $item->id }}"
                                 {{ $data->data->parent_account_id == $item->id ? 'selected' : '' }}>
@@ -47,11 +48,27 @@
             </div>
             <div class="row mb-3 align-items-center">
                 <div class="col-md-3">
+                    <label for="account_type_id" class="form-label fw-bold mb-0">Tipe Akun <span
+                            class="text-danger">*</span></label>
+                </div>
+                <div class="col-md-9">
+                    <select class="form-select" id="account_type_id" name="account_type_id" required>
+                        <option value="" selected disabled>Pilih Tipe Akun</option>
+                        @foreach ($coatype->data as $type)
+                            <option value="{{ $type->id }}"
+                                {{ $type->id == $data->data->account_type_id ? 'selected' : '' }}>{{ $type->type_name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+            <div class="row mb-3 align-items-center">
+                <div class="col-md-3">
                     <label for="description" class="form-label fw-bold mb-0">Keterangan COA <span
                             class="text-danger">*</span></label>
                 </div>
                 <div class="col-md-9">
-                    <textarea class="form-control" id="edit_description" name="description" rows="5">{{ $data->data->description }}</textarea>
+                    <textarea class="form-control" id="edit_description" name="description" rows="5" required>{{ $data->data->description }}</textarea>
                 </div>
             </div>
             <div class="modal-footer">

@@ -12,7 +12,7 @@
                             class="text-danger">*</span></label>
                 </div>
                 <div class="col-md-9">
-                    <select class="form-select" id="parent_account_id" name="parent_account_id">
+                    <select class="form-select" id="parent_account_id" name="parent_account_id" required>
                         <option value="" selected disabled>Pilih Parent</option>
                         @foreach ($coa->data as $data)
                             <option value="{{ $data->id }}">{{ $data->account_name }}
@@ -43,6 +43,21 @@
             </div>
             <div class="row mb-3 align-items-center">
                 <div class="col-md-3">
+                    <label for="account_type_id" class="form-label fw-bold mb-0">Tipe Akun <span
+                            class="text-danger">*</span></label>
+                </div>
+                <div class="col-md-9">
+                    <select class="form-select" id="account_type_id" name="account_type_id" required>
+                        <option value="" selected disabled>Pilih Tipe Akun</option>
+                        @foreach ($coatype->data as $data)
+                            <option value="{{ $data->id }}">{{ $data->type_name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+            <div class="row mb-3 align-items-center">
+                <div class="col-md-3">
                     <label for="description" class="form-label fw-bold mb-0">Keterangan COA <span
                             class="text-danger">*</span></label>
                 </div>
@@ -50,7 +65,6 @@
                     <textarea class="form-control" id="description" name="description" rows="5" required></textarea>
                 </div>
             </div>
-
             <div class="modal-footer">
                 <button type="submit" class="btn btn-primary" id="submitButton">Simpan</button>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
