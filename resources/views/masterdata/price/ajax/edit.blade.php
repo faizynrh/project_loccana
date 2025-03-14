@@ -10,20 +10,18 @@
             @method('PUT')
             <div class="row mb-3 align-items-center">
                 <div class="col-md-3">
-                    <label for="kodeitem" class="form-label fw-bold mb-0">Kode Item <span
-                            class="text-danger">*</span></label>
+                    <label for="kodeitem" class="form-label fw-bold mb-0">Kode Item</label>
                 </div>
                 <div class="col-md-9">
-                    <label for="namaitem" class="form-label fw-bold mb-0">{{ $data->data->kode_item }}</label>
+                    <input type="text" class="form-control" value="{{ $data->data->kode_item }}" disabled>
                 </div>
             </div>
             <div class="row mb-3 align-items-center">
                 <div class="col-md-3">
-                    <label for="namaitem" class="form-label fw-bold mb-0">Nama Item <span
-                            class="text-danger">*</span></label>
+                    <label for="namaitem" class="form-label fw-bold mb-0">Nama Item</label>
                 </div>
                 <div class="col-md-9">
-                    <label for="namaitem" class="form-label fw-bold mb-0">{{ $data->data->nama_item }}</label>
+                    <input type="text" class="form-control" value="{{ $data->data->nama_item }}" disabled>
                 </div>
             </div>
             <div class="row mb-3 align-items-center">
@@ -33,7 +31,7 @@
                 </div>
                 <div class="col-md-9">
                     <input type="text" class="form-control" id="harga_atas" name="harga_atas"
-                        value="{{ $data->data->harga_atas }}" placeholder="Harga Atas">
+                        value="{{ $data->data->harga_atas }}" placeholder="Harga Atas" required>
                 </div>
             </div>
             <div class="row mb-3 align-items-center">
@@ -43,7 +41,7 @@
                 </div>
                 <div class="col-md-9">
                     <input type="text" class="form-control" id="harga_bawah" name="harga_bawah"
-                        value="{{ $data->data->harga_bawah }}" placeholder="Harga Bawah">
+                        value="{{ $data->data->harga_bawah }}" placeholder="Harga Bawah" required>
                 </div>
             </div>
             <div class="row mb-3 align-items-center">
@@ -62,7 +60,7 @@
                 </div>
                 <div class="col-md-9">
                     <input type="text" class="form-control" id="harga_beli" name="harga_beli"
-                        value="{{ $data->data->harga_beli }}"placeholder="Harga Beli">
+                        value="{{ $data->data->harga_beli }}"placeholder="Harga Beli" required>
                 </div>
             </div>
             <div class="modal-footer">
