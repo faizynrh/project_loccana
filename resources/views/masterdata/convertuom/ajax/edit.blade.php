@@ -19,9 +19,10 @@
                             </select>
                         </div>
                         <div class="col-md-3">
-                            <label for="conversion_factor_edit" class="form-label">Faktor Konversi</label>
-                            <input type="number" class="form-control" id="conversion_factor_edit"
-                                name="conversion_factor" placeholder="Masukkan Faktor Konversi" required
+                            <label for="conversion_factor" class="form-label">Faktor Konversi</label>
+                            <input type="number" class="form-control" id="conversion_factor" name="conversion_factor"
+                                placeholder="Masukkan Faktor Konversi" required min="1"
+                                oninput="this.value = this.value < 1 ? '' : this.value"
                                 value="{{ $data->data->conversion_factor }}">
                         </div>
                         <div class="col-md-4">
@@ -46,3 +47,12 @@
         </div>
     </div>
 </div>
+<script>
+    document.getElementById('editConvertUomForm').addEventListener('submit', function(e) {
+        const factor = document.getElementById('conversion_factor_edit').value;
+        if (factor <= 0) {
+            e.preventDefault();
+            alert('Faktor konversi harus lebih dari 0');
+        }
+    });
+</script>

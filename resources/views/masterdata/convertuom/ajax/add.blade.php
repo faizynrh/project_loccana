@@ -18,7 +18,8 @@
                         <div class="col-md-3">
                             <label for="conversion_factor" class="form-label">Faktor Konversi</label>
                             <input type="number" class="form-control" id="conversion_factor" name="conversion_factor"
-                                placeholder="Masukkan Faktor Konversi" required>
+                                placeholder="Masukkan Faktor Konversi" required min="1"
+                                oninput="this.value = this.value < 1 ? '' : this.value">
                         </div>
                         <div class="col-md-4">
                             <label for="ke" class="form-label">Satuan Tujuan</label>
