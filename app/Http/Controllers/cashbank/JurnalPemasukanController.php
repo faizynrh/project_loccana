@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\cashbank;
 
+use App\Exports\ExportJurnalPemasukan;
 use App\Http\Controllers\Controller;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
 class JurnalPemasukanController extends Controller
 {
@@ -206,6 +208,43 @@ class JurnalPemasukanController extends Controller
             }
         } catch (\Exception $e) {
             return back()->withErrors($e->getMessage());
+        }
+    }
+    public function exportExcel(Request $request)
+    {
+        try {
+            $month = $request->input('month', 0);
+            $year = $request->input('year', now()->year);
+            $total_entries = $request->input('total_entries');
+
+            // Make sure we have a reasonable number for limit
+            $limit = intval($total_entries) > 0 ? intval($total_entries) : 1000;
+
+            $requestbody = [
+                'search' => $request->input('search', ''),
+                'month' => $month,
+                'year' => $year,
+                'limit' => $limit,
+                'offset' => 0,
+                'company_id' => 2,
+            ];
+
+            $apiResponse = storeApi(env('JURNAL_PEMASUKAN_URL') . '/' . 'list', $requestbody);
+
+            if ($apiResponse->successful()) {
+                $data = $apiResponse->json();
+                $tableData = $data['data']['table'];
+
+                if (empty($tableData)) {
+                    return back()->with('error', 'Tidak ada data untuk diexport.');
+                }
+
+                return Excel::download(new ExportJurnalPemasukan($tableData, $month, $year), 'Jurnal_Pemasukan.xlsx');
+            }
+
+            return response()->json(['error' => $apiResponse->json()['message']]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()]);
         }
     }
 }
