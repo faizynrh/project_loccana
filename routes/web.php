@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\masterdata\ConvertUomController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\masterdata\COAController;
 use App\Http\Controllers\masterdata\UomController;
@@ -110,6 +111,21 @@ Route::middleware('auth.login')->group(
             Route::get('/detail/{id}', 'show')->name('show');
         }
         );
+        // Convert UOM
+        Route::prefix('/convert_uom')->name('convert_uom.')->controller(ConvertUomController::class)->group(
+            function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/ajax', 'ajaxuom')->name('ajax');
+            Route::get('/add', 'create')->name('create');
+            // Route::post('/add', 'store')->name('store');
+            // Route::delete('/delete/{id}', 'destroy')->name('destroy');
+            // Route::get('/edit/{id}', 'edit')->name('edit');
+            // Route::put('/update/{id}', 'update')->name('update');
+            // Route::get('/detail/{id}', 'show')->name('show');
+        }
+        );
+
+
 
         // COA
         Route::prefix('/coa')->name('coa.')->controller(COAController::class)->group(function () {

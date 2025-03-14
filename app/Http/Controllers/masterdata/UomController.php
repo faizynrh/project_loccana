@@ -56,7 +56,7 @@ class UomController extends Controller
             $data = [
                 'name' => (string) $request->input('uom_name'),
                 'symbol' => (string) $request->input('uom_symbol'),
-                'description' => (string) $request->input('description',)
+                'description' => (string) $request->input('description', )
             ];
             $apiResponse = storeApi(env('UOM_URL') . '/', $data);
             // dd($data);
@@ -86,7 +86,7 @@ class UomController extends Controller
                 'masterdata.uom.ajax.edit',
 
                 compact('data')
-            );;
+            );
         } catch (\Exception $e) {
             return back()->withErrors($e->getMessage());
         }
@@ -97,7 +97,7 @@ class UomController extends Controller
             $data = [
                 'name' => (string) $request->input('uom_name'),
                 'symbol' => (string) $request->input('uom_symbol'),
-                'description' => (string) $request->input('description',)
+                'description' => (string) $request->input('description', )
             ];
             $apiResponse = updateApi(env('UOM_URL') . '/' . $id, $data);
             // $apiResponse = updateApi($this->buildApiUrl('/' . $id), $data);
@@ -123,7 +123,7 @@ class UomController extends Controller
                 'masterdata.uom.ajax.detail',
 
                 compact('data')
-            );;
+            );
         } catch (\Exception $e) {
             return back()->withErrors($e->getMessage());
         }
