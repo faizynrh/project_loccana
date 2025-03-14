@@ -125,6 +125,19 @@ Route::middleware('auth.login')->group(
         }
         );
 
+        Route::prefix('/convert_uom')->name('convert_uom.')->controller(ConvertUomController::class)->group(
+            function () {
+                Route::get('/', 'index')->name('index');
+                Route::get('/ajax', 'ajaxconvertuom')->name('ajax');
+                Route::get('/add', 'create')->name('create');
+                Route::post('/add', 'store')->name('store');
+                Route::delete('/delete/{id}', 'destroy')->name('destroy');
+                Route::get('/edit/{id}', 'edit')->name('edit');
+                Route::put('/update/{id}', 'update')->name('update');
+                Route::get('/detail/{id}', 'show')->name('show');
+            }
+        );
+
 
         // COA
         Route::prefix('/coa_type')->name('coa_type.')->controller(COATypeController::class)->group(function () {
