@@ -19,8 +19,16 @@
                                 <p class="mb-0 text-sm text-gray-600">Administrator</p>
                             </div>
                             <div class="user-img d-flex align-items-center">
-                                <div class="avatar avatar-md">
-                                    <img src="">
+                                @php
+                                    $username = Session::get('user_info')['username'] ?? 'User';
+                                    $initial = strtoupper(substr($username, 0, 1));
+                                    $colors = ['#FF5733', '#33A1FF', '#FF33A8', '#33FF57', '#A833FF', '#FFC733'];
+                                    $bgColor = $colors[ord($initial) % count($colors)];
+                                @endphp
+
+                                <div class="avatar avatar-md"
+                                    style="background-color: {{ $bgColor }}; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; border-radius: 50%; font-size: 20px; font-weight: bold; color: white;">
+                                    {{ $initial }}
                                 </div>
                             </div>
                         </div>
@@ -28,7 +36,7 @@
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton"
                         style="min-width: 11rem">
                         <li>
-                            <h6 class="dropdown-header">Hello, {{ Session::get('user_info')['username'] ?? 'Guest' }}
+                            <h6 class="dropdown-header">Hello, {{ Session::get('user_info')['username'] }}
                             </h6>
                         </li>
                         <li>
