@@ -48,7 +48,7 @@ class UomController extends Controller
     }
     public function index()
     {
-        return view('masterdata.uom.index');
+        return view('masterdata.uom.uom.index');
     }
     public function store(Request $request)
     {
@@ -74,7 +74,7 @@ class UomController extends Controller
     }
     public function create()
     {
-        return view('masterdata.uom.ajax.add');
+        return view('masterdata.uom.uom.ajax.add');
     }
     public function edit($id)
     {
@@ -83,8 +83,7 @@ class UomController extends Controller
             $data = json_decode($apiResponse->getBody()->getContents());
             // dd($data);
             return view(
-                'masterdata.uom.ajax.edit',
-
+                'masterdata.uom.uom.ajax.edit',
                 compact('data')
             );
         } catch (\Exception $e) {
@@ -120,7 +119,7 @@ class UomController extends Controller
             $data = json_decode($apiResponse->getBody()->getContents());
             // dd($data);
             return view(
-                'masterdata.uom.ajax.detail',
+                'masterdata.uom.uom.ajax.detail',
 
                 compact('data')
             );
