@@ -34,9 +34,9 @@
                             <thead>
                                 <tr>
                                     <th scope="col">No</th>
-                                    <th scope="col">Nama</th>
-                                    <th scope="col">Simbol</th>
-                                    <th scope="col">Deskripsi</th>
+                                    <th scope="col">Satuan Asal</th>
+                                    <th scope="col">Satuan Tujuan</th>
+                                    <th scope="col">Faktor Konversi</th>
                                     <th scope="col">Action</th>
                                 </tr>
                             </thead>
@@ -68,13 +68,13 @@
                             }
                         },
                         {
-                            data: 'name'
+                            data: 'dari'
                         },
                         {
-                            data: 'symbol'
+                            data: 'ke'
                         },
                         {
-                            data: 'description'
+                            data: 'conversion_factor'
                         },
                         {
                             data: null,

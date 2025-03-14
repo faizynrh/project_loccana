@@ -40,9 +40,18 @@
                         <li class="submenu-item {{ Request::is('user*') ? 'active' : '' }}">
                             <a href="/user" class="submenu-link">User</a>
                         </li>
-                        <li class="submenu-item {{ Request::is('uom*') ? 'active' : '' }}">
-                            <a href="/uom" class="submenu-link">UOM</a>
+                        <li class="submenu-item has-sub submenu-item {{ Request::is('uom*') ? 'active' : '' }}">
+                            <a href="#" class="submenu-link">UOM</a>
+                            <ul class="submenu submenu-level-2 ">
+                                <li class="submenu-item {{ Request::is('uom*') ? 'active' : '' }}">
+                                    <a href="/uom" class="submenu-link">UOM</a>
+                                </li>
+                                <li class="submenu-item {{ Request::is('convert_uom*') ? 'active' : '' }}">
+                                    <a href="/convert_uom" class="submenu-link">Convert UOM</a>
+                                </li>
+                            </ul>
                         </li>
+
                         <li class="submenu-item {{ Request::is('price*') ? 'active' : '' }}">
                             <a href="/price" class="submenu-link">Price</a>
                         </li>
