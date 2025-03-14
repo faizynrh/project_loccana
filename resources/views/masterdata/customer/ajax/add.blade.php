@@ -6,11 +6,13 @@
                 <div class="col-md-6 mb-3">
                     <label for="kode" class="form-label fw-bold">Tipe Partner</label>
                     <select type="number" name="partner_type_id" placeholder="Type Partner" class="form-select"
-                        id="partner_type_id" required>
+                        id="partner_type_id"
+                        style="pointer-events: none;background-color: #f0f0f0;color: #888;cursor: not-allowed;">
                         <option value="" disabled selected>Pilih Tipe</option>
                         @if (isset($partner->data))
                             @foreach ($partner->data as $partner)
-                                <option value="{{ $partner->id }}">{{ $partner->name }}</option>
+                                <option value="{{ $partner->id }}"
+                                    {{ $partner->name == 'Customer' ? 'selected' : '' }}>{{ $partner->name }}</option>
                             @endforeach
                         @else
                             <option value="">Data tidak tersedia</option>
