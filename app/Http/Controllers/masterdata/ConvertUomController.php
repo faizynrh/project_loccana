@@ -43,7 +43,7 @@ class ConvertUomController extends Controller
 
     public function index()
     {
-        return view('masterdata.convertuom.index');
+        return view('masterdata.uom.convertuom.index');
     }
 
     public function create()
@@ -52,7 +52,7 @@ class ConvertUomController extends Controller
 
         if ($uomResponse->successful()) {
             $uom = json_decode($uomResponse->body(), false);
-            return view('masterdata.convertuom.ajax.add', compact('uom'));
+            return view('masterdata.uom.convertuom.ajax.add', compact('uom'));
         } else {
             $errors = [];
             if (!$uomResponse->successful()) {
@@ -91,7 +91,7 @@ class ConvertUomController extends Controller
             $apiResponse = fectApi(env('CONVERT_UOM_URL') . '/' . $id);
             $data = json_decode($apiResponse->getBody()->getContents());
             $uom = json_decode($uomResponse->getBody()->getContents());
-            return view('masterdata.convertuom.ajax.detail', compact('data', 'uom'));
+            return view('masterdata.uom.convertuom.ajax.detail', compact('data', 'uom'));
         } catch (\Exception $e) {
             return back()->withErrors($e->getMessage());
         }
@@ -104,7 +104,7 @@ class ConvertUomController extends Controller
             $apiResponse = fectApi(env('CONVERT_UOM_URL') . '/' . $id);
             $data = json_decode($apiResponse->getBody()->getContents());
             $uom = json_decode($uomResponse->getBody()->getContents());
-            return view('masterdata.convertuom.ajax.edit', compact('data', 'uom'));
+            return view('masterdata.uom.convertuom.ajax.edit', compact('data', 'uom'));
         } catch (\Exception $e) {
             return back()->withErrors($e->getMessage());
         }
