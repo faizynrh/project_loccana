@@ -11,15 +11,18 @@ class JurnalPengeluaranController extends Controller
     public function ajax(Request $request)
     {
         try {
-            $length = $request->input('length', 10);
-            $start = $request->input('start', 0);
+            $length = $request->input('length');
+            $start = $request->input('start');
             $search = $request->input('search.value') ?? '';
+            $month = $request->input('month');
+            $year = $request->input('year');
 
             $requestbody = [
                 'search' => $search,
+                'month' => $month,
+                'year' => $year,
                 'limit' => $length,
                 'offset' => $start,
-                'company_id' => 2
             ];
             $apiResponse = storeApi(env('JURNAL_PENGELUARAN_URL') . '/list', $requestbody);
             if ($apiResponse->successful()) {
