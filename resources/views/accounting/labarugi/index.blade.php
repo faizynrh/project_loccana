@@ -1,5 +1,9 @@
 @extends('layouts.app')
 @section('content')
+    @push('styles')
+        <style>
+        </style>
+    @endpush
     <div id="main-content">
         <div class="page-heading">
             <div class="page-title">
@@ -23,183 +27,151 @@
             </div>
             <section class="section">
                 <div class="card">
-                    <div class="card-body">
-                        @include('alert.alert')
-                        <table class="table table-striped table-bordered mt-3 table-responsive" id="tableuom">
-                            <thead>
-                                <tr>
-                                    <th scope="col">No</th>
-                                    <th scope="col">Nama</th>
-                                    <th scope="col">Simbol</th>
-                                    <th scope="col">Deskripsi</th>
-                                    <th scope="col">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {{-- {{ dd($data) }} --}}
-                            </tbody>
-                        </table>
+                    <div class="card-header">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <form id="searchForm" class="d-flex">
+                                <div class="me-2">
+                                    <label for="tanggal" class="form-label fw-bold mt-2 mb-1 small">Tanggal Awal</label>
+                                    <input type="date" id="start_date" name="start_date" class="form-control"
+                                        value="{{ date('Y-m-d') }}" required>
+                                </div>
+                                <div class="me-2">
+                                    <label for="tanggal" class="form-label fw-bold mt-2 mb-1 small">Tanggal Akhir</label>
+                                    <input type="date" id="end_date" name="end_date" class="form-control"
+                                        value="{{ date('Y-m-d') }}" required>
+                                </div>
+                                <div class="col-md-3 d-flex align-items-end">
+                                    <button type="submit" class="btn btn-primary">Cari</button>
+                                </div>
+                            </form>
+                            <button class="btn btn-primary" id="exportBtn">
+                                <i class="bi bi-file-earmark-excel"></i> Export Excel
+                            </button>
+                        </div>
                     </div>
-                </div>
             </section>
+            <div class="row">
+                <section class="col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-striped table-bordered mt-3 table-fixed" id="tablereport">
+                                    <thead>
+                                        <tr>
+                                            <th>COA</th>
+                                            <th>Keterangan</th>
+                                            <th>Debit</th>
+                                            <th>Credit</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <section class="col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-striped table-bordered mt-3 table-fixed" id="tablesummary">
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
         </div>
+        {{-- @dd('') --}}
     </div>
-    @push('scripts')
-        @include('modal.modal')
-        <script>
-            $(document).ready(function() {
-                $('#tableuom').DataTable({
-                    serverSide: true,
-                    processing: true,
-                    ajax: {
-                        url: '{{ route('uom.ajax') }}',
-                        type: 'GET',
-
-                    },
-                    columns: [{
-                            data: null,
-                            render: function(data, type, row, meta) {
-                                return meta.row + meta.settings._iDisplayStart + 1;
-                            }
-                        },
-                        {
-                            data: 'name'
-                        },
-                        {
-                            data: 'symbol'
-                        },
-                        {
-                            data: 'description'
-                        },
-                        {
-                            data: null,
-                            render: function(data, type, row) {
-                                return `
-                    <button type="button" class="btn btn-sm btn-info mb-2 btn-detail-uom" title="Detail" data-id="${row.id}" >
-                        <i class="bi bi-eye"></i>
-                    </button>
-                    <button type="button" class="btn btn-sm btn-warning mb-2 btn-edit-uom" data-id="${row.id}" title="Edit"  >
-                        <i class="bi bi-pencil"></i>
-                    </button>
-                    <form action="/uom/delete/${row.id}" method="POST" id="delete${row.id}" style="display:inline;">
-                        @csrf
-                        @method('DELETE')
-                        <button type="button" class="btn btn-sm btn-danger mb-2" title="Hapus" onclick="confirmDelete(${row.id})">
-                            <i class="bi bi-trash"></i>
-                        </button>
-                    </form>
-                `;
-                            }
-                        }
-                    ],
-                });
-            });
-
-
-            $(document).on('click', '.btn-add-uom', function(e) {
-                e.preventDefault();
-                const url = '{{ route('uom.store') }}'
-                const $button = $(this);
-
-                $('#loading-overlay').fadeIn();
-                $button.prop("disabled", true).html('<i class="bi bi-hourglass-split"></i>');
-
-                $.ajax({
-                    url: url,
-                    type: 'GET',
-                    dataType: 'html',
-                    beforeSend: function() {
-                        //
-                    },
-                    success: function(response) {
-                        updateModal('#modal-example', 'Tambah UOM', response,
-                            'modal-lg');
-                    },
-                    error: function(xhr) {
-                        let errorMsg = xhr.responseText ||
-                            '<p>An error occurred while loading the content.</p>';
-                        $('#content-example').html(errorMsg);
-
-                    },
-                    complete: function() {
-                        $('#loading-overlay').fadeOut();
-                        $button.prop("disabled", false).html('+ Tambah UOM');
-                    }
-                });
-            });
-
-            $(document).on('click', '.btn-detail-uom', function(e) {
-                e.preventDefault();
-                const uomId = $(this).data('id');
-                const url = '{{ route('uom.show', ':uomId') }}'.replace(':uomId', uomId);
-                const $button = $(this);
-
-                $('#loading-overlay').fadeIn();
-                $button.prop("disabled", true).html('<i class="bi bi-hourglass-split"></i>');
-
-                $.ajax({
-                    url: url,
-                    type: 'GET',
-                    dataType: 'html',
-                    beforeSend: function() {
-                        //
-                    },
-                    success: function(response) {
-                        updateModal('#modal-example', 'Detail UOM', response,
-                            'modal-lg');
-                    },
-                    error: function(xhr) {
-                        let errorMsg = xhr.responseText ||
-                            '<p>An error occurred while loading the content.</p>';
-                        $('#content-example').html(errorMsg);
-                    },
-                    complete: function() {
-                        $('#loading-overlay').fadeOut();
-                        $button.prop("disabled", false).html('<i class="bi bi-eye"></i>');
-                    }
-                });
-            });
-
-            $(document).on('click', '.btn-edit-uom', function(e) {
-                e.preventDefault();
-                const uomId = $(this).data('id');
-                const url = '{{ route('uom.edit', ':uomId') }}'.replace(':uomId', uomId);
-                const $button = $(this);
-
-                $('#loading-overlay').fadeIn();
-                $button.prop("disabled", true).html('<i class="bi bi-hourglass-split"></i>');
-
-                $.ajax({
-                    url: url,
-                    type: 'GET',
-                    dataType: 'html',
-                    beforeSend: function() {
-                        //
-                    },
-                    success: function(response) {
-                        updateModal('#modal-example', 'Edit UOM', response,
-                            'modal-lg');
-                    },
-                    error: function(xhr) {
-                        let errorMsg = xhr.responseText ||
-                            '<p>An error occurred while loading the content.</p>';
-                        $('#content-example').html(errorMsg);
-                    },
-                    complete: function() {
-                        $('#loading-overlay').fadeOut();
-                        $button.prop("disabled", false).html('<i class="bi bi-pencil"></i>');
-                    }
-                });
-            });
-
-            function disableButton(event) {
-                let form = event.target;
-                if (form.checkValidity()) { // Pastikan form valid
-                    let button = document.getElementById('submitButton');
-                    button.disabled = true;
-                    button.innerText = 'Processing...';
-                }
-            }
-        </script>
-    @endpush
 @endsection
+@push('scripts')
+    <script>
+        $(document).ready(function() {
+            function fetchData() {
+                $('#loading-overlay').fadeIn();
+
+                $.ajax({
+                    url: '{{ route('laba_rugi.ajax') }}',
+                    type: 'GET',
+                    data: {
+                        start_date: $('#start_date').val(),
+                        end_date: $('#end_date').val(),
+                    },
+                    success: function(response) {
+                        let data = response.data;
+                        $('#tablereport tbody, #tablesummary tbody').empty();
+
+
+                        $.each(data.calculate_report_values, function(index, item) {
+                            let row = `
+                    <tr>
+                        <td>${item.coa_code}</td>
+                        <td>${item.coa_name}</td>
+                        <td>${formatRupiah(item.masuk)}</td>
+                        <td>${formatRupiah(item.keluar)}</td>
+                    </tr>`;
+                            $('#tablereport tbody').append(row);
+                        });
+
+                        let totalRow = `
+                <tr>
+                    <td colspan="2">Total</td>
+                    <td><strong>${formatRupiah(data.total_debit)}</strong></td>
+                    <td><strong>${formatRupiah(data.total_kredit)}</strong></td>
+                </tr>`;
+                        $('#tablereport tbody').append(totalRow);
+
+                        let profitLossRow = `
+                <tr>
+                    <td colspan="3"><strong>Laba / Rugi</strong></td>
+                    <td><strong>${formatRupiah(data.total_laba_rugi)}</strong></td>
+                </tr>`;
+                        $('#tablereport tbody').append(profitLossRow);
+
+                        if (data.calculate_summary && data.calculate_summary.length > 0 && data
+                            .calculate_summary[0].html) {
+                            $.each(data.calculate_summary[0].html, function(index, item) {
+                                let summaryRow = `
+                        <tr>
+                            <td>${item.name}</td>
+                            <td>${item.value}</td>
+                        </tr>`;
+                                $('#tablesummary tbody').append(summaryRow);
+                            });
+                        }
+
+                        $('#exportBtn').show();
+                    },
+                    error: function(xhr) {
+                        alert('Gagal mengambil data: ' + xhr.responseText);
+                    },
+                    complete: function() {
+                        $('#loading-overlay').fadeOut();
+                    }
+                });
+            }
+
+            fetchData();
+
+            $('#searchForm').on('submit', function(e) {
+                e.preventDefault();
+                fetchData();
+            });
+
+            $('#exportBtn').click(function() {
+                const start_date = $('#start_date').val();
+                const end_date = $('#end_date').val();
+
+                const formData = new URLSearchParams({
+                    start_date: start_date,
+                    end_date: end_date
+                }).toString();
+                window.location.href = "/laba_rugi/export-excel?" + formData;
+            });
+        });
+    </script>
+@endpush

@@ -2,64 +2,72 @@
 
 namespace App\Http\Controllers\accounting;
 
+use App\Exports\ExportAccountingLabaRugi;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
+
 
 class LabaRugiController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    public function ajax(Request $request)
+    {
+        try {
+            $start_date = $request->start_date;
+            $end_date = $request->end_date;
+            $requestbody = [
+                'start_date' => $start_date,
+                'end_date' => $end_date,
+                'coa_id' => 0
+            ];
+            $apiResponse = storeApi(env('LABA_RUGI_URL'), $requestbody);
+            // dd($apiResponse);
+            if ($apiResponse->successful()) {
+                $data = $apiResponse->json();
+                return response()->json([
+                    'data' => $data['data'],
+                ]);
+            }
+            return response()->json([
+                'error' => $apiResponse->json()['message'],
+            ]);
+        } catch (\Exception $e) {
+            if ($request->ajax()) {
+                return response()->json([
+                    'error' => $e->getMessage(),
+                ]);
+            }
+        }
+    }
     public function index()
     {
         return view('accounting.labarugi.index');
     }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function exportExcel(Request $request)
     {
-        //
-    }
+        try {
+            $start_date = $request->start_date;
+            $end_date = $request->end_date;
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
+            $requestbody = [
+                'start_date' => $start_date,
+                'end_date' => $end_date,
+                'coa_id' => 0
+            ];
+            $apiResponse = storeApi(env('LABA_RUGI_URL'), $requestbody);
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
+            if ($apiResponse->successful()) {
+                $data = json_decode($apiResponse->body());
+                if (empty($data)) {
+                    return back()->with('error', 'Tidak ada data untuk diexport.');
+                }
+                $fileName = 'Laporan Laba Rugi ' . $start_date . ' s.d ' . $end_date . '.xlsx';
+                return Excel::download(new ExportAccountingLabaRugi($data, $start_date, $end_date), $fileName);
+            }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+            return response()->json(['error' => $apiResponse->json()['message']]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()]);
+        }
     }
 }
