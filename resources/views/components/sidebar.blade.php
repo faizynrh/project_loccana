@@ -184,7 +184,7 @@
                     </ul>
                 </li>
                 <li
-                    class="sidebar-item has-sub {{ (Request::is('jurnal_penyesuaian*') || Request::is('neraca*') ? 'active' : '' || Request::is('laba_rugi*')) ? 'active' : '' }} }} ">
+                    class="sidebar-item has-sub {{ (Request::is('jurnal_penyesuaian*') || Request::is('neraca*') ? 'active' : '' || Request::is('laba_rugi*') || Request::is('report_piutang*')) ? 'active' : '' }} }} ">
                     <a href="#" class="sidebar-link">
                         <i class="bi bi-calculator"></i>
                         <span>Accounting</span>
