@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\masterdata\ConvertUomController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\masterdata\COAController;
 use App\Http\Controllers\masterdata\UomController;
@@ -23,7 +22,9 @@ use App\Http\Controllers\procurement\RekapPOController;
 use App\Http\Controllers\masterdata\PrincipalController;
 use App\Http\Controllers\penjualan\RangePriceController;
 use App\Http\Controllers\inventory\StockGudangController;
+use App\Http\Controllers\masterdata\ConvertUomController;
 use App\Http\Controllers\inventory\TransferStockController;
+use App\Http\Controllers\accounting\ReportPiutangController;
 use App\Http\Controllers\cashbank\JurnalPemasukanController;
 use App\Http\Controllers\inventory\StockInTransitController;
 use App\Http\Controllers\penjualan\DasarPenjualanController;
@@ -490,7 +491,11 @@ Route::middleware('auth.login')->group(
             Route::get('/ajax', 'ajax')->name('ajax');
             Route::get('/export-excel', 'exportExcel')->name('exportexcel');
         });
+
+        Route::prefix('/report_piutang')->name('report_piutang.')->controller(ReportPiutangController::class)->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/ajax', 'ajax')->name('ajax');
+            Route::get('/export-excel', 'exportExcel')->name('exportexcel');
+        });
     }
-
-
 );

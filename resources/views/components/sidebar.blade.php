@@ -184,7 +184,7 @@
                     </ul>
                 </li>
                 <li
-                    class="sidebar-item has-sub {{ Request::is('jurnal_penyesuaian*') || Request::is('neraca*') ? 'active' : '' }}">
+                    class="sidebar-item has-sub {{ Request::is('jurnal_penyesuaian*') || Request::is('neraca*') || Request::is('report_piutang*') ? 'active' : '' }}">
                     <a href="#" class="sidebar-link">
                         <i class="bi bi-calculator"></i>
                         <span>Accounting</span>
@@ -211,8 +211,8 @@
                         <li class="submenu-item">
                             <a href="#" class="submenu-link">Report Hutang</a>
                         </li>
-                        <li class="submenu-item">
-                            <a href="#" class="submenu-link">Report Piutang</a>
+                        <li class="submenu-item {{ Request::is('report_piutang*') ? 'active' : '' }}">
+                            <a href="/report_piutang" class="submenu-link">Report Piutang</a>
                         </li>
                     </ul>
                 </li>
