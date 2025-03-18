@@ -50,7 +50,7 @@
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
-                                <table class="table table-striped table-bordered mt-3 table-fixed" id="tableaktiva">
+                                <table class="table table-striped table-bordered mt-1" id="tableaktiva">
                                     <thead>
                                         <tr>
                                             <th>COA</th>
@@ -72,7 +72,7 @@
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
-                                <table class="table table-striped table-bordered mt-3 table-fixed" id="tablepassiva">
+                                <table class="table table-striped table-bordered mt-1" id="tablepassiva">
                                     <thead>
                                         <tr>
                                             <th>COA</th>
