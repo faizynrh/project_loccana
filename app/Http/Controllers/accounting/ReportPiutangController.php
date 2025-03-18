@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers\accounting;
 
+use App\Exports\ExportAccountingReportPiutang;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Maatwebsite\Excel\Facades\Excel;
-use App\Exports\ExportInventoryReport;
 
 class ReportPiutangController extends Controller
 {
@@ -22,7 +21,6 @@ class ReportPiutangController extends Controller
                 'start_date' => $start_date,
                 'end_date' => $end_date,
             ];
-            Log::info($requestbody);
             $apiResponse = storeApi(env('REPORT_PIUTANG_URL'), $requestbody);
             if ($apiResponse->successful()) {
                 $data = $apiResponse->json();
@@ -43,42 +41,44 @@ class ReportPiutangController extends Controller
     }
     public function index()
     {
-        $company_id = 2;
-        $supplier = "false";
-        $customer = "true";
-        $partnerResponse = fectApi(env('LIST_PARTNER') . '/' . $company_id . '/' . $supplier . '/' . $customer);
-        if ($partnerResponse->successful()) {
-            $partner = json_decode($partnerResponse->body());
-            return view('accounting.reportpiutang.index', compact('partner'));
+        try {
+            $company_id = 2;
+            $supplier = "false";
+            $customer = "true";
+            $partnerResponse = fectApi(env('LIST_PARTNER') . '/' . $company_id . '/' . $supplier . '/' . $customer);
+            if ($partnerResponse->successful()) {
+                $partner = json_decode($partnerResponse->body());
+                return view('accounting.reportpiutang.index', compact('partner'));
+            } elseif (!$partnerResponse->successful()) {
+                return back()->withErrors($partnerResponse->json()['message']);
+            }
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()]);
         }
-        return view('accounting.reportpiutang.index');
     }
 
     public function exportExcel(Request $request)
     {
         try {
-            $partner_id = $request->input('principal', 0);
-            $start_date = $request->input('start_date', 0);
-            $end_date = $request->input('end_date', 0);
-            $principalname = $request->input('principal_name');
+            $partner_id = $request->input('principal');
+            $start_date = $request->input('start_date');
+            $end_date = $request->input('end_date');
+            $principalname = $request->input('customer_name');
 
             $requestbody = [
                 'partner_id' => $partner_id,
                 'start_date' => $start_date,
                 'end_date' => $end_date,
-                'company_id' => 0,
             ];
-
-            $apiResponse = storeApi(env('REPORT_PERSEDIAAN_URL') . '/lists', $requestbody);
+            $apiResponse = storeApi(env('REPORT_PIUTANG_URL'), $requestbody);
 
             if ($apiResponse->successful()) {
                 $data = json_decode($apiResponse->body());
-                dd($data);
                 if (empty($data)) {
                     return back()->with('error', 'Tidak ada data untuk diexport.');
                 }
-                $fileName = 'Laporan Persediaan ' . $principalname . ' ' . $start_date . ' s.d ' . $end_date . '.xlsx';
-                return Excel::download(new ExportInventoryReport($data, $principalname, $start_date, $end_date), $fileName);
+                $fileName = 'Laporan Piutang ' . $principalname . ' ' . $start_date . ' s.d ' . $end_date . '.xlsx';
+                return Excel::download(new ExportAccountingReportPiutang($data, $principalname, $start_date, $end_date), $fileName);
             }
 
             return response()->json(['error' => $apiResponse->json()['message']]);
