@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\accounting\LabaRugiController;
+use App\Http\Controllers\accounting\ReportHutangController;
 use App\Http\Controllers\masterdata\ConvertUomController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\masterdata\COAController;
@@ -497,7 +498,11 @@ Route::middleware('auth.login')->group(
             Route::get('/ajax', 'ajax')->name('ajax');
             Route::get('/export-excel', 'exportExcel')->name('exportexcel');
         });
+
+        Route::prefix('/report_hutang')->name('report_hutang.')->controller(ReportHutangController::class)->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/ajax', 'ajax')->name('ajax');
+            Route::get('/export-excel', 'exportExcel')->name('exportexcel');
+        });
     }
-
-
 );

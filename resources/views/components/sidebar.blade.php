@@ -209,7 +209,7 @@
                             <a href="#" class="submenu-link">Report Cash</a>
                         </li>
                         <li class="submenu-item">
-                            <a href="#" class="submenu-link">Report Hutang</a>
+                            <a href="/report_hutang" class="submenu-link">Report Hutang</a>
                         </li>
                         <li class="submenu-item">
                             <a href="#" class="submenu-link">Report Piutang</a>
