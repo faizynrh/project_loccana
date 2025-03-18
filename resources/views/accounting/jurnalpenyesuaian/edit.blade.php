@@ -10,7 +10,7 @@
             <div class="page-title">
                 <div class="row">
                     <div class="col-12 col-md-6 order-md-1 order-last">
-                        <h3>Tambah Jurnal Penyesuaian</h3>
+                        <h3>Edit Jurnal Penyesuaian</h3>
                     </div>
                     <div class="col-12 col-md-6 order-md-2 order-first">
                         <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
@@ -22,7 +22,7 @@
                                     <a href="/jurnal_penyesuaian">Jurnal Penyesuaian</a>
                                 </li>
                                 <li class="breadcrumb-item active" aria-current="page">
-                                    Tambah Jurnal Penyesuaian
+                                    Edit Jurnal Penyesuaian
                                 </li>
                             </ol>
                         </nav>
@@ -31,47 +31,40 @@
             </div>
             <section class="section">
                 <div class="card">
-                    <div class="card-header">
-                        <h6 class="mb-1">Harap isi data yang telah ditandai dengan <span
-                                class="text-danger bg-light px-1">*</span>, dan
-                            masukkan data dengan benar.</h6>
-                    </div>
-                    <form action="{{ route('jurnal_penyesuaian.store') }}" method="POST">
+                    <form action="{{ route('jurnal_penyesuaian.update', $data->data[0]->jurnal_parent_id) }}"
+                        method="POST">
                         @csrf
+                        @method('PUT')
+                        @include('alert.alert')
                         <div class="card-body">
                             <div class="row mb-3">
                                 <div class="col-md-6">
                                     <div class="mb-3">
-                                        <label class="form-label fw-bold">Cash Account Debit<span
-                                                class="text-danger bg-light px-1">*</span></label>
+                                        <label class="form-label fw-bold">Cash Account Debit</label>
                                         <select class="form-select" name="coa_debit" required>
-                                            @if (!empty($coa->data) && count($coa->data) > 0)
-                                                <option value="" disabled selected>Pilih Cash Debit</option>
-                                                @foreach ($coa->data as $data)
-                                                    <option value="{{ $data->id }}">{{ $data->account_name }}</option>
-                                                @endforeach
-                                            @else
-                                                <option value="" selected disabled>Data Cash Tidak Tersedia</option>
-                                            @endif
+                                            <option value="" disabled selected>Pilih Cash Debit</option>
+                                            @foreach ($listcoa as $item)
+                                                <option value="{{ $item->id }}"
+                                                    {{ $data->data[0]->id_debit == $item->id ? 'selected' : '' }}>
+                                                    {{ $item->account_name }}</option>
+                                            @endforeach
                                         </select>
                                     </div>
                                     <div class="mb-3">
-                                        <label class="form-label fw-bold">Tanggal<span
-                                                class="text-danger bg-light px-1">*</span></label>
-                                        <input type="date" class="form-control" name="transaction_date" required>
+                                        <label class="form-label fw-bold">Tanggal</label>
+                                        <input type="date" class="form-control" name="transaction_date"
+                                            value="{{ $data->data[0]->transaction_date }}" required>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="mb-3">
-                                        <label class="form-label fw-bold">Jumlah<span
-                                                class="text-danger bg-light px-1">*</span></label>
+                                        <label class="form-label fw-bold">Jumlah</label>
                                         <input type="text" class="form-control bg-body-secondary" placeholder="Jumlah"
-                                            name="debit" id="total_amount" value="" readonly>
+                                            name="debit" id="total_amount" value="{{ $data->data[0]->debit }}" readonly>
                                     </div>
                                     <div class="mb-3">
-                                        <label class="form-label fw-bold">Keterangan<span
-                                                class="text-danger bg-light px-1">*</span></label>
-                                        <textarea class="form-control" name="description" placeholder="Keterangan" rows="4" required></textarea>
+                                        <label class="form-label fw-bold">Keterangan</label>
+                                        <textarea class="form-control" name="description" placeholder="Keterangan" rows="5" required>{{ $data->data[0]->description_debit }}</textarea>
                                     </div>
                                 </div>
                             </div>
@@ -79,35 +72,35 @@
                             <table class="table mt-3">
                                 <thead>
                                     <tr style="border-bottom: 3px solid #000;">
-                                        <th>Cash Kredit<span class="text-danger bg-light px-1">*</span></th>
+                                        <th>Cash Kredit</th>
                                         <th>Jumlah</th>
                                         <th>Keterangan</th>
                                     </tr>
                                 </thead>
                                 <tbody id="tableBody">
-                                    <tr style="border-bottom: 2px solid #000;">
-                                        <td>
-                                            <select class="form-select coa-select" name="items[0][coa_credit]" required>
-                                                @if (!empty($coa->data) && count($coa->data) > 0)
+                                    @foreach ($data->data as $item)
+                                        <tr style="border-bottom: 2px solid #000;">
+                                            <td>
+                                                <select class="form-select coa-select" name="items[0][coa_credit]" required>
                                                     <option value="" disabled selected>Pilih Cash Kredit</option>
-                                                    @foreach ($coa->data as $data)
-                                                        <option value="{{ $data->id }}">{{ $data->account_name }}
-                                                        </option>
+                                                    @foreach ($listcoa as $coa)
+                                                        <option value="{{ $coa->id }}"
+                                                            {{ $data->data[0]->id_credit == $coa->id ? 'selected' : '' }}>
+                                                            {{ $coa->account_name }}</option>
                                                     @endforeach
-                                                @else
-                                                    <option value="" selected disabled>Data Cash Tidak Tersedia
-                                                    </option>
-                                                @endif
-                                            </select>
-                                        </td>
-                                        <td>
-                                            <input type="number" class="form-control jumlah" name="items[0][credit]"
-                                                placeholder="Jumlah" value="" required min="1">
-                                        </td>
-                                        <td>
-                                            <textarea class="form-control" name="items[0][description]" placeholder="Keterangan"></textarea>
-                                        </td>
-                                    </tr>
+                                                </select>
+                                                <input type="hidden" class="form-control" name="items[0][id_jurnal_child]"
+                                                    value="{{ $item->jurnal_child_id }}">
+                                            </td>
+                                            <td>
+                                                <input type="number" class="form-control jumlah" placeholder="Jumlah"
+                                                    value="{{ $item->credit }}" name="items[0][credit]" required>
+                                            </td>
+                                            <td>
+                                                <textarea class="form-control" placeholder="Keterangan" name="items[0][description]" required>{{ $item->description_credit }}</textarea>
+                                            </td>
+                                        </tr>
+                                    @endforeach
                                     <tr id="add-button-row" style="border-bottom: 2px solid #000;">
                                         <td colspan="3" class="text-end">
                                             <button type="button" class="btn btn-primary fw-bold" id="add-row">+</button>
@@ -139,24 +132,26 @@
             const state = {
                 itemIndex: 1,
                 selectedCoas: new Set(),
-                maxCoaCount: {{ count($coa->data) }}
+                maxCoaCount: {{ count($listcoa) }}
             };
             const templates = {
                 tableRow: (index) => `
                                 <tr style="border-bottom: 2px solid #000;">
                                     <td>
                                         <select class="form-select coa-select" name="items[${index}][coa_credit]" required>
-                                            <option value="" disabled selected>Pilih Cash Debit</option>
-                                            @foreach ($coa->data as $data)
-                                                <option value="{{ $data->id }}">{{ $data->account_name }}</option>
-                                            @endforeach
+                                            <option value="" disabled selected>Pilih Cash Kredit</option>
+                                            @foreach ($listcoa as $coa)
+                                                        <option value="{{ $coa->id }}">
+                                                            {{ $coa->account_name }}</option>
+                                                    @endforeach
                                         </select>
+                                        <input type="hidden" class="form-control" name="items[${index}][id_jurnal_child]" value="0">
                                     </td>
                                     <td>
                                         <input type="number" class="form-control jumlah" placeholder="Jumlah" name="items[${index}][credit]" required min="1">
                                     </td>
                                     <td>
-                                        <textarea class="form-control" placeholder="Keterangan" name="items[${index}][description]"></textarea>
+                                        <textarea class="form-control" placeholder="Keterangan" name="items[${index}][description]" required></textarea>
                                     </td>
                                     <td class="text-end">
                                         <button type="button" class="btn btn-danger fw-bold remove-row">-</button>
@@ -170,7 +165,7 @@
                                 </td>
                             </tr>
                             <tr id="total-row" class="fw-bold">
-                                <td colspan="3" class="text-end">Total</td>
+                                <td colspan="2" class="text-end">Total</td>
                                 <td class="text-end" id="amount">Rp. 0,00</td>
                             </tr>`
             };

@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers\accounting;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\Controller;
 
 class JurnalPenyesuaianController extends Controller
 {
@@ -13,12 +14,15 @@ class JurnalPenyesuaianController extends Controller
             $length = $request->input('length');
             $start = $request->input('start');
             $search = $request->input('search.value') ?? '';
+            $month = $request->input('month');
+            $year = $request->input('year');
 
             $requestbody = [
                 'search' => $search,
+                'month' => $month,
+                'year' => $year,
                 'limit' => $length,
                 'offset' => $start,
-                'company_id' => 2
             ];
             $apiResponse = storeApi(env('JURNAL_PENYESUAIAN_URL') . '/list', $requestbody);
             if ($apiResponse->successful()) {
@@ -65,8 +69,8 @@ class JurnalPenyesuaianController extends Controller
             if ($request->has('items')) {
                 foreach ($request->input('items') as $item) {
                     $items[] = [
-                        'coa_id' => $item['coa_debit'],
-                        'debit' => $item['debit'],
+                        'coa_id' => $item['coa_credit'],
+                        'credit' => $item['credit'],
                         'description' => $item['description'],
                     ];
                 }
@@ -74,16 +78,18 @@ class JurnalPenyesuaianController extends Controller
 
             $data = [
                 'transaction_date' => $request->transaction_date,
-                'coa_id' => $request->coa_kredit,
-                'credit' => $request->credit,
+                'coa_id' => $request->coa_debit,
+                'debit' => $request->debit,
+                'credit' => 0,
                 'description' => $request->description,
                 'reference_id' => 0,
+                'reference_type' => 'jurnal penyesuaian',
                 'company_id' => 2,
                 'items' => $items
             ];
             $apiResponse = storeApi(env('JURNAL_PENYESUAIAN_URL'), $data);
             if ($apiResponse->successful()) {
-                return redirect()->route('jurnal_pengeluaran.index')
+                return redirect()->route('jurnal_penyesuaian.index')
                     ->with('success', $apiResponse->json()['message']);
             } else {
                 return back()->withErrors($apiResponse->json()['message']);
@@ -141,8 +147,8 @@ class JurnalPenyesuaianController extends Controller
             if ($request->has('items')) {
                 foreach ($request->input('items') as $item) {
                     $items[] = [
-                        'coa_id' => $item['coa_debit'],
-                        'debit' => $item['debit'],
+                        'coa_id' => $item['coa_credit'],
+                        'credit' => $item['credit'],
                         'description' => $item['description'],
                         'id_jurnal_child' => $item['id_jurnal_child'],
                     ];
@@ -151,14 +157,14 @@ class JurnalPenyesuaianController extends Controller
 
             $data = [
                 'transaction_date' => $request->transaction_date,
-                'coa_id' => $request->coa_kredit,
-                'credit' => $request->credit,
+                'coa_id' => $request->coa_debit,
+                'debit' => $request->debit,
                 'description' => $request->description,
                 'items' => $items
             ];
             $apiResponse = updateApi(env('JURNAL_PENYESUAIAN_URL') . '/' . $id, $data);
             if ($apiResponse->successful()) {
-                return redirect()->route('jurnal_pengeluaran.index')
+                return redirect()->route('jurnal_penyesuaian.index')
                     ->with('success', $apiResponse->json()['message']);
             } else {
                 return back()->withErrors($apiResponse->json()['message']);
@@ -173,7 +179,7 @@ class JurnalPenyesuaianController extends Controller
         try {
             $apiResponse = deleteApi(env('JURNAL_PENYESUAIAN_URL') . '/' . $id);
             if ($apiResponse->successful()) {
-                return redirect()->route('jurnal_pengeluaran.index')->with('success', $apiResponse->json()['message']);
+                return redirect()->route('jurnal_penyesuaian.index')->with('success', $apiResponse->json()['message']);
             } else {
                 return back()->withErrors($apiResponse->json()['message']);
             }
