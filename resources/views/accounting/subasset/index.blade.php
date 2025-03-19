@@ -1,209 +1,277 @@
-    @extends('layouts.app')
-    @section('content')
-        @push('styles')
-            <style>
-                .last-row {
-                    background-color: #ffff00 !important;
-                    font-weight: bold !important;
-                }
-            </style>
-        @endpush
-        <div id="main-content">
-            <div class="page-heading">
-                <div class="page-title">
-                    <div class="row">
-                        <div class="col-12 col-md-6 order-md-1 order-last">
-                            <h3>Report Hutang</h3>
+@extends('layouts.app')
+@section('content')
+    @push('styles')
+        <style>
+            .cursor-not-allowed {
+                cursor: not-allowed;
+            }
+        </style>
+    @endpush
+    <div id="main-content">
+        <div class="page-heading">
+            <div class="page-title">
+                <div class="row">
+                    <div class="col-12 col-md-6 order-md-1 order-last">
+                        <h3>Asset</h3>
+                    </div>
+                    <div class="col-12 col-md-6 order-md-2 order-first">
+                        <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item">
+                                    <a href="/dashboard">Dashboard</a>
+                                </li>
+                                <li class="breadcrumb-item active" aria-current="page">
+                                    Asset
+                                </li>
+                            </ol>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <section class="section">
+                <div class="card">
+                    <div class="card-body">
+                        @include('alert.alert')
+                        <div class="row mb-2">
+                            <div class="d-flex align-items-center">
+                                <button class="btn btn-primary me-2 fw-bold btn-add-asset">
+                                    + Tambah Asset
+                                </button>
+                                <form id="searchForm" class="d-flex">
+                                    <div class="me-2">
+                                        <input type="date" id="end_date" name="end_date" class="form-control"
+                                            value="{{ date('Y-m-d') }}" required>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Cari</button>
+                                </form>
+                                <div class="text-end ms-auto">
+                                    <h6 class="fw-bold">Total Per Bulan</h6>
+                                    <h4 class="fw-bold" id="totalPerBulan">Rp 0,00</h4>
+                                </div>
+                            </div>
                         </div>
-                        <div class="col-12 col-md-6 order-md-2 order-first">
-                            <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
-                                <ol class="breadcrumb">
-                                    <li class="breadcrumb-item">
-                                        <a href="/dashboard">Dashboard</a>
-                                    </li>
-                                    <li class="breadcrumb-item active" aria-current="page">
-                                        Report Hutang
-                                    </li>
-                                </ol>
-                            </nav>
+                        <div class="row mb-2">
+                            <div class="mt-1 d-flex justify-content-end">
+                                <form action="{{ route('purchaseorder.printexcel') }}" method="GET" id="filterForm">
+                                    <button type="submit" class="btn btn-primary fw-bold">
+                                        <i class="bi bi-file-earmark-excel"></i> Export Excel
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-striped table-bordered mt-3" id="tableasset">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Asset</th>
+                                        <th scope="col">Keterangan</th>
+                                        <th scope="col">Tanggal Pembelian</th>
+                                        <th scope="col">Harga</th>
+                                        <th scope="col">Depresiasi Perbulan</th>
+                                        <th scope="col">Akumulasi Depresiasi 2024</th>
+                                        <th scope="col">Depresiasi 2025</th>
+                                        <th scope="col">Total Depresiasi</th>
+                                        <th scope="col">Book Value</th>
+                                        <th scope="col">Status</th>
+                                        <th scope="col">Action</th>
+                                    </tr>
+                                </thead>
+                            </table>
                         </div>
                     </div>
                 </div>
-                <section class="section">
-                    <div class="card">
-                        <div class="card-header">
-                            <form id="searchForm">
-                                <div class="row g-3 align-items-center">
-                                    <div class="col-auto">
-                                        <label for="principal" class="form-label fw-bold small">Principal</label>
-                                        <select class="form-select" style="width: 250px" id="partner_id" name="partner_id"
-                                            required>
-                                            <option value="0" selected disabled>Pilih Principal</option>
-                                            <option value="0">Semua Principal</option>
-                                            @foreach ($partner as $item)
-                                                <option value="{{ $item['id'] }}">{{ $item['name'] }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    <div class="col-auto">
-                                        <label for="start_date" class="form-label fw-bold small">Tanggal Awal</label>
-                                        <input type="date" id="start_date" name="start_date" class="form-control"
-                                            required>
-                                    </div>
-                                    <div class="col-auto">
-                                        <label for="end_date" class="form-label fw-bold small"
-                                            style="margin-top: 35px">s/d</label>
-                                    </div>
-                                    <div class="col-auto">
-                                        <label for="end_date" class="form-label fw-bold small">Tanggal Akhir</label>
-                                        <input type="date" id="end_date" name="end_date" class="form-control" required>
-                                    </div>
-                                    {{-- <div class="col-auto">
-                                        <label for="wilayah" class="form-label fw-bold small">Wilayah</label>
-                                        <select id="wilayahSelect" class="form-select me-2" name="wilayah" required>
-                                            <option value="0" selected>Semua Wilayah</option>
-                                            <option value="1">Wilayah 1</option>
-                                            <option value="2">Wilayah 2</option>
-                                            <option value="3">Wilayah 3</option>
-                                            <option value="4">Office</option>
-                                        </select>
-                                    </div> --}}
-                                    <div class="col-auto">
-                                        <button type="submit" class="btn btn-primary"
-                                            style="margin-top: 28px">Cari</button>
-                                    </div>
-                                </div>
-                            </form>
-                            <div class="mt-3 d-flex justify-content-end">
-                                <button class="btn btn-primary" id="btnprint">
-                                    <i class="bi bi-file-earmark-excel"></i> Export Excel
-                                </button>
-                            </div>
-                            <div class="card-body">
-                                @include('alert.alert')
-                                <div class="table-responsive">
-                                    <table class="table table-striped table-bordered mt-3" id="tablereporthutang">
-                                        <thead>
-                                            <tr>
-                                                <th scope="col">Principle</th>
-                                                <th scope="col">Tanggal Terima</th>
-                                                <th scope="col">Order Pembelian</th>
-                                                <th scope="col">No Invoice</th>
-                                                <th scope="col">Jatuh Tempo</th>
-
-                                                <th scope="col">Umur</th>
-                                                <th scope="col">Saldo</th>
-                                                <th scope="col">Bulan Berjalan</th>
-                                                <th scope="col">Tgl Bayar</th>
-                                                <th scope="col">Dibayar</th>
-                                                <th scope="col">Sisa</th>
-                                                <th scope="col">Sudah Diinvoice</th>
-                                                <th scope="col">
-                                                    < 1 Bulan </th>
-                                                <th scope="col">1 Bulan</th>
-                                                <th scope="col">2 Bulan</th>
-                                                <th scope="col">3 Bulan</th>
-                                                <th scope="col">> 3 Bulan</th>
-                                                <th scope="col">Jumlah</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                </section>
-            </div>
+            </section>
         </div>
-    @endsection
-    @push('scripts')
-        <script>
-            $(document).ready(function() {
-                $('#btnprint').hide();
+    </div>
+@endsection
 
-                $('#btnprint').click(function() {
-                    const dataTable = $('#tablereporthutang').DataTable();
-                    const principal = $('#partner_id').val();
-                    const start_date = $('#start_date').val();
-                    const end_date = $('#end_date').val();
-                    const principalName = $('#principal_id option:selected').text();
-
-                    const formData = new URLSearchParams({
-                        principal: principal,
-                        start_date: start_date,
-                        end_date: end_date,
-                        // wilayah: wilayah,
-                        principal_name: principalName
-                    }).toString();
-                    console.log(formData);
-                    window.location.href = "/report_hutang/export-excel?" + formData;
-                });
-
-                $('#searchForm').on('submit', function(e) {
-                    e.preventDefault();
-
-                    let $btnCari = $('button[type="submit"]');
-                    $btnCari.prop('disabled', true).text('Processing...');
-
-                    let formData = {
-                        principal: $('#principal').val(),
-                        start_date: $('#start_date').val(),
-                        end_date: $('#end_date').val()
-                    };
-
-                    $('#loading-overlay').fadeIn();
-
-                    $.ajax({
-                        url: '{{ route('report_hutang.ajax') }}',
-                        type: 'GET',
-                        data: formData,
-                        success: function(response) {
-                            let data = response.data;
-
-                            let tableBody = $('#tablereporthutang tbody');
-                            tableBody.empty();
-
-                            $.each(data, function(index, item) {
-                                let row = `
-         <tr class="${index === data.length - 1 ? 'last-row' : ''}">
-            <td>${item.name}</td>
-            <td>${item.receipt_date}</td>
-            <td>${item.invoice_number}</td>
-            <td>${item.jatuh_tempo}</td>
-            <td>${item.umur ? item.umur : '-'}</td>
-            <td>${formatRupiah(item.saldo)}</td>
-            <td>${formatRupiah(item.bulan_berjalan)}</td>
-            <td>${item.tgl_bayar}</td>
-            <td>${formatRupiah(item.bayar)}</td>
-            <td>${formatRupiah(item.sisa)}</td>
-            <td>${item.jatuh_tempo}</td>
-            <td>${formatRupiah(item.bayar)}</td>
-            <td>${formatRupiah(item.min_30)}</td>
-            <td>${formatRupiah(item.d30a)}</td>
-            <td>${formatRupiah(item.d60a)}</td>
-            <td>${formatRupiah(item.d90a)}</td>
-            <td>${formatRupiah(item.d120a)}</td>
-            <td>${formatRupiah(item.jumlah)}</td>
-        </tr>
-    `;
-                                tableBody.append(row);
-                            });
-
-                            $('#btnprint').show();
-
-                            $btnCari.prop('disabled', false).text('Cari');
-                        },
-                        error: function(xhr) {
-                            alert('Gagal mengambil data: ' + xhr.responseText);
-                            $btnCari.prop('disabled', false).text('Cari');
-                        },
-                        complete: function() {
-                            $('#loading-overlay').fadeOut();
+@push('scripts')
+    @include('modal.modal')
+    <script>
+        $(document).ready(function() {
+            var dataTable = $('#tableasset').DataTable({
+                serverSide: true,
+                processing: true,
+                ajax: {
+                    url: '{{ route('asset.ajax') }}',
+                    type: 'GET',
+                    data: function(d) {
+                        d.end_date = $('#end_date').val();
+                    },
+                    dataSrc: function(response) {
+                        if (response.mtd) {
+                            const formattedNumber = new Intl.NumberFormat('id-ID', {
+                                minimumFractionDigits: 2,
+                                maximumFractionDigits: 2
+                            }).format(response.mtd);
+                            $('#totalPerBulan').html('Rp ' + formattedNumber);
                         }
-                    });
+                        return response.data;
+                    }
+                },
+                columns: [{
+                        data: 'asset_name'
+                    },
+                    {
+                        data: 'asset_type'
+                    },
+                    {
+                        data: 'acquisition_date',
+                        render: function(data) {
+                            if (data) {
+                                var date = new Date(data);
+                                return date.getFullYear() + '-' +
+                                    (date.getMonth() + 1).toString().padStart(2, '0') + '-' +
+                                    date.getDate().toString().padStart(2, '0');
+                            }
+                            return data;
+                        }
+                    },
+                    {
+                        data: 'acquisition_cost'
+                    },
+                    {
+                        data: 'depreciation_rate',
+                        render: function(data, type, row) {
+                            return (row.depreciation_rate * row.acquisition_cost).toFixed(2);
+                        }
+                    },
+                    {
+                        data: 'accumulated_depreciation'
+                    },
+                    {
+                        data: 'depreciation_rate',
+                        render: function(data, type, row) {
+                            return (row.depreciation_rate * row.acquisition_cost).toFixed(2);
+                        }
+                    },
+                    {
+                        data: 'accumulated_depreciation',
+                        render: function(data, type, row) {
+                            return (row.accumulated_depreciation + (row.depreciation_rate * row
+                                .acquisition_cost)).toFixed(2);
+                        }
+                    },
+                    {
+                        data: 'book_value'
+                    },
+                    {
+                        data: 'status'
+                    },
+                    {
+                        data: null,
+                        render: function(data, type, row) {
+                            return `<div class="d-flex gap-1">
+                                <button type="button" class="btn btn-sm btn-info mb-2 btn-detail-asset" title="Detail" data-id="${row.id}" >
+                        <i class="bi bi-eye"></i>
+                    </button>
+                    <button type="button" class="btn btn-sm btn-warning mb-2 btn-edit-asset" data-id="${row.id}" title="Edit"  >
+                        <i class="bi bi-pencil"></i>
+                    </button>
+                            </div>`;
+                        }
+                    }
+                ]
+            });
+
+            $('#searchForm').on('submit', function(e) {
+                e.preventDefault();
+                dataTable.ajax.reload();
+            });
+
+            $(document).on('click', '.btn-add-asset', function(e) {
+                e.preventDefault();
+                const url = '{{ route('asset.create') }}'
+                const $button = $(this);
+
+                $('#loading-overlay').fadeIn();
+                $button.prop("disabled", true).html('<i class="bi bi-hourglass-split"></i>');
+
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    dataType: 'html',
+                    beforeSend: function() {},
+                    success: function(response) {
+                        updateModal('#modal-example', 'Tambah Asset', response,
+                            'modal-lg');
+                    },
+                    error: function(xhr) {
+                        let errorMsg = xhr.responseText ||
+                            '<p>An error occurred while loading the content.</p>';
+                        $('#content-example').html(errorMsg);
+
+                    },
+                    complete: function() {
+                        $('#loading-overlay').fadeOut();
+                        $button.prop("disabled", false).html('+ Tambah Asset');
+                    }
                 });
             });
-        </script>
-    @endpush
+
+            $(document).on('click', '.btn-detail-asset', function(e) {
+                e.preventDefault();
+                const assetId = $(this).data('id');
+                const url = '{{ route('asset.show', ':assetId') }}'.replace(':assetId', assetId);
+                const $button = $(this);
+
+                $('#loading-overlay').fadeIn();
+                $button.prop("disabled", true).html('<i class="bi bi-hourglass-split"></i>');
+
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    dataType: 'html',
+                    beforeSend: function() {
+                        //
+                    },
+                    success: function(response) {
+                        updateModal('#modal-example', 'Detail Asset', response,
+                            'modal-lg');
+                    },
+                    error: function(xhr) {
+                        let errorMsg = xhr.responseText ||
+                            '<p>An error occurred while loading the content.</p>';
+                        $('#content-example').html(errorMsg);
+                    },
+                    complete: function() {
+                        $('#loading-overlay').fadeOut();
+                        $button.prop("disabled", false).html('<i class="bi bi-eye"></i>');
+                    }
+                });
+            });
+
+            $(document).on('click', '.btn-edit-asset', function(e) {
+                e.preventDefault();
+                const assetId = $(this).data('id');
+                const url = '{{ route('asset.edit', ':assetId') }}'.replace(':assetId', assetId);
+                const $button = $(this);
+
+                $('#loading-overlay').fadeIn();
+                $button.prop("disabled", true).html('<i class="bi bi-hourglass-split"></i>');
+
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    dataType: 'html',
+                    beforeSend: function() {
+                        //
+                    },
+                    success: function(response) {
+                        updateModal('#modal-example', 'Edit Asset', response,
+                            'modal-lg');
+                    },
+                    error: function(xhr) {
+                        let errorMsg = xhr.responseText ||
+                            '<p>An error occurred while loading the content.</p>';
+                        $('#content-example').html(errorMsg);
+                    },
+                    complete: function() {
+                        $('#loading-overlay').fadeOut();
+                        $button.prop("disabled", false).html('<i class="bi bi-pencil"></i>');
+                    }
+                });
+            });
+        });
+    </script>
+@endpush
