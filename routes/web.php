@@ -519,6 +519,7 @@ Route::middleware('auth.login')->group(
             function () {
                 Route::get('/', 'index')->name('index');
                 Route::get('/ajax', 'ajax')->name('ajax');
+                Route::get('/ajax_detail', 'ajaxDetail')->name('ajaxDetail');
                 Route::get('/detail_cash', 'detailCash')->name('detailCash');
                 Route::get('/export-excel', 'exportExcel')->name('exportexcel');
             }

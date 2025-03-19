@@ -9,7 +9,7 @@
             <div class="page-title">
                 <div class="row">
                     <div class="col-12 col-md-6 order-md-1 order-last">
-                        <h3>Report Cash Bank</h3>
+                        <h3>Rekap Saldo Per Bank</h3>
                     </div>
                     <div class="col-12 col-md-6 order-md-2 order-first">
                         <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
@@ -18,7 +18,7 @@
                                     <a href="/dashboard">Dashboard</a>
                                 </li>
                                 <li class="breadcrumb-item active" aria-current="page">
-                                    Report Cash Bank
+                                    Rekap Saldo Per Bank
                                 </li>
                             </ol>
                         </nav>
@@ -53,7 +53,7 @@
                                     </div>
                                 </div>
                             </form>
-                            <a href="{{ route('hutang.pembayaran.index') }}" class="btn btn-primary fw-bold text-end">
+                            <a href="{{ route('report_cash.detailCash') }}" class="btn btn-primary fw-bold text-end">
                                 <i class="bi bi-list-ul"></i> Detail
                             </a>
                         </div>
