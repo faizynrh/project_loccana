@@ -185,6 +185,7 @@
                 </li>
                 <li
                     class="sidebar-item has-sub {{ (Request::is('jurnal_penyesuaian*') || Request::is('neraca*') ? 'active' : '' || Request::is('laba_rugi*') || Request::is('report_hutang*') || Request::is('asset*') || Request::is('report_piutang*') || Request::is('report_cash*')) ? 'active' : '' }} }} ">
+
                     <a href="#" class="sidebar-link">
                         <i class="bi bi-calculator"></i>
                         <span>Accounting</span>
@@ -196,8 +197,8 @@
                         <li class="submenu-item {{ Request::is('asset*') ? 'active' : '' }}">
                             <a href="/asset" class="submenu-link">Asset</a>
                         </li>
-                        <li class="submenu-item">
-                            <a href="#" class="submenu-link">Buku Besar Pembantu</a>
+                        <li class="submenu-item {{ Request::is('buku_besar_pembantu*') ? 'active' : '' }}">
+                            <a href="/buku_besar_pembantu" class="submenu-link">Buku Besar Pembantu</a>
                         </li>
                         <li class="submenu-item {{ Request::is('laba_rugi*') ? 'active' : '' }}">
                             <a href="/laba_rugi" class="submenu-link">Laba Rugi</a>

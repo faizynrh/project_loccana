@@ -2,14 +2,14 @@
 @section('content')
     @push('styles')
         <style>
-            #tablereportcash thead tr:first-child th {
+            #tablebukubesar thead tr:first-child th {
                 position: sticky;
                 background: white;
                 z-index: 0;
                 border-bottom: 2px solid #ddd;
             }
 
-            #tablereportcash thead tr:first-child th {
+            #tablebukubesar thead tr:first-child th {
                 top: 0;
             }
 
@@ -24,7 +24,7 @@
             <div class="page-title">
                 <div class="row">
                     <div class="col-12 col-md-6 order-md-1 order-last">
-                        <h3>Report Cash</h3>
+                        <h3>Buku Besar Pembantu</h3>
                     </div>
                     <div class="col-12 col-md-6 order-md-2 order-first">
                         <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
@@ -32,11 +32,8 @@
                                 <li class="breadcrumb-item">
                                     <a href="/dashboard">Dashboard</a>
                                 </li>
-                                <li class="breadcrumb-item">
-                                    <a href="/report_cash">Rekap Saldo Per Bank</a>
-                                </li>
                                 <li class="breadcrumb-item active" aria-current="page">
-                                    Report Cash
+                                    Buku Besar Pembantu
                                 </li>
                             </ol>
                         </nav>
@@ -47,7 +44,7 @@
                 <div class="card">
                     <div class="card-header">
                         <div class="d-flex justify-content-between align-items-center mb-3">
-                            <form id="searchForm" class="d-flex flex-wrap">
+                            <form id="searchForm" class="d-flex flex-wrap align-items-center">
                                 <div class="row g-3 align-items-center">
                                     <div class="col-auto">
                                         <label for="coa" class="form-label fw-bold small">Akun</label>
@@ -78,25 +75,14 @@
                                     </div>
                                 </div>
                             </form>
-                            <div class="text-end ms-auto">
-                                <h6 class="fw-bold">Total Per Periode</h6>
-                                <h4 class="fw-bold" id="totalPerPeriode">Rp 0,00</h4>
-                            </div>
-                        </div>
-                        <div class="d-flex justify-content-end">
-                            <div class="d-flex flex-column align-items-end">
-                                <a href="{{ route('report_cash.index') }}" class="btn btn-secondary fw-bold mb-2">
-                                    <i class="bi bi-arrow-left-circle"></i> Kembali
-                                </a>
-                                <button class="btn btn-primary fw-bold" id="exportBtn">
-                                    <i class="bi bi-file-earmark-excel"></i> Export Excel
-                                </button>
-                            </div>
+                            <button class="btn btn-primary fw-bold ms-auto" id="exportBtn">
+                                <i class="bi bi-file-earmark-excel"></i> Export Excel
+                            </button>
                         </div>
                         <div class="card-body">
                             @include('alert.alert')
                             <div class="table-responsive">
-                                <table class="table table-striped table-bordered mt-3" id="tablereportcash">
+                                <table class="table table-striped table-bordered mt-3" id="tablebukubesar">
                                     <thead>
                                         <tr>
                                             <th>Tanggal</th>
@@ -129,7 +115,7 @@
                 $('#loading-overlay').fadeIn();
 
                 $.ajax({
-                    url: '{{ route('report_cash.ajaxDetail') }}',
+                    url: '{{ route('buku_besar_pembantu.ajax') }}',
                     type: 'GET',
                     data: {
                         coa: $('#coa').val(),
@@ -139,7 +125,7 @@
                     success: function(response) {
                         let data = response.data;
                         console.log(data);
-                        $('#tablereportcash tbody').empty();
+                        $('#tablebukubesar tbody').empty();
 
                         $.each(data, function(index, item) {
                             let row = `
@@ -155,7 +141,7 @@
                                             <td>${formatRupiah(item.saldo)}</td>
                                         </tr>
                                     `;
-                            $('#tablereportcash tbody').append(row);
+                            $('#tablebukubesar tbody').append(row);
                         });
                         $('#exportBtn').show();
                     },
@@ -185,7 +171,7 @@
                     end_date: end_date,
                     accountName: accountName
                 }).toString();
-                window.location.href = "/report_cash/export-excel?" + formData;
+                window.location.href = "/buku_besar_pembantu/export-excel?" + formData;
             });
         });
     </script>
