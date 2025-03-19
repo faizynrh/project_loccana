@@ -31,14 +31,18 @@
                         <div class="d-flex justify-content-between align-items-center">
                             <form id="searchForm" class="d-flex">
                                 <div class="me-2">
+                                    <label for="start_date" class="form-label fw-bold small">Tanggal Awal</label>
                                     <input type="date" id="start_date" name="start_date" class="form-control"
                                         value="{{ date('Y-m-d') }}" required>
                                 </div>
                                 <div class="me-2">
+                                    <label for="start_date" class="form-label fw-bold small">Tanggal Akhir</label>
                                     <input type="date" id="end_date" name="end_date" class="form-control"
                                         value="{{ date('Y-m-d') }}" required>
                                 </div>
-                                <button type="submit" class="btn btn-primary">Cari</button>
+                                <div class="col-auto">
+                                    <button type="submit" class="btn btn-primary" style="margin-top: 31px">Cari</button>
+                                </div>
                             </form>
                             <button class="btn btn-primary" id="exportBtn">
                                 <i class="bi bi-file-earmark-excel"></i> Export Excel
