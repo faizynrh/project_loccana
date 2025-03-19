@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\accounting;
 
+use App\Exports\ExportAccountingReportHutang;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ReportHutangController extends Controller
 {
@@ -57,31 +59,32 @@ class ReportHutangController extends Controller
             return back()->withErrors($errors);
         }
     }
-    // public function exportExcel(Request $request)
-    // {
-    //     try {
-    //         $start_date = $request->start_date;
-    //         $end_date = $request->end_date;
+    public function exportExcel(Request $request)
+    {
+        try {
+            $start_date = $request->start_date;
+            $end_date = $request->end_date;
+            $partner_id = $request->partner_id;
 
-    //         $requestbody = [
-    //             'start_date' => $start_date,
-    //             'end_date' => $end_date,
-    //             'coa_id' => 0
-    //         ];
-    //         $apiResponse = storeApi(env('REPORT_HUTANG_URL'), $requestbody);
+            $requestbody = [
+                'start_date' => $start_date,
+                'end_date' => $end_date,
+                'partner_id' => $partner_id
+            ];
+            $apiResponse = storeApi(env('REPORT_HUTANG_URL'), $requestbody);
 
-    //         if ($apiResponse->successful()) {
-    //             $data = json_decode($apiResponse->body());
-    //             if (empty($data)) {
-    //                 return back()->with('error', 'Tidak ada data untuk diexport.');
-    //             }
-    //             $fileName = 'Laporan Laba Rugi ' . $start_date . ' s.d ' . $end_date . '.xlsx';
-    //             return Excel::download(new ExportAccountingLabaRugi($data, $start_date, $end_date), $fileName);
-    //         }
+            if ($apiResponse->successful()) {
+                $data = json_decode($apiResponse->body());
+                if (empty($data)) {
+                    return back()->with('error', 'Tidak ada data untuk diexport.');
+                }
+                $fileName = 'Laporan Report Hutang ' . $start_date . ' s.d ' . $end_date . '.xlsx';
+                return Excel::download(new ExportAccountingReportHutang($data, $start_date, $end_date), $fileName);
+            }
 
-    //         return response()->json(['error' => $apiResponse->json()['message']]);
-    //     } catch (\Exception $e) {
-    //         return response()->json(['error' => $e->getMessage()]);
-    //     }
-    // }
+            return response()->json(['error' => $apiResponse->json()['message']]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()]);
+        }
+    }
 }
