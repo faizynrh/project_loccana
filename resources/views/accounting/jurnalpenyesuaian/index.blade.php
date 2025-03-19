@@ -148,9 +148,6 @@
                                                                                         <i class="bi bi-eye-fill text-primary me-2"></i>
                                                                                         <span>Lihat Detail</span>
                                                                                     </a></li>
-                                                    <li><a href="/jurnal_penyesuaian/print/${row.jurnal_id}" class="dropdown-item d-flex align-items-center py-2" target="_blank" title="Print PDF">
-                                                <i class="bi bi-printer-fill text-warning me-2"></i>
-                                                <span>Cetak PDF</span>
                                             </a></li>
                                                     <li><hr class="dropdown-divider"></li>
                                                     <li> <a href="/jurnal_penyesuaian/edit/${row.jurnal_id}" class="dropdown-item d-flex align-items-center py-2" title="Edit">
