@@ -24,7 +24,7 @@
                             class="text-danger">*</span></label>
                 </div>
                 <div class="col-md-9">
-                    <input type="text" class="form-control" name="location" required
+                    <input type="text" class="form-control" name="description" required
                         value="{{ $data->data->description }}">
                 </div>
             </div>
@@ -34,7 +34,7 @@
                             class="text-danger">*</span></label>
                 </div>
                 <div class="col-md-9">
-                    <textarea class="form-control" name="description" rows="5" required>{{ $data->data->location }}</textarea>
+                    <textarea class="form-control" name="location" rows="5" required>{{ $data->data->location }}</textarea>
                 </div>
             </div>
             <div class="row mb-3 align-items-center">

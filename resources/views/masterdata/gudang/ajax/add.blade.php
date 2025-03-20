@@ -22,7 +22,8 @@
                             class="text-danger">*</span></label>
                 </div>
                 <div class="col-md-9">
-                    <input type="text" class="form-control" name="location" placeholder="Deskripsi Gudang" required>
+                    <input type="text" class="form-control" name="description" placeholder="Deskripsi Gudang"
+                        required>
                 </div>
             </div>
             <div class="row mb-3 align-items-center">
@@ -31,7 +32,7 @@
                             class="text-danger">*</span></label>
                 </div>
                 <div class="col-md-9">
-                    <textarea class="form-control" name="description" rows="5" required></textarea>
+                    <textarea class="form-control" name="location" rows="5" required></textarea>
                 </div>
             </div>
             <div class="row mb-3 align-items-center">
