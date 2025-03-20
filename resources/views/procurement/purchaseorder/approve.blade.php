@@ -115,23 +115,20 @@
                             <thead>
                                 <tr style="border-bottom: 3px solid #000;">
                                     <th style="width: 140px">Kode</th>
-                                    <th style="width: 90px"></th>
                                     <th style="width: 45px">Qty (Lt/Kg)</th>
                                     <th style="width: 100px">Harga</th>
                                     <th style="width: 30px">Diskon (%)</th>
                                     <th style="width: 70px">Total</th>
-                                    <th style="width: 30px"></th>
-                                    <th style="width: 30px"></th>
                                 </tr>
                             </thead>
                             <tbody id="tableBody">
                                 @foreach ($data->data as $item)
                                     <tr style="border-bottom: 2px solid #000" class="item-row">
-                                        <td colspan="2">
+                                        <td>
                                             <input type="text"
                                                 value="{{ $item->item_code }} - {{ $item->item_name }}" disabled
-                                                class="form-control"> <input type="hidden" name="items[0][uom_id]"
-                                                class="uom-input">
+                                                class="form-control">
+                                            <input type="hidden" name="items[0][uom_id]" class="uom-input">
                                         </td>
                                         <td>
                                             <input type="number" name="items[0][quantity]"
@@ -147,46 +144,42 @@
                                                 class="form-control discount-input" value="{{ $item->discount }}"
                                                 min="0" max="100" disabled>
                                         </td>
-                                        <td colspan="2">
-                                            <input type="number" name=""
-                                                class="form-control bg-body-secondary total-input"
+                                        <td>
+                                            <input type="number" class="form-control bg-body-secondary total-input"
                                                 value="{{ $item->total_price }}" readonly>
                                         </td>
-                                        <td></td>
                                     </tr>
-                                    <td colspan="6"></td>
                                 @endforeach
                             </tbody>
-                            <tr class="fw-bold">
-                                <td colspan="4"></td>
-                                <td>Sub Total</td>
-                                <td style="float: right;">0</td>
-                                <td></td>
-                            </tr>
-                            <tr class="fw-bold">
-                                <td colspan="4"></td>
-                                <td>Diskon</td>
-                                <td style="float: right;">0</td>
-                                <td></td>
-                            </tr class="fw-bold">
-                            <tr class="fw-bold">
-                                <td colspan="4"></td>
-                                <td>Taxable</td>
-                                <td style="float: right">0</td>
-                                <td></td>
-                            </tr class="fw-bold">
-                            <tr class="fw-bold">
-                                <td colspan="4"></td>
-                                <td>VAT/PPN</td>
-                                <td style="float: right">0</td>
-                                <td></td>
-                            </tr>
-                            <tr class="fw-bold" style="border-top: 2px solid #000">
-                                <td colspan="4"></td>
-                                <td>Total</td>
-                                <td style="float: right">0</td>
-                            </tr>
+                            <tfoot>
+                                <tr class="fw-bold">
+                                    <td colspan="3"></td>
+                                    <td>Sub Total</td>
+                                    <td style="float: right;">0</td>
+                                </tr>
+                                <tr class="fw-bold">
+                                    <td colspan="3"></td>
+                                    <td>Diskon</td>
+                                    <td style="float: right;">0</td>
+                                </tr>
+                                <tr class="fw-bold">
+                                    <td colspan="3"></td>
+                                    <td>Taxable</td>
+                                    <td style="float: right">0</td>
+                                </tr>
+                                <tr class="fw-bold" style="border-bottom: 2px solid #000">
+                                    <td colspan="3"></td>
+                                    <td>VAT/PPN</td>
+                                    <td style="float: right">0</td>
+                                </tr>
+                                <tr class="fw-bold">
+                                    <td colspan="3"></td>
+                                    <td>Total</td>
+                                    <td style="float: right">0</td>
+                                </tr>
+                            </tfoot>
                         </table>
+
                         <div class="row">
                             <div class="col-md-12 text-end">
                                 <input type="hidden" name="tax_amount" id="tax_amount" value="0">

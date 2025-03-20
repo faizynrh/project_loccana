@@ -89,7 +89,8 @@
                                     <label for="ship" class="form-label fw-bold mt-2 mb-1 small">Ship From</label>
                                     <textarea class="form-control bg-body-secondary" rows="5" id="ship" name="ship" readonly></textarea>
                                     <label for="ppn" class="form-label fw-bold mt-2 mb-1 small">VAT/PPN</label>
-                                    <input type="number" class="form-control" id="ppn" name="ppn" required>
+                                    <input type="number" class="form-control" id="ppn" name="ppn"
+                                        min="0" max="100" required>
 
 
                                     <label for="description" class="form-label fw-bold mt-2 mb-1 small">Keterangan</label>
@@ -102,22 +103,21 @@
                             <table class="table mt-3" id="transaction-table">
                                 <thead>
                                     <tr style="border-bottom: 3px solid #000;">
-                                        <th style="width: 140px">Kode</th>
-                                        <th style="width: 90px"></th>
-                                        <th style="width: 45px">Qty (Lt/Kg)</th>
-                                        <th style="width: 100px">Harga</th>
-                                        <th style="width: 30px">Diskon (%)</th>
-                                        <th style="width: 70px">Total</th>
-                                        <th style="width: 30px"></th>
-                                        <th style="width: 30px"></th>
+                                        <th>Kode</th>
+                                        <th>Qty (Lt/Kg)</th>
+                                        <th>Harga</th>
+                                        <th>Diskon (%)</th>
+                                        <th>Total</th>
+
                                     </tr>
                                 </thead>
                                 <tbody id="tableBody">
                                     <tr style="border-bottom: 2px solid #000" class="item-row">
                                     <tr style="border-bottom: 2px solid #000" class="item-row">
-                                        <td colspan="2">
-                                            <select class="form-select item-select" name="items[0][item_id]">
-                                                <option value="" disabled selected>Silahkan pilih principle terlebih
+                                        <td>
+                                            <select class="form-select item-select" id="item"
+                                                name="items[0][item_id]">
+                                                <option value="" disabled selected>Pilih principle
                                                     dahulu</option>
                                             </select>
                                             <input type="hidden" name="items[0][uom_id]" class="uom-input">
@@ -129,13 +129,13 @@
                                         </td>
                                         <td>
                                             <input type="number" name="items[0][unit_price]"
-                                                class="form-control price-input" value="0" min="0"
-                                                oninput="this.value = validateMinZero(this.value)">
+                                                class="form-control price-input" id="unit_price" value="0"
+                                                min="0" oninput="this.value = validateMinZero(this.value)">
                                         </td>
                                         <td>
                                             <input type="number" name="items[0][discount]"
                                                 class="form-control discount-input" value="0" min="0"
-                                                max="100" oninput="this.value = validateMinZero(this.value)">
+                                                max="100">
                                         </td>
                                         <td colspan="2">
                                             <input type="number" name="items[0][total_price]"
@@ -157,28 +157,26 @@
                                     <td colspan="4"></td>
                                     <td>Sub Total</td>
                                     <td style="float: right;">0</td>
-                                    <td></td>
+
                                 </tr>
                                 <tr class="fw-bold">
                                     <td colspan="4"></td>
                                     <td>Diskon</td>
                                     <td style="float: right;">0</td>
-                                    <td></td>
+
                                 </tr class="fw-bold">
                                 <tr class="fw-bold">
                                     <td colspan="4"></td>
                                     <td>Taxable</td>
                                     <td style="float: right">0</td>
-                                    <td></td>
                                 </tr class="fw-bold">
-                                <tr class="fw-bold">
+                                <tr class="fw-bold" style="border-bottom: 3px solid #000">
                                     <td colspan="4"></td>
                                     <td>VAT/PPN</td>
                                     <td style="float: right">0
                                     </td>
-                                    <td></td>
                                 </tr>
-                                <tr class="fw-bold" style="border-top: 2px solid #000">
+                                <tr class="fw-bold">
                                     <td colspan="4"></td>
                                     <td>Total</td>
                                     <td style="float: right">0</td>
@@ -290,7 +288,8 @@
                 $('#loading-overlay').fadeIn();
                 if (warehouseId) {
                     $.ajax({
-                        url: '/purchase_order/getDetailWarehouse/' + warehouseId,
+                        url: '/purchase_order/getDetailWarehouse/' +
+                            warehouseId, // Fixed variable name
                         type: 'GET',
                         dataType: 'json',
                         success: function(response) {
@@ -304,6 +303,32 @@
                         error: function(xhr, status, error) {
                             Swal.fire('Error', 'Gagal mengambil data gudang', 'error');
                             $('#ship').val('Gagal mengambil data');
+                            $('#loading-overlay').fadeOut();
+                        }
+                    });
+                }
+            });
+
+            $('#item').on('change', function() {
+                var itemId = $(this).val();
+                $('#loading-overlay').fadeIn();
+                var companyId = 2;
+                if (itemId) {
+                    $.ajax({
+                        url: '/purchase_order/getPrice/' + itemId,
+                        type: 'GET',
+                        dataType: 'json',
+                        success: function(response) {
+                            if (response.price) {
+                                $('#unit_price').val(response.price);
+                            } else {
+                                $('#unit_price').val('Data tidak tersedia');
+                            }
+                            $('#loading-overlay').fadeOut();
+                        },
+                        error: function(xhr, status, error) {
+                            Swal.fire('Error', 'Gagal mengambil data gudang', 'error');
+                            $('#unit_price').val('Gagal mengambil data');
                             $('#loading-overlay').fadeOut();
                         }
                     });
@@ -365,30 +390,30 @@
                 }
 
                 return `
-        <tr style="border-bottom: 2px solid #000" class="item-row">
-          <td colspan="2">
-            <select class="form-select item-select" name="items[${rowCount}][item_id]">
-              ${itemOptions}
-            </select>
-            <input type="hidden" name="items[${rowCount}][uom_id]" class="uom-input">
-          </td>
-          <td>
-            <input type="number" class="form-control qty-input" name="items[${rowCount}][quantity]" value="1" min="0" oninput="this.value = validateMinOne(this.value)">
-          </td>
-          <td>
-            <input type="number" class="form-control price-input" name="items[${rowCount}][unit_price]" value="0" min="0" oninput="this.value = validateMinZero(this.value)">
-          </td>
-          <td>
-            <input type="number" class="form-control discount-input" name="items[${rowCount}][discount]" value="0" min="0" max="100" oninput="this.value = validateMinZero(this.value)">
-          </td>
-          <td colspan="2">
-            <input type="number" class="form-control bg-body-secondary total-input" name="items[${rowCount}][total_price]" readonly>
-          </td>
-          <td>
-            <button type="button" class="btn btn-danger btn-sm remove-row">-</button>
-          </td>
-        </tr>
-      `;
+<tr style="border-bottom: 2px solid #000" class="item-row">
+  <td>
+    <select class="form-select item-select" name="items[${rowCount}][item_id]">
+      ${itemOptions}
+    </select>
+    <input type="hidden" name="items[${rowCount}][uom_id]" class="uom-input">
+  </td>
+  <td>
+    <input type="number" class="form-control qty-input" name="items[${rowCount}][quantity]" value="1" min="0" oninput="this.value = validateMinOne(this.value)">
+  </td>
+  <td>
+    <input type="number" class="form-control price-input" id="unit_price" name="items[${rowCount}][unit_price]" value="0" min="0" oninput="this.value = validateMinZero(this.value)">
+  </td>
+  <td>
+    <input type="number" class="form-control discount-input" name="items[${rowCount}][discount]" value="0" min="0" max="100">
+  </td>
+  <td colspan="2">
+    <input type="number" class="form-control bg-body-secondary total-input" name="items[${rowCount}][total_price]" readonly>
+  </td>
+  <td>
+    <button type="button" class="btn btn-danger btn-sm remove-row">-</button>
+  </td>
+</tr>
+`;
             }
 
             function getSelectedItems() {
@@ -446,6 +471,29 @@
                 if (itemId) {
                     $(this).siblings('.uom-input').val(selectedUOM);
                     row.data('item-id', itemId);
+
+                    // Add AJAX call to get item price
+                    $('#loading-overlay').fadeIn();
+                    $.ajax({
+                        url: '/purchase_order/getPrice/' + itemId,
+                        type: 'GET',
+                        dataType: 'json',
+                        success: function(response) {
+                            if (response && response.price) {
+                                // Update the price input in the current row
+                                row.find('.price-input').val(response.price);
+                                // Recalculate row total
+                                calculateRowTotal(row);
+                                // Update all totals
+                                updateTotals();
+                            }
+                            $('#loading-overlay').fadeOut();
+                        },
+                        error: function(xhr, status, error) {
+                            Swal.fire('Error', 'Gagal mengambil data harga', 'error');
+                            $('#loading-overlay').fadeOut();
+                        }
+                    });
 
                     const items = $('#tableBody').data('current-items');
                     if (items) {
@@ -572,6 +620,21 @@
                     maximumFractionDigits: 0
                 });
             }
+
+            // Helper functions for input validation
+            function validateMinZero(value) {
+                let numValue = parseFloat(value);
+                return numValue < 0 ? 0 : value;
+            }
+
+            function validateMinOne(value) {
+                let numValue = parseFloat(value);
+                return numValue < 1 ? 1 : value;
+            }
+
+            $('#ppn').on('input', function() {
+                updateTotals();
+            });
 
             updateTotals();
             checkItemsAvailability();

@@ -232,6 +232,7 @@ Route::middleware('auth.login')->group(
             Route::get('/edit/{id}', 'edit')->name('edit');
             Route::put('/update/{id}', 'update')->name('update');
             Route::get('/getItemsList/{id}', 'getItemsList')->name('getitem');
+            Route::get('/getPrice/{id}', 'getprice')->name('getprice');
             Route::get('/approve/{id}', 'vapprove')->name('vapprove');
             Route::put('/approve/{id}', 'approve')->name('approve');
             Route::put('/reject/{id}', 'reject')->name('reject');

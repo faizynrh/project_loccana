@@ -122,14 +122,11 @@
                             <table class="table mt-3" id="transaction-table">
                                 <thead>
                                     <tr style="border-bottom: 3px solid #000;">
-                                        <th style="width: 140px">Kode</th>
-                                        <th style="width: 90px"></th>
-                                        <th style="width: 45px">Qty (Lt/Kg)</th>
-                                        <th style="width: 100px">Harga</th>
-                                        <th style="width: 30px">Diskon (%)</th>
-                                        <th style="width: 70px">Total</th>
-                                        <th style="width: 30px"></th>
-                                        <th style="width: 30px"></th>
+                                        <th>Kode</th>
+                                        <th>Qty (Lt/Kg)</th>
+                                        <th>Harga</th>
+                                        <th>Diskon (%)</th>
+                                        <th>Total</th>
                                     </tr>
                                 </thead>
                                 <tbody id="tableBody">
@@ -142,10 +139,9 @@
                                             $selectedUom = $selectedOption ? $selectedOption->unit_of_measure_id : '';
                                         @endphp
                                         <tr style="border-bottom: 2px solid #000" class="item-row">
-                                            <td colspan="2">
+                                            <td>
                                                 <select class="form-control"
                                                     style="pointer-events: none; background-color: #e9ecef;"
-                                                    id="item_id_{{ $index }}"
                                                     name="items[{{ $index }}][item_id]">
                                                     <option value="" selected disabled>Pilih Item</option>
                                                     @foreach ($items->data->items ?? [] as $option)
@@ -169,14 +165,14 @@
                                             </td>
                                             <td>
                                                 <input type="number" name="items[{{ $index }}][unit_price]"
-                                                    class="form-control price-input" value="{{ $item->unit_price ?? 0 }}"
-                                                    min="0" oninput="this.value = validateMinZero(this.value)">
+                                                    class="form-control price-input" id="unit_price"
+                                                    value="{{ $item->unit_price ?? 0 }}" min="0"
+                                                    oninput="this.value = validateMinZero(this.value)">
                                             </td>
                                             <td>
                                                 <input type="number" name="items[{{ $index }}][discount]"
                                                     class="form-control discount-input"
-                                                    value="{{ $item->discount ?? 0 }}" min="0" max="100"
-                                                    oninput="this.value = validateMinZero(this.value)">
+                                                    value="{{ $item->discount ?? 0 }}" min="0" max="100">
                                             </td>
                                             <td colspan="2">
                                                 <input type="number" class="form-control bg-body-secondary total-input"
@@ -194,7 +190,6 @@
                                             <button class="btn btn-primary fw-bold" id="add-row">+</button>
                                         </td>
                                     </tr>
-
                                 </tbody>
                                 <tfoot>
                                     <tr class="fw-bold">
@@ -215,13 +210,13 @@
                                         <td style="float: right">0</td>
                                         <td></td>
                                     </tr>
-                                    <tr class="fw-bold">
+                                    <tr class="fw-bold" class="fw-bold" style="border-bottom: 2px solid #000">
                                         <td colspan="4"></td>
                                         <td>VAT/PPN</td>
                                         <td style="float: right">0</td>
                                         <td></td>
                                     </tr>
-                                    <tr class="fw-bold" style="border-top: 2px solid #000">
+                                    <tr class="fw-bold">
                                         <td colspan="4"></td>
                                         <td>Total</td>
                                         <td style="float: right">0</td>
@@ -377,36 +372,37 @@
                 @endforeach
 
                 const newRow = `
-            <tr style="border-bottom: 2px solid #000" class="item-row">
-                <td colspan="2">
-                    <select class="form-select" name="items[${rowCount}][item_id]" required>
-                        ${itemOptions}
-                    </select>
-                    <input type="hidden" name="items[${rowCount}][uom_id]" class="uom-input">
-                    <input type="hidden" name="items[${rowCount}][po_detail_id]" class="po-detail-id">
-                </td>
-                <td>
-                    <input type="number" name="items[${rowCount}][quantity]" class="form-control qty-input" value="1" min="1" oninput="this.value = validateMinOne(this.value)">
-                </td>
-                <td>
-                    <input type="number" name="items[${rowCount}][unit_price]" class="form-control price-input" value="0" min="0" oninput="this.value = validateMinZero(this.value)">
-                </td>
-                <td>
-                    <input type="number" name="items[${rowCount}][discount]" class="form-control discount-input" value="0" min="0" max="100" oninput="this.value = validateMinZero(this.value)">
-                </td>
-                <td colspan="2">
-                    <input type="number" class="form-control bg-body-secondary total-input" value="0" readonly>
-                </td>
-                <td class="text-center">
-                    <button type="button" class="btn btn-danger btn-sm remove-row">-</button>
-                </td>
-            </tr>
+        <tr style="border-bottom: 2px solid #000" class="item-row">
+            <td>
+                <select class="form-select item-select" id="item_id" name="items[${rowCount}][item_id]" required>
+                    ${itemOptions}
+                </select>
+                <input type="hidden" name="items[${rowCount}][uom_id]" class="uom-input">
+                <input type="hidden" name="items[${rowCount}][po_detail_id]" class="po-detail-id">
+            </td>
+            <td>
+                <input type="number" name="items[${rowCount}][quantity]" class="form-control qty-input" value="1" min="1" oninput="this.value = validateMinOne(this.value)">
+            </td>
+            <td>
+                <input type="number" name="items[${rowCount}][unit_price]" id="unit_price" class="form-control price-input" value="0" min="0" oninput="this.value = validateMinZero(this.value)">
+            </td>
+            <td>
+                <input type="number" name="items[${rowCount}][discount]" class="form-control discount-input" min="0" max="100">
+            </td>
+            <td colspan="2">
+                <input type="number" class="form-control bg-body-secondary total-input" value="0" readonly>
+            </td>
+            <td class="text-center">
+                <button type="button" class="btn btn-danger btn-sm remove-row">-</button>
+            </td>
+        </tr>
         `;
-
                 $(newRow).insertBefore('#tableBody tr:last');
 
                 updateAddButton();
             });
+
+
 
             var poId = '{{ $data->data[0]->partner_id }}';
             var warehouseId = $('#gudang').val();
@@ -481,6 +477,35 @@
                     updateTotals();
                 }
             });
+
+            $(document).on('change', '.item-select', function() {
+                var itemId = $(this).val();
+                var row = $(this).closest('tr'); // Ambil baris terkait
+                $('#loading-overlay').fadeIn();
+
+                if (itemId) {
+                    $.ajax({
+                        url: '/purchase_order/getPrice/' + itemId,
+                        type: 'GET',
+                        dataType: 'json',
+                        success: function(response) {
+                            if (response.price) {
+                                row.find('.price-input').val(response
+                                .price); // Ubah harga di dalam baris terkait
+                            } else {
+                                row.find('.price-input').val('Data tidak tersedia');
+                            }
+                            $('#loading-overlay').fadeOut();
+                        },
+                        error: function(xhr, status, error) {
+                            Swal.fire('Error', 'Gagal mengambil data gudang', 'error');
+                            row.find('.price-input').val('Gagal mengambil data');
+                            $('#loading-overlay').fadeOut();
+                        }
+                    });
+                }
+            });
+
 
             $(document).on('input', '.qty-input, .price-input, .discount-input', function() {
                 const discountInput = $(this).closest('tr').find('.discount-input');

@@ -79,6 +79,25 @@ class PurchaseOrderController extends Controller
         }
     }
 
+    protected function getprice($id)
+    {
+        try {
+            $price = fectApi(env('PRICE_URL') . '/' . $id);
+
+            if ($price->successful()) {
+                $contact = json_decode($price->getbody()->getContents(), false);
+
+                return response()->json([
+                    'price' => $contact->data->price ?? null
+                ]);
+            } else {
+                return response()->json(['message' => 'Gagal mengambil data'], 500);
+            }
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Terjadi kesalahan pada server'], 500);
+        }
+    }
+
     public function print($id)
     {
         try {
