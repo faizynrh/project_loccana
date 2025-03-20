@@ -59,12 +59,10 @@ class PriceController extends Controller
     {
         try {
             $data = [
-                'harga_atas' => $request->harga_atas,
-                'harga_bawah' => $request->harga_bawah,
-                'harga_pokok' => $request->harga_pokok,
-                'harga_beli' => $request->harga_beli,
+                'price' => $request->price,
+                'valid_from' => $request->valid_from,
+                'valid_to' => $request->valid_to,
             ];
-
             $apiResponse = updateApi(env('PRICE_URL') . '/' . $id, $data);
             if ($apiResponse->successful()) {
                 return redirect()->route('price.index')->with('success', $apiResponse->json()['message']);
@@ -75,20 +73,20 @@ class PriceController extends Controller
             return back()->withErrors($e->getMessage());
         }
     }
-    public function approve(Request $request, $id)
-    {
-        try {
-            $data = [
-                'status' => 'approve',
-            ];
-            $apiResponse = updateApi(env('PRICE_URL') . '/approve/' . $id, $data);
-            if ($apiResponse->successful()) {
-                return redirect()->route('price.index')->with('success', $apiResponse->json()['message']);
-            } else {
-                return back()->withErrors($apiResponse->json()['message']);
-            }
-        } catch (\Exception $e) {
-            return back()->withErrors($e->getMessage());
-        }
-    }
+    // public function approve(Request $request, $id)
+    // {
+    //     try {
+    //         $data = [
+    //             'status' => 'approve',
+    //         ];
+    //         $apiResponse = updateApi(env('PRICE_URL') . '/approve/' . $id, $data);
+    //         if ($apiResponse->successful()) {
+    //             return redirect()->route('price.index')->with('success', $apiResponse->json()['message']);
+    //         } else {
+    //             return back()->withErrors($apiResponse->json()['message']);
+    //         }
+    //     } catch (\Exception $e) {
+    //         return back()->withErrors($e->getMessage());
+    //     }
+    // }
 }

@@ -36,13 +36,15 @@
                         <table class="table table-striped table-bordered mt-3" id="tableprice">
                             <thead>
                                 <tr>
-                                    <th scope="col">No</th>
-                                    <th scope="col">Kode Item</th>
-                                    <th scope="col">Nama Item</th>
-                                    <th scope="col">Principal</th>
-                                    <th scope="col">Harga Pokok </th>
-                                    <th scope="col">Harga Beli</th>
-                                    <th scope="col">Action</th>
+                                    <th>No</th>
+                                    <th>Kode Item</th>
+                                    <th>Nama Item</th>
+                                    {{-- <th >Principal</th> --}}
+                                    {{-- <th >Harga Pokok </th> --}}
+                                    <th>Harga</th>
+                                    <th>Valid To</th>
+                                    <th>Valid From</th>
+                                    <th>Action</th>
                                 </tr>
                             </thead>
                         </table>
@@ -76,40 +78,26 @@
                         data: 'nama_item'
                     },
                     {
-                        data: 'nama_principal'
-                    },
-                    {
-                        data: 'harga_pokok',
+                        data: 'price',
                         render: function(data, type, row) {
                             return formatRupiah(data);
                         }
                     },
                     {
-                        data: 'harga_beli',
-                        render: function(data, type, row) {
-                            return formatRupiah(data);
-                        }
+                        data: 'valid_from'
+                    },
+                    {
+                        data: 'valid_to'
                     },
                     {
                         data: null,
                         render: function(data, type, row) {
                             return `
-                                    <div class="d-flex">
                                     <button type="button" class="btn btn-sm btn-warning me-2 btn-edit-price"
                                         data-id="${row.id}"
                                         title="Edit">
                                         <i class="bi bi-pencil"></i>
                                     </button>
-                                    <form id="approve${row.id}"
-                                    action="/price/approve/${row.id}" method="POST">
-                                    @csrf
-                                    @method('PUT')
-                                    <button type="button" class="btn btn-sm btn-success me-2" title="Approve"
-                                        onclick="confirmApprove(${row.id})">
-                                        <i class="bi bi-check"></i>
-                                    </button>
-                                    </form>
-                                    </div>
                                 `;
                         }
                     }
