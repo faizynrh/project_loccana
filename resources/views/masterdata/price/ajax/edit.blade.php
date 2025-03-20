@@ -4,7 +4,7 @@
             masukkan data dengan benar.</h6>
     </div>
     <div class="col-12">
-        <form action="{{ route('price.update', $data->data->id) }}" method="POST" id="updateForm"
+        <form action="{{ route('price.update', $data->data->item_id) }}" method="POST" id="updateForm"
             onsubmit="disableButton(event)">
             @csrf
             @method('PUT')
@@ -13,7 +13,7 @@
                     <label for="kodeitem" class="form-label fw-bold mb-0">Kode Item</label>
                 </div>
                 <div class="col-md-9">
-                    <input type="text" class="form-control" value="{{ $data->data->kode_item }}" disabled>
+                    <input type="text" class="form-control" value="{{ $data->data->item_code }}" disabled>
                 </div>
             </div>
             <div class="row mb-3 align-items-center">
@@ -21,46 +21,37 @@
                     <label for="namaitem" class="form-label fw-bold mb-0">Nama Item</label>
                 </div>
                 <div class="col-md-9">
-                    <input type="text" class="form-control" value="{{ $data->data->nama_item }}" disabled>
+                    <input type="text" class="form-control" value="{{ $data->data->item_name }}" disabled>
                 </div>
             </div>
             <div class="row mb-3 align-items-center">
                 <div class="col-md-3">
-                    <label for="hargaatas" class="form-label fw-bold mb-0">Harga Atas<span
+                    <label for="hargaatas" class="form-label fw-bold mb-0">Harga<span
                             class="text-danger">*</span></label>
                 </div>
                 <div class="col-md-9">
-                    <input type="text" class="form-control" id="harga_atas" name="harga_atas"
-                        value="{{ $data->data->harga_atas }}" placeholder="Harga Atas" required>
+                    <input type="text" class="form-control" id="price" name="price"
+                        value="{{ $data->data->price }}" placeholder="Harga Atas" required>
                 </div>
             </div>
             <div class="row mb-3 align-items-center">
                 <div class="col-md-3">
-                    <label for="hargabawah" class="form-label fw-bold mb-0">Harga Bawah<span
+                    <label for="hargaatas" class="form-label fw-bold mb-0">Valid From<span
                             class="text-danger">*</span></label>
                 </div>
                 <div class="col-md-9">
-                    <input type="text" class="form-control" id="harga_bawah" name="harga_bawah"
-                        value="{{ $data->data->harga_bawah }}" placeholder="Harga Bawah" required>
+                    <input type="date" class="form-control" id="valid_from" name="valid_from"
+                        value="{{ $data->data->valid_from }}" required>
                 </div>
             </div>
             <div class="row mb-3 align-items-center">
                 <div class="col-md-3">
-                    <label for="hargapokok" class="form-label fw-bold mb-0">Harga Pokok
-                </div>
-                <div class="col-md-9">
-                    <input type="text" class="form-control bg-body-secondary" id="harga_pokok" name="harga_pokok"
-                        value="{{ $data->data->harga_pokok }}" placeholder="Harga Pokok" readonly>
-                </div>
-            </div>
-            <div class="row mb-3 align-items-center">
-                <div class="col-md-3">
-                    <label for="hargabeli" class="form-label fw-bold mb-0">Harga Beli<span
+                    <label for="hargaatas" class="form-label fw-bold mb-0">Valid To<span
                             class="text-danger">*</span></label>
                 </div>
                 <div class="col-md-9">
-                    <input type="text" class="form-control" id="harga_beli" name="harga_beli"
-                        value="{{ $data->data->harga_beli }}"placeholder="Harga Beli" required>
+                    <input type="date" class="form-control" id="valid_to" name="valid_to"
+                        value="{{ $data->data->valid_to }}" required>
                 </div>
             </div>
             <div class="modal-footer">

@@ -115,7 +115,7 @@ Route::middleware('auth.login')->group(
             Route::get('/ajax', 'ajax')->name('ajax');
             Route::get('/edit/{id}', 'edit')->name('edit');
             Route::put('/update/{id}', 'update')->name('update');
-            Route::put('/approve/{id}', 'approve')->name('approve');
+            // Route::put('/approve/{id}', 'approve')->name('approve');
         });
 
         // UOM
