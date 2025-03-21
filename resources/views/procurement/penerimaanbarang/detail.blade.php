@@ -76,58 +76,52 @@
                         <table class="table mt-3">
                             <thead>
                                 <tr style="border-bottom: 3px solid #000;">
-                                    <th style="width: 110px">Kode</th>
-                                    <th style="width: 45px">Order</th>
-                                    <th style="width: 45px">Sisa</th>
-                                    <th style="width: 45px">Total Diterima</th>
-                                    <th style="width: 70px">Gudang</th>
-                                    <th style="width: 45px">Bonus</th>
-                                    <th style="width: 45px">Titipan</th>
-                                    <th style="width: 45px">Diskon</th>
-                                    <th style="width: 45px">Keterangan</th>
-                                </tr>
-                                {{-- <tr style="border-bottom: 3px solid #000;">
                                     <th>Kode</th>
                                     <th>Order</th>
                                     <th>Sisa</th>
                                     <th>Total Diterima</th>
-                                    <th>Diterima (Qty)</th>
-                                    <th>Ditolak (Qty)</th>
+                                    <th>Gudang</th>
                                     <th>Bonus</th>
                                     <th>Titipan</th>
                                     <th>Diskon</th>
                                     <th>Keterangan</th>
-                                </tr> --}}
+                                </tr>
                             </thead>
                             <tbody id="tableBody">
                                 @foreach ($data->data as $item)
                                     <tr style="border-bottom: 2px solid #000;">
                                         <td>
-                                            <p class="fw-bold">[{{ $item->item_code }}] {{ $item->item_name }}</p>
+                                            <textarea class="form-control" disabled>[{{ $item->item_code }}] {{ $item->item_name }}</textarea>
                                         </td>
                                         <td>
-                                            <p class="fw-bold">{{ $item->jumlah_order }}</p>
+                                            <input type="text" class="form-control" disabled
+                                                value="{{ $item->jumlah_order }}">
                                         </td>
                                         <td>
-                                            <p class="fw-bold">{{ $item->jumlah_sisa }}</p>
+                                            <input type="text" class="form-control" disabled
+                                                value="{{ $item->jumlah_sisa }}">
                                         </td>
                                         <td>
-                                            <p class="fw-bold">{{ $item->quantity_received }}</p>
+                                            <input type="text" class="form-control" disabled
+                                                value="{{ $item->quantity_received }}">
                                         </td>
                                         <td>
-                                            <p class="fw-bold">{{ $item->gudang }}</p>
+                                            <textarea class="form-control" disabled>{{ $item->gudang }}</textarea>
                                         </td>
                                         <td>
-                                            <p class="fw-bold">{{ $item->qty_bonus }}</p>
+                                            <input type="text" class="form-control" disabled
+                                                value="{{ $item->qty_bonus }}">
                                         </td>
                                         <td>
-                                            <p class="fw-bold">{{ $item->qty_titip }}</p>
+                                            <input type="text" class="form-control" disabled
+                                                value="{{ $item->qty_titip }}">
                                         </td>
                                         <td>
-                                            <p class="fw-bold">{{ $item->qty_diskon }}</p>
+                                            <input type="text" class="form-control" disabled
+                                                value="{{ $item->qty_diskon }}">
                                         </td>
                                         <td>
-                                            <p class="fw-bold">{{ $item->deskripsi_item }}</p>
+                                            <textarea class="form-control" disabled>{{ $item->deskripsi_item }}</textarea>
                                         </td>
                                     </tr>
                                 @endforeach
