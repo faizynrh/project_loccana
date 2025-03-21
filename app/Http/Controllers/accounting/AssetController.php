@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\accounting;
 
+use App\Exports\ExportAccountingAsset;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
 class AssetController extends Controller
 {
@@ -162,31 +164,29 @@ class AssetController extends Controller
         }
     }
 
-    // public function exportExcel(Request $request)
-    // {
-    //     try {
-    //         $start_date = $request->start_date;
-    //         $end_date = $request->end_date;
+    public function exportExcel(Request $request)
+    {
+        try {
+            $end_date = $request->end_date;
 
-    //         $requestbody = [
-    //             'start_date' => $start_date,
-    //             'end_date' => $end_date,
-    //             'coa_id' => 0
-    //         ];
-    //         $apiResponse = storeApi(env('LABA_RUGI_URL'), $requestbody);
+            $requestbody = [
+                'end_date' => $end_date,
+                'coa_id' => 0
+            ];
+            $apiResponse = storeApi(env('SUBASSET_URL') . '/list', $requestbody);
+            if ($apiResponse->successful()) {
+                $data = json_decode($apiResponse->body());
+                if (empty($data)) {
+                    return back()->with('error', 'Tidak ada data untuk diexport.');
+                }
+                $fileName = 'Laporan Sub Asset ' . $end_date . '.xlsx';
+                return Excel::download(new ExportAccountingAsset($data, $end_date), $fileName);
+            }
 
-    //         if ($apiResponse->successful()) {
-    //             $data = json_decode($apiResponse->body());
-    //             if (empty($data)) {
-    //                 return back()->with('error', 'Tidak ada data untuk diexport.');
-    //             }
-    //             $fileName = 'Laporan Laba Rugi ' . $start_date . ' s.d ' . $end_date . '.xlsx';
-    //             return Excel::download(new ExportAccountingLabaRugi($data, $start_date, $end_date), $fileName);
-    //         }
+            return response()->json(['error' => $apiResponse->json()['message']]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()]);
+        }
 
-    //         return response()->json(['error' => $apiResponse->json()['message']]);
-    //     } catch (\Exception $e) {
-    //         return response()->json(['error' => $e->getMessage()]);
-    //     }
-    // }
+    }
 }

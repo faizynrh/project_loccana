@@ -52,7 +52,7 @@
                         </div>
                         <div class="row mb-2">
                             <div class="mt-1 d-flex justify-content-end">
-                                <form action="{{ route('purchaseorder.printexcel') }}" method="GET" id="filterForm">
+                                <form action="{{ route('asset.exportexcel') }}" method="GET" id="filterForm">
                                     <button type="submit" class="btn btn-primary fw-bold">
                                         <i class="bi bi-file-earmark-excel"></i> Export Excel
                                     </button>
@@ -66,13 +66,13 @@
                                         <th scope="col">Asset</th>
                                         <th scope="col">Keterangan</th>
                                         <th scope="col">Tanggal Pembelian</th>
+                                        <th scope="col">Tahun</th>
+                                        <th scope="col">Bulan</th>
                                         <th scope="col">Harga</th>
                                         <th scope="col">Depresiasi Perbulan</th>
-                                        <th scope="col">Akumulasi Depresiasi 2024</th>
-                                        <th scope="col">Depresiasi 2025</th>
+                                        <th scope="col">Akumulasi Depresiasi</th>
                                         <th scope="col">Total Depresiasi</th>
                                         <th scope="col">Book Value</th>
-                                        <th scope="col">Status</th>
                                         <th scope="col">Action</th>
                                     </tr>
                                 </thead>
@@ -113,7 +113,7 @@
                         data: 'asset_name'
                     },
                     {
-                        data: 'asset_type'
+                        data: 'description_asset'
                     },
                     {
                         data: 'acquisition_date',
@@ -128,35 +128,38 @@
                         }
                     },
                     {
-                        data: 'acquisition_cost'
+                        data: 'selisih_tahun'
                     },
                     {
-                        data: 'depreciation_rate',
-                        render: function(data, type, row) {
-                            return (row.depreciation_rate * row.acquisition_cost).toFixed(2);
+                        data: 'selisih_bulan'
+                    },
+                    {
+                        data: 'acquisition_cost',
+                        render: function(data) {
+                            return formatRupiah(data);
                         }
+
                     },
                     {
-                        data: 'accumulated_depreciation'
-                    },
-                    {
-                        data: 'depreciation_rate',
-                        render: function(data, type, row) {
-                            return (row.depreciation_rate * row.acquisition_cost).toFixed(2);
+                        data: 'depresiasi_perbulan',
+                        render: function(data) {
+                            return formatRupiah(data);
                         }
                     },
                     {
                         data: 'accumulated_depreciation',
-                        render: function(data, type, row) {
-                            return (row.accumulated_depreciation + (row.depreciation_rate * row
-                                .acquisition_cost)).toFixed(2);
+                        render: function(data) {
+                            return formatRupiah(data);
+                        }
+                    },
+                    {
+                        data: 'total_depresiasi',
+                        render: function(data) {
+                            return formatRupiah(data);
                         }
                     },
                     {
                         data: 'book_value'
-                    },
-                    {
-                        data: 'status'
                     },
                     {
                         data: null,

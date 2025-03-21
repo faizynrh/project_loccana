@@ -55,7 +55,6 @@ class LabaRugiController extends Controller
                 'coa_id' => 0
             ];
             $apiResponse = storeApi(env('LABA_RUGI_URL'), $requestbody);
-
             if ($apiResponse->successful()) {
                 $data = json_decode($apiResponse->body());
                 if (empty($data)) {
