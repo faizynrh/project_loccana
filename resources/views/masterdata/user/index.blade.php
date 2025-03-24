@@ -95,7 +95,7 @@
                         data: null,
                         render: function(data, type, row) {
                             return `
-                    <button type="button" class="btn btn-sm btn-info btn-detail-item"
+                    <button type="button" class="btn btn-sm btn-info btn-user-detail"
                         data-id="${row.id}" title="Detail">
                         <i class="bi bi-eye"></i>
                     </button>
@@ -114,6 +114,38 @@
                         }
                     }
                 ]
+            });
+
+            $(document).on('click', '.btn-user-detail', function(e) {
+                e.preventDefault();
+                const itemid = $(this).data('id');
+                const url = '{{ route('user.detail', ':itemid') }}'.replace(':itemid', itemid);
+                const $button = $(this);
+
+                $('#loading-overlay').fadeIn();
+                $button.prop("disabled", true).html('<i class="bi bi-hourglass-split"></i>');
+
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    dataType: 'html',
+                    beforeSend: function() {
+                        //
+                    },
+                    success: function(response) {
+                        updateModal('#modal-example', 'Detail User', response,
+                            'modal-lg');
+                    },
+                    error: function(xhr) {
+                        let errorMsg = xhr.responseText ||
+                            '<p>An error occurred while loading the content.</p>';
+                        $('#content-example').html(errorMsg);
+                    },
+                    complete: function() {
+                        $('#loading-overlay').fadeOut();
+                        $button.prop("disabled", false).html('<i class="bi bi-eye"></i>');
+                    }
+                });
             });
         });
     </script>

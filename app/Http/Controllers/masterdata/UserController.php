@@ -61,7 +61,13 @@ class UserController extends Controller
      */
     public function show(string $id)
     {
-        //
+        try {
+            $apiResponse = getUserDetail(env('USER_URL'), $id, "admin", "admin");
+            $data = json_decode($apiResponse->body());
+            return view('masterdata.user.ajax.detail', compact('data'));
+        } catch (\Exception $e) {
+            return back()->withErrors($e->getMessage());
+        }
     }
 
     /**

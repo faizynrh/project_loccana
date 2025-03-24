@@ -85,3 +85,13 @@ function getUser($apiUrl, $username, $password)
 
     return $response;
 }
+
+function getUserDetail($apiUrl, $userId, $username, $password)
+{
+    $response = Http::withHeaders([
+        'Authorization' => 'Basic ' . base64_encode("$username:$password"),
+        'Content-Type'  => 'application/json'
+    ])->withoutVerifying()->get($apiUrl . '/' . $userId);
+
+    return $response;
+}
