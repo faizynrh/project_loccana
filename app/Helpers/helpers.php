@@ -75,3 +75,13 @@ function deleteApi($apiUrl)
 
     return $response;
 }
+
+function getUser($apiUrl, $username, $password)
+{
+    $response = Http::withHeaders([
+        'Authorization' => 'Basic ' . base64_encode("$username:$password"),
+        'Content-Type'  => 'application/json'
+    ])->withoutVerifying()->get($apiUrl);
+
+    return $response;
+}

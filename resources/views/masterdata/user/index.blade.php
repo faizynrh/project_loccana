@@ -31,67 +31,90 @@
             </div>
             <section class="section">
                 <div class="card">
-                    <div class="card-header">
-                        <h6 class="card-title">Data User</h6>
-                    </div>
                     <div class="card-body">
-                        @if (session('success'))
-                            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                {{ session('success') }}
-                                <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                    aria-label="Close"></button>
-                            </div>
-                        @endif
-
-                        @if ($errors->any())
-                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                @foreach ($errors->all() as $error)
-                                    <p>{{ $error }}</p>
-                                @endforeach
-                                <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                    aria-label="Close"></button>
-                            </div>
-                        @endif
-                        <a href="/user/add" class="btn btn-primary btn-lg fw-bold mt-1 mb-2">+</a>
-                        <table class="table table-striped table-bordered mt-3" id="usertable">
-                            <thead>
-                                <tr>
-                                    <th scope="col">No</th>
-                                    <th scope="col">Gambar</th>
-                                    <th scope="col">Name User</th>
-                                    <th scope="col">User Name</th>
-                                    <th scope="col">Role</th>
-                                    <th scope="col">Wilayah</th>
-                                    <th scope="col">Status</th>
-                                    <th scope="col">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>1</td>
-                                    <td><img src="https://via.placeholder.com/40" alt="User" class="rounded-circle me-2"
-                                            style="width: 40px; height: 40px;"></td>
-                                    <td>Adinda Nazmilla</td>
-                                    <td>dinda</td>
-                                    <td>Manager</td>
-                                    <td> Wilayah 2</td>
-                                    <td><button class="btn btn-sm btn-primary">Aktif</button></td>
-                                    <td><a href="user/edit" class="btn btn-sm btn-warning" title="Edit">
-                                            <i class="bi bi-pencil"></i>
-                                        </a>
-                                        <button class="btn btn-sm btn-danger" title="Hapus">
-                                            <i class="bi bi-trash"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        @include('alert.alert')
+                        <button type="button" class="btn btn-primary fw-bold btn-add-item">+ Tambah User</button>
+                        <div class="table-responsive">
+                            <table class="table table-striped table-bordered mt-1" id="tableuser">
+                                <thead>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Nama Lengkap</th>
+                                        <th>Username</th>
+                                        <th>Email</th>
+                                        <th>Role</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </section>
         </div>
     </div>
+    @include('modal.modal')
 @endsection
 @push('scripts')
-    <script></script>
+    <script>
+        $(document).ready(function() {
+            $('#tableuser').DataTable({
+                ajax: {
+                    url: '{{ route('user.ajax') }}',
+                    type: 'GET',
+                },
+                columns: [{
+                        data: null,
+                        render: function(data, type, row, meta) {
+                            return meta.row + 1;
+                        }
+                    },
+                    {
+                        data: null,
+                        render: function(data, type, row) {
+                            let givenName = row.name?.givenName || '';
+                            let familyName = row.name?.familyName || '';
+                            return givenName + " " + familyName;
+                        }
+                    },
+                    {
+                        data: 'userName'
+                    },
+                    {
+                        data: "emails.0",
+                        defaultContent: "-"
+                    },
+                    {
+                        data: "roles",
+                        render: function(data) {
+                            return data && data.length ? data.map(role => role.display).join(
+                                "<br>") : "-";
+                        }
+                    },
+                    {
+                        data: null,
+                        render: function(data, type, row) {
+                            return `
+                    <button type="button" class="btn btn-sm btn-info btn-detail-item"
+                        data-id="${row.id}" title="Detail">
+                        <i class="bi bi-eye"></i>
+                    </button>
+                    <button type="button" class="btn btn-sm btn-warning btn-edit-item"
+                        data-id="${row.id}" title="Edit">
+                        <i class="bi bi-pencil"></i>
+                    </button>
+                    <form action="/item_management/delete/${row.id}" method="POST" id="delete${row.id}" style="display:inline;">
+                        @csrf
+                        @method('DELETE')
+                        <button type="button" class="btn btn-sm btn-danger" title="Hapus" onclick="confirmDelete(${row.id})">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </form>
+                    `;
+                        }
+                    }
+                ]
+            });
+        });
+    </script>
 @endpush
