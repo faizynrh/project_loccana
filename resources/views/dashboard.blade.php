@@ -4,6 +4,7 @@
     <div id="main-content" style="margin-top: -70px">
         <section class="section">
             <div class="card-body">
+                @include('alert.alert')
                 <div class="top-cards">
                     <div class="card small-card">
                         <div class="card-title">
