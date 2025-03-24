@@ -53,15 +53,20 @@ class DasarPembelianController extends Controller
     }
     public function index()
     {
-        $company_id = 2;
-        $supplier = "true";
-        $customer = "false";
-        $partnerResponse = fectApi(env('LIST_PARTNER') . '/' . $company_id . '/' . $supplier . '/' . $customer);
-        if ($partnerResponse->successful()) {
-            $partner = json_decode($partnerResponse->body());
-            return view('procurement.dasarpembelian.index', compact('partner'));
+        try {
+            $company_id = 2;
+            $supplier = "true";
+            $customer = "false";
+            $partnerResponse = fectApi(env('LIST_PARTNER') . '/' . $company_id . '/' . $supplier . '/' . $customer);
+            if ($partnerResponse->successful()) {
+                $partner = json_decode($partnerResponse->body());
+                return view('procurement.dasarpembelian.index', compact('partner'));
+            } else {
+                return back()->withErrors($partnerResponse->json()['message']);
+            }
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()]);
         }
-        return view('procurement.dasarpembelian.index');
     }
 
     public function exportExcel(Request $request)

@@ -52,15 +52,17 @@ class StockGudangController extends Controller
     }
     public function index(Request $request)
     {
-        $company_id = 2;
-        $apiResponse = fectApi(env('LIST_GUDANG') . '/' . $company_id);
-        if ($apiResponse->successful()) {
-            $data = json_decode($apiResponse->body());
-            return view('inventory.stockgudang.index', compact('data'));
-        } else {
-            return redirect()->route('stock_gudang.index')->withErrors(
-                $apiResponse->json()['message'] ?? 'Terjadi kesalahan, silakan coba lagi.'
-            );
+        try {
+            $company_id = 2;
+            $apiResponse = fectApi(env('LIST_GUDANG') . '/' . $company_id);
+            if ($apiResponse->successful()) {
+                $data = json_decode($apiResponse->body());
+                return view('inventory.stockgudang.index', compact('data'));
+            } else {
+                return back()->withErrors($apiResponse->json()['message']);
+            }
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()]);
         }
     }
 
